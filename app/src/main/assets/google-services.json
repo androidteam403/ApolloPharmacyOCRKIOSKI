@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "349388567880",
+    "firebase_url": "https://pharmacyocr-49334.firebaseio.com",
+    "project_id": "pharmacyocr-49334",
+    "storage_bucket": "pharmacyocr-49334.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:349388567880:android:733b2b78f612f61e",
+        "android_client_info": {
+          "package_name": "com.apollo.pharmacy.ocr"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "349388567880-siqa3etj4mep2fqgq1pi7cusika6mavk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1ZPSIp6ILW9WuZISSGsNOdkwfOkz_BwQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "349388567880-siqa3etj4mep2fqgq1pi7cusika6mavk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

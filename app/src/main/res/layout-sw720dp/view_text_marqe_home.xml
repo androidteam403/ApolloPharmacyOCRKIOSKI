@@ -1,0 +1,152 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/activity_theme_bg"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <VideoView
+                android:id="@+id/video_view"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_gravity="center"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:alpha="0.1"
+                    android:visibility="visible">
+
+                    <com.apollo.pharmacy.ocr.widget.MarqueeView
+                        android:id="@+id/first_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical"
+                        android:layoutDirection="rtl"
+                        app:speed="@dimen/twenty_dp"
+                        app:text_color="@android:color/white"
+                        app:text_size="@dimen/two_hundred_twenty_sp"
+                        app:txt_radius="1.0"
+                        app:txt_spacing="@dimen/one_hundred_dp" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:alpha="0.1"
+                    android:visibility="visible">
+
+                    <com.apollo.pharmacy.ocr.widget.MarqueeViewRight
+                        android:id="@+id/second_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical"
+                        app:speed="@dimen/twenty_dp"
+                        app:text_color="@android:color/white"
+                        app:text_size="@dimen/three_hundred_sp"
+                        app:txt_radius="1.0"
+                        app:txt_spacing="@dimen/one_hundred_dp" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:alpha="0.1">
+
+                    <com.apollo.pharmacy.ocr.widget.MarqueeView
+                        android:id="@+id/third_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical"
+                        app:speed="@dimen/twenty_dp"
+                        app:text_color="@android:color/white"
+                        app:text_size="@dimen/two_hundred_fifty_sp"
+                        app:txt_dx="1.0"
+                        app:txt_dy="1.0"
+                        app:txt_radius="1.0"
+                        app:txt_spacing="@dimen/one_hundred_dp" />
+                </FrameLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="@dimen/two_hundred_fifty_dp"
+                    android:layout_gravity="fill"
+                    android:alpha="0.1"
+                    android:ellipsize="marquee"
+                    android:freezesText="true"
+                    android:gravity="center"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:text="WELCOME"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/two_hundred_sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/two_hundred_fifty_dp"
+                    android:alpha="0.1"
+                    android:gravity="center|fill"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:text="APOLLO"
+                    android:textColor="@color/white"
+                    android:textIsSelectable="true"
+                    android:textSize="@dimen/two_hundred_twenty_sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    android:layout_gravity="center"
+                    android:alpha="0.1"
+                    android:fontFamily="sans-serif-smallcaps"
+                    android:gravity="center"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:singleLine="true"
+                    android:text="PHARMACY"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/two_hundred_sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/fullscreen_dots" />
+
+
+    </RelativeLayout>
+
+
+</LinearLayout>

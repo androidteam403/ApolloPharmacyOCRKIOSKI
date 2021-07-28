@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black_transperent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="@dimen/four_hundred_eighty_dp"
+            android:layout_height="@dimen/four_hundred_fifty_dp"
+            android:layout_marginTop="@dimen/fifty_dp"
+            android:background="@drawable/dialog_view_background">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/ten_dp"
+                android:layout_marginRight="@dimen/ten_dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/ten_dp"
+                    android:gravity="center"
+                    android:text="@string/label_verify_otp"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/eighteen_sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="vertical"
+                    android:paddingStart="@dimen/eight_dp"
+                    android:paddingEnd="@dimen/eight_dp"
+                    android:paddingTop="@dimen/eight_dp">
+
+                    <com.apollo.pharmacy.ocr.widget.OtpView
+                        android:id="@+id/otp_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:cursorVisible="false"
+                        android:inputType="number"
+                        android:itemBackground="@drawable/otp_rounded_bg"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/thirty_sp"
+                        android:textStyle="bold"
+                        app:itemCount="6"
+                        app:lineColor="@android:color/transparent"
+                        app:viewType="rectangle" />
+
+                    <LinearLayout
+                        android:layout_marginTop="@dimen/ten_dp"
+                        android:id="@+id/otp_keyboard_wrapper_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/two_hundred_eighty_five_dp"
+                        android:layout_marginStart="@dimen/fifty_dp"
+                        android:layout_marginEnd="@dimen/fifty_dp"
+                        android:orientation="vertical">
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/ten_dp"
+                    android:gravity="center"
+                    android:text="@string/label_to_pay_scan_qrcode_paytm"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/eighteen_sp"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:layout_width="@dimen/one_hundred_seventy_dp"
+                    android:layout_height="@dimen/one_hundred_fifty_dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/app_name"
+                    android:scaleType="fitXY"
+                    android:visibility="gone" />
+
+                <Button
+                    android:id="@+id/verify_otp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/okay_btn_bg"
+                    android:gravity="center"
+                    android:text="@string/label_verify"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <ImageView
+            android:layout_width="@dimen/one_hundred_dp"
+            android:layout_height="@dimen/sixty_dp"
+            android:layout_gravity="center|top"
+            android:layout_marginTop="0dp"
+            android:background="@drawable/icon_popup_contact"
+            android:contentDescription="@string/app_name" />
+
+        <ImageView
+            android:id="@+id/close_image"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/twenty_dp"
+            android:layout_gravity="end"
+            android:layout_marginTop="@dimen/twenty_five_dp"
+            android:layout_marginBottom="@dimen/thirty_dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/icon_cross"
+            android:visibility="visible" />
+    </FrameLayout>
+</LinearLayout>

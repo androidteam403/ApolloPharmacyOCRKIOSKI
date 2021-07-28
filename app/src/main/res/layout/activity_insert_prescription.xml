@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/parent_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/activity_theme_bg">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/one_hundred_fifty_dp"
+                android:layout_marginEnd="@dimen/fifty_dp"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="@dimen/two_hundred_sixty_dp"
+                    android:layout_height="@dimen/two_hundred_forty_dp"
+                    android:layout_gravity="center"
+                    android:gravity="center">
+
+                    <pl.droidsonroids.gif.GifImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/raw_scan_new"
+                        android:visibility="gone" />
+
+                    <ImageView
+                        android:id="@+id/gif_scanned_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:contentDescription="@string/app_name"
+                        android:visibility="visible" />
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/label_insert_prescription"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/thirty_five_sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/label_in_scanner"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/twenty_five_sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/counter_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_marginTop="@dimen/twenty_dp"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/eighteen_sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <include layout="@layout/view_customer_support" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <include layout="@layout/view_faq_layout" />
+    </RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,12 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/selected_menu_color" />
+    <stroke
+        android:width="@dimen/two_dp"
+        android:color="@color/dialog_border_line" />
+    <padding
+        android:bottom="@dimen/ten_dp"
+        android:left="@dimen/ten_dp"
+        android:right="@dimen/ten_dp"
+        android:top="@dimen/ten_dp" />
+</shape>

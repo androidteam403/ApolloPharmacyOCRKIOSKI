@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/activity_theme_bg"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="70dp"
+            android:layout_marginBottom="50dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/one_hundred_dp"
+                android:layout_marginRight="@dimen/one_hundred_dp"
+                android:background="@drawable/custom_dialog_bg">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/five_hundred_fifty_dp"
+                    android:layout_marginLeft="@dimen/ten_dp"
+                    android:layout_marginTop="@dimen/ten_dp"
+                    android:layout_marginRight="@dimen/ten_dp"
+                    android:layout_marginBottom="@dimen/twenty_five_dp"
+                    android:orientation="vertical"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="@dimen/ten_dp"
+                        android:gravity="center"
+                        android:text="@string/label_select_nearest_apollo_pharmacy"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="@dimen/twenty_sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/forty_five_dp"
+                        android:layout_marginTop="@dimen/ten_dp"
+                        android:background="@drawable/map_address_edittext_bg"
+                        android:padding="@dimen/ten_dp"
+                        android:text="#flat no. 304, A1 Block, Sliver Springs, Apartments, Quthbullapur, Hyderabad-500054 "
+                        android:textColor="@color/colorWhite"
+                        android:textStyle="bold"
+                        android:visibility="gone" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="@dimen/fifteen_dp"
+                        android:layout_marginBottom="@dimen/ten_dp"
+                        android:orientation="horizontal"
+                        android:weightSum="1">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.5"
+                            android:background="@drawable/map_address_edittext_bg"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp"
+                                android:layout_marginLeft="40dp"
+                                android:layout_marginTop="10dp"
+                                android:layout_marginRight="30dp"
+                                android:orientation="horizontal"
+                                android:weightSum="1">
+
+                                <EditText
+                                    android:id="@+id/search_edit_text"
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="0.9"
+                                    android:drawableLeft="@drawable/whitesearch"
+                                    android:drawablePadding="10dp"
+                                    android:gravity="center_vertical"
+                                    android:inputType="text"
+                                    android:paddingLeft="5dp"
+                                    android:text="Pharmacy Address"
+                                    android:textColor="@android:color/white"
+                                    android:textSize="20sp" />
+
+                                <Button
+                                    android:id="@+id/removetext_button"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:layout_marginLeft="10dp"
+                                    android:background="@drawable/close_orders_track"
+                                    android:gravity="end" />
+                            </LinearLayout>
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/pharmacy_location_listview"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginRight="10dp"
+                                android:layout_marginBottom="0dp"
+                                android:layout_weight="3.7"
+                                android:background="@null"
+                                android:divider="@null"
+                                android:dividerHeight="0dp"
+                                android:fadeScrollbars="true"
+                                android:visibility="visible" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="@dimen/ten_dp"
+                            android:layout_weight="0.5"
+                            android:background="@drawable/map_address_edittext_bg"
+                            android:orientation="vertical">
+
+                            <fragment
+                                android:id="@+id/map"
+                                android:name="com.google.android.gms.maps.SupportMapFragment"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <FrameLayout
+                android:id="@+id/medic_keyboard"
+                android:layout_width="750dp"
+                android:layout_height="750dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginTop="250dp"
+                android:layout_marginRight="-2dp"
+                android:layout_marginBottom="0dp"
+                android:visibility="gone"
+                android:clickable="true" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/ok_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|bottom"
+            android:layout_marginBottom="25dp"
+            android:background="@drawable/scan_btn_bg"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/confirm_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:gravity="end"
+                android:text="@string/label_ok"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/twenty_five_sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="@dimen/one_hundred_dp"
+            android:layout_height="@dimen/sixty_dp"
+            android:layout_gravity="center|top"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/icon_popup_navigation"
+            android:contentDescription="@string/app_name" />
+
+        <ImageView
+            android:id="@+id/close_image"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_gravity="end"
+            android:paddingLeft="@dimen/ten_dp"
+            android:paddingTop="@dimen/ten_dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="@dimen/one_hundred_dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/icon_cross"
+            android:visibility="visible" />
+    </FrameLayout>
+
+    <include
+        android:id="@+id/networkErrorLayout"
+        layout="@layout/layout_network_error" />
+</LinearLayout>

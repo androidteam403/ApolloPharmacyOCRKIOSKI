@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.apollo.pharmacy.ocr">
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <uses-permission
+        android:name="android.permission.WRITE_SECURE_SETTINGS"
+        tools:ignore="ProtectedPermissions" />
+
+    <permission
+        android:name="android.permission.CALL_PRIVILEGED"
+        android:protectionLevel="signature|privileged" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="true" />
+    <uses-feature android:name="android.hardware.usb.host" />
+
+    <application
+        android:name=".utility.Constants"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher_apollo"
+        android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_confing"
+        android:roundIcon="@mipmap/ic_launcher_round_apollo"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+        <activity
+            android:name=".activities.StoreSetupActivity"
+            android:screenOrientation="landscape">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activities.Delete"
+            android:screenOrientation="landscape">
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+
+        </activity>
+        <activity
+            android:name=".activities.MainActivity"
+            android:screenOrientation="landscape" />
+
+        <receiver
+            android:name=".receiver.ConnectivityReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".receiver.MedTrailConnectivityReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.intent.action.medtrail.scanResult" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name=".activities.PrescriptionPreviewActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".activities.UploadPrescriptionActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".activities.AddressAddActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".activities.AddressEditActivity"
+            android:screenOrientation="landscape" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAOzLJXOu3T-kWzrpMhkuv_3XfWnESZNoQ" />
+        <!--AIzaSyDAAQk_9yUxZhS267gzniV4z7tlsSISGm4-->
+
+        <activity
+            android:name=".activities.UserLoginActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".activities.HomeActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".activities.USBCameraActivity"
+            android:screenOrientation="landscape">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED"
+                android:resource="@xml/accessory_filter" />
+        </activity>
+        <activity
+            android:name=".activities.MyCartActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".activities.DeliverySelectionActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".activities.AddressListActivity"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".activities.MySearchActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".activities.InsertPrescriptionActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".activities.MyOrdersActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".activities.OrderSummaryActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".activities.PaymentSelectionActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".activities.StorePickupActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".activities.MyOffersActivity"
+            android:screenOrientation="landscape" />
+        <activity android:name=".activities.FAQActivity" />
+        <activity
+            android:name=".activities.MyProfileActivity"
+            android:screenOrientation="landscape" />
+
+        <meta-data
+            android:name="com.google.android.actions"
+            android:resource="@xml/curved_selected_layout" />
+
+        <service
+            android:name=".service.MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".service.MyFirebaseInstanceIDService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+    </application>
+
+</manifest>

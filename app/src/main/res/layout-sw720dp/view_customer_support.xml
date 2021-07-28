@@ -1,0 +1,64 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentEnd="true"
+    android:layout_centerVertical="true"
+    android:layout_marginEnd="@dimen/ten_dp"
+    android:gravity="center"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/forty_five_dp"
+        android:layout_marginEnd="@dimen/twenty_dp"
+        android:background="@drawable/curved_customer_support_bg"
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+        <ImageView
+            android:id="@+id/customer_care_icon"
+            android:layout_width="@dimen/forty_five_dp"
+            android:layout_height="@dimen/forty_five_dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/icon_help_circle" />
+
+        <LinearLayout
+            android:id="@+id/customer_help_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:animateLayoutChanges="true"
+            android:orientation="horizontal"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:animateLayoutChanges="false"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="@dimen/eight_dp"
+                    android:gravity="center"
+                    android:text="@string/label_need_help_call"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/ten_sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="@dimen/ten_dp"
+                    android:gravity="center"
+                    android:paddingStart="@dimen/five_dp"
+                    android:paddingEnd="@dimen/five_dp"
+                    android:text="@string/label_care_number"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/sixteen_sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

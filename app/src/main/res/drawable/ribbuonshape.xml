@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <size
+                android:width="@dimen/forty_dp"
+                android:height="@dimen/sixty_dp" />
+            <solid android:color="@color/offer_ribbon_bg_color" />
+            <corners android:radius="0dp" />
+        </shape>
+    </item>
+
+    <item
+        android:bottom="-90dp"
+        android:left="-26dp"
+        android:right="31dp"
+        android:top="@dimen/thirty_five_dp">
+        <rotate android:fromDegrees="45">
+            <shape android:shape="rectangle">
+                <solid android:color="@color/colorWhite" />
+            </shape>
+        </rotate>
+    </item>
+</layer-list>

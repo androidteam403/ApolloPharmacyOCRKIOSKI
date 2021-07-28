@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+
+    <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="0dp"
+        android:layout_weight="1"
+        android:background="@android:color/white"
+        card_view:cardBackgroundColor="@android:color/white"
+        card_view:cardCornerRadius="6dp"
+        card_view:cardElevation="4dp">
+
+        <FrameLayout
+            android:id="@+id/farme_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="15dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingBottom="0dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="150dp"
+                    android:background="@null"
+                    android:text="@string/label_apollo_pharmacy"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/locate_pharmacy_textview"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/five_dp"
+                    android:layout_marginRight="150dp"
+                    android:background="@null"
+                    android:text=""
+                    android:textColor="@color/colorBlack"
+                    android:maxLines="3"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/contactnumber_textview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/five_dp"
+                    android:layout_marginRight="150dp"
+                    android:background="@null"
+                    android:text=""
+                    android:textColor="@color/colorBlack"
+                    android:textSize="14sp" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="0dp"
+                    android:background="@null"
+                    android:weightSum="3">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:visibility="gone"
+                        android:weightSum="2">
+
+                        <TextView
+                            android:id="@+id/opentime_textview"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:text="Open: 10 AM"
+                            android:textColor="@android:color/black"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:id="@+id/closetime_textview"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_alignRight="@+id/opentime_textview"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:text="Close: 07 PM"
+                            android:textColor="@android:color/black"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/direction_button"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_gravity="end"
+                        android:visibility="gone"
+                        android:layout_marginRight="20dp"
+                        android:background="@drawable/direction_image" />
+
+                </RelativeLayout>
+
+
+            </LinearLayout>
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/select_address_text"
+            android:layout_width="@dimen/one_hundred_ten_dp"
+            android:layout_height="@dimen/forty_dp"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/lang_selection_btn_bg_gray"
+            android:text="Select"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_gravity="right"
+            android:gravity="center"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/fifteen_sp"
+            android:textStyle="bold" />
+
+    </androidx.cardview.widget.CardView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/five_dp"
+        android:background="@color/color_grey"/>
+
+
+</LinearLayout>
+
+
+

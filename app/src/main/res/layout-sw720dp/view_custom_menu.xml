@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/apollo_logo"
+        android:layout_width="@dimen/one_hundred_dp"
+        android:layout_height="@dimen/one_hundred_dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/ten_dp"
+        android:contentDescription="@string/app_name"
+        android:padding="@dimen/five_dp"
+        android:src="@drawable/apollo_circle_logo" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/apollo_logo"
+        android:orientation="vertical"
+        android:weightSum="1">
+
+        <RelativeLayout
+            android:id="@+id/mySearchLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/one_dp"
+            android:layout_marginEnd="@dimen/one_dp"
+            android:layout_weight="0.17"
+            android:gravity="center"
+            android:paddingStart="@dimen/fifteen_dp"
+            android:paddingEnd="@dimen/fifteen_dp">
+
+            <ImageView
+                android:id="@+id/dashboardSearchIcon"
+                android:layout_width="@dimen/forty_five_dp"
+                android:layout_height="@dimen/forty_five_dp"
+                android:layout_alignParentEnd="true"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/dashboard_search" />
+
+            <TextView
+                android:id="@+id/dashboardMySearch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/twenty_three_dp"
+                android:layout_marginBottom="@dimen/minus_five_dp"
+                android:text="@string/label_my_text"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/fifteen_sp" />
+
+            <TextView
+                android:id="@+id/dashboardMySearchText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/dashboardMySearch"
+                android:text="@string/label_search"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/twenty_two_sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/myCartLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
+            android:layout_marginStart="@dimen/one_dp"
+            android:layout_marginEnd="@dimen/one_dp"
+            android:layout_weight="0.17"
+            android:gravity="center"
+            android:paddingStart="@dimen/fifteen_dp"
+            android:paddingEnd="@dimen/fifteen_dp">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true">
+
+                <ImageView
+                    android:id="@+id/dashboardMyCartIcon"
+                    android:layout_width="@dimen/forty_five_dp"
+                    android:layout_height="@dimen/forty_five_dp"
+                    android:layout_alignParentEnd="true"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/dashboard_cart" />
+
+                <LinearLayout
+                    android:layout_width="@dimen/twenty_five_dp"
+                    android:layout_height="@dimen/twenty_five_dp"
+                    android:layout_alignParentEnd="true"
+                    android:gravity="top|end">
+
+                    <com.apollo.pharmacy.ocr.utility.TextViewNormal
+                        android:id="@+id/lblCartCnt"
+                        android:layout_width="@dimen/twenty_five_dp"
+                        android:layout_height="@dimen/twenty_five_dp"
+                        android:layout_alignParentTop="true"
+                        android:background="@drawable/tab_notification_circle"
+                        android:gravity="center"
+                        android:text="1"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="@dimen/thirteen_sp"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/dashboardMyCart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/twenty_three_dp"
+                android:layout_marginBottom="@dimen/minus_five_dp"
+                android:text="@string/label_my_text"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/fifteen_sp" />
+
+            <TextView
+                android:id="@+id/dashboardMyCartText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/dashboardMyCart"
+                android:text="@string/label_cart"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/twenty_two_sp"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/myOrdersLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/one_dp"
+            android:layout_marginEnd="@dimen/one_dp"
+            android:layout_weight="0.17"
+            android:gravity="center"
+            android:paddingStart="@dimen/fifteen_dp"
+            android:paddingEnd="@dimen/fifteen_dp">
+
+            <ImageView
+                android:id="@+id/dashboardMyOrdersIcon"
+                android:layout_width="@dimen/forty_five_dp"
+                android:layout_height="@dimen/forty_five_dp"
+                android:layout_alignParentEnd="true"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/dashboard_orders" />
+
+            <TextView
+                android:id="@+id/dashboardMyOrders"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/twenty_three_dp"
+                android:layout_marginBottom="@dimen/minus_five_dp"
+                android:text="@string/label_my_text"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/fifteen_sp" />
+
+            <TextView
+                android:id="@+id/dashboardMyOrdersText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/dashboardMyOrders"
+                android:text="@string/label_orders"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/twenty_two_sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/myOffersLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/one_dp"
+            android:layout_marginEnd="@dimen/one_dp"
+            android:layout_weight="0.17"
+            android:gravity="center"
+            android:paddingStart="@dimen/fifteen_dp"
+            android:paddingEnd="@dimen/fifteen_dp">
+
+            <ImageView
+                android:id="@+id/dashboardMyOffersIcon"
+                android:layout_width="@dimen/forty_five_dp"
+                android:layout_height="@dimen/forty_five_dp"
+                android:layout_alignParentEnd="true"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/dashboard_offers" />
+
+            <TextView
+                android:id="@+id/dashboardMyOffers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/twenty_three_dp"
+                android:layout_marginBottom="@dimen/minus_five_dp"
+                android:text="@string/label_my_text"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/fifteen_sp" />
+
+            <TextView
+                android:id="@+id/dashboardMyOffersText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/dashboardMyOffers"
+                android:text="@string/label_offers"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/twenty_two_sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/myProfileLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/one_dp"
+            android:layout_marginEnd="@dimen/one_dp"
+            android:layout_marginBottom="@dimen/ten_dp"
+            android:layout_weight="0.17"
+            android:gravity="center"
+            android:paddingStart="@dimen/fifteen_dp"
+            android:paddingEnd="@dimen/fifteen_dp">
+
+            <ImageView
+                android:id="@+id/dashboardMyProfileIcon"
+                android:layout_width="@dimen/forty_five_dp"
+                android:layout_height="@dimen/forty_five_dp"
+                android:layout_alignParentEnd="true"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/dashboard_profile" />
+
+            <TextView
+                android:id="@+id/dashboardMyProfile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/twenty_three_dp"
+                android:layout_marginBottom="@dimen/minus_five_dp"
+                android:text="@string/label_my_text"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/fifteen_sp" />
+
+            <TextView
+                android:id="@+id/dashboardMyProfileText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/dashboardMyProfile"
+                android:text="@string/label_profile"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/twenty_two_sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/userLogout"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_weight="0.1"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/user_logout" />
+    </LinearLayout>
+</RelativeLayout>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/constraint_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/parent_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/activity_theme_bg">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <RelativeLayout
+                    android:layout_width="@dimen/one_hundred_five_dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/thirty_five_dp"
+                    android:layout_marginTop="@dimen/thirty_dp"
+                    android:layout_marginEnd="@dimen/thirty_dp"
+                    android:layout_marginBottom="@dimen/thirty_dp"
+                    android:background="@drawable/curved_dashboard_bg">
+
+                    <include layout="@layout/view_custom_menu" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:weightSum="1">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/six_hundred_fifty_dp"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:layout_marginEnd="@dimen/eighty_dp"
+                            android:orientation="vertical"
+                            android:weightSum="1">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:weightSum="1">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/forty_dp"
+                                    android:layout_weight="0.7"
+                                    android:gravity="end"
+                                    android:text="@string/label_my_orders"
+                                    android:textColor="@color/colorWhite"
+                                    android:textSize="@dimen/thirty_five_sp"
+                                    android:textStyle="bold" />
+
+                                <Button
+                                    android:id="@+id/refresh_button"
+                                    android:layout_width="150dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/thirty_dp"
+                                    android:text="Refresh"
+                                    android:textSize="@dimen/fifteen_dp"
+                                    android:layout_marginLeft="100dp"
+                                    android:textAllCaps="false"
+                                    android:background="@drawable/scan_btn_bg"
+                                    >
+                                </Button>
+                            </LinearLayout>
+
+                                <androidx.recyclerview.widget.RecyclerView
+                                    android:id="@+id/myOrdersRecyclerView"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginTop="@dimen/fifteen_dp"
+                                    android:layout_marginEnd="@dimen/ten_dp"
+                                    android:nestedScrollingEnabled="true" />
+
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <include layout="@layout/view_customer_support" />
+                    </RelativeLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <include layout="@layout/view_faq_layout" />
+
+            <RelativeLayout
+                android:id="@+id/custom_loader_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone" />
+        </RelativeLayout>
+
+        <include
+            android:id="@+id/networkErrorLayout"
+            layout="@layout/layout_network_error" />
+    </RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

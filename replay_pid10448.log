@@ -1,0 +1,97 @@
+JvmtiExport can_access_local_variables 0
+JvmtiExport can_hotswap_or_post_breakpoint 0
+JvmtiExport can_post_on_exceptions 0
+# 431 ciObject found
+ciMethod java/lang/Object <init> ()V 4097 1 1130183 0 0
+ciMethod java/lang/Object getClass ()Ljava/lang/Class; 2049 1 256 0 -1
+ciMethod java/lang/Object hashCode ()I 2049 1 256 0 -1
+ciMethod java/lang/Object equals (Ljava/lang/Object;)Z 2169 1 39631 0 64
+ciMethod java/lang/Object clone ()Ljava/lang/Object; 3073 1 384 0 -1
+ciMethod java/lang/String length ()I 3105 1 396591 0 0
+ciMethod java/lang/String getChars (II[CI)V 3129 1 5657 0 320
+ciMethod java/lang/Class isAssignableFrom (Ljava/lang/Class;)Z 3073 1 384 0 -1
+ciMethod java/lang/Class isArray ()Z 3073 1 384 0 -1
+ciMethod java/lang/Class getName ()Ljava/lang/String; 649 1 54289 0 96
+ciMethod java/lang/Class getName0 ()Ljava/lang/String; 2081 1 260 0 -1
+ciMethod java/lang/Class getSuperclass ()Ljava/lang/Class; 2049 1 256 0 -1
+ciMethod java/lang/Class getRawAnnotations ()[B 2049 1 256 0 -1
+ciMethod java/lang/Class getConstantPool ()Lsun/reflect/ConstantPool; 3081 1 385 0 -1
+ciMethod java/lang/Class getAnnotation (Ljava/lang/Class;)Ljava/lang/annotation/Annotation; 3097 1 4060 0 0
+ciMethod java/lang/Class annotationData ()Ljava/lang/Class$AnnotationData; 2345 1 4540 0 0
+ciMethod java/lang/Class createAnnotationData (I)Ljava/lang/Class$AnnotationData; 505 1 573 0 0
+ciMethod java/lang/System arraycopy (Ljava/lang/Object;ILjava/lang/Object;II)V 4097 1 512 0 -1
+ciMethod java/lang/System identityHashCode (Ljava/lang/Object;)I 3073 1 384 0 -1
+ciMethod java/lang/Throwable getMessage ()Ljava/lang/String; 329 1 41 0 -1
+ciMethod java/lang/Throwable getCause ()Ljava/lang/Throwable; 617 1 77 0 -1
+ciMethod java/lang/Throwable toString ()Ljava/lang/String; 0 0 15 0 -1
+ciMethod java/lang/Throwable getStackTrace ()[Ljava/lang/StackTraceElement; 473 1 59 0 0
+ciMethod java/lang/Throwable getOurStackTrace ()[Ljava/lang/StackTraceElement; 593 29681 74 0 -1
+ciMethod java/lang/ref/Reference get ()Ljava/lang/Object; 1025 1 128 0 -1
+ciMethod java/lang/ref/SoftReference <init> (Ljava/lang/Object;)V 1985 1 7507 0 -1
+ciMethod java/lang/Thread currentThread ()Ljava/lang/Thread; 3073 1 384 0 -1
+ciMethod java/util/Map size ()I 0 0 1 0 -1
+ciMethod java/util/Map get (Ljava/lang/Object;)Ljava/lang/Object; 0 0 1 0 -1
+ciMethod java/util/Map put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; 0 0 1 0 -1
+ciMethod java/util/Map putAll (Ljava/util/Map;)V 0 0 1 0 -1
+ciMethod java/util/Map entrySet ()Ljava/util/Set; 0 0 1 0 -1
+ciMethod java/lang/reflect/Method invoke (Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object; 3073 1 5505 0 -1
+ciMethod sun/misc/Unsafe compareAndSwapObject (Ljava/lang/Object;JLjava/lang/Object;Ljava/lang/Object;)Z 2049 1 256 0 -1
+ciMethod java/io/InputStream <init> ()V 3073 1 17940 0 96
+ciMethod java/lang/Float isNaN (F)Z 2065 1 13064 0 -1
+ciMethod java/util/List size ()I 0 0 1 0 -1
+ciMethod java/util/List isEmpty ()Z 0 0 1 0 -1
+ciMethod java/util/List iterator ()Ljava/util/Iterator; 0 0 1 0 -1
+ciMethod java/util/List add (Ljava/lang/Object;)Z 0 0 1 0 -1
+ciMethod java/util/List get (I)Ljava/lang/Object; 0 0 1 0 -1
+ciMethod java/util/List indexOf (Ljava/lang/Object;)I 0 0 1 0 -1
+ciMethod java/util/AbstractList <init> ()V 2081 1 64194 0 32
+ciMethod java/util/AbstractCollection <init> ()V 377 1 105805 0 32
+ciMethod java/util/ArrayList <init> (I)V 2281 1 6436 0 320
+ciMethod java/util/ArrayList ensureCapacityInternal (I)V 473 1 27448 0 -1
+ciMethod java/util/ArrayList add (Ljava/lang/Object;)Z 473 1 22909 0 736
+ciMethod java/util/Collections emptyList ()Ljava/util/List; 1785 1 10287 0 0
+ciMethod java/util/Collections emptyMap ()Ljava/util/Map; 2049 1 6372 0 -1
+ciMethod java/util/Collections singletonList (Ljava/lang/Object;)Ljava/util/List; 2657 1 1519 0 0
+ciMethod java/util/Set iterator ()Ljava/util/Iterator; 0 0 1 0 -1
+ciMethod java/util/Collections$EmptyMap get (Ljava/lang/Object;)Ljava/lang/Object; 1145 1 143 0 0
+ciMethod java/util/AbstractMap <init> ()V 449 1 36876 0 -1
+ciMethod sun/misc/SharedSecrets getJavaLangAccess ()Lsun/misc/JavaLangAccess; 2089 1 11340 0 -1
+ciMethod java/util/HashMap hash (Ljava/lang/Object;)I 2089 1 59481 0 160
+ciMethod java/util/HashMap tableSizeFor (I)I 2049 1 10469 0 -1
+ciMethod java/util/HashMap <init> (IF)V 2049 1 10181 0 352
+ciMethod java/util/HashMap <init> (I)V 2209 1 9448 0 0
+ciMethod java/util/HashMap putMapEntries (Ljava/util/Map;Z)V 2049 1097 3100 0 0
+ciMethod java/util/HashMap getNode (ILjava/lang/Object;)Ljava/util/HashMap$Node; 2065 1 11524 0 480
+ciMethod java/util/HashMap put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; 1209 1 13631 0 1344
+ciMethod java/util/HashMap putVal (ILjava/lang/Object;Ljava/lang/Object;ZZ)Ljava/lang/Object; 16561 793 13172 0 -1
+ciMethod java/util/HashMap resize ()[Ljava/util/HashMap$Node; 513 385 1704 0 -1
+ciMethod java/util/HashMap putAll (Ljava/util/Map;)V 2105 1 1158 0 0
+ciMethod java/util/Map$Entry getKey ()Ljava/lang/Object; 0 0 1 0 -1
+ciMethod java/util/Map$Entry getValue ()Ljava/lang/Object; 0 0 1 0 -1
+ciMethod java/lang/Math max (II)I 641 1 112063 0 -1
+ciMethod java/lang/Math min (II)I 2945 1 127658 0 -1
+ciMethod java/util/Objects requireNonNull (Ljava/lang/Object;)Ljava/lang/Object; 2113 1 49193 0 64
+ciMethod java/util/Iterator hasNext ()Z 0 0 1 0 -1
+ciMethod java/util/Iterator next ()Ljava/lang/Object; 0 0 1 0 -1
+ciMethod java/io/OutputStream <init> ()V 2049 1 9228 0 0
+ciMethod java/io/OutputStream write ([BII)V 89 2561 11 0 -1
+ciMethod java/lang/Class$Atomic casAnnotationData (Ljava/lang/Class;Ljava/lang/Class$AnnotationData;Ljava/lang/Class$AnnotationData;)Z 505 1 573 0 0
+ciMethod java/lang/Class$AnnotationData <init> (Ljava/util/Map;Ljava/util/Map;I)V 2049 1 573 0 0
+ciMethod sun/reflect/annotation/AnnotationType getInstance (Ljava/lang/Class;)Lsun/reflect/annotation/AnnotationType; 2057 1 3680 0 0
+ciMethod sun/reflect/annotation/AnnotationType <init> (Ljava/lang/Class;)V 105 25 60 0 -1
+ciMethod sun/reflect/annotation/AnnotationType isInherited ()Z 17 1 2 0 0
+ciMethod java/util/Arrays fill ([II)V 1025 39489 1613 0 -1
+ciMethod java/util/LinkedHashMap afterNodeAccess (Ljava/util/HashMap$Node;)V 1209 1 1870 0 0
+ciMethod java/util/LinkedHashMap <init> (I)V 129 1 106 0 0
+ciMethod java/util/LinkedHashMap get (Ljava/lang/Object;)Ljava/lang/Object; 2049 1 10862 0 736
+ciMethodData java/lang/Object <init> ()V 2 1130191 orig 264 8 206 29 113 0 0 0 0 128 4 232 21 0 0 0 0 32 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 77 68 79 32 101 120 116 114 97 32 100 97 116 97 32 108 111 99 107 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 121 230 137 0 1 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 3 0 1 0 0 0 0 0 0 0 255 255 255 255 0 0 0 0 0 0 0 0 data 0 oops 0
+ciMethod sun/misc/JavaLangAccess casAnnotationType (Ljava/lang/Class;Lsun/reflect/annotation/AnnotationType;Lsun/reflect/annotation/AnnotationType;)Z 0 0 1 0 -1
+ciMethod sun/misc/JavaLangAccess getAnnotationType (Ljava/lang/Class;)Lsun/reflect/annotation/AnnotationType; 0 0 1 0 -1
+ciMethod java/util/concurrent/ConcurrentMap putIfAbsent (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; 0 0 1 0 -1
+ciMethod java/util/concurrent/ConcurrentMap remove (Ljava/lang/Object;Ljava/lang/Object;)Z 0 0 1 0 -1
+ciMethod java/util/concurrent/ConcurrentMap get (Ljava/lang/Object;)Ljava/lang/Object; 0 0 1 0 -1
+ciMethod java/util/concurrent/ConcurrentMap put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object; 0 0 1 0 -1
+ciMethod java/util/HashMap$TreeNode getTreeNode (ILjava/lang/Object;)Ljava/util/HashMap$TreeNode; 0 0 1 0 -1
+ciMethodData java/lang/String length ()I 2 396591 orig 264 8 206 29 113 0 0 0 0 96 60 232 21 0 0 0 0 32 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 77 68 79 32 101 120 116 114 97 32 100 97 116 97 32 108 111 99 107 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 132 1 0 0 89 93 48 0 1 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 3 0 1 0 0 0 0 0 0 0 255 255 255 255 0 0 0 0 0 0 0 0 data 0 oops 0
+ciMethodData java/lang/String getChars (II[CI)V 2 5657 orig 264 8 206 29 113 0 0 0 0 8 66 232 21 0 0 0 0 8 2 0 0 128 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 77 68 79 32 101 120 116 114 97 32 100 97 116 97 32 108 111 99 107 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 25 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 135 1 0 0 145 164 0 0 1 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 9 0 2 0 0 0 160 0 0 0 255 255 255 255 7 0 1 0 0 0 0 0 data 20 0x10007 0x1492 0x30 0x0 0x90002 0x0 0x130007 0x1492 0x30 0x0 0x1b0002 0x0 0x210007 0x1492 0x30 0x0 0x2b0002 0x0 0x3a0002 0x1492 oops 0
+ciMethodData java/util/HashMap hash (Ljava/lang/Object;)I 2 59481 orig 264 8 206 29 113 0 0 0 0 120 157 246 21 0 0 0 0 176 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 77 68 79 32 101 120 116 114 97 32 100 97 116 97 32 108 111 99 107 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 17 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 4 1 0 0 161 58 7 0 1 0 0 0 72 156 0 0 0 0 0 0 2 0 0 0 0 0 6 0 2 0 0 0 104 0 0 0 255 255 255 255 7 224 1 0 0 0 0 0 data 13 0x1e007 0xe73b 0x38 0x1c 0x50003 0x1c 0x48 0x90005 0x7805 0x2dba7f0 0x66b3 0x1680b780 0x5f7 oops 2

@@ -1,0 +1,476 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/constraint_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/activity_theme_bg"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/back_icon"
+            android:layout_width="@dimen/seventy_dp"
+            android:layout_height="@dimen/seventy_dp"
+            android:layout_marginStart="@dimen/thirty_dp"
+            android:layout_marginTop="@dimen/thirty_dp"
+            android:layout_marginEnd="@dimen/ten_dp"
+            android:contentDescription="@string/app_name"
+            android:rotation="90"
+            android:src="@drawable/back_arrow_click_effect" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/twenty_dp"
+                android:layout_marginEnd="@dimen/fifty_dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/forty_dp"
+                    android:layout_marginBottom="@dimen/twenty_five_dp"
+                    android:gravity="center"
+                    android:text="@string/label_payment_method"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/thirty_five_sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/five_hundred_dp"
+                    android:layout_gravity="center"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/fifty_five_dp"
+                        android:background="@color/color_review_order"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/image"
+                            android:layout_width="@dimen/forty_dp"
+                            android:layout_height="@dimen/forty_dp"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="@dimen/thirty_dp"
+                            android:contentDescription="@string/app_name"
+                            android:src="@drawable/order_payment_option" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="@dimen/fifteen_dp"
+                            android:text="@string/label_select_your_payment_option"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="@dimen/eighteen_sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/colorWhite"
+                        android:orientation="vertical"
+                        android:weightSum="1">
+
+                        <TextView
+                            android:id="@+id/payment_header"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="@dimen/fifty_dp"
+                            android:layout_marginBottom="@dimen/fifty_dp"
+                            android:gravity="center"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/seventeen_sp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/one_hundred_fifty_dp"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:weightSum="1">
+
+                            <View
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.07"
+                                android:visibility="gone" />
+
+                            <RelativeLayout
+                                android:id="@+id/card_swipe_layout"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.2"
+                                android:orientation="vertical"
+                                android:visibility="gone">
+
+                                <RelativeLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginEnd="@dimen/twelve_dp"
+                                    android:layout_marginBottom="@dimen/twelve_dp">
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:orientation="vertical"
+                                        android:weightSum="1">
+
+                                        <View
+                                            android:layout_width="match_parent"
+                                            android:layout_height="0dp"
+                                            android:layout_weight="0.08" />
+
+                                        <View
+                                            android:id="@+id/card_swipe_view"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="0dp"
+                                            android:layout_weight="0.92"
+                                            android:background="@drawable/my_orders_unselected_bg"
+                                            android:tag="1" />
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:orientation="vertical"
+                                        android:weightSum="1">
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="0dp"
+                                            android:layout_gravity="center"
+                                            android:layout_weight="0.18"
+                                            android:background="@color/colorWhite"
+                                            android:paddingStart="@dimen/three_dp"
+                                            android:paddingEnd="@dimen/three_dp"
+                                            android:text="@string/Credit_Card"
+                                            android:textColor="@color/black"
+                                            android:textSize="@dimen/fifteen_sp"
+                                            android:textStyle="bold" />
+
+                                        <View
+                                            android:layout_width="match_parent"
+                                            android:layout_height="0dp"
+                                            android:layout_weight="0.05" />
+
+                                        <ImageView
+                                            android:layout_width="@dimen/one_hundred_dp"
+                                            android:layout_height="0dp"
+                                            android:layout_gravity="center"
+                                            android:layout_weight="0.6"
+                                            android:contentDescription="@string/app_name"
+                                            android:src="@drawable/payment_card_swipe" />
+                                    </LinearLayout>
+                                </RelativeLayout>
+
+                                <ImageView
+                                    android:id="@+id/card_swipe_image"
+                                    android:layout_width="@dimen/thirty_dp"
+                                    android:layout_height="@dimen/thirty_dp"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_alignParentBottom="true"
+                                    android:contentDescription="@string/app_name"
+                                    android:src="@drawable/payment_selection_icon"
+                                    android:visibility="gone" />
+                            </RelativeLayout>
+
+                            <View
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.02" />
+
+                            <RelativeLayout
+                                android:id="@+id/cash_on_delivery_layout"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.2"
+                                android:visibility="gone"
+                                android:orientation="vertical">
+
+                                <RelativeLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginEnd="@dimen/twelve_dp"
+                                    android:layout_marginBottom="@dimen/twelve_dp">
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:orientation="vertical"
+                                        android:weightSum="1">
+
+                                        <View
+                                            android:layout_width="match_parent"
+                                            android:layout_height="0dp"
+                                            android:layout_weight="0.08" />
+
+                                        <View
+                                            android:id="@+id/cash_on_delivery_view"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="0dp"
+                                            android:layout_weight="0.92"
+                                            android:background="@drawable/my_orders_unselected_bg"
+                                            android:tag="2" />
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:orientation="vertical"
+                                        android:weightSum="1">
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="0dp"
+                                            android:layout_gravity="center"
+                                            android:layout_weight="0.18"
+                                            android:background="@color/colorWhite"
+                                            android:paddingStart="@dimen/three_dp"
+                                            android:paddingEnd="@dimen/three_dp"
+                                            android:text="@string/COD"
+                                            android:textColor="@color/black"
+                                            android:textSize="@dimen/fifteen_sp"
+                                            android:textStyle="bold" />
+
+                                        <View
+                                            android:layout_width="match_parent"
+                                            android:layout_height="0dp"
+                                            android:layout_weight="0.05" />
+
+                                        <ImageView
+                                            android:layout_width="@dimen/one_hundred_dp"
+                                            android:layout_height="0dp"
+                                            android:layout_gravity="center"
+                                            android:layout_weight="0.65"
+                                            android:contentDescription="@string/app_name"
+                                            android:src="@drawable/payment_cash_on_delivery" />
+                                    </LinearLayout>
+                                </RelativeLayout>
+
+                                <ImageView
+                                    android:id="@+id/cash_on_delivery_image"
+                                    android:layout_width="@dimen/thirty_dp"
+                                    android:layout_height="@dimen/thirty_dp"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_alignParentBottom="true"
+                                    android:contentDescription="@string/app_name"
+                                    android:src="@drawable/payment_selection_icon"
+                                    android:visibility="gone" />
+                            </RelativeLayout>
+
+                            <View
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.02" />
+
+                            <RelativeLayout
+                                android:id="@+id/paytm_cash_layout"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.2"
+                                android:visibility="gone"
+                                android:orientation="vertical">
+
+                                <RelativeLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginEnd="@dimen/twelve_dp"
+                                    android:layout_marginBottom="@dimen/twelve_dp">
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:orientation="vertical"
+                                        android:weightSum="1">
+
+                                        <View
+                                            android:layout_width="match_parent"
+                                            android:layout_height="0dp"
+                                            android:layout_weight="0.08" />
+
+                                        <View
+                                            android:id="@+id/paytm_cash_view"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="0dp"
+                                            android:layout_weight="0.92"
+                                            android:background="@drawable/my_orders_unselected_bg"
+                                            android:tag="3" />
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:orientation="vertical"
+                                        android:weightSum="1">
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="0dp"
+                                            android:layout_gravity="center"
+                                            android:layout_weight="0.18"
+                                            android:background="@color/colorWhite"
+                                            android:paddingStart="@dimen/three_dp"
+                                            android:paddingEnd="@dimen/three_dp"
+                                            android:text="@string/label_paytm_cash_pay"
+                                            android:textColor="@color/black"
+                                            android:textSize="@dimen/fifteen_sp"
+                                            android:textStyle="bold" />
+
+                                        <View
+                                            android:layout_width="match_parent"
+                                            android:layout_height="0dp"
+                                            android:layout_weight="0.1" />
+
+                                        <ImageView
+                                            android:layout_width="@dimen/one_hundred_dp"
+                                            android:layout_height="0dp"
+                                            android:layout_gravity="center"
+                                            android:layout_weight="0.5"
+                                            android:contentDescription="@string/app_name"
+                                            android:src="@drawable/payment_paytm" />
+                                    </LinearLayout>
+                                </RelativeLayout>
+
+                                <ImageView
+                                    android:id="@+id/paytm_cash_image"
+                                    android:layout_width="@dimen/thirty_dp"
+                                    android:layout_height="@dimen/thirty_dp"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_alignParentBottom="true"
+                                    android:contentDescription="@string/app_name"
+                                    android:src="@drawable/payment_selection_icon"
+                                    android:visibility="gone" />
+                            </RelativeLayout>
+
+                            <View
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.02"
+                                android:visibility="gone" />
+
+                            <RelativeLayout
+                                android:id="@+id/online_payment_layout"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.2"
+                                android:orientation="vertical"
+                                android:visibility="gone">
+
+                                <RelativeLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginEnd="@dimen/twelve_dp"
+                                    android:layout_marginBottom="@dimen/twelve_dp">
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:orientation="vertical"
+                                        android:weightSum="1">
+
+                                        <View
+                                            android:layout_width="match_parent"
+                                            android:layout_height="0dp"
+                                            android:layout_weight="0.08" />
+
+                                        <View
+                                            android:id="@+id/online_payment_view"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="0dp"
+                                            android:layout_weight="0.92"
+                                            android:background="@drawable/my_orders_unselected_bg"
+                                            android:tag="4" />
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:orientation="vertical"
+                                        android:weightSum="1">
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="0dp"
+                                            android:layout_gravity="center"
+                                            android:layout_weight="0.18"
+                                            android:background="@color/colorWhite"
+                                            android:paddingStart="@dimen/three_dp"
+                                            android:paddingEnd="@dimen/three_dp"
+                                            android:text="@string/label_online_payment"
+                                            android:textColor="@color/black"
+                                            android:textSize="@dimen/fifteen_sp"
+                                            android:textStyle="bold" />
+
+                                        <View
+                                            android:layout_width="match_parent"
+                                            android:layout_height="0dp"
+                                            android:layout_weight="0.1" />
+
+                                        <ImageView
+                                            android:layout_width="@dimen/one_hundred_dp"
+                                            android:layout_height="0dp"
+                                            android:layout_gravity="center"
+                                            android:layout_weight="0.6"
+                                            android:contentDescription="@string/app_name"
+                                            android:src="@drawable/payment_online" />
+                                    </LinearLayout>
+                                </RelativeLayout>
+
+                                <ImageView
+                                    android:id="@+id/online_payment_image"
+                                    android:layout_width="@dimen/thirty_dp"
+                                    android:layout_height="@dimen/thirty_dp"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_alignParentBottom="true"
+                                    android:contentDescription="@string/app_name"
+                                    android:src="@drawable/payment_selection_icon"
+                                    android:visibility="gone" />
+                            </RelativeLayout>
+
+                            <View
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.07"
+                                android:visibility="gone" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/place_order_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/fifty_dp"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="@dimen/fifty_dp"
+                            android:layout_marginBottom="@dimen/fifty_dp"
+                            android:background="@drawable/payment_selection_btn_gray"
+                            android:gravity="center"
+                            android:text="@string/label_place_order"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/eighteen_sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/thirty_dp">
+
+                <include layout="@layout/view_customer_support" />
+            </RelativeLayout>
+        </LinearLayout>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

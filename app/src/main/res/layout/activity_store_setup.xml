@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/activity_theme_bg">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="@dimen/two_hundred_dp"
+            android:layout_weight="0.5"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/lang_page_apollo_logo" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.45"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    card_view:cardBackgroundColor="@android:color/white"
+                    card_view:cardCornerRadius="@dimen/twelve_dp"
+                    card_view:cardElevation="@dimen/eight_dp"
+                    card_view:cardUseCompatPadding="true">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="@dimen/fifteen_dp"
+                            android:layout_marginBottom="@dimen/fifteen_dp"
+                            android:text="@string/label_device_setup"
+                            android:textSize="@dimen/twenty_sp"
+                            android:textStyle="bold" />
+
+                        <RelativeLayout
+                            android:id="@+id/store_selection_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/forty_dp"
+                            android:layout_marginStart="@dimen/fifteen_dp"
+                            android:layout_marginTop="@dimen/ten_dp"
+                            android:layout_marginEnd="@dimen/fifteen_dp"
+                            android:layout_marginBottom="@dimen/twenty_five_dp"
+                            android:background="@drawable/rectangular_shape"
+                            android:orientation="horizontal"
+                            android:visibility="visible">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:hint="@string/label_select_store"
+                                android:paddingStart="@dimen/five_dp"
+                                android:paddingEnd="@dimen/five_dp"
+                                android:textSize="@dimen/fourteen_sp"
+                                android:textStyle="bold" />
+
+                            <ImageView
+                                android:layout_width="@dimen/thirty_dp"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_centerVertical="true"
+                                android:contentDescription="@string/app_name"
+                                android:paddingStart="@dimen/five_dp"
+                                android:paddingEnd="@dimen/five_dp"
+                                android:src="@drawable/ic_search"
+                                android:tint="@color/colorPrimary" />
+                        </RelativeLayout>
+
+                        <LinearLayout
+                            android:id="@+id/store_information_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="@dimen/fifteen_dp"
+                            android:layout_marginEnd="@dimen/fifteen_dp"
+                            android:layout_marginBottom="@dimen/fifteen_dp"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:visibility="gone">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="start"
+                                android:text="@string/label_store_information"
+                                android:textSize="@dimen/sixteen_sp" />
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                style="@style/EditTextInputLayoutStyle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginTop="@dimen/fifteen_dp">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/store_id_text"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:focusable="false"
+                                    android:gravity="top"
+                                    android:hint="@string/label_store_id"
+                                    android:imeOptions="actionNext"
+                                    android:inputType="none"
+                                    android:padding="@dimen/ten_dp"
+                                    android:singleLine="true"
+                                    android:textSize="@dimen/fifteen_sp" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                style="@style/EditTextInputLayoutStyle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginTop="@dimen/fifteen_dp">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/store_name_text"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:focusable="false"
+                                    android:gravity="top"
+                                    android:hint="@string/label_store_name"
+                                    android:imeOptions="actionNext"
+                                    android:inputType="none"
+                                    android:padding="@dimen/ten_dp"
+                                    android:singleLine="true"
+                                    android:textSize="@dimen/fifteen_sp" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                style="@style/EditTextInputLayoutStyle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginTop="@dimen/fifteen_dp">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/store_address_text"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="@dimen/one_hundred_dp"
+                                    android:focusable="false"
+                                    android:gravity="top"
+                                    android:hint="@string/label_store_address"
+                                    android:imeOptions="actionDone"
+                                    android:inputType="none"
+                                    android:padding="@dimen/ten_dp"
+                                    android:singleLine="true"
+                                    android:textSize="@dimen/fifteen_sp" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/twenty_dp"
+                                android:layout_marginBottom="@dimen/ten_dp"
+                                android:gravity="center"
+                                android:padding="@dimen/five_dp">
+
+                                <TextView
+                                    android:id="@+id/cancel_button"
+                                    android:layout_width="@dimen/eighty_dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="@dimen/ten_dp"
+                                    android:background="@drawable/bg_cancel_btn"
+                                    android:gravity="center"
+                                    android:text="@string/label_cancel"
+                                    android:textColor="@color/white"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/proceed_button"
+                                    android:layout_width="@dimen/eighty_dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="@dimen/ten_dp"
+                                    android:layout_toEndOf="@+id/cancel_button"
+                                    android:background="@drawable/bg_cancel_btn"
+                                    android:backgroundTint="@color/colorPrimary"
+                                    android:gravity="center"
+                                    android:text="@string/label_proceed"
+                                    android:textColor="@color/white"
+                                    android:textStyle="bold" />
+                            </RelativeLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+            </ScrollView>
+        </LinearLayout>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.05" />
+
+        <include
+            android:id="@+id/networkErrorLayout"
+            layout="@layout/layout_network_error" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/two_hundred_eighty_dp"
+    android:layout_marginStart="@dimen/ten_dp"
+    android:layout_marginEnd="@dimen/ten_dp"
+    android:layout_height="@dimen/three_hundred_fifty_dp">
+
+    <ImageView
+        android:id="@+id/prescription_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/twenty_five_dp"
+        android:layout_marginEnd="@dimen/twenty_five_dp"
+        android:scaleType="fitXY"
+        android:contentDescription="@string/app_name" />
+
+    <ImageView
+        android:id="@+id/close_prescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_alignParentEnd="true"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/icon_close_prescription" />
+
+    <ImageView
+        android:id="@+id/prescription_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/icon_view_prescription" />
+</RelativeLayout>

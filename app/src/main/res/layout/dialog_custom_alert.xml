@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/custom_dialog_background"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/dialog_info"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/fifty_dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:paddingStart="@dimen/thirty_dp"
+        android:paddingTop="@dimen/ten_dp"
+        android:paddingEnd="@dimen/thirty_dp"
+        android:paddingBottom="@dimen/ten_dp"
+        android:text="test"
+        android:textColor="@color/colorBlack" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/ten_dp"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/dialog_ok"
+            android:layout_width="@dimen/one_hundred_dp"
+            android:layout_height="@dimen/thirty_five_dp"
+            android:layout_gravity="center"
+            android:layout_marginEnd="@dimen/five_dp"
+            android:background="@drawable/custom_button_border"
+            android:gravity="center"
+            android:text="@string/label_yes"
+            android:textAllCaps="false"
+            android:textColor="@color/colorBlack" />
+
+        <Button
+            android:id="@+id/dialog_cancel"
+            android:layout_width="@dimen/one_hundred_dp"
+            android:layout_height="@dimen/thirty_five_dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/five_dp"
+            android:background="@drawable/custom_no_btn_border"
+            android:gravity="center"
+            android:text="@string/label_no"
+            android:textAllCaps="false"
+            android:textColor="@color/colorBlack" />
+    </LinearLayout>
+</LinearLayout>

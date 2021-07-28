@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/color_yellow_button"/>
+    <stroke
+        android:width="@dimen/two_dp"
+        android:color="@color/colorBlack" />
+    <corners android:radius="@dimen/twenty_five_dp" />
+    <padding
+        android:bottom="@dimen/three_dp"
+        android:left="@dimen/ten_dp"
+        android:right="@dimen/ten_dp"
+        android:top="@dimen/three_dp" />
+</shape>

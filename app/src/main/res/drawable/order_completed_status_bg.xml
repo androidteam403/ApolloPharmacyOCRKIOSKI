@@ -1,0 +1,9 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <solid android:color="@color/order_status_delivered_color" />
+    <padding
+        android:bottom="@dimen/eight_dp"
+        android:left="@dimen/eight_dp"
+        android:right="@dimen/eight_dp"
+        android:top="@dimen/eight_dp" />
+</shape>
