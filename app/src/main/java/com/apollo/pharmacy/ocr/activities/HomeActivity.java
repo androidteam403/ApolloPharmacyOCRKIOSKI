@@ -21,9 +21,12 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
+import androidx.databinding.DataBindingUtil;
 
 import com.apollo.pharmacy.ocr.R;
 import com.apollo.pharmacy.ocr.controller.HomeActivityController;
+import com.apollo.pharmacy.ocr.databinding.ActivityHomeBinding;
+import com.apollo.pharmacy.ocr.dialog.ProductScanDialog;
 import com.apollo.pharmacy.ocr.interfaces.HomeListener;
 import com.apollo.pharmacy.ocr.model.CategoryList;
 import com.apollo.pharmacy.ocr.model.Categorylist_Response;
@@ -46,6 +49,7 @@ public class HomeActivity extends AppCompatActivity implements ConnectivityRecei
     private final int MY_READ_PERMISSION_REQUEST_CODE = 103;
     private HomeActivityController homeActivityController;
     private ConstraintLayout constraintLayout;
+    private ActivityHomeBinding activityHomeBinding;
 
     @Override
     public void onNetworkConnectionChanged(boolean isConnected) {
@@ -76,7 +80,7 @@ public class HomeActivity extends AppCompatActivity implements ConnectivityRecei
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        activityHomeBinding = DataBindingUtil.setContentView(this, R.layout.activity_home);
 
         ImageView customerCareImg = findViewById(R.id.customer_care_icon);
         LinearLayout customerHelpLayout = findViewById(R.id.customer_help_layout);
@@ -130,7 +134,7 @@ public class HomeActivity extends AppCompatActivity implements ConnectivityRecei
         ImageView userLogout = findViewById(R.id.userLogout);
         ImageView dashboardApolloIcon = findViewById(R.id.apollo_logo);
         myCartCount = findViewById(R.id.lblCartCnt);
-        LinearLayout scanPrescriptionBtn = findViewById(R.id.scan_prescription);
+        RelativeLayout scanPrescriptionBtn = findViewById(R.id.scan_prescription);
         LinearLayout uploadPrescriptionBtn = findViewById(R.id.upload_prescription);
         constraintLayout = findViewById(R.id.constraint_layout);
         homeActivityController = new HomeActivityController(this);
@@ -190,6 +194,15 @@ public class HomeActivity extends AppCompatActivity implements ConnectivityRecei
             Intent intent = new Intent(HomeActivity.this, MySearchActivity.class);
             startActivity(intent);
             overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
+        });
+
+        activityHomeBinding.shopProducts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(HomeActivity.this, MySearchActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
+            }
         });
 
         myCartLayout.setOnClickListener(v -> {
@@ -341,6 +354,24 @@ public class HomeActivity extends AppCompatActivity implements ConnectivityRecei
         } else {
             welcomeTxt.setText(getApplicationContext().getResources().getString(R.string.label_welcome) + " " + SessionManager.INSTANCE.getLoggedUserName());
         }
+
+        activityHomeBinding.scanProducts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view1) {
+                activityHomeBinding.transColorId.setVisibility(View.VISIBLE);
+                ProductScanDialog productScanDialog = new ProductScanDialog(HomeActivity.this);
+
+                productScanDialog.setPositiveListener(view -> {
+                    activityHomeBinding.transColorId.setVisibility(View.GONE);
+                    productScanDialog.dismiss();
+                });
+                productScanDialog.setNegativeListener(v -> {
+                    activityHomeBinding.transColorId.setVisibility(View.GONE);
+                    productScanDialog.dismiss();
+                });
+                productScanDialog.show();
+            }
+        });
     }
 
     private void checkGalleryPermission() {
