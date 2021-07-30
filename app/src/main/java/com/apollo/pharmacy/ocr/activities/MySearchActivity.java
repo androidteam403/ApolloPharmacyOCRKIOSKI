@@ -42,6 +42,7 @@ import com.apollo.pharmacy.ocr.adapters.ProductsCustomAdapter;
 import com.apollo.pharmacy.ocr.adapters.SubCategoryListAdapter;
 import com.apollo.pharmacy.ocr.controller.MyOffersController;
 import com.apollo.pharmacy.ocr.controller.MySearchController;
+import com.apollo.pharmacy.ocr.dialog.ProductScanDialog;
 import com.apollo.pharmacy.ocr.enums.ViewMode;
 import com.apollo.pharmacy.ocr.fragments.KeyboardFragment;
 import com.apollo.pharmacy.ocr.interfaces.CartCountListener;
@@ -61,8 +62,8 @@ import com.apollo.pharmacy.ocr.model.Suggestion_Product;
 import com.apollo.pharmacy.ocr.network.ApiClient;
 import com.apollo.pharmacy.ocr.network.ApiInterface;
 import com.apollo.pharmacy.ocr.receiver.ConnectivityReceiver;
-import com.apollo.pharmacy.ocr.utility.Constants;
 import com.apollo.pharmacy.ocr.utility.ApplicationConstant;
+import com.apollo.pharmacy.ocr.utility.Constants;
 import com.apollo.pharmacy.ocr.utility.NetworkUtils;
 import com.apollo.pharmacy.ocr.utility.SessionManager;
 import com.apollo.pharmacy.ocr.utility.Utils;
@@ -420,6 +421,24 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
         SessionManager.INSTANCE.setCurrentPage(ApplicationConstant.ACTIVITY_ADDMORE);
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiverAddmore,
                 new IntentFilter("MedicineReciverAddMore"));
+        RelativeLayout scanProducts = findViewById(R.id.scan_products);
+        TextView transColorId=findViewById(R.id.trans_color_id);
+        scanProducts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view1) {
+                transColorId.setVisibility(View.VISIBLE);
+                ProductScanDialog productScanDialog = new ProductScanDialog(MySearchActivity.this);
+                productScanDialog.setPositiveListener(view -> {
+                    transColorId.setVisibility(View.GONE);
+                    productScanDialog.dismiss();
+                });
+                productScanDialog.setNegativeListener(v -> {
+                    transColorId.setVisibility(View.GONE);
+                    productScanDialog.dismiss();
+                });
+                productScanDialog.show();
+            }
+        });
     }
 
     private void setPharmaFirst() {
