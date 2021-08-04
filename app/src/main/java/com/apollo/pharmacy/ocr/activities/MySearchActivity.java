@@ -37,6 +37,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.apollo.pharmacy.ocr.R;
+import com.apollo.pharmacy.ocr.adapters.CategoryGridItemAdapter;
 import com.apollo.pharmacy.ocr.adapters.MedicineSearchAdapter;
 import com.apollo.pharmacy.ocr.adapters.ProductsCustomAdapter;
 import com.apollo.pharmacy.ocr.adapters.SubCategoryListAdapter;
@@ -86,7 +87,7 @@ import rx.functions.FuncN;
 import rx.schedulers.Schedulers;
 
 public class MySearchActivity extends AppCompatActivity implements SubCategoryListener, MyOffersListener, CartCountListener,
-        ConnectivityReceiver.ConnectivityReceiverListener, KeyboardFragment.OnClickKeyboard, AdapterView.OnItemSelectedListener {
+        ConnectivityReceiver.ConnectivityReceiverListener, KeyboardFragment.OnClickKeyboard, AdapterView.OnItemSelectedListener, CategoryGridItemAdapter.CheckOutData {
 
     List<OCRToDigitalMedicineResponse> dataList = new ArrayList<>();
     private ArrayList<ProductSearch> item = new ArrayList<>();
@@ -423,7 +424,7 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiverAddmore,
                 new IntentFilter("MedicineReciverAddMore"));
         RelativeLayout scanProducts = findViewById(R.id.scan_products);
-        TextView transColorId=findViewById(R.id.trans_color_id);
+        TextView transColorId = findViewById(R.id.trans_color_id);
         scanProducts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view1) {
@@ -456,6 +457,7 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
             }
         });
     }
+
 
     private void setPharmaFirst() {
         tabFlag = false;
@@ -865,7 +867,7 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
     @Override
     public void onFailureLoadMoreTrendingNow(String message) {
         search_auto_complete_text = true;
-        Utils.showCustomAlertDialog(MySearchActivity.this, message, false, getResources().getString(R.string.label_ok), "");
+//        Utils.showCustomAlertDialog(MySearchActivity.this, message, false, getResources().getString(R.string.label_ok), "");
     }
 
     @Override
@@ -978,7 +980,7 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
         if (totalPage > currentPage) {
             subDataList.remove(0);
         }
-        cardAdapter = new ProductsCustomAdapter(MySearchActivity.this, subDataList, this);
+        cardAdapter = new ProductsCustomAdapter(MySearchActivity.this, subDataList, this,this);
         cardAdapter.setViewMode(ViewMode.GRID);
         categoriesRecyclerView.setAdapter(cardAdapter);
         cardAdapter.notifyDataSetChanged();
@@ -1224,9 +1226,9 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
         if (count != 0) {
             myCartCount.setVisibility(View.VISIBLE);
             myCartCount.setText(String.valueOf(count));
-            itemsCount.setVisibility(View.VISIBLE);
-            plusIcon.setVisibility(View.VISIBLE);
-            checkOutImage.setVisibility(View.VISIBLE);
+//            itemsCount.setVisibility(View.VISIBLE);
+//            plusIcon.setVisibility(View.VISIBLE);
+//            checkOutImage.setVisibility(View.VISIBLE);
             checkOutImage.setImageResource(R.drawable.checkout_cart);
             itemsCount.setText(count + " " + getResources().getString(R.string.label_items) + " " + getResources().getString(R.string.label_added));
         } else {
@@ -1237,5 +1239,14 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
             myCartCount.setText("");
             itemsCount.setText("");
         }
+    }
+
+    @Override
+    public void checkoutData() {
+        Intent intent1 = new Intent(MySearchActivity.this, MyCartActivity.class);
+        intent1.putExtra("activityname", "AddMoreActivity");
+        startActivity(intent1);
+        finish();
+        overridePendingTransition(R.animator.trans_right_in, R.animator.trans_right_out);
     }
 }
