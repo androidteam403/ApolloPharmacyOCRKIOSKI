@@ -42,6 +42,7 @@ import com.apollo.pharmacy.ocr.adapters.ProductsCustomAdapter;
 import com.apollo.pharmacy.ocr.adapters.SubCategoryListAdapter;
 import com.apollo.pharmacy.ocr.controller.MyOffersController;
 import com.apollo.pharmacy.ocr.controller.MySearchController;
+import com.apollo.pharmacy.ocr.dialog.ItemBatchSelectionDilaog;
 import com.apollo.pharmacy.ocr.dialog.ProductScanDialog;
 import com.apollo.pharmacy.ocr.enums.ViewMode;
 import com.apollo.pharmacy.ocr.fragments.KeyboardFragment;
@@ -429,8 +430,20 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
                 transColorId.setVisibility(View.VISIBLE);
                 ProductScanDialog productScanDialog = new ProductScanDialog(MySearchActivity.this);
                 productScanDialog.setPositiveListener(view -> {
-                    transColorId.setVisibility(View.GONE);
                     productScanDialog.dismiss();
+
+                    ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(MySearchActivity.this);
+
+                    itemBatchSelectionDilaog.setPositiveListener(view2 -> {
+                        transColorId.setVisibility(View.GONE);
+                        itemBatchSelectionDilaog.dismiss();
+                    });
+                    itemBatchSelectionDilaog.setNegativeListener(v -> {
+                        transColorId.setVisibility(View.GONE);
+                        itemBatchSelectionDilaog.dismiss();
+                    });
+                    itemBatchSelectionDilaog.show();
+
                 });
                 productScanDialog.setNegativeListener(v -> {
                     transColorId.setVisibility(View.GONE);

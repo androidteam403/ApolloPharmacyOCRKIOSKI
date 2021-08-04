@@ -21,7 +21,7 @@ public class ItemBatchSelectionDilaog {
     private boolean negativeExist = false;
 
     public ItemBatchSelectionDilaog(Context context) {
-        dialog = new Dialog(context);
+        dialog=new Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen);
         dialogItemBatchSelectionBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.dialog_item_batch_selection, null, false);
         dialog.setContentView(dialogItemBatchSelectionBinding.getRoot());
         if (dialog.getWindow() != null)
