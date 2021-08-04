@@ -2,6 +2,7 @@ package com.apollo.pharmacy.ocr.activities;
 
 import android.os.Bundle;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,5 +26,6 @@ public class OrderinProgressActivity extends AppCompatActivity implements Orderi
 
     @Override
     public void onClickContinueShopping() {
+        Toast.makeText(this, "You clicked", Toast.LENGTH_SHORT).show();
     }
 }
