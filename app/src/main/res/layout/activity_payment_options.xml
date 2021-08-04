@@ -400,6 +400,7 @@ instructions on your phone to complete\nthe payment"
                                 </LinearLayout>
 
                                 <TextView
+                                    android:id="@+id/scan_to_pay_button"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="@dimen/twenty_dp"

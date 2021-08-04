@@ -436,6 +436,9 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
 
                     itemBatchSelectionDilaog.setPositiveListener(view2 -> {
                         transColorId.setVisibility(View.GONE);
+                        Intent intent = new Intent(MySearchActivity.this, MyCartActivity.class);
+                        startActivity(intent);
+                        overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
                         itemBatchSelectionDilaog.dismiss();
                     });
                     itemBatchSelectionDilaog.setNegativeListener(v -> {

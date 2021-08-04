@@ -1,5 +1,6 @@
 package com.apollo.pharmacy.ocr.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
@@ -56,6 +57,14 @@ public class PaymentOptionsActivity extends AppCompatActivity {
                 activityPaymentOptionsBinding.cashOnDelivery.setBackgroundResource(R.drawable.ic_payment_methods_selectebg);
                 PaymentInfoLayoutsHandlings();
                 activityPaymentOptionsBinding.cashOnDeliveryInfoLay.setVisibility(View.VISIBLE);
+            }
+        });
+        activityPaymentOptionsBinding.scanToPayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(PaymentOptionsActivity.this, OrderinProgressActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
             }
         });
         paymentTicksUnticksHandlings();

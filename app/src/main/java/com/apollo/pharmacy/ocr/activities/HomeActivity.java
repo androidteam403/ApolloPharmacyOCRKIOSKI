@@ -379,6 +379,9 @@ public class HomeActivity extends AppCompatActivity implements ConnectivityRecei
 
                     itemBatchSelectionDilaog.setPositiveListener(view2 -> {
                         activityHomeBinding.transColorId.setVisibility(View.GONE);
+                        Intent intent = new Intent(HomeActivity.this, MyCartActivity.class);
+                        startActivity(intent);
+                        overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
                         itemBatchSelectionDilaog.dismiss();
                     });
                     itemBatchSelectionDilaog.setNegativeListener(v -> {
