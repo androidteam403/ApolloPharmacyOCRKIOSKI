@@ -5,7 +5,7 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 android {
     dataBinding {
-        enabled = true
+        enabled = true;
     }
     compileSdkVersion 28
     //jsk credentials apollo@123

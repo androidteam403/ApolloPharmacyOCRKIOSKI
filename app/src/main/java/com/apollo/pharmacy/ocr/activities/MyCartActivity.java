@@ -374,7 +374,7 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
         public void onReceive(Context context, Intent intent) {
             String message = intent.getStringExtra("message");
             if (message.equalsIgnoreCase("ImageName")) {
-               //SessionManager.INSTANCE.setDynamicOrderId(intent.getStringExtra("imageId"));
+                //SessionManager.INSTANCE.setDynamicOrderId(intent.getStringExtra("imageId"));
                 myCartController.handleImageService(intent.getStringExtra("data"));
             }
         }
@@ -983,40 +983,43 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
         }
 
         checkOutImage.setOnClickListener(arg0 -> {
-            if (curationViewLayout.getVisibility() == View.GONE) {
-                if (dataList.size() > 0) {
-                    if (curationFlag) {
-                        if (curationDoneFlag) {
-                            checkDeliveryOption();
-                        } else {
-                            final Dialog dialog = new Dialog(MyCartActivity.this);
-                            dialog.setContentView(R.layout.view_curation_alert_dialog);
-                            if (dialog.getWindow() != null)
-                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                            dialog.show();
-                            TextView dialogTitleText = dialog.findViewById(R.id.dialog_info);
-                            Button okButton = dialog.findViewById(R.id.dialog_ok);
-                            Button declineButton = dialog.findViewById(R.id.dialog_cancel);
-                            dialogTitleText.setText(getResources().getString(R.string.label_curation_in_progress_text));
-                            okButton.setText(getResources().getString(R.string.label_ok));
-                            declineButton.setText(getResources().getString(R.string.label_cancel_text));
-                            okButton.setOnClickListener(v -> {
-                                dialog.dismiss();
-                                if (countdown_timer != null)
-                                    countdown_timer.cancel();
-                                checkDeliveryOption();
-                            });
-                            declineButton.setOnClickListener(v -> dialog.dismiss());
-                        }
-                    } else {
-                        checkDeliveryOption();
-                    }
-                } else {
-                    Utils.showSnackbar(MyCartActivity.this, constraint_Layout, getApplicationContext().getResources().getString(R.string.label_min_order_item_alert));
-                }
-            } else {
-                Utils.showSnackbar(MyCartActivity.this, constraint_Layout, getApplicationContext().getResources().getString(R.string.label_curation_progress_wait));
-            }
+            startActivity(CheckoutActivity.getStartIntent(this));
+            overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
+
+//            if (curationViewLayout.getVisibility() == View.GONE) {
+//                if (dataList.size() > 0) {
+//                    if (curationFlag) {
+//                        if (curationDoneFlag) {
+//                            checkDeliveryOption();
+//                        } else {
+//                            final Dialog dialog = new Dialog(MyCartActivity.this);
+//                            dialog.setContentView(R.layout.view_curation_alert_dialog);
+//                            if (dialog.getWindow() != null)
+//                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//                            dialog.show();
+//                            TextView dialogTitleText = dialog.findViewById(R.id.dialog_info);
+//                            Button okButton = dialog.findViewById(R.id.dialog_ok);
+//                            Button declineButton = dialog.findViewById(R.id.dialog_cancel);
+//                            dialogTitleText.setText(getResources().getString(R.string.label_curation_in_progress_text));
+//                            okButton.setText(getResources().getString(R.string.label_ok));
+//                            declineButton.setText(getResources().getString(R.string.label_cancel_text));
+//                            okButton.setOnClickListener(v -> {
+//                                dialog.dismiss();
+//                                if (countdown_timer != null)
+//                                    countdown_timer.cancel();
+//                                checkDeliveryOption();
+//                            });
+//                            declineButton.setOnClickListener(v -> dialog.dismiss());
+//                        }
+//                    } else {
+//                        checkDeliveryOption();
+//                    }
+//                } else {
+//                    Utils.showSnackbar(MyCartActivity.this, constraint_Layout, getApplicationContext().getResources().getString(R.string.label_min_order_item_alert));
+//                }
+//            } else {
+//                Utils.showSnackbar(MyCartActivity.this, constraint_Layout, getApplicationContext().getResources().getString(R.string.label_curation_progress_wait));
+//            }
         });
 
         promotionViewAll.setOnClickListener(arg0 -> {
