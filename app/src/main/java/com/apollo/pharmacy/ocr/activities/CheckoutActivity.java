@@ -74,6 +74,9 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
     @Override
     public void onClickPaynow() {
         Toast.makeText(this, "You clicked on Paynow", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(CheckoutActivity.this, PaymentOptionsActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
     }
 
     private void deliveryModeHandle() {

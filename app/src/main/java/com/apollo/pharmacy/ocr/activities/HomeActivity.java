@@ -26,14 +26,15 @@ import androidx.databinding.DataBindingUtil;
 import com.apollo.pharmacy.ocr.R;
 import com.apollo.pharmacy.ocr.controller.HomeActivityController;
 import com.apollo.pharmacy.ocr.databinding.ActivityHomeBinding;
+import com.apollo.pharmacy.ocr.dialog.ItemBatchSelectionDilaog;
 import com.apollo.pharmacy.ocr.dialog.ProductScanDialog;
 import com.apollo.pharmacy.ocr.interfaces.HomeListener;
 import com.apollo.pharmacy.ocr.model.CategoryList;
 import com.apollo.pharmacy.ocr.model.Categorylist_Response;
 import com.apollo.pharmacy.ocr.model.PortFolioModel;
 import com.apollo.pharmacy.ocr.receiver.ConnectivityReceiver;
-import com.apollo.pharmacy.ocr.utility.Constants;
 import com.apollo.pharmacy.ocr.utility.ApplicationConstant;
+import com.apollo.pharmacy.ocr.utility.Constants;
 import com.apollo.pharmacy.ocr.utility.NetworkUtils;
 import com.apollo.pharmacy.ocr.utility.SessionManager;
 import com.apollo.pharmacy.ocr.utility.Utils;
@@ -337,9 +338,19 @@ public class HomeActivity extends AppCompatActivity implements ConnectivityRecei
             }
         }
         scanPrescriptionBtn.setOnClickListener(arg0 -> {
+            //Orginal Code
+
+//            Utils.dismissDialog();
+//            finish();
+//            Intent intent = new Intent(this, InsertPrescriptionActivity.class);
+//            startActivity(intent);
+//            overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
+
+            //new code
+
             Utils.dismissDialog();
             finish();
-            Intent intent = new Intent(this, InsertPrescriptionActivity.class);
+            Intent intent = new Intent(this, InsertPrescriptionActivityNew.class);
             startActivity(intent);
             overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
         });
@@ -362,8 +373,23 @@ public class HomeActivity extends AppCompatActivity implements ConnectivityRecei
                 ProductScanDialog productScanDialog = new ProductScanDialog(HomeActivity.this);
 
                 productScanDialog.setPositiveListener(view -> {
-                    activityHomeBinding.transColorId.setVisibility(View.GONE);
                     productScanDialog.dismiss();
+
+                    ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(HomeActivity.this);
+
+                    itemBatchSelectionDilaog.setPositiveListener(view2 -> {
+                        activityHomeBinding.transColorId.setVisibility(View.GONE);
+                        Intent intent = new Intent(HomeActivity.this, MyCartActivity.class);
+                        startActivity(intent);
+                        overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
+                        itemBatchSelectionDilaog.dismiss();
+                    });
+                    itemBatchSelectionDilaog.setNegativeListener(v -> {
+                        activityHomeBinding.transColorId.setVisibility(View.GONE);
+                        itemBatchSelectionDilaog.dismiss();
+                    });
+                    itemBatchSelectionDilaog.show();
+
                 });
                 productScanDialog.setNegativeListener(v -> {
                     activityHomeBinding.transColorId.setVisibility(View.GONE);

@@ -162,15 +162,20 @@
             android:name=".activities.MyProfileActivity"
             android:screenOrientation="landscape" />
         <activity
+            android:name=".activities.PaymentOptionsActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".activities.InsertPrescriptionActivityNew"
+            android:screenOrientation="landscape" />
+        <activity android:name=".activities.YourOrderStatusActivity"
+            android:screenOrientation="landscape"/>
+        <activity
             android:name=".activities.CheckoutActivity"
             android:screenOrientation="landscape" />
         <activity
             android:name=".activities.OrderinProgressActivity"
             android:screenOrientation="landscape">
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
+
         </activity>
 
         <meta-data

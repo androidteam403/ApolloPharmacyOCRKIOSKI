@@ -29,6 +29,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.databinding.DataBindingUtil;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -737,6 +738,7 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
         });
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -1163,6 +1165,14 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
                 window.setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT);
             }
         });
+//        checkOutImage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(MyCartActivity.this, PaymentOptionsActivity.class);
+//                startActivity(intent);
+//                overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
+//            }
+//        });
     }
 
     private void startcountertimer() {

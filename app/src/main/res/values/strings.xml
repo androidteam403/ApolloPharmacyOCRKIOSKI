@@ -427,6 +427,7 @@
     <string name="label_earned_credits" translatable="false">Earned Credits</string>
     <string name="label_available_credits" translatable="false">Available Credits</string>
     <string name="label_burned_credits" translatable="false">Burned Credits</string>
+    <string name="upi">@upi</string>
     <string name="label_your_order_consists_of_fmcg_and_pharma_products_you_have_2_options" translatable="false">Your order consists of FMCG and Pharma Products. You have 2 Options</string>
     <string name="label_order_type" translatable="false">Order Type</string>
     <string name="label_total_items" translatable="false">Total Items</string>

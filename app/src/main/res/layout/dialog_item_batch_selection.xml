@@ -8,24 +8,26 @@
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/transparent_color"
         android:stateListAnimator="@null">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="450dp"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:background="@drawable/dialog_background"
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="wrap_content"
+                android:layout_width="120dp"
                 android:layout_height="150dp"
                 android:layout_marginTop="@dimen/twenty_dp"
                 android:contentDescription="@string/app_name"
+                android:rotation="-30"
                 android:src="@drawable/oralb_cavity" />
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
@@ -37,11 +39,9 @@
                         android:id="@+id/title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:paddingLeft="12dp"
                         android:paddingTop="16dp"
                         android:paddingRight="12dp"
-                        android:text="How to scan"
+                        android:text="Oral-B Cavity DEF 123 Black"
                         android:textAlignment="center"
                         android:textColor="@color/black"
                         android:textSize="@dimen/sixteen_sp"
@@ -52,56 +52,148 @@
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_alignParentEnd="true"
-                        android:layout_marginTop="12dp"
-                        android:layout_marginEnd="@dimen/margin_10dp"
+                        android:layout_marginTop="@dimen/five_dp"
+                        android:layout_marginEnd="@dimen/five_dp"
                         android:contentDescription="@string/app_name"
                         android:src="@drawable/delete_black_icon" />
                 </RelativeLayout>
 
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="100dp"
-                    android:layout_gravity="center"
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="1.Choose from available stock"
                     android:layout_marginTop="@dimen/fifteen_dp"
-                    android:contentDescription="@string/app_name"
-                    android:src="@drawable/barcode_scanner" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/ten_dp"
-                    android:text="Use scanning gun and press the button"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/fourteen_sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:text="placing the light on product barcode"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/fourteen_sp" />
+                    android:textSize="@dimen/fourteen_sp"
+                    android:textStyle="bold" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
+                    android:layout_height="40dp"
                     android:layout_marginTop="@dimen/ten_dp"
-                    android:layout_marginBottom="@dimen/twenty_dp"
-                    android:background="@drawable/okay_btn_bg"
-                    android:orientation="horizontal">
+                    android:background="@drawable/plain_background_rectangle_border"
+                    android:padding="@dimen/ten_dp">
+
+                    <ImageView
+                        android:id="@+id/tick_upi"
+                        android:layout_width="@dimen/twenty_dp"
+                        android:layout_height="@dimen/twenty_dp"
+                        android:layout_gravity="center_vertical"
+                        android:background="@drawable/round_tick_bg"
+                        android:padding="@dimen/two_dp"
+                        android:src="@drawable/tick_mark" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="@dimen/five_dp"
+                        android:text="Mfg:" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="@dimen/five_dp"
+                        android:text="12 Mar 2021"
+                        android:textColor="@color/black"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="@dimen/fifteen_dp"
+                        android:text="Cost:" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="@dimen/five_dp"
+                        android:layout_marginEnd="@dimen/fifteen_dp"
+                        android:text="\u20B9 119.75"
+                        android:textColor="@color/black"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/fifteen_dp"
+                    android:text="2.Select Quantity"
+                    android:textSize="@dimen/fourteen_sp"
+                    android:textStyle="bold" />
+
+                <RelativeLayout
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content">
+
+                    <Button
+                        android:id="@+id/unitDecrease"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_alignParentLeft="true"
+                        android:background="@drawable/dec_button"
+                        android:gravity="center" />
+
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginRight="2dp"
+                        android:background="@null">
+
+                        <TextView
+                            android:id="@+id/unitCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="1"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:textSize="18sp" />
+
+                        <!--<TextView-->
+                        <!--android:id="@+id/unit"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:gravity="center"-->
+                        <!--android:textSize="18sp"-->
+                        <!--android:text="Unit" />-->
+                    </LinearLayout>
+
+
+                    <Button
+                        android:id="@+id/unitIncrease"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_alignParentRight="true"
+                        android:background="@drawable/inc_button"
+                        android:gravity="center" />
+                </RelativeLayout>
+
 
                     <TextView
                         android:id="@+id/dialogButtonOK"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Scan Your Product Now"
-                        android:textColor="@color/colorBlack"
+                        android:text="Add to cart"
+                        android:background="@drawable/plain_background_rectangle_border"
+                        android:layout_marginBottom="@dimen/fifteen_dp"
+                        android:paddingStart="@dimen/ten_dp"
+                        android:layout_marginStart="@dimen/fifteen_dp"
+                        android:paddingEnd="@dimen/ten_dp"
+                        android:paddingTop="@dimen/five_dp"
+                        android:paddingBottom="@dimen/five_dp"
+                        android:backgroundTint="@color/nutrition_color"
+                        android:textColor="@color/white"
                         android:textSize="@dimen/fourteen_sp"
                         android:textStyle="bold" />
-                </LinearLayout>
 
             </LinearLayout>
 
