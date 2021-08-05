@@ -10,10 +10,14 @@ import android.view.View;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.apollo.pharmacy.ocr.R;
 import com.apollo.pharmacy.ocr.activities.MyCartActivity;
 import com.apollo.pharmacy.ocr.databinding.DialogItemBatchSelectionBinding;
+import com.apollo.pharmacy.ocr.dialog.adapter.AdapterItemBatchSelection;
 import com.apollo.pharmacy.ocr.interfaces.CartCountListener;
 import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
 import com.apollo.pharmacy.ocr.model.Product;
@@ -24,7 +28,7 @@ import java.util.List;
 
 import static com.apollo.pharmacy.ocr.utility.Constants.getContext;
 
-public class ItemBatchSelectionDilaog {
+public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnItemBatchClick {
 
     private Dialog dialog;
     private DialogItemBatchSelectionBinding dialogItemBatchSelectionBinding;
@@ -207,6 +211,7 @@ public class ItemBatchSelectionDilaog {
                 }
             }
         });
+        batchSelection();
     }
 
     public ItemBatchSelectionDilaog(Product product, Context context, int position, List<OCRToDigitalMedicineResponse> datalist, CartCountListener cartCountListener) {
@@ -384,6 +389,7 @@ public class ItemBatchSelectionDilaog {
                 }
             }
         });
+        batchSelection();
 
     }
 
@@ -394,6 +400,45 @@ public class ItemBatchSelectionDilaog {
         if (dialog.getWindow() != null)
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.setCancelable(false);
+        batchSelection();
+    }
+
+    private AdapterItemBatchSelection adapterItemBatchSelection;
+    private List<ItemBatchSelectionData> itemBatchSelectionDataList = new ArrayList<>();
+
+    private void batchSelection() {
+        ItemBatchSelectionData itemBatchSelectionData = new ItemBatchSelectionData();
+        itemBatchSelectionData.setDate("06 jan 2021");
+        itemBatchSelectionData.setPrice("123.55");
+        itemBatchSelectionDataList.add(itemBatchSelectionData);
+
+        itemBatchSelectionData = new ItemBatchSelectionData();
+        itemBatchSelectionData.setDate("26 feb 2021");
+        itemBatchSelectionData.setPrice("453.65");
+        itemBatchSelectionDataList.add(itemBatchSelectionData);
+
+        itemBatchSelectionData = new ItemBatchSelectionData();
+        itemBatchSelectionData.setDate("22 jul 2021");
+        itemBatchSelectionData.setPrice("53.65");
+        itemBatchSelectionDataList.add(itemBatchSelectionData);
+
+        itemBatchSelectionData = new ItemBatchSelectionData();
+        itemBatchSelectionData.setDate("30 feb 2021");
+        itemBatchSelectionData.setPrice("153.32");
+        itemBatchSelectionDataList.add(itemBatchSelectionData);
+
+        dialogItemBatchSelectionBinding.batchSelectionData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialogItemBatchSelectionBinding.recyclerViewLay.setVisibility(View.VISIBLE);
+                adapterItemBatchSelection = new AdapterItemBatchSelection(getContext(), itemBatchSelectionDataList,ItemBatchSelectionDilaog.this);
+                RecyclerView.LayoutManager mLayoutManager2 = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+                dialogItemBatchSelectionBinding.batchListRecycle.setLayoutManager(mLayoutManager2);
+                dialogItemBatchSelectionBinding.batchListRecycle.setItemAnimator(new DefaultItemAnimator());
+                dialogItemBatchSelectionBinding.batchListRecycle.setAdapter(adapterItemBatchSelection);
+                dialogItemBatchSelectionBinding.batchListRecycle.setNestedScrollingEnabled(false);
+            }
+        });
     }
 
 
@@ -419,6 +464,13 @@ public class ItemBatchSelectionDilaog {
         dialogItemBatchSelectionBinding.title.setText(title);
     }
 
+    @Override
+    public void onItemBatchClickData(int position, ItemBatchSelectionData itemBatchSelectionData) {
+        dialogItemBatchSelectionBinding.recyclerViewLay.setVisibility(View.GONE);
+        dialogItemBatchSelectionBinding.date.setText(itemBatchSelectionData.getDate());
+        dialogItemBatchSelectionBinding.price.setText(itemBatchSelectionData.getPrice());
+    }
+
 
 //    public void setPositiveLabel(String positive) {
 //        alertDialogBoxBinding.btnYes.setText(positive);
@@ -428,5 +480,28 @@ public class ItemBatchSelectionDilaog {
 //        negativeExist = true;
 //        alertDialogBoxBinding.btnNo.setText(negative);
 //    }
+
+
+    public class ItemBatchSelectionData {
+        private String date;
+        private String price;
+
+        public String getDate() {
+            return date;
+        }
+
+        public void setDate(String date) {
+            this.date = date;
+        }
+
+        public String getPrice() {
+            return price;
+        }
+
+        public void setPrice(String price) {
+            this.price = price;
+        }
+    }
+
 
 }
