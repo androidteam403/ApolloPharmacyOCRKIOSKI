@@ -54,7 +54,7 @@
                     tools:ignore="UseCompoundDrawables">
 
                     <ImageView
-                        android:layout_width="22dp"
+                        android:layout_width="@dimen/forty_dp"
                         android:layout_height="@dimen/forty_dp"
                         android:contentDescription="@string/app_name"
                         android:src="@drawable/ic_istack" />
@@ -223,7 +223,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_marginEnd="@dimen/five_dp"
-                            android:background="@color/lite_grey"
+                            android:background="@drawable/blackstroke_yellowsolid"
                             android:gravity="center"
                             android:onClick="@{()-> callback.onClickNeedHomeDelivery()}"
                             android:orientation="vertical">
@@ -232,7 +232,7 @@
                                 android:layout_width="@dimen/forty_dp"
                                 android:layout_height="wrap_content"
                                 android:contentDescription="@string/app_name"
-                                android:src="@drawable/tick_white" />
+                                android:src="@drawable/tick_green" />
 
                             <TextView
                                 android:id="@+id/need_home_delivery_text"
@@ -240,7 +240,7 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
                                 android:text="@string/label_need_home_ndelivery"
-                                android:textColor="@color/grey_color"
+                                android:textColor="@color/black"
                                 android:textSize="@dimen/twenty_five_sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
