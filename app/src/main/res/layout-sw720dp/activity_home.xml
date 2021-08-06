@@ -54,12 +54,35 @@
                         android:textSize="@dimen/twenty_sp"
                         android:textStyle="bold" />
 
-                    <ImageView
-                        android:layout_width="match_parent"
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
                         android:layout_height="@dimen/two_hundred_fifty_dp"
+                        android:layout_gravity="center_horizontal"
                         android:layout_marginTop="@dimen/forty_dp"
-                        android:contentDescription="@string/app_name"
-                        android:src="@drawable/order_medicine_steps" />
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="@dimen/two_hundred_fifty_dp"
+                            android:layout_height="@dimen/two_hundred_fifty_dp"
+                            android:contentDescription="@string/app_name"
+                            android:src="@drawable/step1_icon" />
+
+                        <ImageView
+                            android:layout_width="@dimen/two_hundred_fifty_dp"
+                            android:layout_height="@dimen/two_hundred_fifty_dp"
+                            android:layout_marginStart="@dimen/twenty_dp"
+                            android:layout_marginEnd="@dimen/twenty_dp"
+                            android:contentDescription="@string/app_name"
+                            android:src="@drawable/step2_icon" />
+
+                        <ImageView
+                            android:layout_width="@dimen/two_hundred_fifty_dp"
+                            android:layout_height="@dimen/two_hundred_fifty_dp"
+                            android:contentDescription="@string/app_name"
+                            android:src="@drawable/step3_icon" />
+
+                    </LinearLayout>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -102,8 +125,10 @@
                                 android:layout_width="@dimen/fifty_dp"
                                 android:layout_height="@dimen/fifty_dp"
                                 android:layout_marginTop="@dimen/fifty_dp"
+                                android:background="@drawable/round_untick_bg"
+                                android:backgroundTint="@color/white"
                                 android:contentDescription="@string/app_name"
-                                android:src="@drawable/apollo_circle_logo" />
+                                android:src="@drawable/scan_prescription_icon" />
 
                         </RelativeLayout>
 
@@ -143,8 +168,12 @@
                                 android:layout_width="@dimen/fifty_dp"
                                 android:layout_height="@dimen/fifty_dp"
                                 android:layout_marginTop="@dimen/fifty_dp"
+                                android:background="@drawable/round_untick_bg"
+                                android:backgroundTint="@color/white"
                                 android:contentDescription="@string/app_name"
-                                android:src="@drawable/apollo_circle_logo" />
+                                android:padding="@dimen/ten_dp"
+                                android:src="@drawable/shop_products_icon" />
+
                         </RelativeLayout>
 
 
@@ -184,8 +213,12 @@
                                 android:layout_width="@dimen/fifty_dp"
                                 android:layout_height="@dimen/fifty_dp"
                                 android:layout_marginTop="@dimen/fifty_dp"
+                                android:background="@drawable/round_untick_bg"
+                                android:backgroundTint="@color/white"
                                 android:contentDescription="@string/app_name"
-                                android:src="@drawable/apollo_circle_logo" />
+                                android:padding="@dimen/ten_dp"
+                                android:src="@drawable/scan_products_icon" />
+
                         </RelativeLayout>
                     </LinearLayout>
 

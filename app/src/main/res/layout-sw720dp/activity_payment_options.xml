@@ -16,12 +16,15 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/fifty_dp"
+                android:layout_marginStart="@dimen/eighty_dp"
+                android:layout_marginEnd="@dimen/eighty_dp"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="@dimen/forty_dp"
-                    android:layout_height="@dimen/forty_dp"
+                    android:layout_width="@dimen/fifty_dp"
+                    android:layout_height="@dimen/fifty_dp"
                     android:layout_gravity="center_vertical"
                     android:background="@drawable/back_arrow_click_effect"
                     android:rotation="90" />
@@ -33,7 +36,7 @@
                     android:layout_marginStart="@dimen/twenty_dp"
                     android:text="Payment Options"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/twenty_dp"
+                    android:textSize="@dimen/twenty_five_sp"
                     android:textStyle="bold" />
 
                 <RelativeLayout
@@ -64,12 +67,14 @@
 
             <ScrollView
                 android:layout_width="match_parent"
+                android:layout_marginBottom="@dimen/twenty_five_dp"
                 android:layout_height="match_parent">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
+                    android:layout_gravity="center_horizontal"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/sixty_dp"
                     android:background="@drawable/dialog_background"
                     android:orientation="vertical">
 
@@ -80,10 +85,12 @@
                         android:layout_marginTop="@dimen/fifteen_dp"
                         android:text="Your order Details"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/fourteen_sp"
+                        android:textSize="@dimen/sixteen_sp"
                         android:textStyle="bold" />
 
                     <LinearLayout
+                        android:layout_marginStart="@dimen/twenty_five_sp"
+                        android:layout_marginEnd="@dimen/twenty_five_sp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
@@ -94,7 +101,7 @@
                             android:layout_margin="@dimen/margin_10dp">
 
                             <TextView
-                                android:layout_width="150dp"
+                                android:layout_width="180dp"
                                 android:layout_height="70dp"
                                 android:layout_marginTop="@dimen/margin_10dp"
                                 android:background="@drawable/plain_background_rectangle_border"
@@ -127,7 +134,7 @@
                             android:layout_margin="@dimen/margin_10dp">
 
                             <TextView
-                                android:layout_width="120dp"
+                                android:layout_width="140dp"
                                 android:layout_height="70dp"
                                 android:layout_marginTop="@dimen/margin_10dp"
                                 android:background="@drawable/plain_background_rectangle_border"
@@ -160,7 +167,7 @@
                             android:layout_margin="@dimen/margin_10dp">
 
                             <TextView
-                                android:layout_width="150dp"
+                                android:layout_width="180dp"
                                 android:layout_height="70dp"
                                 android:layout_marginTop="@dimen/margin_10dp"
                                 android:background="@drawable/plain_background_rectangle_border"
@@ -193,7 +200,7 @@
                             android:layout_margin="@dimen/margin_10dp">
 
                             <TextView
-                                android:layout_width="150dp"
+                                android:layout_width="180dp"
                                 android:layout_height="70dp"
                                 android:layout_marginTop="@dimen/margin_10dp"
                                 android:background="@drawable/plain_background_rectangle_border"
@@ -227,13 +234,17 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/fifteen_dp"
-                        android:layout_marginTop="@dimen/five_dp"
+                        android:layout_marginTop="@dimen/ten_dp"
+                        android:layout_marginBottom="@dimen/fifteen_dp"
                         android:text="Choose Payment Options Below"
+                        android:textSize="@dimen/sixteen_sp"
                         android:textColor="@color/black"
                         android:textStyle="bold" />
 
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:layout_marginStart="@dimen/twenty_five_sp"
+                        android:layout_marginEnd="@dimen/twenty_five_sp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
@@ -244,7 +255,7 @@
 
                             <RelativeLayout
                                 android:id="@+id/scan_to_pay"
-                                android:layout_width="200dp"
+                                android:layout_width="250dp"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="@dimen/ten_dp"
                                 android:layout_marginTop="@dimen/five_dp"
@@ -252,10 +263,11 @@
                                 android:padding="@dimen/ten_dp">
 
                                 <TextView
-                                    android:layout_width="200dp"
+                                    android:layout_width="250dp"
                                     android:layout_height="wrap_content"
                                     android:layout_centerVertical="true"
                                     android:text="Scan to pay"
+                                    android:textSize="@dimen/sixteen_sp"
                                     android:textAlignment="center"
                                     android:textColor="@color/black" />
 
@@ -268,7 +280,7 @@
 
                             <RelativeLayout
                                 android:id="@+id/recieve_payment_sms"
-                                android:layout_width="200dp"
+                                android:layout_width="250dp"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="@dimen/ten_dp"
                                 android:layout_marginTop="@dimen/five_dp"
@@ -276,7 +288,8 @@
                                 android:padding="@dimen/ten_dp">
 
                                 <TextView
-                                    android:layout_width="200dp"
+                                    android:layout_width="250dp"
+                                    android:textSize="@dimen/sixteen_sp"
                                     android:layout_height="wrap_content"
                                     android:layout_centerVertical="true"
                                     android:layout_marginStart="@dimen/twenty_five_dp"
@@ -293,7 +306,7 @@
 
                             <RelativeLayout
                                 android:id="@+id/upi"
-                                android:layout_width="200dp"
+                                android:layout_width="250dp"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="@dimen/ten_dp"
                                 android:layout_marginTop="@dimen/five_dp"
@@ -301,7 +314,8 @@
                                 android:padding="@dimen/ten_dp">
 
                                 <TextView
-                                    android:layout_width="200dp"
+                                    android:layout_width="250dp"
+                                    android:textSize="@dimen/sixteen_sp"
                                     android:layout_height="wrap_content"
                                     android:layout_centerVertical="true"
                                     android:text="UPI"
@@ -317,7 +331,7 @@
 
                             <RelativeLayout
                                 android:id="@+id/cash_on_delivery"
-                                android:layout_width="200dp"
+                                android:layout_width="250dp"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="@dimen/ten_dp"
                                 android:layout_marginTop="@dimen/five_dp"
@@ -325,7 +339,8 @@
                                 android:padding="@dimen/ten_dp">
 
                                 <TextView
-                                    android:layout_width="200dp"
+                                    android:layout_width="250dp"
+                                    android:textSize="@dimen/sixteen_sp"
                                     android:layout_height="wrap_content"
                                     android:layout_centerVertical="true"
                                     android:text="Cash on Delivery"
@@ -342,13 +357,13 @@
 
                         <ScrollView
                             android:id="@+id/scan_to_pay_info_lay"
-                            android:layout_width="match_parent"
+                            android:layout_width="550dp"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/fifteen_dp"
                             android:visibility="visible">
 
                             <LinearLayout
-                                android:layout_width="match_parent"
+                                android:layout_width="550dp"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/five_dp"
                                 android:background="@drawable/dialog_background"
@@ -363,7 +378,7 @@
                                     android:paddingTop="@dimen/twenty_dp"
                                     android:text="Scan to Pay"
                                     android:textColor="@color/black"
-                                    android:textSize="@dimen/fourteen_sp"
+                                    android:textSize="@dimen/sixteen_sp"
                                     android:textStyle="bold" />
 
                                 <TextView
@@ -376,7 +391,7 @@
                                     android:textStyle="bold" />
 
                                 <LinearLayout
-                                    android:layout_width="match_parent"
+                                    android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:orientation="horizontal">
 
@@ -415,13 +430,13 @@ instructions on your phone to complete\nthe payment"
 
                         <ScrollView
                             android:id="@+id/receive_payment_sms_info_lay"
-                            android:layout_width="match_parent"
+                            android:layout_width="550dp"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/twenty_five_dp"
                             android:visibility="gone">
 
                             <LinearLayout
-                                android:layout_width="match_parent"
+                                android:layout_width="550dp"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/five_dp"
                                 android:background="@drawable/dialog_background"
@@ -480,6 +495,7 @@ instructions on your phone to complete\nthe payment"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="@dimen/twenty_dp"
                                     android:layout_marginTop="@dimen/five_dp"
+                                    android:layout_marginEnd="@dimen/forty_dp"
                                     android:text="Your receive SMS payment link to the above mobile number"
                                     android:textColor="@color/black" />
 
@@ -500,12 +516,13 @@ instructions on your phone to complete\nthe payment"
                         <ScrollView
                             android:layout_marginBottom="@dimen/twenty_five_dp"
                             android:id="@+id/upi_info_lay"
-                            android:layout_width="match_parent"
+                            android:layout_width="550dp"
                             android:layout_height="wrap_content"
                             android:visibility="gone">
 
                             <LinearLayout
-                                android:layout_width="match_parent"
+                                android:paddingEnd="@dimen/twenty_five_dp"
+                                android:layout_width="550dp"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/five_dp"
                                 android:background="@drawable/dialog_background"
@@ -533,7 +550,7 @@ instructions on your phone to complete\nthe payment"
                                     android:textSize="@dimen/fourteen_sp" />
 
                                 <LinearLayout
-                                    android:layout_width="match_parent"
+                                    android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="@dimen/twenty_dp"
                                     android:orientation="horizontal">
@@ -663,12 +680,12 @@ instructions on your phone to complete\nthe payment"
                         <ScrollView
                             android:layout_marginBottom="@dimen/fifteen_dp"
                             android:id="@+id/cash_on_delivery_info_lay"
-                            android:layout_width="match_parent"
+                            android:layout_width="550dp"
                             android:layout_height="wrap_content"
                             android:visibility="gone">
 
                             <LinearLayout
-                                android:layout_width="match_parent"
+                                android:layout_width="550dp"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/five_dp"
                                 android:background="@drawable/dialog_background"

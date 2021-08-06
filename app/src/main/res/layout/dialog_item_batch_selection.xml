@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
 
     </data>
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/transparent_color"
@@ -39,6 +39,7 @@
                         android:id="@+id/title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/fifteen_dp"
                         android:paddingTop="16dp"
                         android:paddingRight="12dp"
                         android:text="Oral-B Cavity DEF 123 Black"
@@ -62,12 +63,13 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="1.Choose from available stock"
                     android:layout_marginTop="@dimen/fifteen_dp"
+                    android:text="1.Choose from available stock"
                     android:textSize="@dimen/fourteen_sp"
                     android:textStyle="bold" />
 
                 <LinearLayout
+                    android:id="@+id/batch_selection_data"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:layout_marginTop="@dimen/ten_dp"
@@ -91,6 +93,7 @@
                         android:text="Mfg:" />
 
                     <TextView
+                        android:id="@+id/date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -111,89 +114,126 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="@dimen/five_dp"
+                        android:text="\u20B9"
+                        android:textColor="@color/black"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/two_dp"
+                        android:layout_gravity="center_vertical"
                         android:layout_marginEnd="@dimen/fifteen_dp"
-                        android:text="\u20B9 119.75"
+                        android:text="119.75"
                         android:textColor="@color/black"
                         android:textStyle="bold" />
 
                 </LinearLayout>
 
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/fifteen_dp"
-                    android:text="2.Select Quantity"
-                    android:textSize="@dimen/fourteen_sp"
-                    android:textStyle="bold" />
-
                 <RelativeLayout
-                    android:layout_width="120dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
-
-                    <Button
-                        android:id="@+id/unitDecrease"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_alignParentLeft="true"
-                        android:background="@drawable/dec_button"
-                        android:gravity="center" />
-
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:layout_marginLeft="2dp"
-                        android:layout_marginRight="2dp"
-                        android:background="@null">
+                        android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/unitCount"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/fifteen_dp"
+                            android:text="2.Select Quantity"
+                            android:textSize="@dimen/fourteen_sp"
+                            android:textStyle="bold" />
+
+                        <RelativeLayout
+                            android:layout_width="120dp"
+                            android:layout_height="wrap_content">
+
+                            <Button
+                                android:id="@+id/unitDecrease"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:layout_alignParentLeft="true"
+                                android:background="@drawable/dec_button"
+                                android:gravity="center" />
+
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:layout_marginLeft="2dp"
+                                android:layout_marginRight="2dp"
+                                android:background="@null">
+
+                                <TextView
+                                    android:id="@+id/unitCount"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="1"
+                                    android:textColor="@color/black"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+
+                                <!--<TextView-->
+                                <!--android:id="@+id/unit"-->
+                                <!--android:layout_width="wrap_content"-->
+                                <!--android:layout_height="wrap_content"-->
+                                <!--android:gravity="center"-->
+                                <!--android:textSize="18sp"-->
+                                <!--android:text="Unit" />-->
+                            </LinearLayout>
+
+
+                            <Button
+                                android:id="@+id/unitIncrease"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:layout_alignParentRight="true"
+                                android:background="@drawable/inc_button"
+                                android:gravity="center" />
+                        </RelativeLayout>
+
+
+                        <TextView
+                            android:id="@+id/dialogButtonOK"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:text="1"
-                            android:textColor="@color/black"
-                            android:textStyle="bold"
-                            android:textSize="18sp" />
-
-                        <!--<TextView-->
-                        <!--android:id="@+id/unit"-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:gravity="center"-->
-                        <!--android:textSize="18sp"-->
-                        <!--android:text="Unit" />-->
+                            android:layout_marginStart="@dimen/fifteen_dp"
+                            android:layout_marginBottom="@dimen/fifteen_dp"
+                            android:background="@drawable/plain_background_rectangle_border"
+                            android:backgroundTint="@color/nutrition_color"
+                            android:paddingStart="@dimen/ten_dp"
+                            android:paddingTop="@dimen/five_dp"
+                            android:paddingEnd="@dimen/ten_dp"
+                            android:paddingBottom="@dimen/five_dp"
+                            android:text="Add to cart"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/fourteen_sp"
+                            android:textStyle="bold" />
                     </LinearLayout>
 
-
-                    <Button
-                        android:id="@+id/unitIncrease"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_alignParentRight="true"
-                        android:background="@drawable/inc_button"
-                        android:gravity="center" />
-                </RelativeLayout>
-
-
-                    <TextView
-                        android:id="@+id/dialogButtonOK"
-                        android:layout_width="wrap_content"
+                    <RelativeLayout
+                        android:id="@+id/recycler_view_lay"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Add to cart"
-                        android:background="@drawable/plain_background_rectangle_border"
-                        android:layout_marginBottom="@dimen/fifteen_dp"
-                        android:paddingStart="@dimen/ten_dp"
-                        android:layout_marginStart="@dimen/fifteen_dp"
-                        android:paddingEnd="@dimen/ten_dp"
-                        android:paddingTop="@dimen/five_dp"
-                        android:paddingBottom="@dimen/five_dp"
-                        android:backgroundTint="@color/nutrition_color"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/fourteen_sp"
-                        android:textStyle="bold" />
+                        android:visibility="gone"
+                        android:background="@color/white">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/batch_list_recycle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical" />
+
+                    </RelativeLayout>
+
+                </RelativeLayout>
 
             </LinearLayout>
 
