@@ -19,6 +19,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:padding="@dimen/twenty_dp"
                 android:orientation="vertical">
 
                 <RelativeLayout
@@ -36,7 +37,7 @@
                         android:text="How to scan"
                         android:textAlignment="center"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/sixteen_sp"
+                        android:textSize="@dimen/twenty_sp"
                         android:textStyle="bold" />
 
                     <ImageView
@@ -53,7 +54,7 @@
 
                 <ImageView
                     android:layout_width="wrap_content"
-                    android:layout_height="100dp"
+                    android:layout_height="150dp"
                     android:layout_gravity="center"
                     android:layout_marginTop="@dimen/fifteen_dp"
                     android:contentDescription="@string/app_name"
@@ -66,7 +67,7 @@
                     android:layout_marginTop="@dimen/ten_dp"
                     android:text="Use scanning gun and press the button"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/fourteen_sp" />
+                    android:textSize="@dimen/eighteen_sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -74,7 +75,7 @@
                     android:layout_gravity="center_horizontal"
                     android:text="placing the light on product barcode"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/fourteen_sp" />
+                    android:textSize="@dimen/eighteen_sp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -91,7 +92,7 @@
                         android:layout_height="wrap_content"
                         android:text="Scan Your Product Now"
                         android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/fourteen_sp"
+                        android:textSize="@dimen/eighteen_sp"
                         android:textStyle="bold" />
                 </LinearLayout>
 

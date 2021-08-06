@@ -1,0 +1,768 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/activity_theme_bg">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/forty_dp"
+            android:layout_marginTop="@dimen/twenty_dp"
+            android:layout_marginEnd="@dimen/forty_dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="@dimen/forty_dp"
+                    android:layout_height="@dimen/forty_dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/back_arrow_click_effect"
+                    android:rotation="90" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="@dimen/twenty_dp"
+                    android:text="Payment Options"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/twenty_dp"
+                    android:textStyle="bold" />
+
+                <RelativeLayout
+                    android:id="@+id/scan_prescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:id="@+id/parent_inner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="@dimen/ten_dp"
+                        android:background="@drawable/okay_btn_bg"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Continue Shopping"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/fourteen_sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                </RelativeLayout>
+            </LinearLayout>
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/dialog_background"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/fifteen_dp"
+                        android:layout_marginTop="@dimen/fifteen_dp"
+                        android:text="Your order Details"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/fourteen_sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/margin_10dp">
+
+                            <TextView
+                                android:layout_width="150dp"
+                                android:layout_height="70dp"
+                                android:layout_marginTop="@dimen/margin_10dp"
+                                android:background="@drawable/plain_background_rectangle_border"
+                                android:textSize="@dimen/fourteen_sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:background="@color/white"
+                                android:paddingLeft="@dimen/three_dp"
+                                android:paddingRight="@dimen/three_dp"
+                                android:text="Order Type"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:text="FMCG"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/sixteen_sp"
+                                android:textStyle="bold" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/margin_10dp">
+
+                            <TextView
+                                android:layout_width="120dp"
+                                android:layout_height="70dp"
+                                android:layout_marginTop="@dimen/margin_10dp"
+                                android:background="@drawable/plain_background_rectangle_border"
+                                android:textSize="@dimen/fourteen_sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:background="@color/white"
+                                android:paddingLeft="@dimen/three_dp"
+                                android:paddingRight="@dimen/three_dp"
+                                android:text="Items"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:text="5"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/sixteen_sp"
+                                android:textStyle="bold" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/margin_10dp">
+
+                            <TextView
+                                android:layout_width="150dp"
+                                android:layout_height="70dp"
+                                android:layout_marginTop="@dimen/margin_10dp"
+                                android:background="@drawable/plain_background_rectangle_border"
+                                android:textSize="@dimen/fourteen_sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:background="@color/white"
+                                android:paddingLeft="@dimen/three_dp"
+                                android:paddingRight="@dimen/three_dp"
+                                android:text="Total Amount"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:text="\u20B9 812.85"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/sixteen_sp"
+                                android:textStyle="bold" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/margin_10dp">
+
+                            <TextView
+                                android:layout_width="150dp"
+                                android:layout_height="70dp"
+                                android:layout_marginTop="@dimen/margin_10dp"
+                                android:background="@drawable/plain_background_rectangle_border"
+                                android:textSize="@dimen/fourteen_sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:background="@color/white"
+                                android:paddingLeft="@dimen/three_dp"
+                                android:paddingRight="@dimen/three_dp"
+                                android:text="Delivery Type"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:text="Home Delivery"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/sixteen_sp"
+                                android:textStyle="bold" />
+                        </RelativeLayout>
+
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/fifteen_dp"
+                        android:layout_marginTop="@dimen/five_dp"
+                        android:text="Choose Payment Options Below"
+                        android:textColor="@color/black"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <RelativeLayout
+                                android:id="@+id/scan_to_pay"
+                                android:layout_width="200dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/ten_dp"
+                                android:layout_marginTop="@dimen/five_dp"
+                                android:background="@drawable/ic_payment_methods_selectebg"
+                                android:padding="@dimen/ten_dp">
+
+                                <TextView
+                                    android:layout_width="200dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerVertical="true"
+                                    android:text="Scan to pay"
+                                    android:textAlignment="center"
+                                    android:textColor="@color/black" />
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:contentDescription="@string/app_name"
+                                    android:src="@drawable/scan_pay_icon" />
+                            </RelativeLayout>
+
+                            <RelativeLayout
+                                android:id="@+id/recieve_payment_sms"
+                                android:layout_width="200dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/ten_dp"
+                                android:layout_marginTop="@dimen/five_dp"
+                                android:background="@drawable/ic_payment_methods_unselectebg"
+                                android:padding="@dimen/ten_dp">
+
+                                <TextView
+                                    android:layout_width="200dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginStart="@dimen/twenty_five_dp"
+                                    android:text="Receive PaymentSMS"
+                                    android:textAlignment="center"
+                                    android:textColor="@color/black" />
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:contentDescription="@string/app_name"
+                                    android:src="@drawable/payment_sms_icon" />
+                            </RelativeLayout>
+
+                            <RelativeLayout
+                                android:id="@+id/upi"
+                                android:layout_width="200dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/ten_dp"
+                                android:layout_marginTop="@dimen/five_dp"
+                                android:background="@drawable/ic_payment_methods_unselectebg"
+                                android:padding="@dimen/ten_dp">
+
+                                <TextView
+                                    android:layout_width="200dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerVertical="true"
+                                    android:text="UPI"
+                                    android:textAlignment="center"
+                                    android:textColor="@color/black" />
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:contentDescription="@string/app_name"
+                                    android:src="@drawable/upi_icon" />
+                            </RelativeLayout>
+
+                            <RelativeLayout
+                                android:id="@+id/cash_on_delivery"
+                                android:layout_width="200dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/ten_dp"
+                                android:layout_marginTop="@dimen/five_dp"
+                                android:background="@drawable/ic_payment_methods_unselectebg"
+                                android:padding="@dimen/ten_dp">
+
+                                <TextView
+                                    android:layout_width="200dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerVertical="true"
+                                    android:text="Cash on Delivery"
+                                    android:textAlignment="center"
+                                    android:textColor="@color/black" />
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:contentDescription="@string/app_name"
+                                    android:src="@drawable/cash_on_delivery_icon" />
+                            </RelativeLayout>
+                        </LinearLayout>
+
+                        <ScrollView
+                            android:id="@+id/scan_to_pay_info_lay"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/fifteen_dp"
+                            android:visibility="visible">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/five_dp"
+                                android:background="@drawable/dialog_background"
+                                android:backgroundTint="@color/ask_apollo_divider_color"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="@dimen/twenty_dp"
+                                    android:layout_marginBottom="@dimen/ten_dp"
+                                    android:paddingTop="@dimen/twenty_dp"
+                                    android:text="Scan to Pay"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/fourteen_sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:paddingLeft="@dimen/twenty_dp"
+                                    android:text="Instructions:"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/fourteen_sp"
+                                    android:textStyle="bold" />
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="@dimen/twenty_dp"
+                                        android:layout_marginTop="@dimen/three_dp"
+                                        android:text="Open thecamera app or the QR app on \n
+your phone.Scan the QR codeand click\non thelink that will appear.Follow the\n
+instructions on your phone to complete\nthe payment"
+                                        android:textColor="@color/black" />
+
+                                    <ImageView
+                                        android:layout_width="150dp"
+                                        android:layout_height="100dp"
+                                        android:layout_marginStart="@dimen/forty_dp"
+                                        android:contentDescription="@string/app_name"
+                                        android:src="@drawable/barcode_image" />
+                                </LinearLayout>
+
+                                <TextView
+                                    android:id="@+id/scan_to_pay_button"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="@dimen/twenty_dp"
+                                    android:layout_marginTop="@dimen/five_dp"
+                                    android:layout_marginBottom="@dimen/fifteen_dp"
+                                    android:background="@drawable/pament_screen_button_bg"
+                                    android:text="Scan to pay"
+                                    android:textColor="@color/white"
+                                    android:textSize="@dimen/fourteen_sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+                        </ScrollView>
+
+                        <ScrollView
+                            android:id="@+id/receive_payment_sms_info_lay"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/twenty_five_dp"
+                            android:visibility="gone">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/five_dp"
+                                android:background="@drawable/dialog_background"
+                                android:backgroundTint="@color/ask_apollo_divider_color"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="@dimen/twenty_dp"
+                                    android:layout_marginBottom="@dimen/ten_dp"
+                                    android:paddingTop="@dimen/ten_dp"
+                                    android:text="Receive Payment SMS"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/fourteen_sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="@dimen/twenty_dp"
+                                    android:layout_marginTop="@dimen/five_dp"
+                                    android:text="Name"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/fourteen_sp"
+                                    android:textStyle="bold" />
+
+                                <EditText
+                                    android:layout_width="350dp"
+                                    android:layout_height="35dp"
+                                    android:layout_marginStart="@dimen/twenty_dp"
+                                    android:layout_marginTop="@dimen/three_dp"
+                                    android:background="@drawable/upi_payment_unselected_bg"
+                                    android:hint="User name" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="@dimen/twenty_dp"
+                                    android:layout_marginTop="@dimen/five_dp"
+                                    android:text="Phone Number"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/fourteen_sp"
+                                    android:textStyle="bold" />
+
+                                <EditText
+                                    android:layout_width="350dp"
+                                    android:layout_height="35dp"
+                                    android:layout_marginStart="@dimen/twenty_dp"
+                                    android:layout_marginTop="@dimen/three_dp"
+                                    android:background="@drawable/upi_payment_unselected_bg"
+                                    android:hint="9999999999" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="@dimen/twenty_dp"
+                                    android:layout_marginTop="@dimen/five_dp"
+                                    android:text="Your receive SMS payment link to the above mobile number"
+                                    android:textColor="@color/black" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="@dimen/twenty_dp"
+                                    android:layout_marginTop="@dimen/five_dp"
+                                    android:layout_marginBottom="@dimen/ten_dp"
+                                    android:background="@drawable/pament_screen_button_bg"
+                                    android:text="Send SMS"
+                                    android:textColor="@color/white"
+                                    android:textSize="@dimen/fourteen_sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+                        </ScrollView>
+
+                        <ScrollView
+                            android:layout_marginBottom="@dimen/twenty_five_dp"
+                            android:id="@+id/upi_info_lay"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/five_dp"
+                                android:background="@drawable/dialog_background"
+                                android:backgroundTint="@color/ask_apollo_divider_color"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="@dimen/twenty_dp"
+                                    android:layout_marginBottom="@dimen/ten_dp"
+                                    android:paddingTop="@dimen/ten_dp"
+                                    android:text="UPI"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/fourteen_sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="@dimen/twenty_dp"
+                                    android:layout_marginTop="@dimen/five_dp"
+                                    android:text="Select  your UPI app"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/fourteen_sp" />
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="@dimen/twenty_dp"
+                                    android:orientation="horizontal">
+
+                                    <RelativeLayout
+                                        android:id="@+id/tick_bhim_lay"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:background="@drawable/upi_payment_unselected_bg">
+
+                                        <ImageView
+                                            android:id="@+id/tick_bhim"
+                                            android:layout_width="@dimen/thirty_dp"
+                                            android:layout_height="@dimen/thirty_dp"
+                                            android:padding="@dimen/two_dp"
+                                            android:layout_gravity="center_vertical"
+                                            android:background="@drawable/round_untick_bg" />
+
+                                        <ImageView
+                                            android:layout_width="80dp"
+                                            android:layout_height="30dp"
+                                            android:layout_marginStart="@dimen/five_dp"
+                                            android:layout_toEndOf="@id/tick_bhim"
+                                            android:contentDescription="@string/app_name"
+                                            android:src="@drawable/bhim_payment_icon" />
+
+                                    </RelativeLayout>
+
+                                    <RelativeLayout
+                                        android:id="@+id/tick_upi_lay"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="@dimen/ten_dp"
+                                        android:background="@drawable/upi_payment_unselected_bg">
+
+                                        <ImageView
+                                            android:id="@+id/tick_upi"
+                                            android:layout_width="@dimen/thirty_dp"
+                                            android:layout_height="@dimen/thirty_dp"
+                                            android:padding="@dimen/two_dp"
+                                            android:layout_gravity="center_vertical"
+                                            android:background="@drawable/round_untick_bg" />
+
+                                        <ImageView
+                                            android:layout_width="80dp"
+                                            android:layout_height="30dp"
+                                            android:layout_marginStart="@dimen/five_dp"
+                                            android:layout_toEndOf="@id/tick_upi"
+                                            android:contentDescription="@string/app_name"
+                                            android:src="@drawable/upi_payment_icon" />
+
+                                    </RelativeLayout>
+
+                                    <RelativeLayout
+                                        android:id="@+id/tick_phone_pay_lay"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="@dimen/ten_dp"
+                                        android:background="@drawable/upi_payment_unselected_bg">
+
+                                        <ImageView
+                                            android:id="@+id/tick_phone_pay"
+                                            android:layout_width="@dimen/thirty_dp"
+                                            android:layout_height="@dimen/thirty_dp"
+                                            android:padding="@dimen/two_dp"
+                                            android:layout_gravity="center_vertical"
+                                            android:background="@drawable/round_untick_bg" />
+
+                                        <ImageView
+                                            android:layout_width="80dp"
+                                            android:layout_height="30dp"
+                                            android:layout_marginStart="@dimen/five_dp"
+                                            android:layout_toEndOf="@id/tick_phone_pay"
+                                            android:contentDescription="@string/app_name"
+                                            android:src="@drawable/phone_pay_payment_icon" />
+
+                                    </RelativeLayout>
+
+                                </LinearLayout>
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="@dimen/twenty_dp"
+                                    android:layout_marginTop="@dimen/twenty_dp"
+                                    android:text="Enter your UPI ID"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/fourteen_sp" />
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal">
+
+                                    <EditText
+                                        android:layout_width="200dp"
+                                        android:layout_height="40dp"
+                                        android:layout_marginStart="@dimen/twenty_dp"
+                                        android:layout_marginTop="@dimen/three_dp"
+                                        android:background="@drawable/upi_payment_unselected_bg"
+                                        android:hint="9999999999" />
+
+                                    <EditText
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="40dp"
+                                        android:layout_marginTop="@dimen/three_dp"
+                                        android:background="@drawable/upi_payment_unselected_bg"
+                                        android:backgroundTint="@color/lightgaycolor"
+                                        android:text="@string/upi" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="@dimen/twenty_dp"
+                                        android:layout_marginTop="@dimen/five_dp"
+                                        android:layout_marginBottom="@dimen/ten_dp"
+                                        android:background="@drawable/pament_screen_button_bg"
+                                        android:text="Verify &amp; Pay"
+                                        android:textColor="@color/white"
+                                        android:textSize="@dimen/fourteen_sp"
+                                        android:textStyle="bold" />
+                                </LinearLayout>
+
+                            </LinearLayout>
+                        </ScrollView>
+
+                        <ScrollView
+                            android:layout_marginBottom="@dimen/fifteen_dp"
+                            android:id="@+id/cash_on_delivery_info_lay"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/five_dp"
+                                android:background="@drawable/dialog_background"
+                                android:backgroundTint="@color/ask_apollo_divider_color"
+                                android:orientation="vertical">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal">
+
+                                    <LinearLayout
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="vertical">
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginStart="@dimen/twenty_dp"
+                                            android:layout_marginBottom="@dimen/ten_dp"
+                                            android:paddingTop="@dimen/twenty_dp"
+                                            android:text="Cash on Delivery"
+                                            android:textColor="@color/black"
+                                            android:textSize="@dimen/fourteen_sp"
+                                            android:textStyle="bold" />
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginStart="@dimen/twenty_dp"
+                                            android:text="Free no changes for the home delivery\n
+above 400 Rupees"
+                                            android:textColor="@color/black"
+                                            android:textSize="@dimen/fourteen_sp" />
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginStart="@dimen/twenty_dp"
+                                            android:layout_marginTop="56dp"
+                                            android:layout_marginBottom="@dimen/ten_dp"
+                                            android:background="@drawable/pament_screen_button_bg"
+                                            android:text="Place an Order"
+                                            android:textColor="@color/white"
+                                            android:textSize="@dimen/fourteen_sp"
+                                            android:textStyle="bold" />
+
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="@dimen/twenty_dp"
+                                        android:layout_marginEnd="@dimen/five_dp"
+                                        android:orientation="vertical">
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginBottom="@dimen/ten_dp"
+                                            android:paddingTop="@dimen/twenty_dp"
+                                            android:text="Your home address"
+                                            android:textColor="@color/black" />
+
+                                        <TextView
+                                            android:layout_width="200dp"
+                                            android:layout_height="wrap_content"
+                                            android:background="@drawable/upi_payment_unselected_bg"
+                                            android:padding="@dimen/ten_dp"
+                                            android:text="Flat No :314, A1 Block\nMadhapu,PipeLine Road\nHyderabad : 500032"
+                                            android:textColor="@color/black" />
+
+                                        <TextView
+                                            android:layout_width="200dp"
+                                            android:layout_height="wrap_content"
+                                            android:background="@drawable/upi_payment_unselected_bg"
+                                            android:backgroundTint="@color/color_order_summary_grey"
+                                            android:text="Change Address"
+                                            android:textAlignment="center"
+                                            android:textColor="@color/black"
+                                            android:textStyle="bold" />
+                                    </LinearLayout>
+                                </LinearLayout>
+
+                            </LinearLayout>
+                        </ScrollView>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </ScrollView>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+</layout>
