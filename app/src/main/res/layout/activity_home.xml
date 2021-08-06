@@ -71,9 +71,9 @@
                         <ImageView
                             android:layout_width="@dimen/one_hundred_dp"
                             android:layout_height="@dimen/one_hundred_dp"
-                            android:contentDescription="@string/app_name"
                             android:layout_marginStart="@dimen/twenty_dp"
                             android:layout_marginEnd="@dimen/twenty_dp"
+                            android:contentDescription="@string/app_name"
                             android:src="@drawable/step2_icon" />
 
                         <ImageView
@@ -125,9 +125,9 @@
                             <ImageView
                                 android:layout_width="@dimen/fifty_dp"
                                 android:layout_height="@dimen/fifty_dp"
+                                android:layout_marginTop="@dimen/seven_dp"
                                 android:background="@drawable/round_untick_bg"
                                 android:backgroundTint="@color/white"
-                                android:layout_marginTop="@dimen/seven_dp"
                                 android:contentDescription="@string/app_name"
                                 android:src="@drawable/scan_prescription_icon" />
 
@@ -153,7 +153,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/ten_dp"
-                                android:background="@drawable/okay_btn_bg"
+                                android:background="@drawable/shopproducts_btn_bg"
                                 android:orientation="horizontal">
 
                                 <TextView
@@ -169,11 +169,11 @@
                             <ImageView
                                 android:layout_width="@dimen/fifty_dp"
                                 android:layout_height="@dimen/fifty_dp"
+                                android:layout_marginTop="@dimen/seven_dp"
                                 android:background="@drawable/round_untick_bg"
                                 android:backgroundTint="@color/white"
-                                android:padding="@dimen/ten_dp"
-                                android:layout_marginTop="@dimen/seven_dp"
                                 android:contentDescription="@string/app_name"
+                                android:padding="@dimen/ten_dp"
                                 android:src="@drawable/shop_products_icon" />
 
 
@@ -198,7 +198,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/ten_dp"
-                                android:background="@drawable/okay_btn_bg"
+                                android:background="@drawable/scanproducts_btn_bg"
                                 android:orientation="horizontal">
 
                                 <TextView
@@ -214,11 +214,11 @@
                             <ImageView
                                 android:layout_width="@dimen/fifty_dp"
                                 android:layout_height="@dimen/fifty_dp"
+                                android:layout_marginTop="@dimen/seven_dp"
                                 android:background="@drawable/round_untick_bg"
                                 android:backgroundTint="@color/white"
-                                android:padding="@dimen/ten_dp"
-                                android:layout_marginTop="@dimen/seven_dp"
                                 android:contentDescription="@string/app_name"
+                                android:padding="@dimen/ten_dp"
                                 android:src="@drawable/scan_products_icon" />
 
 

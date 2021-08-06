@@ -256,7 +256,7 @@
                             <RelativeLayout
                                 android:id="@+id/scan_to_pay"
                                 android:layout_width="250dp"
-                                android:layout_height="wrap_content"
+                                android:layout_height="@dimen/fifty_dp"
                                 android:layout_marginStart="@dimen/ten_dp"
                                 android:layout_marginTop="@dimen/five_dp"
                                 android:background="@drawable/ic_payment_methods_selectebg"
@@ -281,7 +281,7 @@
                             <RelativeLayout
                                 android:id="@+id/recieve_payment_sms"
                                 android:layout_width="250dp"
-                                android:layout_height="wrap_content"
+                                android:layout_height="@dimen/fifty_dp"
                                 android:layout_marginStart="@dimen/ten_dp"
                                 android:layout_marginTop="@dimen/five_dp"
                                 android:background="@drawable/ic_payment_methods_unselectebg"
@@ -307,7 +307,7 @@
                             <RelativeLayout
                                 android:id="@+id/upi"
                                 android:layout_width="250dp"
-                                android:layout_height="wrap_content"
+                                android:layout_height="@dimen/fifty_dp"
                                 android:layout_marginStart="@dimen/ten_dp"
                                 android:layout_marginTop="@dimen/five_dp"
                                 android:background="@drawable/ic_payment_methods_unselectebg"
@@ -332,7 +332,7 @@
                             <RelativeLayout
                                 android:id="@+id/cash_on_delivery"
                                 android:layout_width="250dp"
-                                android:layout_height="wrap_content"
+                                android:layout_height="@dimen/fifty_dp"
                                 android:layout_marginStart="@dimen/ten_dp"
                                 android:layout_marginTop="@dimen/five_dp"
                                 android:background="@drawable/ic_payment_methods_unselectebg"

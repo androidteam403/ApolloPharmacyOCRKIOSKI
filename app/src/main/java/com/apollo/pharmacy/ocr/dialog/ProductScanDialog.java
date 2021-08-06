@@ -20,6 +20,7 @@ public class ProductScanDialog {
 
     public ProductScanDialog(Context context) {
         dialog = new Dialog(context);
+        dialog = new Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
         alertDialogBoxBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.dialog_product_scan, null, false);
         dialog.setContentView(alertDialogBoxBinding.getRoot());
         if (dialog.getWindow() != null)
