@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -34,18 +34,18 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
                     android:text="Insert Your Prescription"
                     android:textColor="@color/white"
                     android:textSize="22sp"
-                    android:layout_gravity="center_horizontal"
                     android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:text="in the scanner"
                     android:gravity="center_horizontal"
+                    android:text="in the scanner"
                     android:textColor="@color/white"
                     android:textSize="20sp"
                     android:textStyle="bold" />
@@ -100,63 +100,72 @@
                         android:textStyle="bold" />
 
                     <RelativeLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center_horizontal"
-                        android:orientation="horizontal">
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-                        <ImageView
-                            android:id="@+id/presuploaded_image"
+                        <RelativeLayout
+                            android:id="@+id/prescription_layout"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/thirty_dp"
-                            android:contentDescription="@string/app_name"
-                            android:src="@drawable/apollo_prescription_image" />
+                            android:layout_centerHorizontal="true"
+                            android:gravity="center_horizontal"
+                            android:orientation="horizontal">
 
-                        <ImageView
-                            android:layout_width="@dimen/twenty_five_dp"
-                            android:layout_height="@dimen/twenty_five_dp"
-                            android:layout_alignEnd="@id/presuploaded_image"
-                            android:layout_marginTop="@dimen/twenty_dp"
-                            android:background="@drawable/round_tick_bg"
-                            android:backgroundTint="@color/RED"
-                            android:padding="@dimen/five_dp"
-                            android:src="@drawable/icon_cross" />
+                            <ImageView
+                                android:id="@+id/presuploaded_image"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/thirty_dp"
+                                android:contentDescription="@string/app_name"
+                                android:src="@drawable/apollo_prescription_image" />
 
-                        <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="@dimen/twenty_five_dp"
-                            android:layout_centerVertical="true"
-                            android:layout_marginStart="@dimen/eighty_dp"
-                            android:contentDescription="@string/app_name"
-                            android:src="@drawable/search_grey" />
+                            <ImageView
+                                android:layout_width="@dimen/twenty_five_dp"
+                                android:layout_height="@dimen/twenty_five_dp"
+                                android:layout_alignEnd="@id/presuploaded_image"
+                                android:layout_marginTop="@dimen/twenty_dp"
+                                android:background="@drawable/round_tick_bg"
+                                android:backgroundTint="@color/RED"
+                                android:padding="@dimen/five_dp"
+                                android:src="@drawable/icon_cross" />
+
+                            <ImageView
+                                android:layout_width="25dp"
+                                android:layout_height="@dimen/twenty_five_dp"
+                                android:layout_centerVertical="true"
+                                android:layout_marginStart="@dimen/eighty_dp"
+                                android:contentDescription="@string/app_name"
+                                android:src="@drawable/search_grey" />
+
+
+                        </RelativeLayout>
 
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
-                            android:layout_marginStart="@dimen/twenty_five_dp"
-                            android:layout_toEndOf="@id/presuploaded_image"
+                            android:layout_toEndOf="@+id/prescription_layout"
+                            android:gravity="center"
                             android:orientation="vertical">
 
                             <ImageView
                                 android:id="@+id/plus_icon"
-                                android:layout_width="@dimen/fifty_dp"
-                                android:layout_height="@dimen/fifty_dp"
-                                android:layout_gravity="center_horizontal"
-                                android:src="@drawable/scan_new_prescription" />
+                                android:layout_width="@dimen/seventy_dp"
+                                android:layout_height="@dimen/seventy_dp"
+                                android:contentDescription="@string/app_name"
+                                android:src="@drawable/scanagain_add_plus" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
                                 android:layout_marginTop="@dimen/ten_dp"
+                                android:gravity="center"
                                 android:text="Scan another prescription"
                                 android:textColor="@color/white"
                                 android:textStyle="bold" />
 
                         </LinearLayout>
-
 
                     </RelativeLayout>
 
@@ -168,29 +177,34 @@
                         android:layout_marginTop="@dimen/twenty_dp"
                         android:layout_marginBottom="@dimen/thirty_five_dp">
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/ten_dp"
-                            android:background="@drawable/okay_btn_bg"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:paddingStart="@dimen/fifty_five_dp"
-                                android:paddingEnd="@dimen/twenty_five_dp"
-                                android:text="@string/Continue"
-                                android:textColor="@color/colorBlack"
-                                android:textSize="@dimen/sixteen_sp"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-
                         <ImageView
-                            android:layout_width="@dimen/sixty_dp"
-                            android:layout_height="@dimen/sixty_dp"
+                            android:layout_width="@dimen/two_hundred_dp"
+                            android:layout_height="@dimen/fifty_dp"
                             android:contentDescription="@string/app_name"
-                            android:src="@drawable/scan_new_prescription" />
+                            android:src="@drawable/scan_again" />
+                        <!--                        <LinearLayout-->
+                        <!--                            android:layout_width="wrap_content"-->
+                        <!--                            android:layout_height="wrap_content"-->
+                        <!--                            android:layout_marginTop="@dimen/ten_dp"-->
+                        <!--                            android:background="@drawable/okay_btn_bg"-->
+                        <!--                            android:orientation="horizontal">-->
+
+                        <!--                            <TextView-->
+                        <!--                                android:layout_width="wrap_content"-->
+                        <!--                                android:layout_height="wrap_content"-->
+                        <!--                                android:paddingStart="@dimen/fifty_five_dp"-->
+                        <!--                                android:paddingEnd="@dimen/twenty_five_dp"-->
+                        <!--                                android:text="@string/Continue"-->
+                        <!--                                android:textColor="@color/colorBlack"-->
+                        <!--                                android:textSize="@dimen/sixteen_sp"-->
+                        <!--                                android:textStyle="bold" />-->
+                        <!--                        </LinearLayout>-->
+
+                        <!--                        <ImageView-->
+                        <!--                            android:layout_width="@dimen/sixty_dp"-->
+                        <!--                            android:layout_height="@dimen/sixty_dp"-->
+                        <!--                            android:contentDescription="@string/app_name"-->
+                        <!--                            android:src="@drawable/scan_new_prescription" />-->
 
 
                     </RelativeLayout>

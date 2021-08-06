@@ -16,6 +16,7 @@
                 android:id="@+id/back_icon_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/forty_dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 tools:ignore="UseCompoundDrawables">
@@ -64,7 +65,7 @@
                         android:layout_marginStart="@dimen/ten_dp"
                         android:text="@string/label_your_order_consists_of_fmcg_and_pharma_products_you_have_2_options"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/twelve_sp" />
+                        android:textSize="@dimen/eighteen_sp" />
                 </LinearLayout>
 
                 <LinearLayout

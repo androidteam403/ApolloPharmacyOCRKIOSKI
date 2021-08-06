@@ -54,10 +54,7 @@
         <activity
             android:name=".activities.StoreSetupActivity"
             android:screenOrientation="landscape">
-                        <intent-filter>
-                            <action android:name="android.intent.action.MAIN" />
-                            <category android:name="android.intent.category.LAUNCHER" />
-                        </intent-filter>
+
         </activity>
         <activity
             android:name=".activities.Delete"
@@ -111,7 +108,9 @@
             android:screenOrientation="landscape" />
         <activity
             android:name=".activities.HomeActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape" >
+
+        </activity>
         <activity
             android:name=".activities.USBCameraActivity"
             android:screenOrientation="landscape">
@@ -171,7 +170,12 @@
             android:screenOrientation="landscape"/>
         <activity
             android:name=".activities.CheckoutActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activities.OrderinProgressActivity"
             android:screenOrientation="landscape">
