@@ -1,132 +1,288 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/constraint_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout>
 
-    <RelativeLayout
-        android:id="@+id/parent_layout"
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/constraint_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/activity_theme_bg">
+        android:layout_height="match_parent">
 
         <RelativeLayout
+            android:id="@+id/parent_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@drawable/activity_theme_bg">
 
             <RelativeLayout
-                android:layout_width="@dimen/one_hundred_five_dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="@dimen/thirty_five_dp"
-                android:layout_marginTop="@dimen/thirty_dp"
-                android:layout_marginEnd="@dimen/thirty_dp"
-                android:layout_marginBottom="@dimen/thirty_dp"
-                android:background="@drawable/curved_dashboard_bg">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-                <include layout="@layout/view_custom_menu" />
-            </RelativeLayout>
-
-            <LinearLayout
-                android:layout_width="@dimen/nine_hundred_dp"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/welcome_txt"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/forty_dp"
-                    android:gravity="center"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/eighteen_sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:layout_marginTop="@dimen/margin_10dp"
-                    android:text="@string/label_order_medicine"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/fourteen_sp"
-                    android:textStyle="bold" />
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/one_hundred_dp"
-                    android:layout_marginTop="@dimen/forty_dp"
-                    android:contentDescription="@string/app_name"
-                    android:src="@drawable/order_medicine_steps" />
-
-                <LinearLayout
-                    android:id="@+id/scan_prescription"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                <RelativeLayout
+                    android:layout_width="@dimen/one_hundred_five_dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/thirty_five_dp"
                     android:layout_marginTop="@dimen/thirty_dp"
-                    android:background="@drawable/okay_btn_bg"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="end"
-                        android:gravity="end"
-                        android:text="@string/label_scan_prescription"
-                        android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/twelve_sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="@dimen/twenty_dp"
-                    android:layout_marginBottom="@dimen/twenty_dp"
-                    android:text="@string/label_or"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/twenty_sp"
-                    android:textStyle="bold"
-                    android:visibility="gone" />
-
-                <LinearLayout
-                    android:id="@+id/upload_prescription"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:background="@drawable/okay_btn_bg"
-                    android:orientation="horizontal"
+                    android:layout_marginEnd="@dimen/thirty_dp"
+                    android:layout_marginBottom="@dimen/thirty_dp"
+                    android:background="@drawable/curved_dashboard_bg"
                     android:visibility="gone">
 
+                    <include layout="@layout/view_custom_menu" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="@dimen/nine_hundred_dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/welcome_txt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/ten_dp"
+                        android:gravity="center"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="@dimen/eighteen_sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_10dp"
+                        android:gravity="center"
+                        android:text="@string/label_order_medicine"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="@dimen/fourteen_sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="@dimen/fifteen_dp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="@dimen/one_hundred_dp"
+                            android:layout_height="@dimen/one_hundred_dp"
+                            android:contentDescription="@string/app_name"
+                            android:src="@drawable/step1_icon" />
+
+                        <ImageView
+                            android:layout_width="@dimen/one_hundred_dp"
+                            android:layout_height="@dimen/one_hundred_dp"
+                            android:contentDescription="@string/app_name"
+                            android:layout_marginStart="@dimen/twenty_dp"
+                            android:layout_marginEnd="@dimen/twenty_dp"
+                            android:src="@drawable/step2_icon" />
+
+                        <ImageView
+                            android:layout_width="@dimen/one_hundred_dp"
+                            android:layout_height="@dimen/one_hundred_dp"
+                            android:contentDescription="@string/app_name"
+                            android:src="@drawable/step3_icon" />
+
+                    </LinearLayout>
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="end"
-                        android:gravity="end"
-                        android:text="@string/label_upload_prescription"
-                        android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/twenty_three_sp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="@dimen/twenty_dp"
+                        android:text="Select any one of the option below"
+                        android:textColor="@color/black"
                         android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="@dimen/ten_dp"
+                        android:orientation="horizontal">
+
+                        <RelativeLayout
+                            android:id="@+id/scan_prescription"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/ten_dp"
+                                android:background="@drawable/okay_btn_bg"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="@dimen/twenty_dp"
+                                    android:text="@string/label_scan_prescription"
+                                    android:textColor="@color/colorBlack"
+                                    android:textSize="@dimen/sixteen_sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <ImageView
+                                android:layout_width="@dimen/fifty_dp"
+                                android:layout_height="@dimen/fifty_dp"
+                                android:background="@drawable/round_untick_bg"
+                                android:backgroundTint="@color/white"
+                                android:layout_marginTop="@dimen/seven_dp"
+                                android:contentDescription="@string/app_name"
+                                android:src="@drawable/scan_prescription_icon" />
+
+
+                        </RelativeLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/margin_10dp"
+                            android:layout_marginTop="@dimen/twenty_dp"
+                            android:layout_marginEnd="@dimen/margin_10dp"
+                            android:text="OR"
+                            android:textColor="@color/white"
+                            android:textStyle="bold" />
+
+                        <RelativeLayout
+                            android:id="@+id/shop_products"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/ten_dp"
+                                android:background="@drawable/okay_btn_bg"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="@dimen/fifteen_dp"
+                                    android:text="Shop Products"
+                                    android:textColor="@color/colorBlack"
+                                    android:textSize="@dimen/sixteen_sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <ImageView
+                                android:layout_width="@dimen/fifty_dp"
+                                android:layout_height="@dimen/fifty_dp"
+                                android:background="@drawable/round_untick_bg"
+                                android:backgroundTint="@color/white"
+                                android:padding="@dimen/ten_dp"
+                                android:layout_marginTop="@dimen/seven_dp"
+                                android:contentDescription="@string/app_name"
+                                android:src="@drawable/shop_products_icon" />
+
+
+                        </RelativeLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/margin_10dp"
+                            android:layout_marginTop="@dimen/twenty_dp"
+                            android:layout_marginEnd="@dimen/margin_10dp"
+                            android:text="OR"
+                            android:textColor="@color/white"
+                            android:textStyle="bold" />
+
+                        <RelativeLayout
+                            android:id="@+id/scan_products"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/ten_dp"
+                                android:background="@drawable/okay_btn_bg"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="@dimen/fifteen_dp"
+                                    android:text="Scan Products"
+                                    android:textColor="@color/colorBlack"
+                                    android:textSize="@dimen/sixteen_sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <ImageView
+                                android:layout_width="@dimen/fifty_dp"
+                                android:layout_height="@dimen/fifty_dp"
+                                android:background="@drawable/round_untick_bg"
+                                android:backgroundTint="@color/white"
+                                android:padding="@dimen/ten_dp"
+                                android:layout_marginTop="@dimen/seven_dp"
+                                android:contentDescription="@string/app_name"
+                                android:src="@drawable/scan_products_icon" />
+
+
+                        </RelativeLayout>
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="@dimen/twenty_dp"
+                        android:layout_marginBottom="@dimen/twenty_dp"
+                        android:text="@string/label_or"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="@dimen/twenty_sp"
+                        android:textStyle="bold"
+                        android:visibility="gone" />
+
+                    <LinearLayout
+                        android:id="@+id/upload_prescription"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@drawable/okay_btn_bg"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:gravity="end"
+                            android:text="@string/label_upload_prescription"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/twenty_three_sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
+            </RelativeLayout>
+
+            <include
+                layout="@layout/view_faq_layout"
+                android:visibility="gone" />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="@dimen/twenty_five_dp">
+
+                <include layout="@layout/view_customer_support" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/trans_color_id"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/transparent_color"
+                android:visibility="gone" />
         </RelativeLayout>
 
-        <include layout="@layout/view_faq_layout" />
-
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="@dimen/twenty_five_dp">
-
-            <include layout="@layout/view_customer_support" />
-        </RelativeLayout>
-    </RelativeLayout>
-
-    <include
-        android:id="@+id/networkErrorLayout"
-        layout="@layout/layout_network_error" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <include
+            android:id="@+id/networkErrorLayout"
+            layout="@layout/layout_network_error" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

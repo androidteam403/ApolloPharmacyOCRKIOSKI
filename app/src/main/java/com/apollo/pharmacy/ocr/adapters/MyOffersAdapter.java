@@ -30,12 +30,14 @@ public class MyOffersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private List<OCRToDigitalMedicineResponse> datalist;
     private final ArrayList<Product> offersArrayList;
     private final CartCountListener cartCountListener;
+    private CategoryGridItemAdapter.CheckOutData checkOutData;
 
-    public MyOffersAdapter(Context context, ArrayList<Product> products, List<Product> android, CartCountListener cartCountListener) {
+    public MyOffersAdapter(Context context, ArrayList<Product> products, List<Product> android, CartCountListener cartCountListener, CategoryGridItemAdapter.CheckOutData checkOutData) {
         this.context = context;
         this.products = products;
         this.offersArrayList = (ArrayList<Product>) android;
         this.cartCountListener = cartCountListener;
+        this.checkOutData=checkOutData;
         datalist = new ArrayList<>();
         if (null != SessionManager.INSTANCE.getDataList()) {
             datalist = SessionManager.INSTANCE.getDataList();
@@ -70,7 +72,7 @@ public class MyOffersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             Product product = products.get(position);
             switch (viewMode) {
                 case GRID:
-                    ((MyOffersGridItemAdapter) holder).setup(context, product, position, datalist, offersArrayList, cartCountListener);
+                    ((MyOffersGridItemAdapter) holder).setup(context, product, position, datalist, offersArrayList, cartCountListener,checkOutData);
                     break;
             }
         }

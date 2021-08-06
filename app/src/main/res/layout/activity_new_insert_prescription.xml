@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/parent_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/activity_theme_bg">
+
+            <include layout="@layout/view_faq_layout" />
+
+            <LinearLayout
+                android:id="@+id/start_prescription_lay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <ImageView
+                    android:id="@+id/scan_pres_image"
+                    android:layout_width="@dimen/one_hundred_dp"
+                    android:layout_height="@dimen/one_hundred_dp"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/round_black_transparent_bg"
+                    android:contentDescription="@string/app_name"
+                    android:padding="@dimen/ten_dp"
+                    android:src="@drawable/scan_prescription_icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="Insert Your Prescription"
+                    android:textColor="@color/white"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center_horizontal"
+                    android:text="in the scanner"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/scan_start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/twenty_five_dp"
+                    android:background="@drawable/okay_btn_bg"
+                    android:text="Okay"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/sixteen_sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/time_start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginStart="@dimen/fifteen_dp"
+                    android:layout_marginTop="@dimen/ten_dp"
+                    android:text="0:05 Sec"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/sixteen_sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/scanned_lay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/thirty_dp"
+                    android:clickable="true"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Your Scanned Prescription Preview"
+                        android:textColor="@color/white"
+                        android:textSize="26sp"
+                        android:textStyle="bold" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <RelativeLayout
+                            android:id="@+id/prescription_layout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:gravity="center_horizontal"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:id="@+id/presuploaded_image"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/thirty_dp"
+                                android:contentDescription="@string/app_name"
+                                android:src="@drawable/apollo_prescription_image" />
+
+                            <ImageView
+                                android:layout_width="@dimen/twenty_five_dp"
+                                android:layout_height="@dimen/twenty_five_dp"
+                                android:layout_alignEnd="@id/presuploaded_image"
+                                android:layout_marginTop="@dimen/twenty_dp"
+                                android:background="@drawable/round_tick_bg"
+                                android:backgroundTint="@color/RED"
+                                android:padding="@dimen/five_dp"
+                                android:src="@drawable/icon_cross" />
+
+                            <ImageView
+                                android:layout_width="25dp"
+                                android:layout_height="@dimen/twenty_five_dp"
+                                android:layout_centerVertical="true"
+                                android:layout_marginStart="@dimen/eighty_dp"
+                                android:contentDescription="@string/app_name"
+                                android:src="@drawable/search_grey" />
+
+
+                        </RelativeLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_toEndOf="@+id/prescription_layout"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:id="@+id/plus_icon"
+                                android:layout_width="@dimen/seventy_dp"
+                                android:layout_height="@dimen/seventy_dp"
+                                android:contentDescription="@string/app_name"
+                                android:src="@drawable/scanagain_add_plus" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_marginTop="@dimen/ten_dp"
+                                android:gravity="center"
+                                android:text="Scan another prescription"
+                                android:textColor="@color/white"
+                                android:textStyle="bold" />
+
+                        </LinearLayout>
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/confirm_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="@dimen/twenty_dp"
+                        android:layout_marginBottom="@dimen/thirty_five_dp">
+
+                        <ImageView
+                            android:layout_width="@dimen/two_hundred_dp"
+                            android:layout_height="@dimen/fifty_dp"
+                            android:contentDescription="@string/app_name"
+                            android:src="@drawable/scan_again" />
+                        <!--                        <LinearLayout-->
+                        <!--                            android:layout_width="wrap_content"-->
+                        <!--                            android:layout_height="wrap_content"-->
+                        <!--                            android:layout_marginTop="@dimen/ten_dp"-->
+                        <!--                            android:background="@drawable/okay_btn_bg"-->
+                        <!--                            android:orientation="horizontal">-->
+
+                        <!--                            <TextView-->
+                        <!--                                android:layout_width="wrap_content"-->
+                        <!--                                android:layout_height="wrap_content"-->
+                        <!--                                android:paddingStart="@dimen/fifty_five_dp"-->
+                        <!--                                android:paddingEnd="@dimen/twenty_five_dp"-->
+                        <!--                                android:text="@string/Continue"-->
+                        <!--                                android:textColor="@color/colorBlack"-->
+                        <!--                                android:textSize="@dimen/sixteen_sp"-->
+                        <!--                                android:textStyle="bold" />-->
+                        <!--                        </LinearLayout>-->
+
+                        <!--                        <ImageView-->
+                        <!--                            android:layout_width="@dimen/sixty_dp"-->
+                        <!--                            android:layout_height="@dimen/sixty_dp"-->
+                        <!--                            android:contentDescription="@string/app_name"-->
+                        <!--                            android:src="@drawable/scan_new_prescription" />-->
+
+
+                    </RelativeLayout>
+
+
+                </LinearLayout>
+
+            </ScrollView>
+
+        </RelativeLayout>
+
+        <include
+            android:id="@+id/networkErrorLayout"
+            layout="@layout/layout_network_error" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/twenty_dp">
+
+            <include layout="@layout/view_customer_support" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/trans_color_id"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/transparent_color"
+            android:visibility="gone" />
+    </RelativeLayout>
+</layout>
