@@ -151,7 +151,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/fifty_dp"
-                                android:background="@drawable/okay_btn_bg"
+                                android:background="@drawable/shopproducts_btn_bg"
                                 android:orientation="horizontal">
 
                                 <TextView
@@ -196,7 +196,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/fifty_dp"
-                                android:background="@drawable/okay_btn_bg"
+                                android:background="@drawable/scanproducts_btn_bg"
                                 android:orientation="horizontal">
 
                                 <TextView
