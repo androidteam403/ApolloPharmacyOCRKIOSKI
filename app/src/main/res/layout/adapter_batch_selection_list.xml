@@ -46,13 +46,21 @@
                 android:text="Cost:" />
 
             <TextView
-                android:id="@+id/price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="@dimen/five_dp"
+                android:text="\u20B9 "
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:layout_marginEnd="@dimen/fifteen_dp"
-                android:text="\u20B9 119.75"
+                android:text="119.75"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
 

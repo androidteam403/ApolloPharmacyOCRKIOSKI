@@ -10,6 +10,7 @@ import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -307,6 +308,7 @@ public class MposStoreSetupActivity extends BaseActivity implements GoogleApiCli
     public void onVerifyClick() {
         if (isValidate()) {
 //            mPresenter.checkConfingApi();
+            Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
         }
     }
 
