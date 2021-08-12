@@ -57,6 +57,7 @@ public class MedicineSearchAdapter extends ArrayAdapter<ProductSearch> {
         ImageView medImage = (ImageView) convertView.findViewById(R.id.medImage);
         Glide.with(context)
                 .load(Constants.Get_Image_link + medicine.getImage())
+                .error(R.drawable.hospital)
                 .into(medImage);
 
         string = "\u20B9";

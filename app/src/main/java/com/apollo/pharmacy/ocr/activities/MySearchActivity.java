@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.TranslateAnimation;
@@ -24,9 +25,11 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -52,10 +55,12 @@ import com.apollo.pharmacy.ocr.interfaces.MyOffersListener;
 import com.apollo.pharmacy.ocr.interfaces.SubCategoryListener;
 import com.apollo.pharmacy.ocr.model.Category_request;
 import com.apollo.pharmacy.ocr.model.GetProductListResponse;
+import com.apollo.pharmacy.ocr.model.ItemSearchResponse;
 import com.apollo.pharmacy.ocr.model.NewSearchapirequest;
 import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
 import com.apollo.pharmacy.ocr.model.Product;
 import com.apollo.pharmacy.ocr.model.ProductSearch;
+import com.apollo.pharmacy.ocr.model.ProductSrearchResponse;
 import com.apollo.pharmacy.ocr.model.ScannedData;
 import com.apollo.pharmacy.ocr.model.ScannedMedicine;
 import com.apollo.pharmacy.ocr.model.Searchsuggestionrequest;
@@ -80,6 +85,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
+import retrofit2.Call;
+import retrofit2.Response;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -128,6 +135,8 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
     private boolean search_auto_complete_text;
     private MySearchController mySearchController;
     private MyOffersController myOffersController;
+    private EditText searchProducts;
+    private ProgressBar pDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,6 +144,9 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
         setContentView(R.layout.activity_my_search);
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+        searchProducts = findViewById(R.id.search_product_text);
+        pDialog = findViewById(R.id.pdialog);
         item = new ArrayList<>();
         dataList = new ArrayList<>();
         searchAutoComplete = findViewById(R.id.search_autocomplete);
@@ -156,6 +168,7 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
         itemsCount = findViewById(R.id.items_count);
         checkOutImage = findViewById(R.id.checkout_image);
         search_product_layout = findViewById(R.id.search_product_layout);
+
 
         doneProductsLayout.setVisibility(View.GONE);
         mySearchController = new MySearchController(this);
@@ -212,6 +225,50 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
         imageLayout = findViewById(R.id.image_layout);
 
         initUi();
+
+        searchProducts.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() <= 2) {
+
+                }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() >= 3) {
+//                    searchProductsApiCall(s.toString());
+                    search_listview.setVisibility(View.GONE);
+                    search_suggestion_listview.setVisibility(View.VISIBLE);
+                    itemCountLayout.setVisibility(View.GONE);
+                    subCategoryCount.setText("");
+                    if (search_auto_complete_text) {
+                        Searchsuggestionrequest request = new Searchsuggestionrequest();
+                        request.setParams(searchProducts.getText().toString());
+                        search_auto_complete_text = false;
+                        if (NetworkUtils.isNetworkConnected(MySearchActivity.this)) {
+                            pDialog.setVisibility(View.VISIBLE);
+                            addMoreController.searchItemProducts(null);
+//                            addMoreController.searchSuggestion(request, MySearchActivity.this);
+                        } else {
+                            Utils.showSnackbar(MySearchActivity.this, constraintLayout, getApplicationContext().getResources().getString(R.string.label_internet_error_text));
+                        }
+                    }
+                } else {
+                    search_auto_complete_text = true;
+                    search_listview.setVisibility(View.GONE);
+                    search_suggestion_listview.setVisibility(View.GONE);
+                }
+            }
+        });
+
 
         fmcgLayout.setOnClickListener(v -> {
             tabFlag = true;
@@ -305,7 +362,8 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
         subCategoryListAdapter = new SubCategoryListAdapter(MySearchActivity.this, subCategoryItem, MySearchActivity.this);
         subCategoryRecyclerView.setAdapter(subCategoryListAdapter);
 
-        handleCategoryListService(this);
+// uncomment line if you need to change to fmcg, pharma and search
+//        handleCategoryListService(this);
 
         keyboardFrag = KeyboardFragment.newInstance(MySearchActivity.this, this);
         searchAutoComplete.setText("");
@@ -404,8 +462,8 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
             public void afterTextChanged(Editable arg0) {
             }
         });
-
-        setFMCGFirst();
+        //uncomment line if you need to change to fmcg, pharma and search
+//        setFMCGFirst();
 
         if (SessionManager.INSTANCE.getDataList() != null) {
             if (SessionManager.INSTANCE.getDataList().size() > 0) {
@@ -779,6 +837,7 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
 
     @Override
     public void onSearchSuggestionList(List<Suggestion_Product> m) {
+        pDialog.setVisibility(View.GONE);
         if (item.size() > 0) {
             item.clear();
         }
@@ -881,7 +940,39 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
     }
 
     @Override
+    public void onSuccessSearchItemApi(ItemSearchResponse m) {
+        pDialog.setVisibility(View.GONE);
+        if (item.size() > 0) {
+            item.clear();
+        }
+        if (m != null) {
+            for (ItemSearchResponse.Item r : m.getItemList()) {
+                ProductSearch product = new ProductSearch();
+                product.setName(r.getGenericName());
+                product.setSku(r.getArtCode());
+                product.setQty(1);
+                product.setDescription(r.getDescription());
+//                product.setId(r.getId());
+//                product.setImage(r.getImage());
+                product.setIsInStock(r.getStockqty() != 0 ? 1 : 0);
+                product.setIsPrescriptionRequired(0);
+                product.setPrice(r.getMrp());
+//                product.setSmallImage(r.getSmallImage());
+                // product.setSpecialPrice(r.getSpecialPrice());
+                /* product.setStatus(r.getStatus());
+                 * product.setThumbnail(r.getThumbnail());
+                 *product.setTypeId(r.getTypeId());
+                 *product.setMou(r.getMou());      */
+                item.add(product);
+            }
+        }
+//        search_auto_complete_text = true;
+        myAdapter.notifyDataSetChanged();
+    }
+
+    @Override
     public void onSearchFailure(String error) {
+        pDialog.setVisibility(View.GONE);
         search_auto_complete_text = true;
         Utils.showCustomAlertDialog(MySearchActivity.this, error, false, "OK", "");
     }
@@ -980,7 +1071,7 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
         if (totalPage > currentPage) {
             subDataList.remove(0);
         }
-        cardAdapter = new ProductsCustomAdapter(MySearchActivity.this, subDataList, this,this);
+        cardAdapter = new ProductsCustomAdapter(MySearchActivity.this, subDataList, this, this);
         cardAdapter.setViewMode(ViewMode.GRID);
         categoriesRecyclerView.setAdapter(cardAdapter);
         cardAdapter.notifyDataSetChanged();
@@ -1248,5 +1339,52 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
         startActivity(intent1);
         finish();
         overridePendingTransition(R.animator.trans_right_in, R.animator.trans_right_out);
+    }
+
+    private void searchProductsApiCall(String searchKey) {
+        if (isNetworkConnected()) {
+            ApiInterface apiInterface = ApiClient.getApiService("");
+            Map<String, Object> productRequest = new HashMap<>();
+            productRequest.put("params", searchKey);
+            Call<List<ProductSrearchResponse>> call = apiInterface.productSearch("Bearer p8g0s5tcwz1qnqibpszco93rp36ec7mk", productRequest);
+            call.enqueue(new retrofit2.Callback<List<ProductSrearchResponse>>() {
+
+                @Override
+                public void onResponse(Call<List<ProductSrearchResponse>> call, Response<List<ProductSrearchResponse>> response) {
+                    if (response.body() != null && response.isSuccessful() && response.body().get(0).getStatus().equalsIgnoreCase("1")) {
+                        onSuccessProductApi(response.body());
+                        //                        onSuccessApi(response.body());
+//                        InputMethodManager inputManager = (InputMethodManager) Objects.requireNonNull(getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
+//                        inputManager.hideSoftInputFromWindow(getDialog().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                    } else {
+//                        onFailureSearchApi();
+//                        InputMethodManager inputManager = (InputMethodManager) Objects.requireNonNull(getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
+//                        inputManager.hideSoftInputFromWindow(getDialog().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                    }
+                    Log.e("TAG", response.code() + "");
+                }
+
+                @Override
+                public void onFailure(Call<List<ProductSrearchResponse>> call, Throwable t) {
+                    Log.e("Service", "Failed res :: " + t.getMessage());
+                    Toast.makeText(getApplicationContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        } else {
+            Toast.makeText(this, "Internet Connection Not Available", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void onSuccessProductApi(List<ProductSrearchResponse> productSrearchResponse) {
+
+    }
+
+    private void onSuccessProductApi() {
+
+    }
+
+    public boolean isNetworkConnected() {
+        return NetworkUtils.isNetworkConnected(this);
     }
 }

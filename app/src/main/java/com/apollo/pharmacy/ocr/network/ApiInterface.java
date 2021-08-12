@@ -9,6 +9,7 @@ import com.apollo.pharmacy.ocr.model.GetProductListResponse;
 import com.apollo.pharmacy.ocr.model.GetStoreInfoResponse;
 import com.apollo.pharmacy.ocr.model.Global_api_request;
 import com.apollo.pharmacy.ocr.model.Global_api_response;
+import com.apollo.pharmacy.ocr.model.ItemSearchResponse;
 import com.apollo.pharmacy.ocr.model.Meta;
 import com.apollo.pharmacy.ocr.model.ModelMobileNumVerify;
 import com.apollo.pharmacy.ocr.model.NewSearchapirequest;
@@ -28,6 +29,7 @@ import com.apollo.pharmacy.ocr.model.PinepayrequestResult;
 import com.apollo.pharmacy.ocr.model.PlaceOrderReqModel;
 import com.apollo.pharmacy.ocr.model.PlaceOrderResModel;
 import com.apollo.pharmacy.ocr.model.PortFolioModel;
+import com.apollo.pharmacy.ocr.model.ProductSrearchResponse;
 import com.apollo.pharmacy.ocr.model.Reddemponits_getpoints_response;
 import com.apollo.pharmacy.ocr.model.Reddemponits_sendotp_response;
 import com.apollo.pharmacy.ocr.model.Redeempoints_checkvoucher_request;
@@ -183,4 +185,11 @@ public interface ApiInterface {
 
     @POST
     Call<UploadImageResponse> getUploadPrescriptionService(@Url String url, @Body UploadImageRequest request);
+
+    @POST("http://20.197.57.170//rest/V1/searchapi")
+    Call<List<ProductSrearchResponse>> productSearch(@Header("authorization") String token, @Body Object productSearchRequest);
+
+    @GET("ba8af54b-fa62-11eb-978a-d72b0c462c48")
+    Call<ItemSearchResponse> getSearchItemApiCall();
+
 }

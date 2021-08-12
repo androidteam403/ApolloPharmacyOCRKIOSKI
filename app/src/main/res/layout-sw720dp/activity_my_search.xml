@@ -36,9 +36,9 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_marginBottom="@dimen/five_dp"
-                    android:layout_marginTop="@dimen/forty_dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/forty_dp"
+                    android:layout_marginBottom="@dimen/five_dp"
                     android:orientation="horizontal">
 
                     <TextView
@@ -59,8 +59,8 @@
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:backgroundTint="@color/near_apollo_store_color"
                             android:background="@drawable/okay_btn_bg"
+                            android:backgroundTint="@color/near_apollo_store_color"
                             android:orientation="horizontal">
 
                             <TextView
@@ -105,12 +105,34 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="@dimen/sixty_dp"
                                 android:background="@color/text_dark_blue_color"
-                                android:orientation="horizontal">
+                                android:orientation="horizontal"
+                                android:padding="@dimen/ten_dp">
+
+                                <EditText
+                                    android:id="@+id/search_product_text"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:background="@color/white"
+                                    android:hint="Search Product"
+                                    android:imeOptions="flagNoExtractUi"
+                                    android:importantForAutofill="no"
+                                    android:inputType="text"
+                                    android:padding="@dimen/ten_dp"
+                                    android:textSize="@dimen/twenty_sp" />
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:padding="@dimen/ten_dp"
+                                    android:layout_alignParentEnd="true"
+                                    android:src="@drawable/ic_search"
+                                    android:contentDescription="@string/app_name" />
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:orientation="horizontal"
+                                    android:visibility="gone"
                                     android:weightSum="1">
 
                                     <LinearLayout
@@ -179,11 +201,13 @@
                                             </LinearLayout>
 
                                         </LinearLayout>
+
                                         <View
                                             android:layout_width="2dp"
                                             android:layout_height="match_parent"
-                                            android:visibility="gone"
-                                            android:background="@color/color_yellow_button"/>
+                                            android:background="@color/color_yellow_button"
+                                            android:visibility="gone" />
+
                                         <LinearLayout
                                             android:id="@+id/pharma_layout"
                                             android:layout_width="0dp"
@@ -242,15 +266,16 @@
                                             </LinearLayout>
 
                                         </LinearLayout>
+
                                         <View
                                             android:layout_width="2dp"
                                             android:layout_height="match_parent"
-                                            android:background="@color/color_yellow_button"/>
+                                            android:background="@color/color_yellow_button" />
 
                                         <LinearLayout
                                             android:id="@+id/image_layout"
-                                            android:layout_height="match_parent"
                                             android:layout_width="0dp"
+                                            android:layout_height="match_parent"
                                             android:layout_gravity="center"
                                             android:layout_marginTop="@dimen/two_dp"
                                             android:layout_marginEnd="@dimen/two_dp"
@@ -461,10 +486,10 @@
                                             android:layout_marginEnd="@dimen/two_dp"
                                             android:layout_marginBottom="@dimen/two_dp"
                                             android:layout_weight="0.2"
-                                            android:visibility="gone"
                                             android:background="@color/search_layout_bg"
                                             android:gravity="center"
-                                            android:orientation="horizontal">
+                                            android:orientation="horizontal"
+                                            android:visibility="gone">
 
                                             <ImageView
                                                 android:layout_width="@dimen/twenty_five_dp"
@@ -549,6 +574,13 @@
                                     android:textSize="@dimen/thirteen_sp" />
                             </LinearLayout>
                         </FrameLayout>
+                        <ProgressBar
+                            android:id="@+id/pdialog"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:indeterminate="true"
+                            android:visibility="gone" />
 
                         <RelativeLayout
                             android:layout_width="match_parent"
@@ -595,7 +627,8 @@
                 android:layout_height="match_parent"
                 android:layout_marginStart="@dimen/twenty_dp"
                 android:layout_marginEnd="@dimen/ten_dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -685,12 +718,13 @@
         <include
             android:id="@+id/networkErrorLayout"
             layout="@layout/layout_network_error" />
+
         <TextView
             android:id="@+id/trans_color_id"
-            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/transparent_color" />
+            android:background="@color/transparent_color"
+            android:visibility="gone" />
     </RelativeLayout>
 
     <include

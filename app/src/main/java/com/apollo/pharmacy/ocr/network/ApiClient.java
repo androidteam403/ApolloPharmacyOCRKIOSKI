@@ -1,5 +1,6 @@
 package com.apollo.pharmacy.ocr.network;
 
+import com.apollo.pharmacy.ocr.BuildConfig;
 import com.apollo.pharmacy.ocr.utility.Constants;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -67,5 +68,24 @@ public class ApiClient {
                 .client(httpClient)
                 .addConverterFactory(GsonConverterFactory.create(gson)).build();
         return retrofit.create(serviceClass);
+    }
+    private static final String ROOT_URL = "https://jsonblob.com/api/jsonBlob/";
+
+    public static ApiInterface getApiService() {
+        return getRetrofitInstance().create(ApiInterface.class);
+    }
+
+    private static Retrofit getRetrofitInstance() {
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(1, TimeUnit.MINUTES)
+                .writeTimeout(1, TimeUnit.MINUTES)
+                .readTimeout(1, TimeUnit.MINUTES)
+                .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+                .build();
+        return new Retrofit.Builder()
+                .baseUrl(ROOT_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build();
     }
 }

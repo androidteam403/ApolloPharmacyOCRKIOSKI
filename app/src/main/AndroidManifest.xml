@@ -54,6 +54,10 @@
         <activity
             android:name=".activities.StoreSetupActivity"
             android:screenOrientation="landscape">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
 
         </activity>
         <activity
@@ -109,10 +113,7 @@
         <activity
             android:name=".activities.HomeActivity"
             android:screenOrientation="landscape">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
         <activity
             android:name=".activities.USBCameraActivity"
@@ -140,7 +141,9 @@
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".activities.MySearchActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape">
+
+        </activity>
         <activity
             android:name=".activities.InsertPrescriptionActivity"
             android:screenOrientation="landscape" />
@@ -155,7 +158,7 @@
             android:screenOrientation="landscape" />
         <activity
             android:name=".activities.StorePickupActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"></activity>
         <activity
             android:name=".activities.MyOffersActivity"
             android:screenOrientation="landscape" />

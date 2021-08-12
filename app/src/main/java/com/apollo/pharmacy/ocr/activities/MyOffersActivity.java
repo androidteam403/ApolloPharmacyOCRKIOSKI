@@ -32,6 +32,7 @@ import com.apollo.pharmacy.ocr.enums.ViewMode;
 import com.apollo.pharmacy.ocr.interfaces.CartCountListener;
 import com.apollo.pharmacy.ocr.interfaces.MyOffersListener;
 import com.apollo.pharmacy.ocr.model.GetProductListResponse;
+import com.apollo.pharmacy.ocr.model.ItemSearchResponse;
 import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
 import com.apollo.pharmacy.ocr.model.Product;
 import com.apollo.pharmacy.ocr.model.ProductSearch;
@@ -407,6 +408,11 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
     @Override
     public void onFailureLoadMorePromotions(String message) {
         Utils.showCustomAlertDialog(MyOffersActivity.this, message, false, getApplicationContext().getResources().getString(R.string.label_ok), "");
+    }
+
+    @Override
+    public void onSuccessSearchItemApi(ItemSearchResponse itemSearchResponse) {
+
     }
 
     @Override
