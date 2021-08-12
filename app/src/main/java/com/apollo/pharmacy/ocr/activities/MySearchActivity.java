@@ -94,7 +94,7 @@ import rx.functions.FuncN;
 import rx.schedulers.Schedulers;
 
 public class MySearchActivity extends AppCompatActivity implements SubCategoryListener, MyOffersListener, CartCountListener,
-        ConnectivityReceiver.ConnectivityReceiverListener, KeyboardFragment.OnClickKeyboard, AdapterView.OnItemSelectedListener, CategoryGridItemAdapter.CheckOutData {
+        ConnectivityReceiver.ConnectivityReceiverListener, KeyboardFragment.OnClickKeyboard, AdapterView.OnItemSelectedListener, CategoryGridItemAdapter.CheckOutData, MedicineSearchAdapter.AddToCartCallBackData {
 
     List<OCRToDigitalMedicineResponse> dataList = new ArrayList<>();
     private ArrayList<ProductSearch> item = new ArrayList<>();
@@ -150,7 +150,7 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
         item = new ArrayList<>();
         dataList = new ArrayList<>();
         searchAutoComplete = findViewById(R.id.search_autocomplete);
-        myAdapter = new MedicineSearchAdapter(MySearchActivity.this, item);
+        myAdapter = new MedicineSearchAdapter(MySearchActivity.this, item,this,this);
         addMoreController = new MyOffersController(this);
         itemCountLayout = findViewById(R.id.item_count_layout);
         subCategoryCount = (TextView) findViewById(R.id.subcategory_count);
@@ -369,7 +369,13 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
         searchAutoComplete.setText("");
         searchAutoComplete.setInputType(InputType.TYPE_CLASS_TEXT);
         searchAutoComplete.setRawInputType(InputType.TYPE_CLASS_TEXT);
+
+        searchProducts.setText("");
+        searchProducts.setInputType(InputType.TYPE_CLASS_TEXT);
+        searchProducts.setRawInputType(InputType.TYPE_CLASS_TEXT);
+
         hideSystemKeyBoard();
+
 
         checkOutImage.setOnClickListener(v -> {
             Intent intent1 = new Intent(MySearchActivity.this, MyCartActivity.class);
@@ -559,6 +565,7 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
     private void hideSystemKeyBoard() {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         searchAutoComplete.setOnTouchListener(touchListenerEdt);
+        searchProducts.setOnTouchListener(touchListenerEdt);
     }
 
     View.OnTouchListener touchListenerEdt = (v, event) -> {
@@ -1386,5 +1393,39 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
 
     public boolean isNetworkConnected() {
         return NetworkUtils.isNetworkConnected(this);
+    }
+
+    @Override
+    public void addToCartCallBack() {
+        mySearchLayout.setBackgroundResource(R.color.unselected_menu_color);
+        dashboardSearchIcon.setImageResource(R.drawable.dashboard_search);
+        dashboardMySearch.setTextColor(getResources().getColor(R.color.colorWhite));
+        dashboardMySearchText.setTextColor(getResources().getColor(R.color.colorWhite));
+
+        myCartLayout.setBackgroundResource(R.color.selected_menu_color);
+        dashboardMyCartIcon.setImageResource(R.drawable.dashboard_cart_hover);
+        dashboardMyCart.setTextColor(getResources().getColor(R.color.selected_text_color));
+        dashboardMyCartText.setTextColor(getResources().getColor(R.color.selected_text_color));
+
+        myOrdersLayout.setBackgroundResource(R.color.unselected_menu_color);
+        dashboardMyOrdersIcon.setImageResource(R.drawable.dashboard_orders);
+        dashboardMyOrders.setTextColor(getResources().getColor(R.color.colorWhite));
+        dashboardMyOrdersText.setTextColor(getResources().getColor(R.color.colorWhite));
+
+        myOffersLayout.setBackgroundResource(R.color.unselected_menu_color);
+        dashboardMyOffersIcon.setImageResource(R.drawable.dashboard_offers);
+        dashboardMyOffers.setTextColor(getResources().getColor(R.color.colorWhite));
+        dashboardMyOffersText.setTextColor(getResources().getColor(R.color.colorWhite));
+
+        myProfileLayout.setBackgroundResource(R.color.unselected_menu_color);
+        dashboardMyProfileIcon.setImageResource(R.drawable.dashboard_profile);
+        dashboardMyProfile.setTextColor(getResources().getColor(R.color.colorWhite));
+        dashboardMyProfileText.setTextColor(getResources().getColor(R.color.colorWhite));
+
+        Intent intent1 = new Intent(MySearchActivity.this, MyCartActivity.class);
+        intent1.putExtra("activityname", "AddMoreActivity");
+        startActivity(intent1);
+        finish();
+        overridePendingTransition(R.animator.trans_right_in, R.animator.trans_right_out);
     }
 }

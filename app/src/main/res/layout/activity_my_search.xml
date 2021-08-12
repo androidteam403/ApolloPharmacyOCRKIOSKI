@@ -121,12 +121,8 @@
                                     android:layout_height="match_parent"
                                     android:background="@color/white"
                                     android:hint="Search Product"
-                                    android:imeOptions="flagNoExtractUi"
-                                    android:importantForAutofill="no"
-                                    android:inputType="text"
                                     android:padding="@dimen/two_dp"
-                                    android:textSize="@dimen/twelve_sp"
-                                    tools:ignore="TooDeepLayout" />
+                                    android:textSize="@dimen/twelve_sp" />
 
                                 <ImageView
                                     android:layout_width="wrap_content"

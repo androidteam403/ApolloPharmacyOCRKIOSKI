@@ -275,6 +275,14 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
         dialogItemBatchSelectionBinding.dialogButtonOK.setOnClickListener(okListener);
     }
 
+    public void setUnitIncreaseListener(View.OnClickListener setIncreaseListener) {
+        dialogItemBatchSelectionBinding.unitIncrease.setOnClickListener(setIncreaseListener);
+    }
+
+    public void setUnitDecreaseListener(View.OnClickListener setDecreaseListener) {
+        dialogItemBatchSelectionBinding.unitDecrease.setOnClickListener(setDecreaseListener);
+    }
+
 
     public void setNegativeListener(View.OnClickListener okListener) {
         dialogItemBatchSelectionBinding.dialogButtonNO.setOnClickListener(okListener);
@@ -293,6 +301,10 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
         dialogItemBatchSelectionBinding.title.setText(title);
     }
 
+    public void setQtyCount(String count) {
+        dialogItemBatchSelectionBinding.unitCount.setText(count);
+    }
+
     @Override
     public void onItemBatchClickData(int position, BatchList.Batch itemBatchSelectionData) {
         dialogItemBatchSelectionBinding.recyclerViewLay.setVisibility(View.GONE);
@@ -302,18 +314,22 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
 
     @Override
     public void setSuccessBatchList(BatchList batchList) {
-        dialogItemBatchSelectionBinding.batchSelectionData.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialogItemBatchSelectionBinding.recyclerViewLay.setVisibility(View.VISIBLE);
-                adapterItemBatchSelection = new AdapterItemBatchSelection(getContext(), batchList.getBatchList(), ItemBatchSelectionDilaog.this);
-                RecyclerView.LayoutManager mLayoutManager2 = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-                dialogItemBatchSelectionBinding.batchListRecycle.setLayoutManager(mLayoutManager2);
-                dialogItemBatchSelectionBinding.batchListRecycle.setItemAnimator(new DefaultItemAnimator());
-                dialogItemBatchSelectionBinding.batchListRecycle.setAdapter(adapterItemBatchSelection);
-                dialogItemBatchSelectionBinding.batchListRecycle.setNestedScrollingEnabled(false);
-            }
-        });
+        if (batchList != null && batchList.getBatchList() != null && batchList.getBatchList().size() > 0) {
+            dialogItemBatchSelectionBinding.date.setText(batchList.getBatchList().get(0).getExpDate());
+            dialogItemBatchSelectionBinding.price.setText(String.valueOf(batchList.getBatchList().get(0).getPrice()));
+            dialogItemBatchSelectionBinding.batchSelectionData.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialogItemBatchSelectionBinding.recyclerViewLay.setVisibility(View.VISIBLE);
+                    adapterItemBatchSelection = new AdapterItemBatchSelection(getContext(), batchList.getBatchList(), ItemBatchSelectionDilaog.this);
+                    RecyclerView.LayoutManager mLayoutManager2 = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+                    dialogItemBatchSelectionBinding.batchListRecycle.setLayoutManager(mLayoutManager2);
+                    dialogItemBatchSelectionBinding.batchListRecycle.setItemAnimator(new DefaultItemAnimator());
+                    dialogItemBatchSelectionBinding.batchListRecycle.setAdapter(adapterItemBatchSelection);
+                    dialogItemBatchSelectionBinding.batchListRecycle.setNestedScrollingEnabled(false);
+                }
+            });
+        }
     }
 
     @Override
