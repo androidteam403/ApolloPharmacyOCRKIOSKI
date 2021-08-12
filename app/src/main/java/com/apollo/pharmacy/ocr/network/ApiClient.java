@@ -72,10 +72,10 @@ public class ApiClient {
     private static final String ROOT_URL = "https://jsonblob.com/api/jsonBlob/";
 
     public static ApiInterface getApiService() {
-        return getRetrofitInstance().create(ApiInterface.class);
+        return getRetrofitInstance3().create(ApiInterface.class);
     }
 
-    private static Retrofit getRetrofitInstance() {
+    private static Retrofit getRetrofitInstance3() {
         OkHttpClient client = new OkHttpClient.Builder()
                 .connectTimeout(1, TimeUnit.MINUTES)
                 .writeTimeout(1, TimeUnit.MINUTES)
@@ -104,26 +104,6 @@ public class ApiClient {
                 .build();
         return new Retrofit.Builder()
                 .baseUrl(ROOT_URL_2)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(client)
-                .build();
-    }
-
-    private static final String ROOT_URL = "https://jsonblob.com/api/jsonBlob/";
-
-    public static ApiInterface getApiService() {
-        return getRetrofitInstance().create(ApiInterface.class);
-    }
-
-    private static Retrofit getRetrofitInstance() {
-        OkHttpClient client = new OkHttpClient.Builder()
-                .connectTimeout(1, TimeUnit.MINUTES)
-                .writeTimeout(1, TimeUnit.MINUTES)
-                .readTimeout(1, TimeUnit.MINUTES)
-                .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-                .build();
-        return new Retrofit.Builder()
-                .baseUrl(ROOT_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();
