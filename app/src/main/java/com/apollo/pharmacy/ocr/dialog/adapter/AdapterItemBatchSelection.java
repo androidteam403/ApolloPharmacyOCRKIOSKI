@@ -11,19 +11,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.apollo.pharmacy.ocr.R;
 import com.apollo.pharmacy.ocr.databinding.AdapterBatchSelectionListBinding;
-import com.apollo.pharmacy.ocr.dialog.ItemBatchSelectionDilaog;
+import com.apollo.pharmacy.ocr.model.BatchList;
 
 import java.util.List;
 
 public class AdapterItemBatchSelection extends RecyclerView.Adapter<AdapterItemBatchSelection.ViewHolder> {
     private Context context;
-    private List<ItemBatchSelectionDilaog.ItemBatchSelectionData> itemBatchSelectionDataList;
+    private List<BatchList.Batch> itemBatchSelectionDataList;
     private OnItemBatchClick onItemBatchClick;
 
-    public AdapterItemBatchSelection(Context context, List<ItemBatchSelectionDilaog.ItemBatchSelectionData> itemBatchSelectionDataList,OnItemBatchClick onItemBatchClick) {
+    public AdapterItemBatchSelection(Context context, List<BatchList.Batch> itemBatchSelectionDataList, OnItemBatchClick onItemBatchClick) {
         this.context = context;
         this.itemBatchSelectionDataList = itemBatchSelectionDataList;
-        this.onItemBatchClick=onItemBatchClick;
+        this.onItemBatchClick = onItemBatchClick;
     }
 
     @NonNull
@@ -36,9 +36,9 @@ public class AdapterItemBatchSelection extends RecyclerView.Adapter<AdapterItemB
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        ItemBatchSelectionDilaog.ItemBatchSelectionData itemBatchSelectionData = itemBatchSelectionDataList.get(position);
-        holder.adapterBatchSelectionListBinding.date.setText(itemBatchSelectionData.getDate());
-        holder.adapterBatchSelectionListBinding.price.setText(itemBatchSelectionData.getPrice());
+        BatchList.Batch itemBatchSelectionData = itemBatchSelectionDataList.get(position);
+        holder.adapterBatchSelectionListBinding.date.setText(itemBatchSelectionData.getExpDate());
+        holder.adapterBatchSelectionListBinding.price.setText(String.valueOf(itemBatchSelectionData.getPrice()));
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -49,7 +49,7 @@ public class AdapterItemBatchSelection extends RecyclerView.Adapter<AdapterItemB
 
 
     public interface OnItemBatchClick {
-         void onItemBatchClickData(int position, ItemBatchSelectionDilaog.ItemBatchSelectionData itemBatchSelectionData);
+        void onItemBatchClickData(int position, BatchList.Batch itemBatchSelectionData);
     }
 
     @Override

@@ -467,7 +467,7 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
                         if (totalPage > currentPage) {
                             product_list_array.remove(0);
                         }
-                        promotionList = new MyOffersAdapter(this, product_list_array, product_list_array, this,this);
+                        promotionList = new MyOffersAdapter(this, product_list_array, product_list_array, this);
                         promotionList.setViewMode(ViewMode.GRID);
                         trendingNowRecyclerView.setVisibility(View.GONE);
                         promotionsRecyclerView.setAdapter(promotionList);
@@ -521,7 +521,7 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
                             if (totalPage1 > currentPage1) {
                                 product_list_array1.remove(0);
                             }
-                            trendingNowList = new MyOffersAdapter(this, product_list_array1, product_list_array1, this,this);
+                            trendingNowList = new MyOffersAdapter(this, product_list_array1, product_list_array1, this);
                             trendingNowList.setViewMode(ViewMode.GRID);
                             promotionsRecyclerView.setVisibility(View.GONE);
                             trendingNowRecyclerView.setAdapter(trendingNowList);

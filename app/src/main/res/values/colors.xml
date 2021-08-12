@@ -108,4 +108,10 @@
     <color name="grey_color">#b6b6b6</color>
     <color name="lite_grey">#e6e6e6</color>
     <color name="lite_blue">#94e5e9</color>
+
+    <color name="search_customer_bg">#e8f3f5</color>
+    <color name="customer_info_header">#000000</color>
+    <color name="customer_doctor_divider">#ccccce</color>
+    <color name="nav_header_color">#28baba</color>
+
 </resources>

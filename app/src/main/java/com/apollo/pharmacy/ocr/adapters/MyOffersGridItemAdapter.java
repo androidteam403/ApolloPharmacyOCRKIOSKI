@@ -13,11 +13,13 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.apollo.pharmacy.ocr.R;
+import com.apollo.pharmacy.ocr.activities.MyCartActivity;
 import com.apollo.pharmacy.ocr.dialog.ItemBatchSelectionDilaog;
 import com.apollo.pharmacy.ocr.interfaces.CartCountListener;
 import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
 import com.apollo.pharmacy.ocr.model.Product;
 import com.apollo.pharmacy.ocr.utility.Constants;
+import com.apollo.pharmacy.ocr.utility.SessionManager;
 import com.apollo.pharmacy.ocr.utility.Utils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -57,12 +59,10 @@ public class MyOffersGridItemAdapter extends RecyclerView.ViewHolder {
         decreement_button = itemView.findViewById(R.id.decreement_button);
     }
 
-    private CategoryGridItemAdapter.CheckOutData checkOutData;
 
     @SuppressLint("ResourceAsColor")
-    public void setup(Context context, Product product, int position, List<OCRToDigitalMedicineResponse> datalist, ArrayList<Product> offersArrayList, CartCountListener cartCountListener, CategoryGridItemAdapter.CheckOutData checkOutData) {
-        this.checkOutData = checkOutData;
-        setClickListeners(product, context, position, datalist, offersArrayList, cartCountListener, checkOutData);
+    public void setup(Context context, Product product, int position, List<OCRToDigitalMedicineResponse> datalist, ArrayList<Product> offersArrayList, CartCountListener cartCountListener) {
+        setClickListeners(product, context, position, datalist, offersArrayList, cartCountListener);
         product_name.setText(product.getName());
         String rupee_symbol;
         rupee_symbol = "\u20B9";
@@ -111,8 +111,8 @@ public class MyOffersGridItemAdapter extends RecyclerView.ViewHolder {
         for (OCRToDigitalMedicineResponse data : datalist) {
             if (data.getArtCode() != null) {
                 if (data.getArtCode().equalsIgnoreCase(product.getSku())) {
-//                    itemAddToCartLayout.setVisibility(View.GONE);
-//                    inc_dec_card.setVisibility(View.VISIBLE);
+                    itemAddToCartLayout.setVisibility(View.GONE);
+                    inc_dec_card.setVisibility(View.VISIBLE);
                     product_qty.setText(String.valueOf(data.getQty()));
                     cartCountListener.cartCount(datalist.size());
                 }
@@ -120,174 +120,174 @@ public class MyOffersGridItemAdapter extends RecyclerView.ViewHolder {
         }
     }
 
-    private void setClickListeners(Product product, Context context, int position, List<OCRToDigitalMedicineResponse> datalist, ArrayList<Product> offersArrayList, CartCountListener cartCountListener, CategoryGridItemAdapter.CheckOutData checkOutData) {
+    private void setClickListeners(Product product, Context context, int position, List<OCRToDigitalMedicineResponse> datalist, ArrayList<Product> offersArrayList, CartCountListener cartCountListener) {
         itemAddToCartLayout.setOnClickListener(v -> {
 
-            ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(product, context, position, datalist,offersArrayList, cartCountListener);
-            itemBatchSelectionDilaog.setTitle(product.getName());
+//            ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(product, context, position, datalist,offersArrayList, cartCountListener);
+//            itemBatchSelectionDilaog.setTitle(product.getName());
+//
+//            itemBatchSelectionDilaog.setPositiveListener(view2 -> {
+//                if (checkOutData != null) {
+//                    checkOutData.checkoutData();
+//                }
+//                itemBatchSelectionDilaog.dismiss();
+//            });
+//            itemBatchSelectionDilaog.setNegativeListener(v1 -> {
+////                activityHomeBinding.transColorId.setVisibility(View.GONE);
+//                itemBatchSelectionDilaog.dismiss();
+//            });
+//            itemBatchSelectionDilaog.show();
 
-            itemBatchSelectionDilaog.setPositiveListener(view2 -> {
-                if (checkOutData != null) {
-                    checkOutData.checkoutData();
+            boolean product_avilable = false;
+            if (null != datalist) {
+                int count = 0;
+                for (OCRToDigitalMedicineResponse data : datalist) {
+                    String product_sku = product.getSku();
+                    if (product_sku.equalsIgnoreCase(data.getArtCode())) {
+                        product_avilable = true;
+                        int qty = data.getQty();
+                        qty = qty + 1;
+                        datalist.remove(count);
+
+                        OCRToDigitalMedicineResponse object1 = new OCRToDigitalMedicineResponse();
+                        object1.setArtName(offersArrayList.get(position).getName());
+                        object1.setArtCode(offersArrayList.get(position).getSku());
+                        if (null != offersArrayList.get(position).getSpecialPrice() && offersArrayList.get(position).getSpecialPrice().length() > 0) {
+                            object1.setArtprice(offersArrayList.get(position).getSpecialPrice());
+                        } else {
+                            object1.setArtprice(String.valueOf(offersArrayList.get(position).getPrice()));
+                        }
+                        object1.setMou(offersArrayList.get(position).getMou());
+                        object1.setQty(qty);
+                        object1.setContainer("Strip");
+                        datalist.add(object1);
+                        SessionManager.INSTANCE.setDataList(datalist);
+                        break;
+                    } else {
+                        product_avilable = false;
+                    }
+                    count = count + 1;
                 }
-                itemBatchSelectionDilaog.dismiss();
-            });
-            itemBatchSelectionDilaog.setNegativeListener(v1 -> {
-//                activityHomeBinding.transColorId.setVisibility(View.GONE);
-                itemBatchSelectionDilaog.dismiss();
-            });
-            itemBatchSelectionDilaog.show();
 
-//            boolean product_avilable = false;
-//            if (null != datalist) {
-//                int count = 0;
-//                for (OCRToDigitalMedicineResponse data : datalist) {
-//                    String product_sku = product.getSku();
-//                    if (product_sku.equalsIgnoreCase(data.getArtCode())) {
-//                        product_avilable = true;
-//                        int qty = data.getQty();
-//                        qty = qty + 1;
-//                        datalist.remove(count);
-//
-//                        OCRToDigitalMedicineResponse object1 = new OCRToDigitalMedicineResponse();
-//                        object1.setArtName(offersArrayList.get(position).getName());
-//                        object1.setArtCode(offersArrayList.get(position).getSku());
-//                        if (null != offersArrayList.get(position).getSpecialPrice() && offersArrayList.get(position).getSpecialPrice().length() > 0) {
-//                            object1.setArtprice(offersArrayList.get(position).getSpecialPrice());
-//                        } else {
-//                            object1.setArtprice(String.valueOf(offersArrayList.get(position).getPrice()));
-//                        }
-//                        object1.setMou(offersArrayList.get(position).getMou());
-//                        object1.setQty(qty);
-//                        object1.setContainer("Strip");
-//                        datalist.add(object1);
-//                        SessionManager.INSTANCE.setDataList(datalist);
-//                        break;
-//                    } else {
-//                        product_avilable = false;
-//                    }
-//                    count = count + 1;
-//                }
-//
-//                if (!product_avilable) {
-//                    OCRToDigitalMedicineResponse object1 = new OCRToDigitalMedicineResponse();
-//                    object1.setArtName(offersArrayList.get(position).getName());
-//                    object1.setArtCode(offersArrayList.get(position).getSku());
-//                    if (null != offersArrayList.get(position).getSpecialPrice() && offersArrayList.get(position).getSpecialPrice().length() > 0) {
-//                        object1.setArtprice(offersArrayList.get(position).getSpecialPrice());
-//                    } else {
-//                        object1.setArtprice(String.valueOf(offersArrayList.get(position).getPrice()));
-//                    }
-//                    object1.setMou(offersArrayList.get(position).getMou());
-//                    object1.setQty(1);
-//                    object1.setContainer("Strip");
-//                    datalist.add(object1);
-//                    SessionManager.INSTANCE.setDataList(datalist);
-//                    cartCountListener.cartCount(datalist.size());
-//                    product_qty.setText(String.valueOf("1"));
-//                }
-//            }
-//            if (context instanceof MyCartActivity) {
-//                ((MyCartActivity) context).message_string = "addtocart";
-//                ((MyCartActivity) context).updatecartlist();
-//            }
-//            itemAddToCartLayout.setVisibility(View.GONE);
-//            inc_dec_card.setVisibility(View.VISIBLE);
+                if (!product_avilable) {
+                    OCRToDigitalMedicineResponse object1 = new OCRToDigitalMedicineResponse();
+                    object1.setArtName(offersArrayList.get(position).getName());
+                    object1.setArtCode(offersArrayList.get(position).getSku());
+                    if (null != offersArrayList.get(position).getSpecialPrice() && offersArrayList.get(position).getSpecialPrice().length() > 0) {
+                        object1.setArtprice(offersArrayList.get(position).getSpecialPrice());
+                    } else {
+                        object1.setArtprice(String.valueOf(offersArrayList.get(position).getPrice()));
+                    }
+                    object1.setMou(offersArrayList.get(position).getMou());
+                    object1.setQty(1);
+                    object1.setContainer("Strip");
+                    datalist.add(object1);
+                    SessionManager.INSTANCE.setDataList(datalist);
+                    cartCountListener.cartCount(datalist.size());
+                    product_qty.setText(String.valueOf("1"));
+                }
+            }
+            if (context instanceof MyCartActivity) {
+                ((MyCartActivity) context).message_string = "addtocart";
+                ((MyCartActivity) context).updatecartlist();
+            }
+            itemAddToCartLayout.setVisibility(View.GONE);
+            inc_dec_card.setVisibility(View.VISIBLE);
         });
 
         increement_button.setOnClickListener(v -> {
-//            int qty = Integer.parseInt(product_qty.getText().toString());
-//            qty = qty + 1;
-//            String product_sku = offersArrayList.get(position).getSku();
-//            int count = 0;
-//            for (OCRToDigitalMedicineResponse data : datalist) {
-//                if (product_sku.equalsIgnoreCase(data.getArtCode())) {
-//                    datalist.remove(count);
-//                    break;
-//                }
-//                count = count + 1;
-//            }
-//
-//            OCRToDigitalMedicineResponse object1 = new OCRToDigitalMedicineResponse();
-//            object1.setArtName(offersArrayList.get(position).getName());
-//            object1.setArtCode(offersArrayList.get(position).getSku());
-//            if (null != offersArrayList.get(position).getSpecialPrice() && offersArrayList.get(position).getSpecialPrice().length() > 0) {
-//                object1.setArtprice(offersArrayList.get(position).getSpecialPrice());
-//            } else {
-//                object1.setArtprice(String.valueOf(offersArrayList.get(position).getPrice()));
-//            }
-//            object1.setMou(offersArrayList.get(position).getMou());
-//            object1.setQty(qty);
-//            object1.setContainer("Strip");
-//            datalist.add(object1);
-//            product_qty.setText(String.valueOf(qty));
-//            cartCountListener.cartCount(datalist.size());
-//            SessionManager.INSTANCE.setDataList(datalist);
-//            if (context instanceof MyCartActivity) {
-//                ((MyCartActivity) context).message_string = "cartupdate";
-//            }
-//            if (context instanceof MyCartActivity) {
-//                ((MyCartActivity) context).updatecartlist();
-//            }
+            int qty = Integer.parseInt(product_qty.getText().toString());
+            qty = qty + 1;
+            String product_sku = offersArrayList.get(position).getSku();
+            int count = 0;
+            for (OCRToDigitalMedicineResponse data : datalist) {
+                if (product_sku.equalsIgnoreCase(data.getArtCode())) {
+                    datalist.remove(count);
+                    break;
+                }
+                count = count + 1;
+            }
+
+            OCRToDigitalMedicineResponse object1 = new OCRToDigitalMedicineResponse();
+            object1.setArtName(offersArrayList.get(position).getName());
+            object1.setArtCode(offersArrayList.get(position).getSku());
+            if (null != offersArrayList.get(position).getSpecialPrice() && offersArrayList.get(position).getSpecialPrice().length() > 0) {
+                object1.setArtprice(offersArrayList.get(position).getSpecialPrice());
+            } else {
+                object1.setArtprice(String.valueOf(offersArrayList.get(position).getPrice()));
+            }
+            object1.setMou(offersArrayList.get(position).getMou());
+            object1.setQty(qty);
+            object1.setContainer("Strip");
+            datalist.add(object1);
+            product_qty.setText(String.valueOf(qty));
+            cartCountListener.cartCount(datalist.size());
+            SessionManager.INSTANCE.setDataList(datalist);
+            if (context instanceof MyCartActivity) {
+                ((MyCartActivity) context).message_string = "cartupdate";
+            }
+            if (context instanceof MyCartActivity) {
+                ((MyCartActivity) context).updatecartlist();
+            }
         });
 
         decreement_button.setOnClickListener(v -> {
-//            int qty = Integer.parseInt(product_qty.getText().toString());
-//            if (qty > 1) {
-//                qty = qty - 1;
-//                int count = 0;
-//                String product_code = offersArrayList.get(position).getSku();
-//                for (OCRToDigitalMedicineResponse data : datalist) {
-//                    if (product_code.equalsIgnoreCase(data.getArtCode())) {
-//                        datalist.remove(count);
-//                        break;
-//                    }
-//                    count = count + 1;
-//                }
-//                OCRToDigitalMedicineResponse object1 = new OCRToDigitalMedicineResponse();
-//                object1.setArtName(offersArrayList.get(position).getName());
-//                object1.setArtCode(offersArrayList.get(position).getSku());
-//                if (null != offersArrayList.get(position).getSpecialPrice() && offersArrayList.get(position).getSpecialPrice().length() > 0) {
-//                    object1.setArtprice(offersArrayList.get(position).getSpecialPrice());
-//                } else {
-//                    object1.setArtprice(String.valueOf(offersArrayList.get(position).getPrice()));
-//                }
-//                object1.setMou(offersArrayList.get(position).getMou());
-//                object1.setQty(qty);
-//                object1.setContainer("Strip");
-//                datalist.add(object1);
-//
-//                SessionManager.INSTANCE.setDataList(datalist);
-//                product_qty.setText(String.valueOf(qty));
-//                if (context instanceof MyCartActivity) {
-//                    ((MyCartActivity) context).message_string = "cartupdate";
-//                }
-//            } else {
-//                int qty1 = Integer.parseInt(product_qty.getText().toString());
-//                qty1 = qty1 - 1;
-//                int count = 0;
-//                String product_code = offersArrayList.get(position).getSku();
-//                for (OCRToDigitalMedicineResponse data : datalist) {
-//                    if (product_code.equalsIgnoreCase(data.getArtCode())) {
-//                        datalist.remove(count);
-//                        break;
-//                    }
-//                    count = count + 1;
-//                }
-//                SessionManager.INSTANCE.setDataList(datalist);
-//                itemAddToCartLayout.setVisibility(View.VISIBLE);
-//                inc_dec_card.setVisibility(View.GONE);
-//                if (itemAddToCartLayout.getVisibility() == View.VISIBLE) {
-//                    cartCountListener.cartCount(datalist.size());
-//                }
-//                if (context instanceof MyCartActivity) {
-//                    ((MyCartActivity) context).message_string = "cartdelete";
-//                    ((MyCartActivity) context).delete_item_sku = product_code;
-//                }
-//            }
-//            if (context instanceof MyCartActivity) {
-//                ((MyCartActivity) context).updatecartlist();
-//            }
+            int qty = Integer.parseInt(product_qty.getText().toString());
+            if (qty > 1) {
+                qty = qty - 1;
+                int count = 0;
+                String product_code = offersArrayList.get(position).getSku();
+                for (OCRToDigitalMedicineResponse data : datalist) {
+                    if (product_code.equalsIgnoreCase(data.getArtCode())) {
+                        datalist.remove(count);
+                        break;
+                    }
+                    count = count + 1;
+                }
+                OCRToDigitalMedicineResponse object1 = new OCRToDigitalMedicineResponse();
+                object1.setArtName(offersArrayList.get(position).getName());
+                object1.setArtCode(offersArrayList.get(position).getSku());
+                if (null != offersArrayList.get(position).getSpecialPrice() && offersArrayList.get(position).getSpecialPrice().length() > 0) {
+                    object1.setArtprice(offersArrayList.get(position).getSpecialPrice());
+                } else {
+                    object1.setArtprice(String.valueOf(offersArrayList.get(position).getPrice()));
+                }
+                object1.setMou(offersArrayList.get(position).getMou());
+                object1.setQty(qty);
+                object1.setContainer("Strip");
+                datalist.add(object1);
+
+                SessionManager.INSTANCE.setDataList(datalist);
+                product_qty.setText(String.valueOf(qty));
+                if (context instanceof MyCartActivity) {
+                    ((MyCartActivity) context).message_string = "cartupdate";
+                }
+            } else {
+                int qty1 = Integer.parseInt(product_qty.getText().toString());
+                qty1 = qty1 - 1;
+                int count = 0;
+                String product_code = offersArrayList.get(position).getSku();
+                for (OCRToDigitalMedicineResponse data : datalist) {
+                    if (product_code.equalsIgnoreCase(data.getArtCode())) {
+                        datalist.remove(count);
+                        break;
+                    }
+                    count = count + 1;
+                }
+                SessionManager.INSTANCE.setDataList(datalist);
+                itemAddToCartLayout.setVisibility(View.VISIBLE);
+                inc_dec_card.setVisibility(View.GONE);
+                if (itemAddToCartLayout.getVisibility() == View.VISIBLE) {
+                    cartCountListener.cartCount(datalist.size());
+                }
+                if (context instanceof MyCartActivity) {
+                    ((MyCartActivity) context).message_string = "cartdelete";
+                    ((MyCartActivity) context).delete_item_sku = product_code;
+                }
+            }
+            if (context instanceof MyCartActivity) {
+                ((MyCartActivity) context).updatecartlist();
+            }
         });
 
         item_imageview.setOnClickListener(new View.OnClickListener() {

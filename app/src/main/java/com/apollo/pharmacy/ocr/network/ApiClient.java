@@ -88,4 +88,44 @@ public class ApiClient {
                 .client(client)
                 .build();
     }
+
+    private static final String ROOT_URL_2 = "http://lms.apollopharmacy.org:8033/APK/";
+
+    public static ApiInterface getApiService2() {
+        return getRetrofitInstance2().create(ApiInterface.class);
+    }
+
+    private static Retrofit getRetrofitInstance2() {
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(1, TimeUnit.MINUTES)
+                .writeTimeout(1, TimeUnit.MINUTES)
+                .readTimeout(1, TimeUnit.MINUTES)
+                .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+                .build();
+        return new Retrofit.Builder()
+                .baseUrl(ROOT_URL_2)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build();
+    }
+
+    private static final String ROOT_URL = "https://jsonblob.com/api/jsonBlob/";
+
+    public static ApiInterface getApiService() {
+        return getRetrofitInstance().create(ApiInterface.class);
+    }
+
+    private static Retrofit getRetrofitInstance() {
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(1, TimeUnit.MINUTES)
+                .writeTimeout(1, TimeUnit.MINUTES)
+                .readTimeout(1, TimeUnit.MINUTES)
+                .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+                .build();
+        return new Retrofit.Builder()
+                .baseUrl(ROOT_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build();
+    }
 }
