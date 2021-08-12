@@ -7,6 +7,7 @@ import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 import java.util.concurrent.TimeUnit;
 
+import dmax.dialog.BuildConfig;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -67,5 +68,45 @@ public class ApiClient {
                 .client(httpClient)
                 .addConverterFactory(GsonConverterFactory.create(gson)).build();
         return retrofit.create(serviceClass);
+    }
+
+    private static final String ROOT_URL_2 = "http://lms.apollopharmacy.org:8033/APK/";
+
+    public static ApiInterface getApiService2() {
+        return getRetrofitInstance2().create(ApiInterface.class);
+    }
+
+    private static Retrofit getRetrofitInstance2() {
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(1, TimeUnit.MINUTES)
+                .writeTimeout(1, TimeUnit.MINUTES)
+                .readTimeout(1, TimeUnit.MINUTES)
+                .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+                .build();
+        return new Retrofit.Builder()
+                .baseUrl(ROOT_URL_2)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build();
+    }
+
+    private static final String ROOT_URL = "https://jsonblob.com/api/jsonBlob/";
+
+    public static ApiInterface getApiService() {
+        return getRetrofitInstance().create(ApiInterface.class);
+    }
+
+    private static Retrofit getRetrofitInstance() {
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(1, TimeUnit.MINUTES)
+                .writeTimeout(1, TimeUnit.MINUTES)
+                .readTimeout(1, TimeUnit.MINUTES)
+                .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+                .build();
+        return new Retrofit.Builder()
+                .baseUrl(ROOT_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build();
     }
 }

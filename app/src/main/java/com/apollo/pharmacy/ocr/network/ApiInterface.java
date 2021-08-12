@@ -1,7 +1,9 @@
 package com.apollo.pharmacy.ocr.network;
 
+import com.apollo.pharmacy.ocr.activities.mposstoresetup.model.StoreListResponseModel;
 import com.apollo.pharmacy.ocr.controller.GetStoreInfoRequest;
 import com.apollo.pharmacy.ocr.model.AddFCMTokenRequest;
+import com.apollo.pharmacy.ocr.model.BatchList;
 import com.apollo.pharmacy.ocr.model.Category_request;
 import com.apollo.pharmacy.ocr.model.Categorylist_Response;
 import com.apollo.pharmacy.ocr.model.GetImageRes;
@@ -183,4 +185,12 @@ public interface ApiInterface {
 
     @POST
     Call<UploadImageResponse> getUploadPrescriptionService(@Url String url, @Body UploadImageRequest request);
+
+    @GET("apollompos/Self/STORELIST")
+    Call<StoreListResponseModel> GET_STORES_LIST();
+
+    @GET("6009921b-fa66-11eb-978a-85578f7c5b29")
+    Call<BatchList> GET_BATCH_LIST();
+
+
 }
