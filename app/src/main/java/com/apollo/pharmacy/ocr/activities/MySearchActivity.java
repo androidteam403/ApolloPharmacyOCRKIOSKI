@@ -1,5 +1,6 @@
 package com.apollo.pharmacy.ocr.activities;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -115,16 +116,16 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
     boolean isEmpty = false;
     private String selectedProductName = "Baby Care";
     private int selectedProductID = Constants.Baby_Care;
-    private RelativeLayout mySearchLayout, myCartLayout, myOrdersLayout, myOffersLayout, myProfileLayout;
+    private RelativeLayout mySearchLayout, myCartLayout, myOrdersLayout, myOffersLayout, myProfileLayout, parentLayout;
     private ImageView dashboardSearchIcon, dashboardMyCartIcon, dashboardMyOrdersIcon, dashboardMyOffersIcon, dashboardMyProfileIcon;
     private TextView dashboardMySearch, dashboardMySearchText, dashboardMyCart, dashboardMyCartText, dashboardMyOrders, dashboardMyOrdersText,
             dashboardMyOffers, dashboardMyOffersText, dashboardMyProfile, dashboardMyProfileText, myCartCount;
-    private LinearLayout searchViewLayout, searchProductsLayout, searchCancelLayout, doneProductsLayout, fcPharmaLayout, search_product_layout;
+    private LinearLayout searchViewLayout, searchProductsLayout, searchCancelLayout, doneProductsLayout, fcPharmaLayout, search_product_layout, subParentLayout;
     private ImageView cancel_image;
     private ConstraintLayout constraintLayout;
     private KeyboardFragment keyboardFrag;
     private Handler handler = new Handler();
-    private LinearLayout itemCountLayout, fcItemCountLayout, pharmaItemCountLayout, fmcgLayout, pharmaLayout;
+    private LinearLayout itemCountLayout, fcItemCountLayout, pharmaItemCountLayout, fmcgLayout, pharmaLayout, subSubParentLayout;
     private FrameLayout medic_keyboard;
     private TextView plusIcon, itemsCount;
     private ImageView checkOutImage;
@@ -150,7 +151,7 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
         item = new ArrayList<>();
         dataList = new ArrayList<>();
         searchAutoComplete = findViewById(R.id.search_autocomplete);
-        myAdapter = new MedicineSearchAdapter(MySearchActivity.this, item,this,this);
+        myAdapter = new MedicineSearchAdapter(MySearchActivity.this, item, this, this);
         addMoreController = new MyOffersController(this);
         itemCountLayout = findViewById(R.id.item_count_layout);
         subCategoryCount = (TextView) findViewById(R.id.subcategory_count);
@@ -168,7 +169,7 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
         itemsCount = findViewById(R.id.items_count);
         checkOutImage = findViewById(R.id.checkout_image);
         search_product_layout = findViewById(R.id.search_product_layout);
-
+        subParentLayout = findViewById(R.id.sub_parent_layout);
 
         doneProductsLayout.setVisibility(View.GONE);
         mySearchController = new MySearchController(this);
@@ -194,6 +195,7 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
         myOrdersLayout = findViewById(R.id.myOrdersLayout);
         myOffersLayout = findViewById(R.id.myOffersLayout);
         myProfileLayout = findViewById(R.id.myProfileLayout);
+        parentLayout = findViewById(R.id.parent_layout);
 
         dashboardSearchIcon = findViewById(R.id.dashboardSearchIcon);
         dashboardMyCartIcon = findViewById(R.id.dashboardMyCartIcon);
@@ -223,6 +225,7 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
         pharmaItemCountTxt = findViewById(R.id.pharma_item_count_txt);
         searchImg = findViewById(R.id.search_icon);
         imageLayout = findViewById(R.id.image_layout);
+        subSubParentLayout = findViewById(R.id.sub_sub_parent_layout);
 
         initUi();
 
@@ -520,6 +523,7 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
                 productScanDialog.show();
             }
         });
+        hideKeyboardEmptyPlaceClick();
     }
 
 
@@ -1427,5 +1431,25 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
         startActivity(intent1);
         finish();
         overridePendingTransition(R.animator.trans_right_in, R.animator.trans_right_out);
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private void hideKeyboardEmptyPlaceClick() {
+        constraintLayout.setOnTouchListener((view, motionEvent) -> {
+            hideKeyBoard();
+            return false;
+        });
+        parentLayout.setOnTouchListener((view, motionEvent) -> {
+            hideKeyBoard();
+            return false;
+        });
+        subParentLayout.setOnTouchListener((view, motionEvent) -> {
+            hideKeyBoard();
+            return false;
+        });
+        subSubParentLayout.setOnTouchListener((view, motionEvent) -> {
+            hideKeyBoard();
+            return false;
+        });
     }
 }

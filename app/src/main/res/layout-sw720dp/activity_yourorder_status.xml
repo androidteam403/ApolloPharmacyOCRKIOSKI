@@ -3,19 +3,19 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:background="#CC000000">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#CC000000">
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
 
             <RelativeLayout
                 android:id="@+id/pharma_fmcg_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="@dimen/thirty_dp"
+                android:layout_margin="@dimen/fifty_dp"
                 android:background="@color/white">
 
                 <TextView
@@ -35,7 +35,7 @@
                     android:layout_height="@dimen/forty_dp"
                     android:layout_below="@+id/orderisin_progress_text"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="@dimen/ten_dp"
+                    android:layout_marginTop="@dimen/twenty_dp"
                     android:background="@color/nutrition_color"
                     android:paddingStart="@dimen/sixty_dp"
                     android:paddingEnd="@dimen/sixty_dp"
@@ -49,6 +49,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/pleaseproceedto_billing_text"
+                    android:layout_marginTop="@dimen/twenty_dp"
                     android:gravity="center_horizontal"
                     android:orientation="horizontal">
 
@@ -160,8 +161,6 @@
                             android:textColor="@color/black"
                             android:textStyle="bold" />
                     </RelativeLayout>
-
-
                 </LinearLayout>
 
                 <RelativeLayout
@@ -371,13 +370,13 @@
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:background="@drawable/blackstroke_yellowsolid_curves_bg"
+                        android:onClick="@{()-> callback.onClickContinueShopping()}"
                         android:paddingStart="@dimen/fifteen_dp"
                         android:paddingTop="@dimen/ten_dp"
                         android:paddingEnd="@dimen/fifteen_dp"
                         android:paddingBottom="@dimen/ten_dp"
                         android:text="Continue Shopping"
                         android:textColor="@color/BLACK"
-                        android:onClick="@{()-> callback.onClickContinueShopping()}"
                         android:textSize="@dimen/eighteen_sp"
                         android:textStyle="bold" />
                 </RelativeLayout>

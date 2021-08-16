@@ -49,10 +49,11 @@
                         android:textSize="@dimen/thirty_five_sp"
                         android:textStyle="bold" />
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="@dimen/two_hundred_fifty_dp"
+                        android:layout_height="@dimen/seventy_dp"
                         android:src="@drawable/scan_products1"
-                        android:layout_alignParentEnd="true"/>
+                        android:layout_alignParentEnd="true"
+                        android:contentDescription="@string/app_name" />
 
 
                     <TextView

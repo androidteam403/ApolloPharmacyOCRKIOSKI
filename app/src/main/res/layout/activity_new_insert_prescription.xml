@@ -119,6 +119,7 @@
                                 android:layout_height="@dimen/three_hundred_eighty_dp"
                                 android:layout_marginTop="@dimen/thirty_dp"
                                 android:contentDescription="@string/app_name"
+                                android:onClick="@{()-> callback.onClickPrescription()}"
                                 android:src="@drawable/apollo_prescription_image" />
 
                             <ImageView
@@ -132,8 +133,8 @@
                             <ImageView
                                 android:layout_width="25dp"
                                 android:layout_height="@dimen/twenty_five_dp"
-                                android:layout_centerVertical="true"
                                 android:layout_centerInParent="true"
+                                android:layout_centerVertical="true"
                                 android:contentDescription="@string/app_name"
                                 android:src="@drawable/search_grey" />
 
@@ -237,5 +238,79 @@
             android:layout_height="match_parent"
             android:background="@color/transparent_color"
             android:visibility="gone" />
+
+        <RelativeLayout
+            android:id="@+id/prescription_fullview_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:layout_margin="@dimen/fifty_dp"
+            android:visibility="gone">
+
+            <com.apollo.pharmacy.ocr.utility.ZoomImageView
+                android:id="@+id/prescription_fullview_img"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:contentDescription="@string/app_name"
+                android:scaleType="fitXY"
+                android:src="@drawable/apollo_prescription_image" />
+
+            <!--            <ImageView-->
+            <!--                android:id="@+id/close_fullview_prescription"-->
+            <!--                android:layout_width="@dimen/thirty_dp"-->
+            <!--                android:layout_height="@dimen/thirty_dp"-->
+            <!--                android:layout_alignParentEnd="true"-->
+            <!--                android:contentDescription="@string/app_name"-->
+            <!--                android:onClick="@{()-> callback.onCloseFullviewPrescription()}"-->
+            <!--                android:src="@drawable/scanagain_close" />-->
+
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/close_fullview_prescription"
+            android:layout_width="@dimen/seventy_dp"
+            android:layout_height="@dimen/seventy_dp"
+            android:contentDescription="@string/app_name"
+            android:onClick="@{()-> callback.onCloseFullviewPrescription()}"
+            android:padding="@dimen/ten_dp"
+            android:rotation="90"
+            android:src="@drawable/back_arrow_click_effect"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/zoomin_zoomout_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="@dimen/ten_dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/zoom_in"
+                android:layout_width="@dimen/fifty_dp"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/app_name"
+                android:onClick="@{()-> callback.onClickZoomIn()}"
+                android:src="@drawable/yellow_plus" />
+
+            <ImageView
+                android:id="@+id/zoom_out"
+                android:layout_width="@dimen/fifty_dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/ten_dp"
+                android:contentDescription="@string/app_name"
+                android:onClick="@{()-> callback.onClickZoomOut()}"
+                android:src="@drawable/yellow_minus" />
+
+
+        </LinearLayout>
     </RelativeLayout>
+
+    <data>
+
+        <variable
+            name="callback"
+            type="com.apollo.pharmacy.ocr.activities.insertprescriptionnew.InsertPrescriptionActivityNewListener" />
+    </data>
 </layout>

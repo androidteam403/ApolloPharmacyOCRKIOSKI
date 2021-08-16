@@ -307,6 +307,7 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
 
     @Override
     public void onItemBatchClickData(int position, BatchList.Batch itemBatchSelectionData) {
+        dialogItemBatchSelectionBinding.dialogItemBatchInnerParentLayout.setBackground(getContext().getResources().getDrawable(R.drawable.dialog_background));
         dialogItemBatchSelectionBinding.recyclerViewLay.setVisibility(View.GONE);
         dialogItemBatchSelectionBinding.date.setText(itemBatchSelectionData.getExpDate());
         dialogItemBatchSelectionBinding.price.setText(String.valueOf(itemBatchSelectionData.getPrice()));
@@ -320,6 +321,7 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
             dialogItemBatchSelectionBinding.batchSelectionData.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    dialogItemBatchSelectionBinding.dialogItemBatchInnerParentLayout.setBackground(getContext().getResources().getDrawable(R.drawable.dialog_item_batch_inner_parent_layout_bg));
                     dialogItemBatchSelectionBinding.recyclerViewLay.setVisibility(View.VISIBLE);
                     adapterItemBatchSelection = new AdapterItemBatchSelection(getContext(), batchList.getBatchList(), ItemBatchSelectionDilaog.this);
                     RecyclerView.LayoutManager mLayoutManager2 = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);

@@ -13,6 +13,7 @@
         android:background="@drawable/activity_theme_bg">
 
         <LinearLayout
+            android:id="@+id/sub_parent_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
@@ -30,6 +31,7 @@
             </RelativeLayout>
 
             <LinearLayout
+                android:id="@+id/sub_sub_parent_layout"
                 android:layout_width="@dimen/eight_hundred_eighty_five_dp"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
@@ -60,6 +62,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@drawable/okay_btn_bg"
+                            android:layout_centerVertical="true"
                             android:backgroundTint="@color/near_apollo_store_color"
                             android:orientation="horizontal">
 
@@ -76,9 +79,12 @@
                         <ImageView
                             android:layout_width="@dimen/forty_dp"
                             android:layout_height="@dimen/forty_dp"
+                            android:padding="@dimen/ten_dp"
+                            android:backgroundTint="@color/white"
+                            android:background="@drawable/round_untick_bg"
                             android:layout_centerVertical="true"
                             android:contentDescription="@string/app_name"
-                            android:src="@drawable/apollo_circle_logo" />
+                            android:src="@drawable/scan_products_icon" />
 
 
                     </RelativeLayout>

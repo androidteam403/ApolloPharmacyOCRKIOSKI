@@ -164,9 +164,9 @@ public class MedicineSearchAdapter extends ArrayAdapter<ProductSearch> {
                 intent.putExtra("product_mou", String.valueOf(medicine.getMou()));
                 intent.putExtra("product_position", String.valueOf(position));
                 LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
-                if (addToCartCallBackData!=null) {
-                    addToCartCallBackData.addToCartCallBack();
-                }
+//                if (addToCartCallBackData!=null) {
+//                    addToCartCallBackData.addToCartCallBack();
+//                }
                 itemBatchSelectionDilaog.dismiss();
             });
             itemBatchSelectionDilaog.setNegativeListener(v1 -> {
