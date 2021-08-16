@@ -136,7 +136,6 @@ public class HomeActivity extends AppCompatActivity implements ConnectivityRecei
         ImageView userLogout = findViewById(R.id.userLogout);
         ImageView dashboardApolloIcon = findViewById(R.id.apollo_logo);
         myCartCount = findViewById(R.id.lblCartCnt);
-        RelativeLayout scanPrescriptionBtn = findViewById(R.id.scan_prescription);
         LinearLayout uploadPrescriptionBtn = findViewById(R.id.upload_prescription);
         constraintLayout = findViewById(R.id.constraint_layout);
         homeActivityController = new HomeActivityController(this);
@@ -338,7 +337,7 @@ public class HomeActivity extends AppCompatActivity implements ConnectivityRecei
                 cartCountData(SessionManager.INSTANCE.getDataList().size());
             }
         }
-        scanPrescriptionBtn.setOnClickListener(arg0 -> {
+        activityHomeBinding.scanPrescription.setOnClickListener(arg0 -> {
             //Orginal Code
 
 //            Utils.dismissDialog();
