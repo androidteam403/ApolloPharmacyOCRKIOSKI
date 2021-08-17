@@ -132,12 +132,13 @@
                                     android:textSize="@dimen/twelve_sp" />
 
                                 <ImageView
+                                    android:id="@+id/clear_search_text"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_alignParentEnd="true"
                                     android:contentDescription="@string/app_name"
                                     android:padding="@dimen/five_dp"
-                                    android:src="@drawable/ic_search" />
+                                    android:src="@drawable/close_icon" />
 
                                 <LinearLayout
                                     android:layout_width="match_parent"

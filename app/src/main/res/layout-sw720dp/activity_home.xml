@@ -48,13 +48,14 @@
 
                     <TextView
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/one_hundred_dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/forty_dp"
                         android:gravity="center"
                         android:text="@string/label_welcome"
+                        android:layout_marginBottom="@dimen/five_dp"
                         android:textColor="@color/colorWhite"
                         android:textSize="@dimen/thirty_eight_sp"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -70,7 +71,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="@dimen/twenty_dp"
                         android:text="Select any one of the option below"
                         android:textColor="@color/white"
                         android:textSize="@dimen/twenty_eight_sp"
@@ -90,8 +90,8 @@
                             android:orientation="vertical">
 
                             <ImageView
-                                android:layout_width="@dimen/three_hundred_dp"
-                                android:layout_height="@dimen/three_hundred_eighty_dp"
+                                android:layout_width="@dimen/two_hundred_fifty_dp"
+                                android:layout_height="@dimen/three_hundred_dp"
                                 android:contentDescription="@string/app_name"
                                 android:src="@drawable/step1_icon" />
 
@@ -124,8 +124,8 @@
                             android:orientation="vertical">
 
                             <ImageView
-                                android:layout_width="@dimen/three_hundred_dp"
-                                android:layout_height="@dimen/three_hundred_eighty_dp"
+                                android:layout_width="@dimen/two_hundred_fifty_dp"
+                                android:layout_height="@dimen/three_hundred_dp"
                                 android:layout_marginStart="@dimen/twenty_dp"
                                 android:layout_marginEnd="@dimen/twenty_dp"
                                 android:contentDescription="@string/app_name"
@@ -160,8 +160,8 @@
                             android:orientation="vertical">
 
                             <ImageView
-                                android:layout_width="@dimen/three_hundred_dp"
-                                android:layout_height="@dimen/three_hundred_eighty_dp"
+                                android:layout_width="@dimen/two_hundred_fifty_dp"
+                                android:layout_height="@dimen/three_hundred_dp"
                                 android:contentDescription="@string/app_name"
                                 android:src="@drawable/step3_icon" />
 

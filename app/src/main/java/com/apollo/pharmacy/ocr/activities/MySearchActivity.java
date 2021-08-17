@@ -121,7 +121,7 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
     private TextView dashboardMySearch, dashboardMySearchText, dashboardMyCart, dashboardMyCartText, dashboardMyOrders, dashboardMyOrdersText,
             dashboardMyOffers, dashboardMyOffersText, dashboardMyProfile, dashboardMyProfileText, myCartCount;
     private LinearLayout searchViewLayout, searchProductsLayout, searchCancelLayout, doneProductsLayout, fcPharmaLayout, search_product_layout, subParentLayout;
-    private ImageView cancel_image;
+    private ImageView cancel_image, clearSearchText;
     private ConstraintLayout constraintLayout;
     private KeyboardFragment keyboardFrag;
     private Handler handler = new Handler();
@@ -170,6 +170,7 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
         checkOutImage = findViewById(R.id.checkout_image);
         search_product_layout = findViewById(R.id.search_product_layout);
         subParentLayout = findViewById(R.id.sub_parent_layout);
+        clearSearchText = findViewById(R.id.clear_search_text);
 
         doneProductsLayout.setVisibility(View.GONE);
         mySearchController = new MySearchController(this);
@@ -271,7 +272,12 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
                 }
             }
         });
-
+        clearSearchText.setOnClickListener(view -> {
+            searchProducts.setText(null);
+            if (item != null && item.size() > 0) {
+                item.clear();
+            }
+        });
 
         fmcgLayout.setOnClickListener(v -> {
             tabFlag = true;
