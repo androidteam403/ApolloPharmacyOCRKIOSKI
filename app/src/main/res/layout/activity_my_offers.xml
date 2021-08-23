@@ -46,11 +46,16 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
+                            android:layout_centerVertical="true"
                             android:text="@string/label_my_offers"
                             android:textColor="@color/colorWhite"
                             android:textSize="@dimen/twelve_sp"
                             android:textStyle="bold" />
+                        <ImageView
+                            android:layout_width="@dimen/one_hundred_dp"
+                            android:layout_height="@dimen/fifty_dp"
+                            android:src="@drawable/scan_products1"
+                            android:layout_alignParentEnd="true"/>
 
                         <TextView
                             android:id="@+id/checkout_text"

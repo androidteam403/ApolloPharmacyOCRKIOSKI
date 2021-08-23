@@ -35,6 +35,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.apollo.pharmacy.ocr.R;
+import com.apollo.pharmacy.ocr.activities.checkout.CheckoutActivity;
 import com.apollo.pharmacy.ocr.adapters.MyCartListAdapter;
 import com.apollo.pharmacy.ocr.adapters.PromotionsAdapter;
 import com.apollo.pharmacy.ocr.adapters.TrendingNowAdapter;
@@ -64,6 +65,7 @@ import com.apollo.pharmacy.ocr.utility.Utils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -374,7 +376,7 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
         public void onReceive(Context context, Intent intent) {
             String message = intent.getStringExtra("message");
             if (message.equalsIgnoreCase("ImageName")) {
-               //SessionManager.INSTANCE.setDynamicOrderId(intent.getStringExtra("imageId"));
+                //SessionManager.INSTANCE.setDynamicOrderId(intent.getStringExtra("imageId"));
                 myCartController.handleImageService(intent.getStringExtra("data"));
             }
         }
@@ -737,6 +739,7 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
         });
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -983,40 +986,48 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
         }
 
         checkOutImage.setOnClickListener(arg0 -> {
-            if (curationViewLayout.getVisibility() == View.GONE) {
-                if (dataList.size() > 0) {
-                    if (curationFlag) {
-                        if (curationDoneFlag) {
-                            checkDeliveryOption();
-                        } else {
-                            final Dialog dialog = new Dialog(MyCartActivity.this);
-                            dialog.setContentView(R.layout.view_curation_alert_dialog);
-                            if (dialog.getWindow() != null)
-                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                            dialog.show();
-                            TextView dialogTitleText = dialog.findViewById(R.id.dialog_info);
-                            Button okButton = dialog.findViewById(R.id.dialog_ok);
-                            Button declineButton = dialog.findViewById(R.id.dialog_cancel);
-                            dialogTitleText.setText(getResources().getString(R.string.label_curation_in_progress_text));
-                            okButton.setText(getResources().getString(R.string.label_ok));
-                            declineButton.setText(getResources().getString(R.string.label_cancel_text));
-                            okButton.setOnClickListener(v -> {
-                                dialog.dismiss();
-                                if (countdown_timer != null)
-                                    countdown_timer.cancel();
-                                checkDeliveryOption();
-                            });
-                            declineButton.setOnClickListener(v -> dialog.dismiss());
-                        }
-                    } else {
-                        checkDeliveryOption();
-                    }
-                } else {
-                    Utils.showSnackbar(MyCartActivity.this, constraint_Layout, getApplicationContext().getResources().getString(R.string.label_min_order_item_alert));
-                }
+            if (dataList != null && dataList.size() > 0) {
+                startActivity(CheckoutActivity.getStartIntent(this, dataList));
+                overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
             } else {
-                Utils.showSnackbar(MyCartActivity.this, constraint_Layout, getApplicationContext().getResources().getString(R.string.label_curation_progress_wait));
+                Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "No items added to cart", Snackbar.LENGTH_SHORT);
+                snackbar.getView().setBackgroundColor(getResources().getColor(R.color.color_yellow_button));
+                snackbar.show();
             }
+//            if (curationViewLayout.getVisibility() == View.GONE) {
+//                if (dataList.size() > 0) {
+//                    if (curationFlag) {
+//                        if (curationDoneFlag) {
+//                            checkDeliveryOption();
+//                        } else {
+//                            final Dialog dialog = new Dialog(MyCartActivity.this);
+//                            dialog.setContentView(R.layout.view_curation_alert_dialog);
+//                            if (dialog.getWindow() != null)
+//                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//                            dialog.show();
+//                            TextView dialogTitleText = dialog.findViewById(R.id.dialog_info);
+//                            Button okButton = dialog.findViewById(R.id.dialog_ok);
+//                            Button declineButton = dialog.findViewById(R.id.dialog_cancel);
+//                            dialogTitleText.setText(getResources().getString(R.string.label_curation_in_progress_text));
+//                            okButton.setText(getResources().getString(R.string.label_ok));
+//                            declineButton.setText(getResources().getString(R.string.label_cancel_text));
+//                            okButton.setOnClickListener(v -> {
+//                                dialog.dismiss();
+//                                if (countdown_timer != null)
+//                                    countdown_timer.cancel();
+//                                checkDeliveryOption();
+//                            });
+//                            declineButton.setOnClickListener(v -> dialog.dismiss());
+//                        }
+//                    } else {
+//                        checkDeliveryOption();
+//                    }
+//                } else {
+//                    Utils.showSnackbar(MyCartActivity.this, constraint_Layout, getApplicationContext().getResources().getString(R.string.label_min_order_item_alert));
+//                }
+//            } else {
+//                Utils.showSnackbar(MyCartActivity.this, constraint_Layout, getApplicationContext().getResources().getString(R.string.label_curation_progress_wait));
+//            }
         });
 
         promotionViewAll.setOnClickListener(arg0 -> {
@@ -1160,6 +1171,14 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
                 window.setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT);
             }
         });
+//        checkOutImage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(MyCartActivity.this, PaymentOptionsActivity.class);
+//                startActivity(intent);
+//                overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
+//            }
+//        });
     }
 
     private void startcountertimer() {

@@ -15,6 +15,7 @@ import android.widget.TextView;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.apollo.pharmacy.ocr.R;
+import com.apollo.pharmacy.ocr.dialog.ItemBatchSelectionDilaog;
 import com.apollo.pharmacy.ocr.model.ProductSearch;
 import com.apollo.pharmacy.ocr.utility.Constants;
 import com.bumptech.glide.Glide;
@@ -28,12 +29,16 @@ public class MedicineSearchAdapter extends ArrayAdapter<ProductSearch> {
     private ArrayList<ProductSearch> tempCustomer, suggestions;
     private Context context;
     private String string;
+    private Activity activity;
+    private AddToCartCallBackData addToCartCallBackData;
 
-    public MedicineSearchAdapter(Context context, ArrayList<ProductSearch> objects) {
+    public MedicineSearchAdapter(Context context, ArrayList<ProductSearch> objects, Activity activity, AddToCartCallBackData addToCartCallBackData) {
         super(context, android.R.layout.simple_list_item_1, objects);
         this.context = context;
         this.tempCustomer = new ArrayList<ProductSearch>(objects);
         this.suggestions = new ArrayList<ProductSearch>(objects);
+        this.activity = activity;
+        this.addToCartCallBackData = addToCartCallBackData;
     }
 
     @NotNull
@@ -57,6 +62,7 @@ public class MedicineSearchAdapter extends ArrayAdapter<ProductSearch> {
         ImageView medImage = (ImageView) convertView.findViewById(R.id.medImage);
         Glide.with(context)
                 .load(Constants.Get_Image_link + medicine.getImage())
+                .error(R.drawable.hospital)
                 .into(medImage);
 
         string = "\u20B9";
@@ -74,23 +80,46 @@ public class MedicineSearchAdapter extends ArrayAdapter<ProductSearch> {
         txtQty.setText("" + medicine.getQty());
 
         txtQtyIncrease.setOnClickListener(view -> {
-            medicine.setQty(medicine.getQty() + 1);
-            txtQty.setText("" + medicine.getQty());
-            Object priceobject = medicine.getPrice();
-            if (priceobject instanceof Integer) {
-                int medicine_price = (int) medicine.getPrice();
-                int total_price = Integer.parseInt(txtQty.getText().toString()) * medicine_price;
-                total_price_textview.setText(string + total_price);
-            } else {
-                double medicine_price = (Double) medicine.getPrice();
-                double total_price = Double.parseDouble(txtQty.getText().toString()) * medicine_price;
-                total_price_textview.setText(string + total_price);
-            }
+//            medicine.setQty(medicine.getQty() + 1);
+//            txtQty.setText("" + medicine.getQty());
+//            Object priceobject = medicine.getPrice();
+//            if (priceobject instanceof Integer) {
+//                int medicine_price = (int) medicine.getPrice();
+//                int total_price = Integer.parseInt(txtQty.getText().toString()) * medicine_price;
+//                total_price_textview.setText(string + total_price);
+//            } else {
+//                double medicine_price = (Double) medicine.getPrice();
+//                double total_price = Double.parseDouble(txtQty.getText().toString()) * medicine_price;
+//                total_price_textview.setText(string + total_price);
+//            }
         });
 
         txtQtyDecrease.setOnClickListener(view -> {
-            if (medicine.getQty() > 1) {
-                medicine.setQty(medicine.getQty() - 1);
+//            if (medicine.getQty() > 1) {
+//                medicine.setQty(medicine.getQty() - 1);
+//                txtQty.setText("" + medicine.getQty());
+//                Object priceobject = medicine.getPrice();
+//                if (priceobject instanceof Integer) {
+//                    int medicine_price = (int) medicine.getPrice();
+//                    int total_price = Integer.parseInt(txtQty.getText().toString()) * medicine_price;
+//                    total_price_textview.setText(string + total_price);
+//                } else {
+//                    double medicine_price = (Double) medicine.getPrice();
+//                    double total_price = Double.parseDouble(txtQty.getText().toString()) * medicine_price;
+//                    total_price_textview.setText(string + total_price);
+//                }
+//            }
+        });
+
+
+        btnAddCart.setOnClickListener(view -> {
+
+            ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(context);
+            itemBatchSelectionDilaog.setTitle(medicine.getName());
+
+            itemBatchSelectionDilaog.setUnitIncreaseListener(view1 -> {
+                medicine.setQty(medicine.getQty() + 1);
+                itemBatchSelectionDilaog.setQtyCount("" + medicine.getQty());
                 txtQty.setText("" + medicine.getQty());
                 Object priceobject = medicine.getPrice();
                 if (priceobject instanceof Integer) {
@@ -98,26 +127,60 @@ public class MedicineSearchAdapter extends ArrayAdapter<ProductSearch> {
                     int total_price = Integer.parseInt(txtQty.getText().toString()) * medicine_price;
                     total_price_textview.setText(string + total_price);
                 } else {
-                    double medicine_price = (Double) medicine.getPrice();
+                    double medicine_price = (Double.parseDouble(String.valueOf(medicine.getPrice())));
                     double total_price = Double.parseDouble(txtQty.getText().toString()) * medicine_price;
                     total_price_textview.setText(string + total_price);
                 }
-            }
-        });
+            });
 
-        btnAddCart.setOnClickListener(view -> {
-            Intent intent = new Intent("cardReceiver");
-            intent.putExtra("message", "Addtocart");
-            intent.putExtra("product_sku", medicine.getSku());
-            intent.putExtra("product_name", medicine.getName());
-            intent.putExtra("product_quantyty", txtQty.getText().toString());
-            intent.putExtra("product_price", String.valueOf(medicine.getPrice()));
-            // intent.putExtra("product_container", product_container);
-            intent.putExtra("product_mou", String.valueOf(medicine.getMou()));
-            intent.putExtra("product_position", String.valueOf(position));
-            LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
+            itemBatchSelectionDilaog.setUnitDecreaseListener(view2 -> {
+                if (medicine.getQty() > 1) {
+                    medicine.setQty(medicine.getQty() - 1);
+                    itemBatchSelectionDilaog.setQtyCount("" + medicine.getQty());
+                    txtQty.setText("" + medicine.getQty());
+                    Object priceobject = medicine.getPrice();
+                    if (priceobject instanceof Integer) {
+                        int medicine_price = (int) medicine.getPrice();
+                        int total_price = Integer.parseInt(txtQty.getText().toString()) * medicine_price;
+                        total_price_textview.setText(string + total_price);
+                    } else {
+                        double medicine_price = (Double.parseDouble(String.valueOf(medicine.getPrice())));
+                        double total_price = Double.parseDouble(txtQty.getText().toString()) * medicine_price;
+                        total_price_textview.setText(string + total_price);
+                    }
+                }
+            });
+
+            itemBatchSelectionDilaog.setPositiveListener(view3 -> {
+
+                Intent intent = new Intent("cardReceiver");
+                intent.putExtra("message", "Addtocart");
+                intent.putExtra("product_sku", medicine.getSku());
+                intent.putExtra("product_name", medicine.getName());
+                intent.putExtra("product_quantyty", txtQty.getText().toString());
+                intent.putExtra("product_price", String.valueOf(medicine.getPrice()));
+                // intent.putExtra("product_container", product_container);
+                intent.putExtra("medicineType", medicine.getMedicineType());
+                intent.putExtra("product_mou", String.valueOf(medicine.getMou()));
+                intent.putExtra("product_position", String.valueOf(position));
+                LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
+//                if (addToCartCallBackData!=null) {
+//                    addToCartCallBackData.addToCartCallBack();
+//                }
+                itemBatchSelectionDilaog.dismiss();
+            });
+            itemBatchSelectionDilaog.setNegativeListener(v1 -> {
+//                activityHomeBinding.transColorId.setVisibility(View.GONE);
+                itemBatchSelectionDilaog.dismiss();
+            });
+            itemBatchSelectionDilaog.show();
+
         });
         return convertView;
+    }
+
+    public interface AddToCartCallBackData {
+        void addToCartCallBack();
     }
 
     @NotNull
