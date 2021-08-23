@@ -1,4 +1,4 @@
-package com.apollo.pharmacy.ocr.interfaces;
+package com.apollo.pharmacy.ocr.activities.checkout;
 
 public interface CheckoutListener {
     void onClickNeedHomeDelivery();

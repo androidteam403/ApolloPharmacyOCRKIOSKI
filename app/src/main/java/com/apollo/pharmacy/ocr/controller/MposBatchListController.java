@@ -31,7 +31,6 @@ public class MposBatchListController {
         call.enqueue(new Callback<BatchList>() {
             @Override
             public void onResponse(@NotNull Call<BatchList> call, @NotNull Response<BatchList> response) {
-                Utils.dismissDialog();
                 if (response.body() != null) {
                     mposBatchListListener.setSuccessBatchList(response.body());
                 }

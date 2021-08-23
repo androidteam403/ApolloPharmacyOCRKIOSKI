@@ -729,6 +729,7 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
                                 OCRToDigitalMedicineResponse object1 = new OCRToDigitalMedicineResponse();
                                 object1.setArtName(intent.getStringExtra("product_name"));
                                 object1.setArtCode(intent.getStringExtra("product_sku"));
+                                object1.setMedicineType(intent.getStringExtra("medicineType"));
                                 object1.setQty(Integer.parseInt(intent.getStringExtra("product_quantyty")));
                                 if (null != intent.getStringExtra("product_price")) {
                                     object1.setArtprice(intent.getStringExtra("product_price"));
@@ -736,7 +737,7 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
                                     object1.setArtprice(String.valueOf(intent.getStringExtra("product_price")));
                                 }
                                 object1.setMou(String.valueOf(intent.getStringExtra("product_mou")));
-                                object1.setQty(qty);
+//                                object1.setQty(qty);
                                 object1.setContainer("Strip");
                                 dataList.add(object1);
                                 SessionManager.INSTANCE.setDataList(dataList);
@@ -751,6 +752,7 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
                         OCRToDigitalMedicineResponse object1 = new OCRToDigitalMedicineResponse();
                         object1.setArtName(intent.getStringExtra("product_name"));
                         object1.setArtCode(intent.getStringExtra("product_sku"));
+                        object1.setMedicineType(intent.getStringExtra("medicineType"));
                         object1.setQty(Integer.parseInt(intent.getStringExtra("product_quantyty")));
                         if (null != intent.getStringExtra("product_price")) {
                             object1.setArtprice(intent.getStringExtra("product_price"));
@@ -758,7 +760,7 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
                             object1.setArtprice(String.valueOf(intent.getStringExtra("product_price")));
                         }
                         object1.setMou(String.valueOf(intent.getStringExtra("product_mou")));
-                        object1.setQty(1);
+//                        object1.setQty(1);
                         object1.setContainer("Strip");
                         dataList.add(object1);
                         SessionManager.INSTANCE.setDataList(dataList);
@@ -969,6 +971,7 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
                 product.setSku(r.getArtCode());
                 product.setQty(1);
                 product.setDescription(r.getDescription());
+                product.setMedicineType(r.getMedicineType());
 //                product.setId(r.getId());
 //                product.setImage(r.getImage());
                 product.setIsInStock(r.getStockqty() != 0 ? 1 : 0);

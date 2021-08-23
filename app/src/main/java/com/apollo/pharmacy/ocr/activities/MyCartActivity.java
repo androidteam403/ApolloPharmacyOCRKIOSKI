@@ -29,13 +29,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.databinding.DataBindingUtil;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.apollo.pharmacy.ocr.R;
+import com.apollo.pharmacy.ocr.activities.checkout.CheckoutActivity;
 import com.apollo.pharmacy.ocr.adapters.MyCartListAdapter;
 import com.apollo.pharmacy.ocr.adapters.PromotionsAdapter;
 import com.apollo.pharmacy.ocr.adapters.TrendingNowAdapter;
@@ -65,6 +65,7 @@ import com.apollo.pharmacy.ocr.utility.Utils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -985,9 +986,14 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
         }
 
         checkOutImage.setOnClickListener(arg0 -> {
-            startActivity(CheckoutActivity.getStartIntent(this));
-            overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
-
+            if (dataList != null && dataList.size() > 0) {
+                startActivity(CheckoutActivity.getStartIntent(this, dataList));
+                overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
+            } else {
+                Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "No items added to cart", Snackbar.LENGTH_SHORT);
+                snackbar.getView().setBackgroundColor(getResources().getColor(R.color.color_yellow_button));
+                snackbar.show();
+            }
 //            if (curationViewLayout.getVisibility() == View.GONE) {
 //                if (dataList.size() > 0) {
 //                    if (curationFlag) {

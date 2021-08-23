@@ -173,7 +173,7 @@
             android:name=".activities.yourorderstatus.YourOrderStatusActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".activities.CheckoutActivity"
+            android:name=".activities.checkout.CheckoutActivity"
             android:screenOrientation="landscape"></activity>
         <activity
             android:name=".activities.OrderinProgressActivity"

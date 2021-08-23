@@ -24,6 +24,7 @@ import com.apollo.pharmacy.ocr.model.BatchList;
 import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
 import com.apollo.pharmacy.ocr.model.Product;
 import com.apollo.pharmacy.ocr.utility.SessionManager;
+import com.apollo.pharmacy.ocr.utility.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -305,6 +306,10 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
         dialogItemBatchSelectionBinding.unitCount.setText(count);
     }
 
+    public String getQtyCount() {
+        return dialogItemBatchSelectionBinding.unitCount.getText().toString();
+    }
+
     @Override
     public void onItemBatchClickData(int position, BatchList.Batch itemBatchSelectionData) {
         dialogItemBatchSelectionBinding.dialogItemBatchInnerParentLayout.setBackground(getContext().getResources().getDrawable(R.drawable.dialog_background));
@@ -318,6 +323,7 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
         if (batchList != null && batchList.getBatchList() != null && batchList.getBatchList().size() > 0) {
             dialogItemBatchSelectionBinding.date.setText(batchList.getBatchList().get(0).getExpDate());
             dialogItemBatchSelectionBinding.price.setText(String.valueOf(batchList.getBatchList().get(0).getPrice()));
+            Utils.dismissDialog();
             dialogItemBatchSelectionBinding.batchSelectionData.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

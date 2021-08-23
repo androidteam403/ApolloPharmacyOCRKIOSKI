@@ -30,9 +30,9 @@ public class InsertPrescriptionActivityNew extends AppCompatActivity implements 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         activityNewInsertPrescriptionBinding.setCallback(this);
 //        mScaleGestureDetector = new ScaleGestureDetector(this, new ScaleListener());
-        Bitmap bImage = BitmapFactory.decodeResource(this.getResources(), R.drawable.apollo_prescription_image);
+        Bitmap bImage = BitmapFactory.decodeResource(this.getResources(), R.drawable.apollo_prescription);
         activityNewInsertPrescriptionBinding.prescriptionFullviewImg.setImageBitmap(bImage);
-        activityNewInsertPrescriptionBinding.prescriptionFullviewImg.setMaxZoom(4f);
+//        activityNewInsertPrescriptionBinding.prescriptionFullviewImg.setMaxZoom(4f);
         listeners();
     }
 
@@ -125,7 +125,8 @@ public class InsertPrescriptionActivityNew extends AppCompatActivity implements 
     public void onClickPrescription() {
         activityNewInsertPrescriptionBinding.closeFullviewPrescription.setVisibility(View.VISIBLE);
         activityNewInsertPrescriptionBinding.scannedLay.setVisibility(View.GONE);
-        activityNewInsertPrescriptionBinding.prescriptionFullviewLayout.setVisibility(View.VISIBLE);
+//        activityNewInsertPrescriptionBinding.prescriptionFullviewLayout.setVisibility(View.VISIBLE);
+        activityNewInsertPrescriptionBinding.prescriptionFullviewImg.setVisibility(View.VISIBLE);
         activityNewInsertPrescriptionBinding.zoominZoomoutLayout.setVisibility(View.VISIBLE);
     }
 
@@ -133,18 +134,19 @@ public class InsertPrescriptionActivityNew extends AppCompatActivity implements 
     public void onCloseFullviewPrescription() {
         activityNewInsertPrescriptionBinding.scannedLay.setVisibility(View.VISIBLE);
         activityNewInsertPrescriptionBinding.closeFullviewPrescription.setVisibility(View.GONE);
-        activityNewInsertPrescriptionBinding.prescriptionFullviewLayout.setVisibility(View.GONE);
+//        activityNewInsertPrescriptionBinding.prescriptionFullviewLayout.setVisibility(View.GONE);
+        activityNewInsertPrescriptionBinding.prescriptionFullviewImg.setVisibility(View.GONE);
         activityNewInsertPrescriptionBinding.zoominZoomoutLayout.setVisibility(View.GONE);
 
     }
 
     @Override
     public void onClickZoomIn() {
-        activityNewInsertPrescriptionBinding.prescriptionFullviewImg.zoomIn();
+//        activityNewInsertPrescriptionBinding.prescriptionFullviewImg.zoomIn();
     }
 
     @Override
     public void onClickZoomOut() {
-        activityNewInsertPrescriptionBinding.prescriptionFullviewImg.zoomOut();
+//        activityNewInsertPrescriptionBinding.prescriptionFullviewImg.zoomOut();
     }
 }

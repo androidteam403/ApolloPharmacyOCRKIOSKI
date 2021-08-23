@@ -3,7 +3,10 @@ package com.apollo.pharmacy.ocr.activities;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -22,6 +25,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.apollo.pharmacy.ocr.R;
 import com.apollo.pharmacy.ocr.activities.insertprescriptionnew.InsertPrescriptionActivityNew;
@@ -32,7 +36,9 @@ import com.apollo.pharmacy.ocr.dialog.ProductScanDialog;
 import com.apollo.pharmacy.ocr.interfaces.HomeListener;
 import com.apollo.pharmacy.ocr.model.CategoryList;
 import com.apollo.pharmacy.ocr.model.Categorylist_Response;
+import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
 import com.apollo.pharmacy.ocr.model.PortFolioModel;
+import com.apollo.pharmacy.ocr.model.ProductSearch;
 import com.apollo.pharmacy.ocr.receiver.ConnectivityReceiver;
 import com.apollo.pharmacy.ocr.utility.ApplicationConstant;
 import com.apollo.pharmacy.ocr.utility.Constants;
@@ -42,6 +48,7 @@ import com.apollo.pharmacy.ocr.utility.Utils;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class HomeActivity extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener, HomeListener {
@@ -52,6 +59,7 @@ public class HomeActivity extends AppCompatActivity implements ConnectivityRecei
     private HomeActivityController homeActivityController;
     private ConstraintLayout constraintLayout;
     private ActivityHomeBinding activityHomeBinding;
+    List<OCRToDigitalMedicineResponse> dataList = new ArrayList<>();
 
     @Override
     public void onNetworkConnectionChanged(boolean isConnected) {
@@ -165,7 +173,8 @@ public class HomeActivity extends AppCompatActivity implements ConnectivityRecei
         });
 
         dashboardApolloIcon.setClickable(false);
-
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
+                new IntentFilter("cardReceiver"));
         mySearchLayout.setOnClickListener(v -> {
             mySearchLayout.setBackgroundResource(R.color.selected_menu_color);
             dashboardSearchIcon.setImageResource(R.drawable.dashboard_search_hover);
@@ -376,13 +385,43 @@ public class HomeActivity extends AppCompatActivity implements ConnectivityRecei
                     productScanDialog.dismiss();
 
                     ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(HomeActivity.this);
+                    ProductSearch medicine = new ProductSearch();
+                    medicine.setSku("APC0005");
+                    medicine.setQty(1);
+                    medicine.setName("Dolo");
+                    medicine.setMedicineType("PHAMRA");
+                    medicine.setPrice("6");
+                    medicine.setMou("");
 
+                    itemBatchSelectionDilaog.setUnitIncreaseListener(view3 -> {
+                        medicine.setQty(medicine.getQty() + 1);
+                        itemBatchSelectionDilaog.setQtyCount("" + medicine.getQty());
+                    });
+                    itemBatchSelectionDilaog.setUnitDecreaseListener(view4 -> {
+                        if (medicine.getQty() > 1) {
+                            medicine.setQty(medicine.getQty() - 1);
+                            itemBatchSelectionDilaog.setQtyCount("" + medicine.getQty());
+                        }
+                    });
                     itemBatchSelectionDilaog.setPositiveListener(view2 -> {
                         activityHomeBinding.transColorId.setVisibility(View.GONE);
-                        Intent intent = new Intent(HomeActivity.this, MyCartActivity.class);
-                        startActivity(intent);
-                        overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
+                        Intent intent = new Intent("cardReceiver");
+                        intent.putExtra("message", "Addtocart");
+                        intent.putExtra("product_sku", medicine.getSku());
+                        intent.putExtra("medicineType", medicine.getMedicineType());
+                        intent.putExtra("product_name", medicine.getName());
+                        intent.putExtra("product_quantyty", itemBatchSelectionDilaog.getQtyCount().toString());
+                        intent.putExtra("product_price", String.valueOf(medicine.getPrice()));
+                        // intent.putExtra("product_container", product_container);
+                        intent.putExtra("product_mou", String.valueOf(medicine.getMou()));
+                        intent.putExtra("product_position", String.valueOf(0));
+                        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
                         itemBatchSelectionDilaog.dismiss();
+                        Intent intent1 = new Intent(HomeActivity.this, MyCartActivity.class);
+                        intent.putExtra("activityname", "AddMoreActivity");
+                        startActivity(intent1);
+                        finish();
+                        overridePendingTransition(R.animator.trans_right_in, R.animator.trans_right_out);
                     });
                     itemBatchSelectionDilaog.setNegativeListener(v -> {
                         activityHomeBinding.transColorId.setVisibility(View.GONE);
@@ -399,6 +438,7 @@ public class HomeActivity extends AppCompatActivity implements ConnectivityRecei
             }
         });
     }
+
 
     private void checkGalleryPermission() {
         if ((ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) &&
@@ -537,5 +577,78 @@ public class HomeActivity extends AppCompatActivity implements ConnectivityRecei
         } else {
             welcomeTxt.setText(getApplicationContext().getResources().getString(R.string.label_welcome) + " " + getApplicationContext().getResources().getString(R.string.label_guest));
         }
+    }
+
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String message = intent.getStringExtra("message");
+            if (message.equalsIgnoreCase("Addtocart")) {
+                if (null != SessionManager.INSTANCE.getDataList()) {
+                    if (SessionManager.INSTANCE.getDataList().size() > 0) {
+//                        cartCount(SessionManager.INSTANCE.getDataList().size());
+                        dataList = SessionManager.INSTANCE.getDataList();
+                    }
+                }
+                boolean product_avilable = false;
+                if (null != dataList) {
+                    int count = 0;
+                    for (OCRToDigitalMedicineResponse data : dataList) {
+                        if (data.getArtCode() != null) {
+                            if (data.getArtCode().equalsIgnoreCase(intent.getStringExtra("product_sku"))) {
+                                product_avilable = true;
+                                int qty = data.getQty();
+                                qty = qty + 1;
+                                dataList.remove(count);
+                                OCRToDigitalMedicineResponse object1 = new OCRToDigitalMedicineResponse();
+                                object1.setArtName(intent.getStringExtra("product_name"));
+                                object1.setArtCode(intent.getStringExtra("product_sku"));
+                                object1.setMedicineType(intent.getStringExtra("medicineType"));
+                                object1.setQty(Integer.parseInt(intent.getStringExtra("product_quantyty")));
+                                if (null != intent.getStringExtra("product_price")) {
+                                    object1.setArtprice(intent.getStringExtra("product_price"));
+                                } else {
+                                    object1.setArtprice(String.valueOf(intent.getStringExtra("product_price")));
+                                }
+                                object1.setMou(String.valueOf(intent.getStringExtra("product_mou")));
+//                                object1.setQty(qty);
+                                object1.setContainer("Strip");
+                                dataList.add(object1);
+                                SessionManager.INSTANCE.setDataList(dataList);
+                                break;
+                            } else {
+                                product_avilable = false;
+                            }
+                        }
+                        count = count + 1;
+                    }
+                    if (!product_avilable) {
+                        OCRToDigitalMedicineResponse object1 = new OCRToDigitalMedicineResponse();
+                        object1.setArtName(intent.getStringExtra("product_name"));
+                        object1.setArtCode(intent.getStringExtra("product_sku"));
+                        object1.setMedicineType(intent.getStringExtra("medicineType"));
+                        object1.setQty(Integer.parseInt(intent.getStringExtra("product_quantyty")));
+                        if (null != intent.getStringExtra("product_price")) {
+                            object1.setArtprice(intent.getStringExtra("product_price"));
+                        } else {
+                            object1.setArtprice(String.valueOf(intent.getStringExtra("product_price")));
+                        }
+                        object1.setMou(String.valueOf(intent.getStringExtra("product_mou")));
+//                        object1.setQty(1);
+                        object1.setContainer("Strip");
+                        dataList.add(object1);
+                        SessionManager.INSTANCE.setDataList(dataList);
+                    }
+                }
+                Utils.showSnackbar(HomeActivity.this, constraintLayout, getApplicationContext().getResources().getString(R.string.label_item_added_cart));
+//                cartCount(dataList.size());
+            }
+        }
+    };
+
+    @Override
+    protected void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+        super.onPause();
     }
 }

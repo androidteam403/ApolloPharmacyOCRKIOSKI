@@ -114,6 +114,9 @@ public class ItemSearchResponse implements Serializable {
         @SerializedName("SubCategory")
         @Expose
         private String subCategory;
+        @SerializedName("MedicineType")
+        @Expose
+        private String medicineType;
         @SerializedName("SubClassification")
         @Expose
         private String subClassification;
@@ -300,6 +303,14 @@ public class ItemSearchResponse implements Serializable {
 
         public void setSubCategory(String subCategory) {
             this.subCategory = subCategory;
+        }
+
+        public String getMedicineType() {
+            return medicineType;
+        }
+
+        public void setMedicineType(String medicineType) {
+            this.medicineType = medicineType;
         }
 
         public String getSubClassification() {
