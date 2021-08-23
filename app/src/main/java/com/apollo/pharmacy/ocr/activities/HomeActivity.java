@@ -22,6 +22,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.apollo.pharmacy.ocr.R;
 import com.apollo.pharmacy.ocr.activities.insertprescriptionnew.InsertPrescriptionActivityNew;
@@ -33,6 +34,7 @@ import com.apollo.pharmacy.ocr.interfaces.HomeListener;
 import com.apollo.pharmacy.ocr.model.CategoryList;
 import com.apollo.pharmacy.ocr.model.Categorylist_Response;
 import com.apollo.pharmacy.ocr.model.PortFolioModel;
+import com.apollo.pharmacy.ocr.model.ProductSearch;
 import com.apollo.pharmacy.ocr.receiver.ConnectivityReceiver;
 import com.apollo.pharmacy.ocr.utility.ApplicationConstant;
 import com.apollo.pharmacy.ocr.utility.Constants;
@@ -376,12 +378,40 @@ public class HomeActivity extends AppCompatActivity implements ConnectivityRecei
                     productScanDialog.dismiss();
 
                     ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(HomeActivity.this);
+                    ProductSearch medicine = new ProductSearch();
+                    medicine.setSku("APC0005");
+                    medicine.setQty(1);
+                    medicine.setName("Dolo");
+                    medicine.setPrice("6");
+                    medicine.setMou("");
 
+                    itemBatchSelectionDilaog.setUnitIncreaseListener(view3 -> {
+                        medicine.setQty(medicine.getQty() + 1);
+                        itemBatchSelectionDilaog.setQtyCount("" + medicine.getQty());
+                    });
+                    itemBatchSelectionDilaog.setUnitDecreaseListener(view4 -> {
+                        if (medicine.getQty() > 1) {
+                            medicine.setQty(medicine.getQty() - 1);
+                            itemBatchSelectionDilaog.setQtyCount("" + medicine.getQty());
+                        }
+                    });
                     itemBatchSelectionDilaog.setPositiveListener(view2 -> {
                         activityHomeBinding.transColorId.setVisibility(View.GONE);
-                        Intent intent = new Intent(HomeActivity.this, MyCartActivity.class);
-                        startActivity(intent);
-                        overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
+                        Intent intent = new Intent("cardReceiver");
+                        intent.putExtra("message", "Addtocart");
+                        intent.putExtra("product_sku", medicine.getSku());
+                        intent.putExtra("product_name", medicine.getName());
+                        intent.putExtra("product_quantyty", itemBatchSelectionDilaog.getQtyCount().toString());
+                        intent.putExtra("product_price", String.valueOf(medicine.getPrice()));
+                        // intent.putExtra("product_container", product_container);
+                        intent.putExtra("product_mou", String.valueOf(medicine.getMou()));
+                        intent.putExtra("product_position", String.valueOf(0));
+                        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+//                        Intent intent1 = new Intent(MySearchActivity.this, MyCartActivity.class);
+//                        intent.putExtra("activityname", "AddMoreActivity");
+//                        startActivity(intent1);
+                        finish();
+                        overridePendingTransition(R.animator.trans_right_in, R.animator.trans_right_out);
                         itemBatchSelectionDilaog.dismiss();
                     });
                     itemBatchSelectionDilaog.setNegativeListener(v -> {
@@ -399,6 +429,7 @@ public class HomeActivity extends AppCompatActivity implements ConnectivityRecei
             }
         });
     }
+
 
     private void checkGalleryPermission() {
         if ((ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) &&

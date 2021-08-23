@@ -97,6 +97,7 @@ import rx.schedulers.Schedulers;
 public class MySearchActivity extends AppCompatActivity implements SubCategoryListener, MyOffersListener, CartCountListener,
         ConnectivityReceiver.ConnectivityReceiverListener, KeyboardFragment.OnClickKeyboard, AdapterView.OnItemSelectedListener, CategoryGridItemAdapter.CheckOutData, MedicineSearchAdapter.AddToCartCallBackData {
 
+    Context context;
     List<OCRToDigitalMedicineResponse> dataList = new ArrayList<>();
     private ArrayList<ProductSearch> item = new ArrayList<>();
     private EditText searchAutoComplete;
@@ -125,7 +126,7 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
     private ConstraintLayout constraintLayout;
     private KeyboardFragment keyboardFrag;
     private Handler handler = new Handler();
-    private LinearLayout itemCountLayout, fcItemCountLayout, pharmaItemCountLayout, fmcgLayout, pharmaLayout, subSubParentLayout;
+    private LinearLayout itemCountLayout, fcItemCountLayout, pharmaItemCountLayout, fmcgLayout, pharmaLayout, subSubParentLayout, checkOutNewBtn;
     private FrameLayout medic_keyboard;
     private TextView plusIcon, itemsCount;
     private ImageView checkOutImage;
@@ -138,6 +139,8 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
     private MyOffersController myOffersController;
     private EditText searchProducts;
     private ProgressBar pDialog;
+    TextView transColorId;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -168,6 +171,7 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
         plusIcon = findViewById(R.id.plus_icon);
         itemsCount = findViewById(R.id.items_count);
         checkOutImage = findViewById(R.id.checkout_image);
+        checkOutNewBtn = findViewById(R.id.check_out_btn);
         search_product_layout = findViewById(R.id.search_product_layout);
         subParentLayout = findViewById(R.id.sub_parent_layout);
         clearSearchText = findViewById(R.id.clear_search_text);
@@ -394,6 +398,14 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
             overridePendingTransition(R.animator.trans_right_in, R.animator.trans_right_out);
         });
 
+        checkOutNewBtn.setOnClickListener(v -> {
+            Intent intent1 = new Intent(MySearchActivity.this, MyCartActivity.class);
+            intent1.putExtra("activityname", "AddMoreActivity");
+            startActivity(intent1);
+            finish();
+            overridePendingTransition(R.animator.trans_right_in, R.animator.trans_right_out);
+        });
+
         doneProductsLayout.setOnClickListener(v -> {
             finish();
             Intent intent1 = new Intent(MySearchActivity.this, MyCartActivity.class);
@@ -497,7 +509,7 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiverAddmore,
                 new IntentFilter("MedicineReciverAddMore"));
         RelativeLayout scanProducts = findViewById(R.id.scan_products);
-        TextView transColorId = findViewById(R.id.trans_color_id);
+        transColorId = findViewById(R.id.trans_color_id);
         scanProducts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view1) {
@@ -505,22 +517,46 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
                 ProductScanDialog productScanDialog = new ProductScanDialog(MySearchActivity.this);
                 productScanDialog.setPositiveListener(view -> {
                     productScanDialog.dismiss();
-
                     ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(MySearchActivity.this);
+                    ProductSearch medicine = new ProductSearch();
+                    medicine.setSku("APC0005");
+                    medicine.setQty(1);
+                    medicine.setName("Static");
+                    medicine.setPrice("6");
+                    medicine.setMou("");
 
+                    itemBatchSelectionDilaog.setUnitIncreaseListener(view3 -> {
+                        medicine.setQty(medicine.getQty() + 1);
+                        itemBatchSelectionDilaog.setQtyCount("" + medicine.getQty());
+                    });
+                    itemBatchSelectionDilaog.setUnitDecreaseListener(view4 -> {
+                        if (medicine.getQty() > 1) {
+                            medicine.setQty(medicine.getQty() - 1);
+                            itemBatchSelectionDilaog.setQtyCount("" + medicine.getQty());
+                        }
+                    });
                     itemBatchSelectionDilaog.setPositiveListener(view2 -> {
                         transColorId.setVisibility(View.GONE);
-                        Intent intent = new Intent(MySearchActivity.this, MyCartActivity.class);
-                        startActivity(intent);
-                        overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
+
+                        Intent intent = new Intent("cardReceiver");
+                        intent.putExtra("message", "Addtocart");
+                        intent.putExtra("product_sku", medicine.getSku());
+                        intent.putExtra("product_name", medicine.getName());
+                        intent.putExtra("product_quantyty", itemBatchSelectionDilaog.getQtyCount().toString());
+                        intent.putExtra("product_price", String.valueOf(medicine.getPrice()));
+                        // intent.putExtra("product_container", product_container);
+                        intent.putExtra("product_mou", String.valueOf(medicine.getMou()));
+                        intent.putExtra("product_position", String.valueOf(0));
+                        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                        addToCartCallBack();
                         itemBatchSelectionDilaog.dismiss();
+
                     });
                     itemBatchSelectionDilaog.setNegativeListener(v -> {
                         transColorId.setVisibility(View.GONE);
                         itemBatchSelectionDilaog.dismiss();
                     });
                     itemBatchSelectionDilaog.show();
-
                 });
                 productScanDialog.setNegativeListener(v -> {
                     transColorId.setVisibility(View.GONE);
@@ -531,7 +567,6 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
         });
         hideKeyboardEmptyPlaceClick();
     }
-
 
     private void setPharmaFirst() {
         tabFlag = false;

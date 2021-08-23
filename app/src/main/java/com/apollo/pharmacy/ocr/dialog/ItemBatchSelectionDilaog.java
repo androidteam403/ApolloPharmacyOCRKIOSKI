@@ -305,6 +305,10 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
         dialogItemBatchSelectionBinding.unitCount.setText(count);
     }
 
+    public String getQtyCount() {
+        return dialogItemBatchSelectionBinding.unitCount.getText().toString();
+    }
+
     @Override
     public void onItemBatchClickData(int position, BatchList.Batch itemBatchSelectionData) {
         dialogItemBatchSelectionBinding.dialogItemBatchInnerParentLayout.setBackground(getContext().getResources().getDrawable(R.drawable.dialog_background));

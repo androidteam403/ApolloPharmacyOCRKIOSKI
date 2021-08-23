@@ -25,13 +25,13 @@ public class MposBatchListController {
     }
 
     public void getBatchList() {
-        Utils.showDialog(activity, "Loading…");
+//        Utils.showDialog(activity, "Loading…");
         ApiInterface api = ApiClient.getApiService();
         Call<BatchList> call = api.GET_BATCH_LIST();
         call.enqueue(new Callback<BatchList>() {
             @Override
             public void onResponse(@NotNull Call<BatchList> call, @NotNull Response<BatchList> response) {
-                Utils.dismissDialog();
+//                Utils.dismissDialog();
                 if (response.body() != null) {
                     mposBatchListListener.setSuccessBatchList(response.body());
                 }
