@@ -1,4 +1,4 @@
-package com.apollo.pharmacy.ocr.activities;
+package com.apollo.pharmacy.ocr.activities.checkout;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,14 +11,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import com.apollo.pharmacy.ocr.R;
+import com.apollo.pharmacy.ocr.activities.PaymentOptionsActivity;
 import com.apollo.pharmacy.ocr.databinding.ActivityCheckoutBinding;
-import com.apollo.pharmacy.ocr.interfaces.CheckoutListener;
+import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
+
+import java.io.Serializable;
+import java.util.List;
 
 public class CheckoutActivity extends AppCompatActivity implements CheckoutListener {
     private ActivityCheckoutBinding activityCheckoutBinding;
+    private List<OCRToDigitalMedicineResponse> dataList;
 
-    public static Intent getStartIntent(Context context) {
+    public static Intent getStartIntent(Context context, List<OCRToDigitalMedicineResponse> dataList) {
         Intent intent = new Intent(context, CheckoutActivity.class);
+        intent.putExtra("dataList", (Serializable) dataList);
         intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         return intent;
     }
@@ -29,7 +35,37 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
         activityCheckoutBinding = DataBindingUtil.setContentView(this, R.layout.activity_checkout);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         activityCheckoutBinding.setCallback(this);
+        setUp();
 
+    }
+
+    private void setUp() {
+        if (getIntent() != null) {
+            dataList = (List<OCRToDigitalMedicineResponse>) getIntent().getSerializableExtra("dataList");
+            if (dataList != null && dataList.size() > 0) {
+                int pharmaMedicineCount = 0;
+                int fmcgMedicineCount = 0;
+                double pharmaTotal = 0.0;
+                double fmcgTotal = 0.0;
+                for (OCRToDigitalMedicineResponse data : dataList) {
+                    if (data.getMedicineType().equals("PHARMA")) {
+                        pharmaMedicineCount++;
+                        pharmaTotal = pharmaTotal + (Double.parseDouble(data.getArtprice()) * data.getQty());
+                    } else {
+                        fmcgMedicineCount++;
+                        fmcgTotal = fmcgTotal + (Double.parseDouble(data.getArtprice()) * data.getQty());
+                    }
+                }
+                CheckoutuiModel checkoutuiModel = new CheckoutuiModel();
+                checkoutuiModel.setPharmaCount(String.valueOf(pharmaMedicineCount));
+                checkoutuiModel.setFmcgCount(String.valueOf(fmcgMedicineCount));
+                checkoutuiModel.setPharmaTotal(getResources().getString(R.string.rupee) + String.valueOf(pharmaTotal));
+                checkoutuiModel.setFmcgTotal(getResources().getString(R.string.rupee) + String.valueOf(fmcgTotal));
+                checkoutuiModel.setTotalMedicineCount(String.valueOf(dataList.size()));
+                checkoutuiModel.setMedicineTotal(getResources().getString(R.string.rupee) + String.valueOf(pharmaTotal + fmcgTotal));
+                activityCheckoutBinding.setModel(checkoutuiModel);
+            }
+        }
     }
 
     @Override
@@ -112,4 +148,64 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
         activityCheckoutBinding.payHereAndcarryImg.setImageDrawable(getResources().getDrawable(R.drawable.tick_white));
 
     }
+
+    public  class CheckoutuiModel {
+        private String pharmaCount;
+        private String fmcgCount;
+        private String fmcgTotal;
+        private String pharmaTotal;
+        private String totalMedicineCount;
+        private String medicineTotal;
+
+        public String getPharmaCount() {
+            return pharmaCount;
+        }
+
+        public void setPharmaCount(String pharmaCount) {
+            this.pharmaCount = pharmaCount;
+        }
+
+        public String getFmcgCount() {
+            return fmcgCount;
+        }
+
+        public void setFmcgCount(String fmcgCount) {
+            this.fmcgCount = fmcgCount;
+        }
+
+        public String getFmcgTotal() {
+            return fmcgTotal;
+        }
+
+        public void setFmcgTotal(String fmcgTotal) {
+            this.fmcgTotal = fmcgTotal;
+        }
+
+        public String getPharmaTotal() {
+            return pharmaTotal;
+        }
+
+        public void setPharmaTotal(String pharmaTotal) {
+            this.pharmaTotal = pharmaTotal;
+        }
+
+        public String getTotalMedicineCount() {
+            return totalMedicineCount;
+        }
+
+        public void setTotalMedicineCount(String totalMedicineCount) {
+            this.totalMedicineCount = totalMedicineCount;
+        }
+
+        public String getMedicineTotal() {
+            return medicineTotal;
+        }
+
+        public void setMedicineTotal(String medicineTotal) {
+            this.medicineTotal = medicineTotal;
+        }
+    }
 }
+/*  double amount = Double.parseDouble(String.valueOf(getProducts.getOfferprice()));
+ *DecimalFormat formatter = new DecimalFormat("#,###.00");
+ *String formatted = formatter.format(amount);*/

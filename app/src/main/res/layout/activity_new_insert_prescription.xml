@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -120,7 +121,7 @@
                                 android:layout_marginTop="@dimen/thirty_dp"
                                 android:contentDescription="@string/app_name"
                                 android:onClick="@{()-> callback.onClickPrescription()}"
-                                android:src="@drawable/apollo_prescription_image" />
+                                android:src="@drawable/apollo_prescription" />
 
                             <ImageView
                                 android:layout_width="@dimen/thirty_dp"
@@ -239,33 +240,48 @@
             android:background="@color/transparent_color"
             android:visibility="gone" />
 
-        <RelativeLayout
-            android:id="@+id/prescription_fullview_layout"
+        <!--        <RelativeLayout-->
+        <!--            android:id="@+id/prescription_fullview_layout"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="match_parent"-->
+        <!--            android:layout_centerInParent="true"-->
+        <!--            android:layout_margin="@dimen/fifty_dp"-->
+        <!--            android:visibility="gone">-->
+
+        <!--            <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView-->
+        <!--                android:id="@+id/prescription_fullview_img"-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:layout_centerInParent="true"-->
+        <!--                android:contentDescription="@string/app_name"-->
+        <!--                android:scaleType="fitXY"-->
+        <!--                android:visibility="gone"-->
+        <!--                android:src="@drawable/apollo_prescription_image" />-->
+        <com.apollo.pharmacy.ocr.utility.zoomage.ZoomageView
+            android:id="@+id/prescription_fullview_img"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_centerInParent="true"
-            android:layout_margin="@dimen/fifty_dp"
-            android:visibility="gone">
+            android:padding="@dimen/ten_dp"
+            android:src="@drawable/apollo_prescription"
+            android:visibility="gone"
+            app:zoomage_animateOnReset="true"
+            app:zoomage_autoCenter="true"
+            app:zoomage_autoResetMode="UNDER"
+            app:zoomage_maxScale="8"
+            app:zoomage_minScale="0.6"
+            app:zoomage_restrictBounds="false"
+            app:zoomage_translatable="true"
+            app:zoomage_zoomable="true" />
+        <!--            <ImageView-->
+        <!--                android:id="@+id/close_fullview_prescription"-->
+        <!--                android:layout_width="@dimen/thirty_dp"-->
+        <!--                android:layout_height="@dimen/thirty_dp"-->
+        <!--                android:layout_alignParentEnd="true"-->
+        <!--                android:contentDescription="@string/app_name"-->
+        <!--                android:onClick="@{()-> callback.onCloseFullviewPrescription()}"-->
+        <!--                android:src="@drawable/scanagain_close" />-->
 
-            <com.apollo.pharmacy.ocr.utility.ZoomImageView
-                android:id="@+id/prescription_fullview_img"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_centerInParent="true"
-                android:contentDescription="@string/app_name"
-                android:scaleType="fitXY"
-                android:src="@drawable/apollo_prescription_image" />
-
-            <!--            <ImageView-->
-            <!--                android:id="@+id/close_fullview_prescription"-->
-            <!--                android:layout_width="@dimen/thirty_dp"-->
-            <!--                android:layout_height="@dimen/thirty_dp"-->
-            <!--                android:layout_alignParentEnd="true"-->
-            <!--                android:contentDescription="@string/app_name"-->
-            <!--                android:onClick="@{()-> callback.onCloseFullviewPrescription()}"-->
-            <!--                android:src="@drawable/scanagain_close" />-->
-
-        </RelativeLayout>
+        <!--        </RelativeLayout>-->
 
         <ImageView
             android:id="@+id/close_fullview_prescription"
@@ -292,7 +308,8 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/app_name"
                 android:onClick="@{()-> callback.onClickZoomIn()}"
-                android:src="@drawable/yellow_plus" />
+                android:src="@drawable/yellow_plus"
+                android:visibility="gone" />
 
             <ImageView
                 android:id="@+id/zoom_out"
@@ -301,7 +318,8 @@
                 android:layout_marginStart="@dimen/ten_dp"
                 android:contentDescription="@string/app_name"
                 android:onClick="@{()-> callback.onClickZoomOut()}"
-                android:src="@drawable/yellow_minus" />
+                android:src="@drawable/yellow_minus"
+                android:visibility="gone" />
 
 
         </LinearLayout>

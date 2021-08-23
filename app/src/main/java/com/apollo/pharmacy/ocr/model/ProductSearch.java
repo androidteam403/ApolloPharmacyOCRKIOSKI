@@ -50,8 +50,16 @@ public class ProductSearch implements Serializable {
     @SerializedName("mou")
     @Expose
     private String mou;
-
+    private String medicineType;
     private Integer qty;
+
+    public String getMedicineType() {
+        return medicineType;
+    }
+
+    public void setMedicineType(String medicineType) {
+        this.medicineType = medicineType;
+    }
 
     public Integer getQty() {
         return qty;

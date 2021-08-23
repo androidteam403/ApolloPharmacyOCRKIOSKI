@@ -188,17 +188,18 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:gravity="center"
-                                android:text="@string/label_two"
+                                android:text="@{model.pharmaCount}"
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/eighteen_sp"
                                 android:textStyle="bold" />
 
                             <TextView
+                                android:id="@+id/pharma_total"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:gravity="center"
-                                android:text="\u20B9 372.85"
+                                android:text="@{model.pharmaTotal}"
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/eighteen_sp"
                                 android:textStyle="bold" />
@@ -347,17 +348,18 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:gravity="center"
-                                android:text="@string/label_five"
+                                android:text="@{model.fmcgCount}"
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/eighteen_sp"
                                 android:textStyle="bold" />
 
                             <TextView
+                                android:id="@+id/fmcg_total"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:gravity="center"
-                                android:text="\u20B9 440.00"
+                                android:text="@{model.fmcgTotal}"
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/eighteen_sp"
                                 android:textStyle="bold" />
@@ -467,7 +469,7 @@
                         android:layout_weight="1"
                         android:gravity="center"
                         android:padding="@dimen/three_dp"
-                        android:text="@string/label_seven"
+                        android:text="@{model.totalMedicineCount}"
                         android:textColor="@color/white"
                         android:textSize="@dimen/fourteen_sp"
                         android:textStyle="bold" />
@@ -485,7 +487,7 @@
                         android:layout_weight="1"
                         android:gravity="center"
                         android:padding="@dimen/three_dp"
-                        android:text="\u20B9 812.85"
+                        android:text="@{model.medicineTotal}"
                         android:textColor="@color/white"
                         android:textSize="@dimen/fourteen_sp"
                         android:textStyle="bold" />
@@ -525,7 +527,10 @@
 
         <variable
             name="callback"
-            type="com.apollo.pharmacy.ocr.interfaces.CheckoutListener" />
+            type="com.apollo.pharmacy.ocr.activities.checkout.CheckoutListener" />
 
+        <variable
+            name="model"
+            type="com.apollo.pharmacy.ocr.activities.checkout.CheckoutActivity.CheckoutuiModel" />
     </data>
 </layout>

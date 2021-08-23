@@ -16,7 +16,6 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.apollo.pharmacy.ocr.R;
 import com.apollo.pharmacy.ocr.dialog.ItemBatchSelectionDilaog;
-import com.apollo.pharmacy.ocr.model.Product;
 import com.apollo.pharmacy.ocr.model.ProductSearch;
 import com.apollo.pharmacy.ocr.utility.Constants;
 import com.bumptech.glide.Glide;
@@ -161,6 +160,7 @@ public class MedicineSearchAdapter extends ArrayAdapter<ProductSearch> {
                 intent.putExtra("product_quantyty", txtQty.getText().toString());
                 intent.putExtra("product_price", String.valueOf(medicine.getPrice()));
                 // intent.putExtra("product_container", product_container);
+                intent.putExtra("medicineType", medicine.getMedicineType());
                 intent.putExtra("product_mou", String.valueOf(medicine.getMou()));
                 intent.putExtra("product_position", String.valueOf(position));
                 LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
