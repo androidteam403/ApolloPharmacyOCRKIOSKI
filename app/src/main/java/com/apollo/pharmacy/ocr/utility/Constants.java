@@ -20,6 +20,11 @@ public class Constants extends Application {
     public static String CheckServiceAvailability = "http://lms.apollopharmacy.org:8033/MOBILEAPP/Apollo/Common/";
     public static String UPLOAD_IMAGE_URL = "http://pharmacydesk.apollopharmacy.org:83/Apollo/Uploadpresc";
 
+    public static String GET_STORE_LIST = "http://lms.apollopharmacy.org:8033/APK/apollompos/Self/STORELIST";
+
+
+
+
     public static String Add_FCM_Token = "";
     public static String Send_Otp = "";
     public static String Get_Past_Prescription = "";
