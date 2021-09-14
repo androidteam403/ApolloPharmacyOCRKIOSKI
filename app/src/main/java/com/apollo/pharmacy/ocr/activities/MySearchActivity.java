@@ -263,7 +263,7 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
                         search_auto_complete_text = false;
                         if (NetworkUtils.isNetworkConnected(MySearchActivity.this)) {
                             pDialog.setVisibility(View.VISIBLE);
-                            addMoreController.searchItemProducts(null);
+                            addMoreController.searchItemProducts(s.toString());
 //                            addMoreController.searchSuggestion(request, MySearchActivity.this);
                         } else {
                             Utils.showSnackbar(MySearchActivity.this, constraintLayout, getApplicationContext().getResources().getString(R.string.label_internet_error_text));
@@ -517,7 +517,7 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
                 ProductScanDialog productScanDialog = new ProductScanDialog(MySearchActivity.this);
                 productScanDialog.setPositiveListener(view -> {
                     productScanDialog.dismiss();
-                    ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(MySearchActivity.this);
+                    ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(MySearchActivity.this,null);
                     ProductSearch medicine = new ProductSearch();
                     medicine.setSku("APC0005");
                     medicine.setQty(1);
@@ -1006,7 +1006,7 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
                 product.setSku(r.getArtCode());
                 product.setQty(1);
                 product.setDescription(r.getDescription());
-                product.setMedicineType(r.getMedicineType());
+                product.setMedicineType(r.getCategory());
 //                product.setId(r.getId());
 //                product.setImage(r.getImage());
                 product.setIsInStock(r.getStockqty() != 0 ? 1 : 0);

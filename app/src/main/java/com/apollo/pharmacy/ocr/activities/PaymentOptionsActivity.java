@@ -13,12 +13,19 @@ import com.apollo.pharmacy.ocr.databinding.ActivityPaymentOptionsBinding;
 
 public class PaymentOptionsActivity extends AppCompatActivity {
     private ActivityPaymentOptionsBinding activityPaymentOptionsBinding;
+    private double pharmaTotalData = 0.0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activityPaymentOptionsBinding = DataBindingUtil.setContentView(this, R.layout.activity_payment_options);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        if (getIntent() != null) {
+            pharmaTotalData = (double) getIntent().getDoubleExtra("fmcgTotal", 0.0);
+        }
+
+        activityPaymentOptionsBinding.pharmaTotal.setText(getResources().getString(R.string.rupee) + String.valueOf(pharmaTotalData));
+
         listeners();
     }
 
@@ -84,7 +91,7 @@ public class PaymentOptionsActivity extends AppCompatActivity {
         activityPaymentOptionsBinding.cashOnDeliveryInfoLay.setVisibility(View.GONE);
     }
 
-    private void paymentTicksUnticksHandlings(){
+    private void paymentTicksUnticksHandlings() {
         activityPaymentOptionsBinding.tickBhimLay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

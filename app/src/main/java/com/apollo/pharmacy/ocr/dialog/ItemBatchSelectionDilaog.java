@@ -20,9 +20,10 @@ import com.apollo.pharmacy.ocr.databinding.DialogItemBatchSelectionBinding;
 import com.apollo.pharmacy.ocr.dialog.adapter.AdapterItemBatchSelection;
 import com.apollo.pharmacy.ocr.interfaces.CartCountListener;
 import com.apollo.pharmacy.ocr.interfaces.MposBatchListListener;
-import com.apollo.pharmacy.ocr.model.BatchList;
+import com.apollo.pharmacy.ocr.model.BatchListResponse;
 import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
 import com.apollo.pharmacy.ocr.model.Product;
+import com.apollo.pharmacy.ocr.model.ProductSearch;
 import com.apollo.pharmacy.ocr.utility.SessionManager;
 import com.apollo.pharmacy.ocr.utility.Utils;
 
@@ -217,10 +218,10 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
 //        batchSelection();
 
         MposBatchListController batchListController = new MposBatchListController(this, context);
-        batchListController.getBatchList();
+//        batchListController.getBatchList();
     }
 
-    public ItemBatchSelectionDilaog(Context context) {
+    public ItemBatchSelectionDilaog(Context context, String articalCode) {
         dialog = new Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
         dialogItemBatchSelectionBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.dialog_item_batch_selection, null, false);
         dialog.setContentView(dialogItemBatchSelectionBinding.getRoot());
@@ -230,7 +231,7 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
 //        batchSelection();
 
         MposBatchListController batchListController = new MposBatchListController(this, context);
-        batchListController.getBatchList();
+        batchListController.getBatchList(articalCode);
     }
 
     private AdapterItemBatchSelection adapterItemBatchSelection;
@@ -311,7 +312,7 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
     }
 
     @Override
-    public void onItemBatchClickData(int position, BatchList.Batch itemBatchSelectionData) {
+    public void onItemBatchClickData(int position, BatchListResponse.Batch itemBatchSelectionData) {
         dialogItemBatchSelectionBinding.dialogItemBatchInnerParentLayout.setBackground(getContext().getResources().getDrawable(R.drawable.dialog_background));
         dialogItemBatchSelectionBinding.recyclerViewLay.setVisibility(View.GONE);
         dialogItemBatchSelectionBinding.date.setText(itemBatchSelectionData.getExpDate());
@@ -319,17 +320,17 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
     }
 
     @Override
-    public void setSuccessBatchList(BatchList batchList) {
-        if (batchList != null && batchList.getBatchList() != null && batchList.getBatchList().size() > 0) {
-            dialogItemBatchSelectionBinding.date.setText(batchList.getBatchList().get(0).getExpDate());
-            dialogItemBatchSelectionBinding.price.setText(String.valueOf(batchList.getBatchList().get(0).getPrice()));
+    public void setSuccessBatchList(BatchListResponse batchListResponse) {
+        if (batchListResponse != null && batchListResponse.getBatchList() != null && batchListResponse.getBatchList().size() > 0) {
+            dialogItemBatchSelectionBinding.date.setText(batchListResponse.getBatchList().get(0).getExpDate());
+            dialogItemBatchSelectionBinding.price.setText(String.valueOf(batchListResponse.getBatchList().get(0).getPrice()));
             Utils.dismissDialog();
             dialogItemBatchSelectionBinding.batchSelectionData.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     dialogItemBatchSelectionBinding.dialogItemBatchInnerParentLayout.setBackground(getContext().getResources().getDrawable(R.drawable.dialog_item_batch_inner_parent_layout_bg));
                     dialogItemBatchSelectionBinding.recyclerViewLay.setVisibility(View.VISIBLE);
-                    adapterItemBatchSelection = new AdapterItemBatchSelection(getContext(), batchList.getBatchList(), ItemBatchSelectionDilaog.this);
+                    adapterItemBatchSelection = new AdapterItemBatchSelection(getContext(), batchListResponse.getBatchList(), ItemBatchSelectionDilaog.this);
                     RecyclerView.LayoutManager mLayoutManager2 = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
                     dialogItemBatchSelectionBinding.batchListRecycle.setLayoutManager(mLayoutManager2);
                     dialogItemBatchSelectionBinding.batchListRecycle.setItemAnimator(new DefaultItemAnimator());

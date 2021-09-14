@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.List;
 
-public class BatchList implements Serializable {
+public class BatchListResponse implements Serializable {
 
     @SerializedName("BatchList")
     @Expose
@@ -29,7 +29,7 @@ public class BatchList implements Serializable {
     @SerializedName("UserID")
     @Expose
     private Object userID;
-    private final static long serialVersionUID = 1246011398467035437L;
+    private final static long serialVersionUID = -1310781435737574267L;
 
     public List<Batch> getBatchList() {
         return batchList;
@@ -87,20 +87,21 @@ public class BatchList implements Serializable {
         this.userID = userID;
     }
 
-    public static class Batch implements Serializable {
+    public class Batch implements Serializable
+    {
 
         @SerializedName("BatchNo")
         @Expose
         private String batchNo;
         @SerializedName("CESSPerc")
         @Expose
-        private Integer cESSPerc;
+        private Double cESSPerc;
         @SerializedName("CESSTaxCode")
         @Expose
         private String cESSTaxCode;
         @SerializedName("CGSTPerc")
         @Expose
-        private Integer cGSTPerc;
+        private Double cGSTPerc;
         @SerializedName("CGSTTaxCode")
         @Expose
         private String cGSTTaxCode;
@@ -109,7 +110,7 @@ public class BatchList implements Serializable {
         private String expDate;
         @SerializedName("IGSTPerc")
         @Expose
-        private Integer iGSTPerc;
+        private Double iGSTPerc;
         @SerializedName("IGSTTaxCode")
         @Expose
         private String iGSTTaxCode;
@@ -121,13 +122,13 @@ public class BatchList implements Serializable {
         private String itemID;
         @SerializedName("MRP")
         @Expose
-        private Integer mrp;
+        private Double mrp;
         @SerializedName("NearByExpiry")
         @Expose
         private Boolean nearByExpiry;
         @SerializedName("Price")
         @Expose
-        private Integer price;
+        private Double price;
         @SerializedName("Q_O_H")
         @Expose
         private String qOH;
@@ -136,7 +137,7 @@ public class BatchList implements Serializable {
         private Integer reqqty;
         @SerializedName("SGSTPerc")
         @Expose
-        private Integer sGSTPerc;
+        private Double sGSTPerc;
         @SerializedName("SGSTTaxCode")
         @Expose
         private String sGSTTaxCode;
@@ -145,8 +146,8 @@ public class BatchList implements Serializable {
         private String sno;
         @SerializedName("TotalTax")
         @Expose
-        private Integer totalTax;
-        private final static long serialVersionUID = -8914313973056859259L;
+        private Double totalTax;
+        private final static long serialVersionUID = -2078008818526940221L;
 
         public String getBatchNo() {
             return batchNo;
@@ -156,11 +157,11 @@ public class BatchList implements Serializable {
             this.batchNo = batchNo;
         }
 
-        public Integer getCESSPerc() {
+        public Double getCESSPerc() {
             return cESSPerc;
         }
 
-        public void setCESSPerc(Integer cESSPerc) {
+        public void setCESSPerc(Double cESSPerc) {
             this.cESSPerc = cESSPerc;
         }
 
@@ -172,11 +173,11 @@ public class BatchList implements Serializable {
             this.cESSTaxCode = cESSTaxCode;
         }
 
-        public Integer getCGSTPerc() {
+        public Double getCGSTPerc() {
             return cGSTPerc;
         }
 
-        public void setCGSTPerc(Integer cGSTPerc) {
+        public void setCGSTPerc(Double cGSTPerc) {
             this.cGSTPerc = cGSTPerc;
         }
 
@@ -196,11 +197,11 @@ public class BatchList implements Serializable {
             this.expDate = expDate;
         }
 
-        public Integer getIGSTPerc() {
+        public Double getIGSTPerc() {
             return iGSTPerc;
         }
 
-        public void setIGSTPerc(Integer iGSTPerc) {
+        public void setIGSTPerc(Double iGSTPerc) {
             this.iGSTPerc = iGSTPerc;
         }
 
@@ -228,11 +229,11 @@ public class BatchList implements Serializable {
             this.itemID = itemID;
         }
 
-        public Integer getMrp() {
+        public Double getMrp() {
             return mrp;
         }
 
-        public void setMrp(Integer mrp) {
+        public void setMrp(Double mrp) {
             this.mrp = mrp;
         }
 
@@ -244,11 +245,11 @@ public class BatchList implements Serializable {
             this.nearByExpiry = nearByExpiry;
         }
 
-        public Integer getPrice() {
+        public Double getPrice() {
             return price;
         }
 
-        public void setPrice(Integer price) {
+        public void setPrice(Double price) {
             this.price = price;
         }
 
@@ -268,11 +269,11 @@ public class BatchList implements Serializable {
             this.reqqty = reqqty;
         }
 
-        public Integer getSGSTPerc() {
+        public Double getSGSTPerc() {
             return sGSTPerc;
         }
 
-        public void setSGSTPerc(Integer sGSTPerc) {
+        public void setSGSTPerc(Double sGSTPerc) {
             this.sGSTPerc = sGSTPerc;
         }
 
@@ -292,11 +293,11 @@ public class BatchList implements Serializable {
             this.sno = sno;
         }
 
-        public Integer getTotalTax() {
+        public Double getTotalTax() {
             return totalTax;
         }
 
-        public void setTotalTax(Integer totalTax) {
+        public void setTotalTax(Double totalTax) {
             this.totalTax = totalTax;
         }
 

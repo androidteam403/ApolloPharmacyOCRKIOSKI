@@ -114,7 +114,7 @@ public class MedicineSearchAdapter extends ArrayAdapter<ProductSearch> {
 
         btnAddCart.setOnClickListener(view -> {
 
-            ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(context);
+            ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(context,medicine.getSku());
             itemBatchSelectionDilaog.setTitle(medicine.getName());
 
             itemBatchSelectionDilaog.setUnitIncreaseListener(view1 -> {

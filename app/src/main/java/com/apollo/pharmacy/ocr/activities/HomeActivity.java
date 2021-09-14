@@ -384,7 +384,7 @@ public class HomeActivity extends AppCompatActivity implements ConnectivityRecei
                 productScanDialog.setPositiveListener(view -> {
                     productScanDialog.dismiss();
 
-                    ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(HomeActivity.this);
+                    ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(HomeActivity.this,null);
                     ProductSearch medicine = new ProductSearch();
                     medicine.setSku("APC0005");
                     medicine.setQty(1);
