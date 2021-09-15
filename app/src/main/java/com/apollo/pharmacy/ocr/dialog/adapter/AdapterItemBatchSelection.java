@@ -11,16 +11,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.apollo.pharmacy.ocr.R;
 import com.apollo.pharmacy.ocr.databinding.AdapterBatchSelectionListBinding;
-import com.apollo.pharmacy.ocr.model.BatchList;
+import com.apollo.pharmacy.ocr.model.BatchListResponse;
 
 import java.util.List;
 
 public class AdapterItemBatchSelection extends RecyclerView.Adapter<AdapterItemBatchSelection.ViewHolder> {
     private Context context;
-    private List<BatchList.Batch> itemBatchSelectionDataList;
+    private List<BatchListResponse.Batch> itemBatchSelectionDataList;
     private OnItemBatchClick onItemBatchClick;
 
-    public AdapterItemBatchSelection(Context context, List<BatchList.Batch> itemBatchSelectionDataList, OnItemBatchClick onItemBatchClick) {
+    public AdapterItemBatchSelection(Context context, List<BatchListResponse.Batch> itemBatchSelectionDataList, OnItemBatchClick onItemBatchClick) {
         this.context = context;
         this.itemBatchSelectionDataList = itemBatchSelectionDataList;
         this.onItemBatchClick = onItemBatchClick;
@@ -36,7 +36,7 @@ public class AdapterItemBatchSelection extends RecyclerView.Adapter<AdapterItemB
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        BatchList.Batch itemBatchSelectionData = itemBatchSelectionDataList.get(position);
+        BatchListResponse.Batch itemBatchSelectionData = itemBatchSelectionDataList.get(position);
         holder.adapterBatchSelectionListBinding.date.setText(itemBatchSelectionData.getExpDate());
         holder.adapterBatchSelectionListBinding.price.setText(String.valueOf(itemBatchSelectionData.getPrice()));
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -49,7 +49,7 @@ public class AdapterItemBatchSelection extends RecyclerView.Adapter<AdapterItemB
 
 
     public interface OnItemBatchClick {
-        void onItemBatchClickData(int position, BatchList.Batch itemBatchSelectionData);
+        void onItemBatchClickData(int position, BatchListResponse.Batch itemBatchSelectionData);
     }
 
     @Override

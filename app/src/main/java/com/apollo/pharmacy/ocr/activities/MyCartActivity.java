@@ -758,6 +758,9 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
         helpText.setText(getResources().getString(R.string.faq));
         faqLayout.setOnClickListener(view -> startActivity(new Intent(MyCartActivity.this, FAQActivity.class)));
 
+        
+
+
         ImageView customerCareImg = findViewById(R.id.customer_care_icon);
         LinearLayout customerHelpLayout = findViewById(R.id.customer_help_layout);
         customerHelpLayout.setVisibility(View.GONE);

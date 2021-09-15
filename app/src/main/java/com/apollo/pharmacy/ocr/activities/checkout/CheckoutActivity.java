@@ -39,6 +39,8 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
 
     }
 
+    double fmcgToatalPass = 0.0;
+
     private void setUp() {
         if (getIntent() != null) {
             dataList = (List<OCRToDigitalMedicineResponse>) getIntent().getSerializableExtra("dataList");
@@ -48,14 +50,17 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
                 double pharmaTotal = 0.0;
                 double fmcgTotal = 0.0;
                 for (OCRToDigitalMedicineResponse data : dataList) {
-                    if (data.getMedicineType().equals("PHARMA")) {
-                        pharmaMedicineCount++;
-                        pharmaTotal = pharmaTotal + (Double.parseDouble(data.getArtprice()) * data.getQty());
-                    } else {
-                        fmcgMedicineCount++;
-                        fmcgTotal = fmcgTotal + (Double.parseDouble(data.getArtprice()) * data.getQty());
+                    if (data.getMedicineType() != null) {
+                        if (data.getMedicineType().equals("PHARMA")) {
+                            pharmaMedicineCount++;
+                            pharmaTotal = pharmaTotal + (Double.parseDouble(data.getArtprice()) * data.getQty());
+                        } else {
+                            fmcgMedicineCount++;
+                            fmcgTotal = fmcgTotal + (Double.parseDouble(data.getArtprice()) * data.getQty());
+                        }
                     }
                 }
+                fmcgToatalPass = fmcgTotal;
                 CheckoutuiModel checkoutuiModel = new CheckoutuiModel();
                 checkoutuiModel.setPharmaCount(String.valueOf(pharmaMedicineCount));
                 checkoutuiModel.setFmcgCount(String.valueOf(fmcgMedicineCount));
@@ -127,6 +132,7 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
     public void onClickPaynow() {
         Toast.makeText(this, "You clicked on Paynow", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(CheckoutActivity.this, PaymentOptionsActivity.class);
+        intent.putExtra("fmcgTotal", fmcgToatalPass);
         startActivity(intent);
         overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
     }
@@ -149,7 +155,7 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
 
     }
 
-    public  class CheckoutuiModel {
+    public class CheckoutuiModel {
         private String pharmaCount;
         private String fmcgCount;
         private String fmcgTotal;

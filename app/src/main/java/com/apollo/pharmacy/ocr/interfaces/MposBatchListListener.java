@@ -1,10 +1,10 @@
 package com.apollo.pharmacy.ocr.interfaces;
 
-import com.apollo.pharmacy.ocr.model.BatchList;
+import com.apollo.pharmacy.ocr.model.BatchListResponse;
 
 public interface MposBatchListListener {
 
-    void setSuccessBatchList(BatchList batchList);
+    void setSuccessBatchList(BatchListResponse batchListResponse);
 
     void onFailureBatchList();
 }

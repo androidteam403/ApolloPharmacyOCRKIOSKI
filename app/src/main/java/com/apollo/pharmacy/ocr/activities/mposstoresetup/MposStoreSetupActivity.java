@@ -3,12 +3,14 @@ package com.apollo.pharmacy.ocr.activities.mposstoresetup;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -24,6 +26,7 @@ import com.apollo.pharmacy.ocr.activities.mposstoresetup.dialog.MposGetStoresDia
 import com.apollo.pharmacy.ocr.activities.mposstoresetup.model.StoreListResponseModel;
 import com.apollo.pharmacy.ocr.activities.mposstoresetup.model.StoreSetupModel;
 import com.apollo.pharmacy.ocr.databinding.MposStoreSetupActivityBinding;
+import com.apollo.pharmacy.ocr.model.DeviceRegistrationResponse;
 import com.apollo.pharmacy.ocr.utility.Utils;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -36,6 +39,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -71,8 +75,10 @@ public class MposStoreSetupActivity extends BaseActivity implements GoogleApiCli
         setUp();
     }
 
+    private MposStoreSetupController storeSetupController;
+
     private void setUp() {
-        MposStoreSetupController storeSetupController = new MposStoreSetupController(this,this);
+        storeSetupController = new MposStoreSetupController(this, this);
         storeSetupController.getStoreList();
 
         mposStoreSetupActivityBinding.setCallback(this);
@@ -132,9 +138,15 @@ public class MposStoreSetupActivity extends BaseActivity implements GoogleApiCli
     //TODO for website validation
     private boolean isValidate() {
         String url = mposStoreSetupActivityBinding.baseUrl.getText().toString().trim();
+        String terminalId = mposStoreSetupActivityBinding.terminalIdText.getText().toString().trim();
         if (url.isEmpty()) {
             mposStoreSetupActivityBinding.baseUrl.setError("Please Enter Epos Url");
             mposStoreSetupActivityBinding.baseUrl.requestFocus();
+            return false;
+        }
+        if (terminalId.isEmpty()) {
+            mposStoreSetupActivityBinding.terminalIdText.setError("Please Enter Terminal Id");
+            mposStoreSetupActivityBinding.terminalIdText.requestFocus();
             return false;
         }
         return true;
@@ -304,12 +316,29 @@ public class MposStoreSetupActivity extends BaseActivity implements GoogleApiCli
 
     }
 
+    String firebaseToken;
+
     @Override
     public void onVerifyClick() {
         if (isValidate()) {
 //            mPresenter.checkConfingApi();
-            Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
+            FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, instanceIdResult -> {
+                firebaseToken = instanceIdResult.getToken();
+                Log.e("newToken", firebaseToken);
+                this.getPreferences(Context.MODE_PRIVATE).edit().putString("fb", firebaseToken).apply();
+                storeSetupController.getDeviceRegistrationDetails(mposStoreSetupActivityBinding.storeDate.getText().toString(),
+                        mposStoreSetupActivityBinding.deviceType.getText().toString(), firebaseToken, mposStoreSetupActivityBinding.storeLattitude.getText().toString(),
+                        mposStoreSetupActivityBinding.storeLongitude.getText().toString(), mposStoreSetupActivityBinding.macid.getText().toString(),
+                        mposStoreSetupActivityBinding.storeId.getText().toString(), mposStoreSetupActivityBinding.terminalIdText.getText().toString(), "admin");
+            });
+
         }
+    }
+
+    @Override
+    public void getDeviceRegistrationDetails(DeviceRegistrationResponse deviceRegistrationResponse) {
+        Toast.makeText(this, "" + deviceRegistrationResponse.getMessage(), Toast.LENGTH_SHORT).show();
+        finish();
     }
 
     @Override

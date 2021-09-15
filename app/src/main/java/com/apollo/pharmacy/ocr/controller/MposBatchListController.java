@@ -1,10 +1,10 @@
 package com.apollo.pharmacy.ocr.controller;
 
-import android.app.Activity;
 import android.content.Context;
 
 import com.apollo.pharmacy.ocr.interfaces.MposBatchListListener;
-import com.apollo.pharmacy.ocr.model.BatchList;
+import com.apollo.pharmacy.ocr.model.BatchListRequest;
+import com.apollo.pharmacy.ocr.model.BatchListResponse;
 import com.apollo.pharmacy.ocr.network.ApiClient;
 import com.apollo.pharmacy.ocr.network.ApiInterface;
 import com.apollo.pharmacy.ocr.utility.Utils;
@@ -24,20 +24,29 @@ public class MposBatchListController {
         this.activity = activity;
     }
 
-    public void getBatchList() {
+    public void getBatchList(String artcode) {
         Utils.showDialog(activity, "Loading…");
         ApiInterface api = ApiClient.getApiService();
-        Call<BatchList> call = api.GET_BATCH_LIST();
-        call.enqueue(new Callback<BatchList>() {
+        BatchListRequest batchListRequest=new BatchListRequest();
+        batchListRequest.setArticleCode(artcode);
+        batchListRequest.setCustomerState("");
+        batchListRequest.setDataAreaId("ahel");
+        batchListRequest.setSez(0);
+        batchListRequest.setSearchType(1);
+        batchListRequest.setStoreId("16001");
+        batchListRequest.setStoreState("AP");
+        batchListRequest.setTerminalId("005");
+        Call<BatchListResponse> call = api.GET_BATCH_LIST(batchListRequest);
+        call.enqueue(new Callback<BatchListResponse>() {
             @Override
-            public void onResponse(@NotNull Call<BatchList> call, @NotNull Response<BatchList> response) {
+            public void onResponse(@NotNull Call<BatchListResponse> call, @NotNull Response<BatchListResponse> response) {
                 if (response.body() != null) {
                     mposBatchListListener.setSuccessBatchList(response.body());
                 }
             }
 
             @Override
-            public void onFailure(@NotNull Call<BatchList> call, @NotNull Throwable t) {
+            public void onFailure(@NotNull Call<BatchListResponse> call, @NotNull Throwable t) {
                 Utils.dismissDialog();
             }
         });
