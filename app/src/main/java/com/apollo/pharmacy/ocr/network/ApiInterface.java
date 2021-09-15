@@ -125,8 +125,8 @@ public interface ApiInterface {
     @PUT("userInfo/deleteAddress/{id}")
     Call<Meta> deleteAddress(@Path("id") Integer id);
 
-    @POST("webresources/OrderHistory/getHistory")
-    Call<List<OrderHistoryResponse>> getOrderHistory(@Body OrderHistoryRequest request);
+    @GET("https://jsonblob.com/api/jsonBlob/887622755529539584")//webresources/OrderHistory/getHistory
+    Call<List<OrderHistoryResponse>> getOrderHistory();//@Body OrderHistoryRequest request
 
     @GET("Customer/GetByMobile?")
     @Headers({"APIKey: 2B577C3C4C144160A5FD4885F7BA53A4", "AccessToken: 03F80DDA69A84382A8AC0E108270972F"})
