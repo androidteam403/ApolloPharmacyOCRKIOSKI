@@ -1,14 +1,21 @@
 package com.apollo.pharmacy.ocr.network;
 
+import com.apollo.pharmacy.ocr.activities.mposstoresetup.model.StoreListResponseModel;
 import com.apollo.pharmacy.ocr.controller.GetStoreInfoRequest;
 import com.apollo.pharmacy.ocr.model.AddFCMTokenRequest;
+import com.apollo.pharmacy.ocr.model.BatchListRequest;
+import com.apollo.pharmacy.ocr.model.BatchListResponse;
 import com.apollo.pharmacy.ocr.model.Category_request;
 import com.apollo.pharmacy.ocr.model.Categorylist_Response;
+import com.apollo.pharmacy.ocr.model.DeviceRegistrationRequest;
+import com.apollo.pharmacy.ocr.model.DeviceRegistrationResponse;
 import com.apollo.pharmacy.ocr.model.GetImageRes;
 import com.apollo.pharmacy.ocr.model.GetProductListResponse;
 import com.apollo.pharmacy.ocr.model.GetStoreInfoResponse;
 import com.apollo.pharmacy.ocr.model.Global_api_request;
 import com.apollo.pharmacy.ocr.model.Global_api_response;
+import com.apollo.pharmacy.ocr.model.ItemSearchRequest;
+import com.apollo.pharmacy.ocr.model.ItemSearchResponse;
 import com.apollo.pharmacy.ocr.model.Meta;
 import com.apollo.pharmacy.ocr.model.ModelMobileNumVerify;
 import com.apollo.pharmacy.ocr.model.NewSearchapirequest;
@@ -28,6 +35,7 @@ import com.apollo.pharmacy.ocr.model.PinepayrequestResult;
 import com.apollo.pharmacy.ocr.model.PlaceOrderReqModel;
 import com.apollo.pharmacy.ocr.model.PlaceOrderResModel;
 import com.apollo.pharmacy.ocr.model.PortFolioModel;
+import com.apollo.pharmacy.ocr.model.ProductSrearchResponse;
 import com.apollo.pharmacy.ocr.model.Reddemponits_getpoints_response;
 import com.apollo.pharmacy.ocr.model.Reddemponits_sendotp_response;
 import com.apollo.pharmacy.ocr.model.Redeempoints_checkvoucher_request;
@@ -117,8 +125,8 @@ public interface ApiInterface {
     @PUT("userInfo/deleteAddress/{id}")
     Call<Meta> deleteAddress(@Path("id") Integer id);
 
-    @POST("webresources/OrderHistory/getHistory")
-    Call<List<OrderHistoryResponse>> getOrderHistory(@Body OrderHistoryRequest request);
+    @GET("https://jsonblob.com/api/jsonBlob/887622755529539584")//webresources/OrderHistory/getHistory
+    Call<List<OrderHistoryResponse>> getOrderHistory();//@Body OrderHistoryRequest request
 
     @GET("Customer/GetByMobile?")
     @Headers({"APIKey: 2B577C3C4C144160A5FD4885F7BA53A4", "AccessToken: 03F80DDA69A84382A8AC0E108270972F"})
@@ -183,4 +191,22 @@ public interface ApiInterface {
 
     @POST
     Call<UploadImageResponse> getUploadPrescriptionService(@Url String url, @Body UploadImageRequest request);
+
+    @POST("http://20.197.57.170//rest/V1/searchapi")
+    Call<List<ProductSrearchResponse>> productSearch(@Header("authorization") String token, @Body Object productSearchRequest);
+
+    @POST(" http://online.apollopharmacy.org:51/EPOS/SalesTransactionService.svc/GetItemDetails")//ba8af54b-fa62-11eb-978a-d72b0c462c48
+    Call<ItemSearchResponse> getSearchItemApiCall(@Body ItemSearchRequest itemSearchRequest);
+
+
+    @GET("apollompos/Self/STORELIST")
+    Call<StoreListResponseModel> GET_STORES_LIST();
+
+    @POST(" http://online.apollopharmacy.org:51/EPOS/SalesTransactionService.svc/GetBatchDetails")//6009921b-fa66-11eb-978a-85578f7c5b29
+    Call<BatchListResponse> GET_BATCH_LIST(@Body BatchListRequest batchListRequest);
+
+    @POST("http://lms.apollopharmacy.org:8033/APK/apollompos/Self/Registration")
+    Call<DeviceRegistrationResponse> deviceRegistration(@Body DeviceRegistrationRequest deviceRegistrationRequest);
+
+
 }
