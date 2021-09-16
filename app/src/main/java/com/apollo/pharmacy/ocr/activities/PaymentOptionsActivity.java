@@ -144,6 +144,10 @@ public class PaymentOptionsActivity extends AppCompatActivity {
 
                 activityPaymentOptionsBinding.tickUpi.setBackgroundResource(R.drawable.round_untick_bg);
                 activityPaymentOptionsBinding.tickBhim.setBackgroundResource(R.drawable.round_untick_bg);
+
+                activityPaymentOptionsBinding.upiInfoLay.setVisibility(View.GONE);
+                activityPaymentOptionsBinding.scanPhonePayQrPayLay.setVisibility(View.VISIBLE);
+
             }
         });
     }
