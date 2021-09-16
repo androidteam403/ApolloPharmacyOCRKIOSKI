@@ -736,6 +736,7 @@ above 400 Rupees"
                                             android:textSize="@dimen/fourteen_sp" />
 
                                         <TextView
+                                            android:id="@+id/place_an_order"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:layout_marginStart="@dimen/twenty_dp"

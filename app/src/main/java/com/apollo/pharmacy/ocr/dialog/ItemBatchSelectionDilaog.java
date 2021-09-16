@@ -23,7 +23,6 @@ import com.apollo.pharmacy.ocr.interfaces.MposBatchListListener;
 import com.apollo.pharmacy.ocr.model.BatchListResponse;
 import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
 import com.apollo.pharmacy.ocr.model.Product;
-import com.apollo.pharmacy.ocr.model.ProductSearch;
 import com.apollo.pharmacy.ocr.utility.SessionManager;
 import com.apollo.pharmacy.ocr.utility.Utils;
 
@@ -311,19 +310,26 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
         return dialogItemBatchSelectionBinding.unitCount.getText().toString();
     }
 
+    private double itemPrice;
+
     @Override
     public void onItemBatchClickData(int position, BatchListResponse.Batch itemBatchSelectionData) {
         dialogItemBatchSelectionBinding.dialogItemBatchInnerParentLayout.setBackground(getContext().getResources().getDrawable(R.drawable.dialog_background));
         dialogItemBatchSelectionBinding.recyclerViewLay.setVisibility(View.GONE);
         dialogItemBatchSelectionBinding.date.setText(itemBatchSelectionData.getExpDate());
         dialogItemBatchSelectionBinding.price.setText(String.valueOf(itemBatchSelectionData.getPrice()));
+        this.itemPrice = itemBatchSelectionData.getPrice();
+
+
     }
+
 
     @Override
     public void setSuccessBatchList(BatchListResponse batchListResponse) {
         if (batchListResponse != null && batchListResponse.getBatchList() != null && batchListResponse.getBatchList().size() > 0) {
             dialogItemBatchSelectionBinding.date.setText(batchListResponse.getBatchList().get(0).getExpDate());
             dialogItemBatchSelectionBinding.price.setText(String.valueOf(batchListResponse.getBatchList().get(0).getPrice()));
+            this.itemPrice = batchListResponse.getBatchList().get(0).getPrice();
             Utils.dismissDialog();
             dialogItemBatchSelectionBinding.batchSelectionData.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -340,7 +346,9 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
             });
         }
     }
-
+    public double getItemProice() {
+        return itemPrice;
+    }
     @Override
     public void onFailureBatchList() {
 

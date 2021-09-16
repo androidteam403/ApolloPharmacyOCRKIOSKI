@@ -114,7 +114,7 @@ public class MedicineSearchAdapter extends ArrayAdapter<ProductSearch> {
 
         btnAddCart.setOnClickListener(view -> {
 
-            ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(context,medicine.getSku());
+            ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(context, medicine.getSku());
             itemBatchSelectionDilaog.setTitle(medicine.getName());
 
             itemBatchSelectionDilaog.setUnitIncreaseListener(view1 -> {
@@ -158,7 +158,7 @@ public class MedicineSearchAdapter extends ArrayAdapter<ProductSearch> {
                 intent.putExtra("product_sku", medicine.getSku());
                 intent.putExtra("product_name", medicine.getName());
                 intent.putExtra("product_quantyty", txtQty.getText().toString());
-                intent.putExtra("product_price", String.valueOf(medicine.getPrice()));
+                intent.putExtra("product_price", String.valueOf(itemBatchSelectionDilaog.getItemProice()));//String.valueOf(medicine.getPrice())
                 // intent.putExtra("product_container", product_container);
                 intent.putExtra("medicineType", medicine.getMedicineType());
                 intent.putExtra("product_mou", String.valueOf(medicine.getMou()));

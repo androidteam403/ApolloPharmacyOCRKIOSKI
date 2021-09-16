@@ -74,6 +74,12 @@ public class PaymentOptionsActivity extends AppCompatActivity {
                 overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
             }
         });
+        activityPaymentOptionsBinding.placeAnOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
         paymentTicksUnticksHandlings();
     }
 
