@@ -1,7 +1,11 @@
 package com.apollo.pharmacy.ocr.activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -9,9 +13,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import com.apollo.pharmacy.ocr.R;
+import com.apollo.pharmacy.ocr.controller.PhonePayQrCodeController;
 import com.apollo.pharmacy.ocr.databinding.ActivityPaymentOptionsBinding;
+import com.apollo.pharmacy.ocr.interfaces.PhonePayQrCodeListener;
+import com.apollo.pharmacy.ocr.model.PhonePayQrCodeResponse;
+import com.google.zxing.WriterException;
 
-public class PaymentOptionsActivity extends AppCompatActivity {
+import androidmads.library.qrgenearator.QRGContents;
+import androidmads.library.qrgenearator.QRGEncoder;
+
+public class PaymentOptionsActivity extends AppCompatActivity implements PhonePayQrCodeListener {
     private ActivityPaymentOptionsBinding activityPaymentOptionsBinding;
     private double pharmaTotalData = 0.0;
 
@@ -90,6 +101,9 @@ public class PaymentOptionsActivity extends AppCompatActivity {
         activityPaymentOptionsBinding.cashOnDelivery.setBackgroundResource(R.drawable.ic_payment_methods_unselectebg);
     }
 
+    Bitmap bitmap;
+    QRGEncoder qrgEncoder;
+
     private void PaymentInfoLayoutsHandlings() {
         activityPaymentOptionsBinding.scanToPayInfoLay.setVisibility(View.GONE);
         activityPaymentOptionsBinding.receivePaymentSmsInfoLay.setVisibility(View.GONE);
@@ -135,6 +149,7 @@ public class PaymentOptionsActivity extends AppCompatActivity {
                 activityPaymentOptionsBinding.tickPhonePay.setBackgroundResource(R.drawable.round_untick_bg);
             }
         });
+
         activityPaymentOptionsBinding.tickPhonePayLay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -151,10 +166,54 @@ public class PaymentOptionsActivity extends AppCompatActivity {
                 activityPaymentOptionsBinding.tickUpi.setBackgroundResource(R.drawable.round_untick_bg);
                 activityPaymentOptionsBinding.tickBhim.setBackgroundResource(R.drawable.round_untick_bg);
 
-                activityPaymentOptionsBinding.upiInfoLay.setVisibility(View.GONE);
-                activityPaymentOptionsBinding.scanPhonePayQrPayLay.setVisibility(View.VISIBLE);
 
+
+                PhonePayQrCodeController phonePayQrCodeController = new PhonePayQrCodeController(getApplicationContext(), PaymentOptionsActivity.this);
+                phonePayQrCodeController.getPhonePayQrCodeGeneration();
             }
         });
     }
+
+    @Override
+    public void onSuccessGetPhonePayQrCodeUpi(PhonePayQrCodeResponse phonePayQrCodeResponse) {
+
+        activityPaymentOptionsBinding.upiInfoLay.setVisibility(View.GONE);
+        activityPaymentOptionsBinding.scanPhonePayQrPayLay.setVisibility(View.VISIBLE);
+// below line is for getting
+        // the windowmanager service.
+        WindowManager manager = (WindowManager) getSystemService(WINDOW_SERVICE);
+
+        // initializing a variable for default display.
+        Display display = manager.getDefaultDisplay();
+
+        // creating a variable for point which
+        // is to be displayed in QR Code.
+        Point point = new Point();
+        display.getSize(point);
+
+        // getting width and
+        // height of a point
+        int width = point.x;
+        int height = point.y;
+
+        // generating dimension from width and height.
+        int dimen = width < height ? width : height;
+        dimen = dimen * 3 / 4;
+
+        // setting this dimensions inside our qr code
+        // encoder to generate our qr code.
+        qrgEncoder = new QRGEncoder((String) phonePayQrCodeResponse.getQrCode(), null, QRGContents.Type.TEXT, dimen);
+        try {
+            // getting our qrcode in the form of bitmap.
+            bitmap = qrgEncoder.encodeAsBitmap();
+            // the bitmap is set inside our image
+            // view using .setimagebitmap method.
+            activityPaymentOptionsBinding.idIVQrcode.setImageBitmap(bitmap);
+        } catch (WriterException e) {
+            // this method is called for
+            // exception handling.
+            Log.e("Tag", e.toString());
+        }
+    }
+
 }

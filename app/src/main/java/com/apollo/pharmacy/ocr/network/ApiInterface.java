@@ -26,6 +26,8 @@ import com.apollo.pharmacy.ocr.model.OrderPushingRequest;
 import com.apollo.pharmacy.ocr.model.OrderPushingRequest_new;
 import com.apollo.pharmacy.ocr.model.OrderPushingResponse;
 import com.apollo.pharmacy.ocr.model.OrderPushingResponse_new;
+import com.apollo.pharmacy.ocr.model.PhonePayQrCodeRequest;
+import com.apollo.pharmacy.ocr.model.PhonePayQrCodeResponse;
 import com.apollo.pharmacy.ocr.model.PinelabTransaction_cancelresponse;
 import com.apollo.pharmacy.ocr.model.Pinelabs_paymenttransaction_response;
 import com.apollo.pharmacy.ocr.model.Pinelabs_transaction_payment_request;
@@ -207,6 +209,9 @@ public interface ApiInterface {
 
     @POST("http://lms.apollopharmacy.org:8033/APK/apollompos/Self/Registration")
     Call<DeviceRegistrationResponse> deviceRegistration(@Body DeviceRegistrationRequest deviceRegistrationRequest);
+
+    @POST("http://online.apollopharmacy.org:51/EPOS/WalletService.svc/GetQRCodePaymentDetails")
+    Call<PhonePayQrCodeResponse> GET_PhonePay_Qr_Code(@Body PhonePayQrCodeRequest phonePayQrCodeRequest);
 
 
 }

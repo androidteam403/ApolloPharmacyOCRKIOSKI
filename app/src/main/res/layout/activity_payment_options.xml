@@ -274,7 +274,6 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="@dimen/ten_dp"
                                 android:layout_marginTop="@dimen/five_dp"
-                                android:visibility="gone"
                                 android:background="@drawable/ic_payment_methods_unselectebg"
                                 android:padding="@dimen/ten_dp">
 
@@ -348,7 +347,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/fifteen_dp"
-                            android:visibility="gone">
+                            android:visibility="visible">
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -505,7 +504,7 @@ instructions on your phone to complete\nthe payment"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/twenty_five_dp"
-                            android:visibility="visible">
+                            android:visibility="gone">
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -682,6 +681,8 @@ instructions on your phone to complete\nthe payment"
                                     android:id="@+id/idIVQrcode"
                                     android:layout_width="300dp"
                                     android:layout_height="300dp"
+                                    android:paddingTop="@dimen/fifty_dp"
+                                    android:paddingBottom="@dimen/fifty_dp"
                                     android:layout_gravity="center"
                                     android:contentDescription="qr_code" />
 
