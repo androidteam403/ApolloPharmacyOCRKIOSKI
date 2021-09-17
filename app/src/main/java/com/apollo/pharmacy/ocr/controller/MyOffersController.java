@@ -8,6 +8,8 @@ import com.apollo.pharmacy.ocr.R;
 import com.apollo.pharmacy.ocr.interfaces.MyOffersListener;
 import com.apollo.pharmacy.ocr.model.Category_request;
 import com.apollo.pharmacy.ocr.model.GetProductListResponse;
+import com.apollo.pharmacy.ocr.model.ItemSearchRequest;
+import com.apollo.pharmacy.ocr.model.ItemSearchResponse;
 import com.apollo.pharmacy.ocr.model.NewSearchapirequest;
 import com.apollo.pharmacy.ocr.model.NewSearchapiresponse;
 import com.apollo.pharmacy.ocr.model.Searchsuggestionrequest;
@@ -15,14 +17,16 @@ import com.apollo.pharmacy.ocr.model.Searchsuggestionresponse;
 import com.apollo.pharmacy.ocr.network.ApiClient;
 import com.apollo.pharmacy.ocr.network.ApiInterface;
 import com.apollo.pharmacy.ocr.network.CallbackWithRetry;
-import com.apollo.pharmacy.ocr.utility.Constants;
 import com.apollo.pharmacy.ocr.utility.ApplicationConstant;
+import com.apollo.pharmacy.ocr.utility.Constants;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 import rx.Observable;
 import rx.Subscriber;
@@ -197,6 +201,36 @@ public class MyOffersController {
             @Override
             public void onFailure(@NonNull Call<GetProductListResponse> call, @NonNull Throwable t) {
                 myOffersListener.onFailureLoadMorePromotions(t.getMessage());
+            }
+        });
+    }
+
+    public void searchItemProducts(String item) {
+        ApiInterface apiInterface = ApiClient.getApiService();
+        ItemSearchRequest itemSearchRequest = new ItemSearchRequest();
+        itemSearchRequest.setCorpCode("0");
+        itemSearchRequest.setIsGeneric(false);
+        itemSearchRequest.setIsInitial(true);
+        itemSearchRequest.setIsStockCheck(true);
+        itemSearchRequest.setSearchString(item);
+        itemSearchRequest.setStoreID("16001");
+        Call<ItemSearchResponse> call = apiInterface.getSearchItemApiCall(itemSearchRequest);
+        call.enqueue(new Callback<ItemSearchResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<ItemSearchResponse> call, @NonNull Response<ItemSearchResponse> response) {
+                if (response.isSuccessful()) {
+                    Gson gson = new Gson();
+                    String json = gson.toJson(response.body());
+                    System.out.println("void data" + json);
+                    ItemSearchResponse itemSearchResponse = response.body();
+                    assert itemSearchResponse != null;
+                    myOffersListener.onSuccessSearchItemApi(itemSearchResponse);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ItemSearchResponse> call, @NonNull Throwable t) {
+                myOffersListener.onSearchFailure(t.getMessage());
             }
         });
     }
