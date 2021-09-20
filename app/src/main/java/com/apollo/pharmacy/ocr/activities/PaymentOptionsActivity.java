@@ -17,7 +17,16 @@ import com.apollo.pharmacy.ocr.controller.PhonePayQrCodeController;
 import com.apollo.pharmacy.ocr.databinding.ActivityPaymentOptionsBinding;
 import com.apollo.pharmacy.ocr.interfaces.PhonePayQrCodeListener;
 import com.apollo.pharmacy.ocr.model.PhonePayQrCodeResponse;
+import com.apollo.pharmacy.ocr.model.PlaceOrderReqModel;
+import com.apollo.pharmacy.ocr.model.PlaceOrderResModel;
+import com.apollo.pharmacy.ocr.model.StateCodes;
+import com.apollo.pharmacy.ocr.model.UserAddress;
+import com.apollo.pharmacy.ocr.utility.NetworkUtils;
+import com.apollo.pharmacy.ocr.utility.SessionManager;
+import com.apollo.pharmacy.ocr.utility.Utils;
 import com.google.zxing.WriterException;
+
+import java.util.ArrayList;
 
 import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
@@ -80,15 +89,15 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
         activityPaymentOptionsBinding.scanToPayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(PaymentOptionsActivity.this, OrderinProgressActivity.class);
-                startActivity(intent);
-                overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
+//                Intent intent = new Intent(PaymentOptionsActivity.this, OrderinProgressActivity.class);
+//                startActivity(intent);
+//                overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
             }
         });
         activityPaymentOptionsBinding.placeAnOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                placeOrder();
             }
         });
         paymentTicksUnticksHandlings();
@@ -167,7 +176,6 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
                 activityPaymentOptionsBinding.tickBhim.setBackgroundResource(R.drawable.round_untick_bg);
 
 
-
                 PhonePayQrCodeController phonePayQrCodeController = new PhonePayQrCodeController(getApplicationContext(), PaymentOptionsActivity.this);
                 phonePayQrCodeController.getPhonePayQrCodeGeneration();
             }
@@ -214,6 +222,108 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
             // exception handling.
             Log.e("Tag", e.toString());
         }
+    }
+
+    @Override
+    public void onSuccessPlaceOrder(PlaceOrderResModel body) {
+        if (body.getOrdersResult().getStatus()){
+            Intent intent = new Intent(PaymentOptionsActivity.this, OrderinProgressActivity.class);
+            startActivity(intent);
+            overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
+        }
+    }
+
+    @Override
+    public void onFailureService(String string) {
+
+    }
+
+    private void placeOrder() {
+        String userSelectedAdd = "";
+        String selectedStateCode = "";
+        UserAddress userAddress = new UserAddress();
+        userAddress.setMappingMobile(SessionManager.INSTANCE.getMobilenumber());
+        userAddress.setName("User");
+        userAddress.setMobile(SessionManager.INSTANCE.getMobilenumber());
+        userAddress.setAddress1("Hyderabad");
+        userAddress.setAddress2("");
+        userAddress.setAddress3("");
+        userAddress.setCity("Hyderabad");
+        userAddress.setState("Telangana");
+        userAddress.setIsDefault(1);
+        userAddress.setAddressType("");
+        userAddress.setIsDeleted(0);
+        userAddress.setPincode("500032");
+        userAddress.setItemSelected(true);
+//        UserAddress userAddress = SessionManager.INSTANCE.getUseraddress();
+        if (null != userAddress.getAddress1() && userAddress.getAddress1().length() > 0) {
+            String address = userAddress.getAddress1().toUpperCase() + ", " + userAddress.getCity().toUpperCase() + ", " + userAddress.getState().toUpperCase();
+            address = address.replace("null", "");
+            userSelectedAdd = address;
+        } else {
+            if (null != userAddress.getCity() && null != userAddress.getState()) {
+                String address = userAddress.getCity().toUpperCase() + ", " + userAddress.getState().toUpperCase();
+                address = address.replace("null", "");
+                userSelectedAdd = address;
+            }
+        }
+
+
+        String stateName = Utils.removeAllDigit(userAddress.getState().trim());
+        for (StateCodes codes : Utils.getStoreListFromAssets(PaymentOptionsActivity.this)) {
+            String codestate_name = codes.getName().trim();
+            if (codestate_name.equalsIgnoreCase(stateName)) {
+                selectedStateCode = codes.getCode();
+            }
+        }
+
+        PlaceOrderReqModel placeOrderReqModel = new PlaceOrderReqModel();
+        PlaceOrderReqModel.TpdetailsEntity tpDetailsEntity = new PlaceOrderReqModel.TpdetailsEntity();
+        tpDetailsEntity.setOrderId(Utils.getTransactionGeneratedId());
+        tpDetailsEntity.setShopId("16001");
+        tpDetailsEntity.setShippingMethod("HOME DELIVERY");
+        tpDetailsEntity.setPaymentMethod("COD");
+        tpDetailsEntity.setVendorName(SessionManager.INSTANCE.getKioskSetupResponse().getKIOSK_ID());
+        PlaceOrderReqModel.CustomerDetailsEntity customerDetailsEntity = new PlaceOrderReqModel.CustomerDetailsEntity();
+        customerDetailsEntity.setMobileNo(SessionManager.INSTANCE.getMobilenumber());
+        customerDetailsEntity.setComm_addr(userSelectedAdd);
+        customerDetailsEntity.setDel_addr(userSelectedAdd);
+        customerDetailsEntity.setFirstName(userAddress.getName());
+        customerDetailsEntity.setLastName(userAddress.getName());
+        customerDetailsEntity.setUHID("");
+        customerDetailsEntity.setCity(stateName);
+        customerDetailsEntity.setPostCode(userAddress.getPincode());
+        customerDetailsEntity.setMailId("");
+        customerDetailsEntity.setAge(25);
+        customerDetailsEntity.setCardNo("");
+        customerDetailsEntity.setPatientName(userAddress.getName());
+        tpDetailsEntity.setCustomerDetails(customerDetailsEntity);
+
+        PlaceOrderReqModel.PaymentDetailsEntity paymentDetailsEntity = new PlaceOrderReqModel.PaymentDetailsEntity();
+        paymentDetailsEntity.setTotalAmount("0");
+        paymentDetailsEntity.setPaymentSource("COD");
+        paymentDetailsEntity.setPaymentStatus("");
+        paymentDetailsEntity.setPaymentOrderId("");
+        tpDetailsEntity.setPaymentDetails(paymentDetailsEntity);
+
+        ArrayList<PlaceOrderReqModel.ItemDetailsEntity> itemDetailsArr = new ArrayList<>();
+        tpDetailsEntity.setItemDetails(itemDetailsArr);
+        tpDetailsEntity.setDotorName("Apollo");
+        tpDetailsEntity.setStateCode(selectedStateCode);
+        tpDetailsEntity.setTAT("");
+        tpDetailsEntity.setUserId(SessionManager.INSTANCE.getKioskSetupResponse().getKIOSK_ID());
+        tpDetailsEntity.setOrderType("Pharma");
+        tpDetailsEntity.setCouponCode("MED10");
+        tpDetailsEntity.setOrderDate(Utils.getOrderedID());
+        tpDetailsEntity.setRequestType("NONCART");
+        ArrayList<PlaceOrderReqModel.PrescUrlEntity> prescEntityArray = new ArrayList<>();
+        PlaceOrderReqModel.PrescUrlEntity pue = new PlaceOrderReqModel.PrescUrlEntity();
+        pue.setUrl("http://172.16.2.251:8033/ApolloKMD/apolloMedBuddy/Medibuddy/WalletCheck");
+        prescEntityArray.add(pue);
+        tpDetailsEntity.setPrescUrl(prescEntityArray);
+        placeOrderReqModel.setTpdetails(tpDetailsEntity);
+        PhonePayQrCodeController phonePayQrCodeController = new PhonePayQrCodeController(getApplicationContext(), PaymentOptionsActivity.this);
+        phonePayQrCodeController.handleOrderPlaceService(PaymentOptionsActivity.this, placeOrderReqModel);
     }
 
 }

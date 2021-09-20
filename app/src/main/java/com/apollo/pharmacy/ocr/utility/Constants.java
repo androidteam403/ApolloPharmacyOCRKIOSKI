@@ -66,6 +66,9 @@ public class Constants extends Application {
     public static String Order_Place_With_Prescription_API = "https://online.apollopharmacy.org/UAT/OrderPlace.svc/";
     public static String Order_Place_With_Prescription_Token = "9f15bdd0fcd5423190c2e877ba02bel";
 
+
+    public static String New_Order_Place_With_Prescription_Token = "9f15bdd0fcd5423190c2e877ba0228APM";
+
     public static final String DIRECTORY_NAME = "USBCamera";
 
     public static int Baby_Care = 1154;
