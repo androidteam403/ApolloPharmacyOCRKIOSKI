@@ -1,9 +1,7 @@
 package com.apollo.pharmacy.ocr.controller;
 
-import android.app.Activity;
 import android.content.Context;
 
-import com.apollo.pharmacy.ocr.R;
 import com.apollo.pharmacy.ocr.interfaces.PhonePayQrCodeListener;
 import com.apollo.pharmacy.ocr.model.PhonePayQrCodeRequest;
 import com.apollo.pharmacy.ocr.model.PhonePayQrCodeResponse;
@@ -31,7 +29,7 @@ public class PhonePayQrCodeController {
 //        Utils.showDialog(activity, "Loading…");
         ApiInterface api = ApiClient.getApiService();
         PhonePayQrCodeRequest phonePayQrCodeRequest = new PhonePayQrCodeRequest();
-        phonePayQrCodeRequest.setAmount(10.0);
+        phonePayQrCodeRequest.setAmount(1.0);
         phonePayQrCodeRequest.setExpiresIn(2000);
         phonePayQrCodeRequest.setMessage("");
         phonePayQrCodeRequest.setOriginalTransactionId("");
@@ -53,6 +51,32 @@ public class PhonePayQrCodeController {
             @Override
             public void onFailure(@NotNull Call<PhonePayQrCodeResponse> call, @NotNull Throwable t) {
 //                Utils.dismissDialog();
+            }
+        });
+    }
+
+    public void getPhonePayPaymentSuccess(PhonePayQrCodeResponse response) {
+        Utils.showDialog(activity, "Loading…");
+        ApiInterface api = ApiClient.getApiService();
+        PhonePayQrCodeResponse responsseAsRequest = new PhonePayQrCodeResponse();
+        responsseAsRequest.setMessage(response.getMessage());
+        responsseAsRequest.setProviderReferenceId(response.getProviderReferenceId());
+        responsseAsRequest.setQrCode(response.getQrCode());
+        responsseAsRequest.setStatus(response.getStatus());
+
+        Call<PhonePayQrCodeResponse> call = api.GET_PhonePay_Qr_payment_Success(responsseAsRequest);
+        call.enqueue(new Callback<PhonePayQrCodeResponse>() {
+            @Override
+            public void onResponse(@NotNull Call<PhonePayQrCodeResponse> call, @NotNull Response<PhonePayQrCodeResponse> response) {
+                if (response.body() != null) {
+                    Utils.dismissDialog();
+//                    phonePayQrCodeListener.onSuccessGetPhonePayQrCodeUpi(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<PhonePayQrCodeResponse> call, @NotNull Throwable t) {
+                Utils.dismissDialog();
             }
         });
     }

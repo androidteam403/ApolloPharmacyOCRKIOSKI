@@ -91,6 +91,14 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
 
             }
         });
+
+        activityPaymentOptionsBinding.verify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PhonePayQrCodeController phonePayQrCodeController = new PhonePayQrCodeController(getApplicationContext(), PaymentOptionsActivity.this);
+                phonePayQrCodeController.getPhonePayPaymentSuccess(phonePayQrCodeResponse);
+            }
+        });
         paymentTicksUnticksHandlings();
     }
 
@@ -110,6 +118,7 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
         activityPaymentOptionsBinding.upiInfoLay.setVisibility(View.GONE);
         activityPaymentOptionsBinding.cashOnDeliveryInfoLay.setVisibility(View.GONE);
     }
+
 
     private void paymentTicksUnticksHandlings() {
         activityPaymentOptionsBinding.tickBhimLay.setOnClickListener(new View.OnClickListener() {
@@ -167,16 +176,17 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
                 activityPaymentOptionsBinding.tickBhim.setBackgroundResource(R.drawable.round_untick_bg);
 
 
-
                 PhonePayQrCodeController phonePayQrCodeController = new PhonePayQrCodeController(getApplicationContext(), PaymentOptionsActivity.this);
                 phonePayQrCodeController.getPhonePayQrCodeGeneration();
             }
         });
     }
 
+    PhonePayQrCodeResponse phonePayQrCodeResponse;
+
     @Override
     public void onSuccessGetPhonePayQrCodeUpi(PhonePayQrCodeResponse phonePayQrCodeResponse) {
-
+        this.phonePayQrCodeResponse = phonePayQrCodeResponse;
         activityPaymentOptionsBinding.upiInfoLay.setVisibility(View.GONE);
         activityPaymentOptionsBinding.scanPhonePayQrPayLay.setVisibility(View.VISIBLE);
 // below line is for getting
