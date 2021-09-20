@@ -27,6 +27,7 @@ import com.apollo.pharmacy.ocr.activities.mposstoresetup.model.StoreListResponse
 import com.apollo.pharmacy.ocr.activities.mposstoresetup.model.StoreSetupModel;
 import com.apollo.pharmacy.ocr.databinding.MposStoreSetupActivityBinding;
 import com.apollo.pharmacy.ocr.model.DeviceRegistrationResponse;
+import com.apollo.pharmacy.ocr.utility.SessionManager;
 import com.apollo.pharmacy.ocr.utility.Utils;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -332,6 +333,8 @@ public class MposStoreSetupActivity extends BaseActivity implements GoogleApiCli
                         mposStoreSetupActivityBinding.storeId.getText().toString(), mposStoreSetupActivityBinding.terminalIdText.getText().toString(), "admin");
             });
 
+            SessionManager.INSTANCE.setStoreId(storeIdNumber);
+            SessionManager.INSTANCE.setTerminalId(mposStoreSetupActivityBinding.terminalIdText.getText().toString());
         }
     }
 
@@ -346,9 +349,12 @@ public class MposStoreSetupActivity extends BaseActivity implements GoogleApiCli
         isShowDialog = false;
     }
 
+    String storeIdNumber;
+
     @Override
     public void onSelectStore(StoreListResponseModel.StoreListObj item) {
         mposStoreSetupActivityBinding.setStoreinfo(item);
+        storeIdNumber = item.getStoreId();
         selectedStoreId = item;
         selectedStoreContactNum = item;
     }

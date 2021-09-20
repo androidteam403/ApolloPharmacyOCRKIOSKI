@@ -213,5 +213,8 @@ public interface ApiInterface {
     @POST("http://online.apollopharmacy.org:51/EPOS/WalletService.svc/GetQRCodePaymentDetails")
     Call<PhonePayQrCodeResponse> GET_PhonePay_Qr_Code(@Body PhonePayQrCodeRequest phonePayQrCodeRequest);
 
+    @POST("http://online.apollopharmacy.org:51/EPOS/WalletService.svc/GetQRCodePaymentDetails")
+    Call<PhonePayQrCodeResponse> GET_PhonePay_Qr_payment_Success(@Body PhonePayQrCodeResponse responseasRequest);
+
 
 }
