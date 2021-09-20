@@ -30,6 +30,7 @@ public class OCRToDigitalMedicineResponse implements Serializable {
     @Expose
     @SerializedName("mou")
     private String mou;
+    private String medicineType;
 
     public OCRToDigitalMedicineResponse() {
 
@@ -40,6 +41,14 @@ public class OCRToDigitalMedicineResponse implements Serializable {
         artName = source.readString();
         container = source.readString();
         qty = source.readInt();
+    }
+
+    public String getMedicineType() {
+        return medicineType;
+    }
+
+    public void setMedicineType(String medicineType) {
+        this.medicineType = medicineType;
     }
 
     public String getArtprice() {
