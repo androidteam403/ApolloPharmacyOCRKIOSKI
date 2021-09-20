@@ -233,6 +233,10 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
         subSubParentLayout = findViewById(R.id.sub_sub_parent_layout);
 
         initUi();
+        if (dataList != null && dataList.size() > 0)
+            checkOutNewBtn.setVisibility(View.VISIBLE);
+        else
+            checkOutNewBtn.setVisibility(View.GONE);
 
         searchProducts.addTextChangedListener(new TextWatcher() {
 
@@ -517,7 +521,7 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
                 ProductScanDialog productScanDialog = new ProductScanDialog(MySearchActivity.this);
                 productScanDialog.setPositiveListener(view -> {
                     productScanDialog.dismiss();
-                    ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(MySearchActivity.this,null);
+                    ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(MySearchActivity.this, null);
                     ProductSearch medicine = new ProductSearch();
                     medicine.setSku("APC0005");
                     medicine.setQty(1);
@@ -804,6 +808,10 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
                 Utils.showSnackbar(MySearchActivity.this, constraintLayout, getApplicationContext().getResources().getString(R.string.label_item_added_cart));
                 cartCount(dataList.size());
             }
+            if (dataList != null && dataList.size() > 0)
+                checkOutNewBtn.setVisibility(View.VISIBLE);
+            else
+                checkOutNewBtn.setVisibility(View.GONE);
         }
     };
 
