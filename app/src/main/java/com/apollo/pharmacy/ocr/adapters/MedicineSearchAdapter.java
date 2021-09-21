@@ -17,7 +17,6 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.apollo.pharmacy.ocr.R;
 import com.apollo.pharmacy.ocr.dialog.ItemBatchSelectionDilaog;
 import com.apollo.pharmacy.ocr.model.ProductSearch;
-import com.apollo.pharmacy.ocr.utility.Constants;
 import com.bumptech.glide.Glide;
 
 import org.jetbrains.annotations.NotNull;
@@ -58,12 +57,21 @@ public class MedicineSearchAdapter extends ArrayAdapter<ProductSearch> {
         TextView txtOfferPrice = (TextView) convertView.findViewById(R.id.offerPrice);
         TextView total_price_textview = (TextView) convertView.findViewById(R.id.total_price_textview);
         Button btnAddCart = (Button) convertView.findViewById(R.id.search_Addtocart);
+        TextView description = (TextView) convertView.findViewById(R.id.description);
 
         ImageView medImage = (ImageView) convertView.findViewById(R.id.medImage);
-        Glide.with(context)
-                .load(Constants.Get_Image_link + medicine.getImage())
-                .error(R.drawable.hospital)
-                .into(medImage);
+        if (medicine.getCategory().equals("FMCG")) {//Constants.Get_Image_link + medicine.getImage()
+            Glide.with(context)
+                    .load(R.drawable.ic_fmcg)
+                    .error(R.drawable.hospital)
+                    .into(medImage);
+        } else {
+            Glide.with(context)
+                    .load(R.drawable.ic_pharma)
+                    .error(R.drawable.hospital)
+                    .into(medImage);
+        }
+        description.setText(medicine.getDescription());
 
         string = "\u20B9";
         byte[] utf8 = null;

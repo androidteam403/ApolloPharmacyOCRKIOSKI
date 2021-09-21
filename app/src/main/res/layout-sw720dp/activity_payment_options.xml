@@ -38,6 +38,15 @@
                     android:textColor="@color/white"
                     android:textSize="@dimen/twenty_five_sp"
                     android:textStyle="bold" />
+                <Button
+                    android:id="@+id/verify"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="@dimen/twenty_dp"
+                    android:text="verify"
+                    android:textSize="@dimen/twenty_dp"
+                    android:textStyle="bold" />
 
                 <RelativeLayout
                     android:id="@+id/scan_prescription"
@@ -754,6 +763,7 @@ above 400 Rupees"
                                             android:textSize="@dimen/fourteen_sp" />
 
                                         <TextView
+                                            android:id="@+id/place_an_order"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:layout_marginStart="@dimen/twenty_dp"
