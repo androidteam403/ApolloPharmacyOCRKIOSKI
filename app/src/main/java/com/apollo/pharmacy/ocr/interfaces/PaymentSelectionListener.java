@@ -2,6 +2,7 @@ package com.apollo.pharmacy.ocr.interfaces;
 
 import com.apollo.pharmacy.ocr.model.OrderPushingResponse;
 import com.apollo.pharmacy.ocr.model.OrderPushingResponse_new;
+import com.apollo.pharmacy.ocr.model.PhonePayQrCodeResponse;
 import com.apollo.pharmacy.ocr.model.PincodeValidationResponse;
 import com.apollo.pharmacy.ocr.model.PinelabTransaction_cancelresponse;
 import com.apollo.pharmacy.ocr.model.Pinelabs_paymenttransaction_response;
