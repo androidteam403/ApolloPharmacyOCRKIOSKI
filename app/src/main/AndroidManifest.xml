@@ -180,6 +180,9 @@
         <activity
             android:name=".activities.mposstoresetup.MposStoreSetupActivity"
             android:screenOrientation="landscape" />
+        <activity
+            android:name=".activities.barcodescanner.BarcodeScannerActivity"
+            android:screenOrientation="landscape" />
 
         <meta-data
             android:name="com.google.android.actions"

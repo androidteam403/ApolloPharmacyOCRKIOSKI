@@ -117,7 +117,7 @@
                             android:textStyle="bold" />
 
                         <LinearLayout
-                            android:id="@+id/scan_products"
+                            android:id="@+id/shop_products"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="vertical">
@@ -150,7 +150,7 @@
                             android:textStyle="bold" />
 
                         <LinearLayout
-                            android:id="@+id/shop_products"
+                            android:id="@+id/scan_products"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="vertical">
