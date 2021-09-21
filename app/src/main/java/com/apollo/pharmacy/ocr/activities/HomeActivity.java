@@ -20,7 +20,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
@@ -28,23 +30,24 @@ import androidx.databinding.DataBindingUtil;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.apollo.pharmacy.ocr.R;
+import com.apollo.pharmacy.ocr.activities.barcodescanner.BarcodeScannerActivity;
 import com.apollo.pharmacy.ocr.activities.insertprescriptionnew.InsertPrescriptionActivityNew;
 import com.apollo.pharmacy.ocr.controller.HomeActivityController;
 import com.apollo.pharmacy.ocr.databinding.ActivityHomeBinding;
-import com.apollo.pharmacy.ocr.dialog.ItemBatchSelectionDilaog;
 import com.apollo.pharmacy.ocr.dialog.ProductScanDialog;
 import com.apollo.pharmacy.ocr.interfaces.HomeListener;
 import com.apollo.pharmacy.ocr.model.CategoryList;
 import com.apollo.pharmacy.ocr.model.Categorylist_Response;
 import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
 import com.apollo.pharmacy.ocr.model.PortFolioModel;
-import com.apollo.pharmacy.ocr.model.ProductSearch;
 import com.apollo.pharmacy.ocr.receiver.ConnectivityReceiver;
 import com.apollo.pharmacy.ocr.utility.ApplicationConstant;
 import com.apollo.pharmacy.ocr.utility.Constants;
 import com.apollo.pharmacy.ocr.utility.NetworkUtils;
 import com.apollo.pharmacy.ocr.utility.SessionManager;
 import com.apollo.pharmacy.ocr.utility.Utils;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -383,51 +386,53 @@ public class HomeActivity extends AppCompatActivity implements ConnectivityRecei
 
                 productScanDialog.setPositiveListener(view -> {
                     productScanDialog.dismiss();
+                    new IntentIntegrator(HomeActivity.this).setCaptureActivity(BarcodeScannerActivity.class).initiateScan();
 
-                    ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(HomeActivity.this,null);
-                    ProductSearch medicine = new ProductSearch();
-                    medicine.setSku("APC0005");
-                    medicine.setQty(1);
-                    medicine.setName("Dolo");
-                    medicine.setMedicineType("PHAMRA");
-                    medicine.setPrice("6");
-                    medicine.setMou("");
 
-                    itemBatchSelectionDilaog.setUnitIncreaseListener(view3 -> {
-                        medicine.setQty(medicine.getQty() + 1);
-                        itemBatchSelectionDilaog.setQtyCount("" + medicine.getQty());
-                    });
-                    itemBatchSelectionDilaog.setUnitDecreaseListener(view4 -> {
-                        if (medicine.getQty() > 1) {
-                            medicine.setQty(medicine.getQty() - 1);
-                            itemBatchSelectionDilaog.setQtyCount("" + medicine.getQty());
-                        }
-                    });
-                    itemBatchSelectionDilaog.setPositiveListener(view2 -> {
-                        activityHomeBinding.transColorId.setVisibility(View.GONE);
-                        Intent intent = new Intent("cardReceiver");
-                        intent.putExtra("message", "Addtocart");
-                        intent.putExtra("product_sku", medicine.getSku());
-                        intent.putExtra("medicineType", medicine.getMedicineType());
-                        intent.putExtra("product_name", medicine.getName());
-                        intent.putExtra("product_quantyty", itemBatchSelectionDilaog.getQtyCount().toString());
-                        intent.putExtra("product_price", String.valueOf(medicine.getPrice()));
-                        // intent.putExtra("product_container", product_container);
-                        intent.putExtra("product_mou", String.valueOf(medicine.getMou()));
-                        intent.putExtra("product_position", String.valueOf(0));
-                        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
-                        itemBatchSelectionDilaog.dismiss();
-                        Intent intent1 = new Intent(HomeActivity.this, MyCartActivity.class);
-                        intent.putExtra("activityname", "AddMoreActivity");
-                        startActivity(intent1);
-                        finish();
-                        overridePendingTransition(R.animator.trans_right_in, R.animator.trans_right_out);
-                    });
-                    itemBatchSelectionDilaog.setNegativeListener(v -> {
-                        activityHomeBinding.transColorId.setVisibility(View.GONE);
-                        itemBatchSelectionDilaog.dismiss();
-                    });
-                    itemBatchSelectionDilaog.show();
+//                    ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(HomeActivity.this,null);
+//                    ProductSearch medicine = new ProductSearch();
+//                    medicine.setSku("APC0005");
+//                    medicine.setQty(1);
+//                    medicine.setName("Dolo");
+//                    medicine.setMedicineType("PHAMRA");
+//                    medicine.setPrice("6");
+//                    medicine.setMou("");
+//
+//                    itemBatchSelectionDilaog.setUnitIncreaseListener(view3 -> {
+//                        medicine.setQty(medicine.getQty() + 1);
+//                        itemBatchSelectionDilaog.setQtyCount("" + medicine.getQty());
+//                    });
+//                    itemBatchSelectionDilaog.setUnitDecreaseListener(view4 -> {
+//                        if (medicine.getQty() > 1) {
+//                            medicine.setQty(medicine.getQty() - 1);
+//                            itemBatchSelectionDilaog.setQtyCount("" + medicine.getQty());
+//                        }
+//                    });
+//                    itemBatchSelectionDilaog.setPositiveListener(view2 -> {
+//                        activityHomeBinding.transColorId.setVisibility(View.GONE);
+//                        Intent intent = new Intent("cardReceiver");
+//                        intent.putExtra("message", "Addtocart");
+//                        intent.putExtra("product_sku", medicine.getSku());
+//                        intent.putExtra("medicineType", medicine.getMedicineType());
+//                        intent.putExtra("product_name", medicine.getName());
+//                        intent.putExtra("product_quantyty", itemBatchSelectionDilaog.getQtyCount().toString());
+//                        intent.putExtra("product_price", String.valueOf(medicine.getPrice()));
+//                        // intent.putExtra("product_container", product_container);
+//                        intent.putExtra("product_mou", String.valueOf(medicine.getMou()));
+//                        intent.putExtra("product_position", String.valueOf(0));
+//                        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+//                        itemBatchSelectionDilaog.dismiss();
+//                        Intent intent1 = new Intent(HomeActivity.this, MyCartActivity.class);
+//                        intent.putExtra("activityname", "AddMoreActivity");
+//                        startActivity(intent1);
+//                        finish();
+//                        overridePendingTransition(R.animator.trans_right_in, R.animator.trans_right_out);
+//                    });
+//                    itemBatchSelectionDilaog.setNegativeListener(v -> {
+//                        activityHomeBinding.transColorId.setVisibility(View.GONE);
+//                        itemBatchSelectionDilaog.dismiss();
+//                    });
+//                    itemBatchSelectionDilaog.show();
 
                 });
                 productScanDialog.setNegativeListener(v -> {
@@ -650,5 +655,21 @@ public class HomeActivity extends AppCompatActivity implements ConnectivityRecei
     protected void onPause() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
         super.onPause();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+//check for null
+        if (result != null) {
+            if (result.getContents() == null) {
+                Toast.makeText(this, "Scan Cancelled", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, result.getContents(), Toast.LENGTH_LONG).show();
+            }
+        } else {
+// This is important, otherwise the result will not be passed to the fragment
+        }
     }
 }
