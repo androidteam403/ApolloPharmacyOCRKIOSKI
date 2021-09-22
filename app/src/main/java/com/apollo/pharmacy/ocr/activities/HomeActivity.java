@@ -34,12 +34,15 @@ import com.apollo.pharmacy.ocr.activities.barcodescanner.BarcodeScannerActivity;
 import com.apollo.pharmacy.ocr.activities.insertprescriptionnew.InsertPrescriptionActivityNew;
 import com.apollo.pharmacy.ocr.controller.HomeActivityController;
 import com.apollo.pharmacy.ocr.databinding.ActivityHomeBinding;
+import com.apollo.pharmacy.ocr.dialog.ItemBatchSelectionDilaog;
 import com.apollo.pharmacy.ocr.dialog.ProductScanDialog;
 import com.apollo.pharmacy.ocr.interfaces.HomeListener;
 import com.apollo.pharmacy.ocr.model.CategoryList;
 import com.apollo.pharmacy.ocr.model.Categorylist_Response;
+import com.apollo.pharmacy.ocr.model.ItemSearchResponse;
 import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
 import com.apollo.pharmacy.ocr.model.PortFolioModel;
+import com.apollo.pharmacy.ocr.model.ProductSearch;
 import com.apollo.pharmacy.ocr.receiver.ConnectivityReceiver;
 import com.apollo.pharmacy.ocr.utility.ApplicationConstant;
 import com.apollo.pharmacy.ocr.utility.Constants;
@@ -381,7 +384,7 @@ public class HomeActivity extends AppCompatActivity implements ConnectivityRecei
         activityHomeBinding.scanProducts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view1) {
-                activityHomeBinding.transColorId.setVisibility(View.VISIBLE);
+//                activityHomeBinding.transColorId.setVisibility(View.VISIBLE);
                 ProductScanDialog productScanDialog = new ProductScanDialog(HomeActivity.this);
 
                 productScanDialog.setPositiveListener(view -> {
@@ -569,6 +572,83 @@ public class HomeActivity extends AppCompatActivity implements ConnectivityRecei
         Utils.showSnackbar(HomeActivity.this, constraintLayout, message);
     }
 
+    @Override
+    public void onSuccessSearchItemApi(ItemSearchResponse itemSearchResponse) {
+        if (itemSearchResponse.getItemList() != null && itemSearchResponse.getItemList().size() > 0) {
+            ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(HomeActivity.this, itemSearchResponse.getItemList().get(0).getArtCode());
+            ProductSearch medicine = new ProductSearch();
+
+            medicine.setName(itemSearchResponse.getItemList().get(0).getGenericName());
+            medicine.setSku(itemSearchResponse.getItemList().get(0).getArtCode());
+            medicine.setQty(1);
+            medicine.setDescription(itemSearchResponse.getItemList().get(0).getDescription());
+            medicine.setCategory(itemSearchResponse.getItemList().get(0).getCategory());
+            medicine.setMedicineType(itemSearchResponse.getItemList().get(0).getCategory());
+            medicine.setIsInStock(itemSearchResponse.getItemList().get(0).getStockqty() != 0 ? 1 : 0);
+            medicine.setIsPrescriptionRequired(0);
+            medicine.setPrice(itemSearchResponse.getItemList().get(0).getMrp());
+
+
+            itemBatchSelectionDilaog.setUnitIncreaseListener(view3 -> {
+                medicine.setQty(medicine.getQty() + 1);
+                itemBatchSelectionDilaog.setQtyCount("" + medicine.getQty());
+            });
+            itemBatchSelectionDilaog.setUnitDecreaseListener(view4 -> {
+                if (medicine.getQty() > 1) {
+                    medicine.setQty(medicine.getQty() - 1);
+                    itemBatchSelectionDilaog.setQtyCount("" + medicine.getQty());
+                }
+            });
+            itemBatchSelectionDilaog.setPositiveListener(view2 -> {
+                activityHomeBinding.transColorId.setVisibility(View.GONE);
+
+//                Intent intent = new Intent("cardReceiver");
+//                intent.putExtra("message", "Addtocart");
+//                intent.putExtra("product_sku", medicine.getSku());
+//                intent.putExtra("product_name", medicine.getName());
+//                intent.putExtra("product_quantyty", itemBatchSelectionDilaog.getQtyCount().toString());
+//                intent.putExtra("product_price", String.valueOf(itemBatchSelectionDilaog.getItemProice()));//String.valueOf(medicine.getPrice())
+//                // intent.putExtra("product_container", product_container);
+//                intent.putExtra("medicineType", medicine.getMedicineType());
+//                intent.putExtra("product_mou", String.valueOf(medicine.getMou()));
+//                intent.putExtra("product_position", String.valueOf(0));
+//                LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+                OCRToDigitalMedicineResponse ocrToDigitalMedicineResponse = new OCRToDigitalMedicineResponse();
+                ocrToDigitalMedicineResponse.setArtCode(medicine.getSku());
+                ocrToDigitalMedicineResponse.setArtName(medicine.getName());
+                ocrToDigitalMedicineResponse.setQty(Integer.parseInt(itemBatchSelectionDilaog.getQtyCount().toString()));
+                ocrToDigitalMedicineResponse.setArtprice(String.valueOf(itemBatchSelectionDilaog.getItemProice()));
+                ocrToDigitalMedicineResponse.setMedicineType(medicine.getMedicineType());
+                ocrToDigitalMedicineResponse.setMou(String.valueOf(medicine.getMou()));
+                if (null != SessionManager.INSTANCE.getDataList()) {
+                    this.dataList = SessionManager.INSTANCE.getDataList();
+                    dataList.add(ocrToDigitalMedicineResponse);
+                    SessionManager.INSTANCE.setDataList(dataList);
+                } else {
+                    dataList.add(ocrToDigitalMedicineResponse);
+                    SessionManager.INSTANCE.setDataList(dataList);
+                }
+
+                itemBatchSelectionDilaog.dismiss();
+                Intent intent1 = new Intent(HomeActivity.this, MyCartActivity.class);
+                intent1.putExtra("activityname", "AddMoreActivity");
+                startActivity(intent1);
+                finish();
+                overridePendingTransition(R.animator.trans_right_in, R.animator.trans_right_out);
+            });
+            itemBatchSelectionDilaog.setNegativeListener(v -> {
+                activityHomeBinding.transColorId.setVisibility(View.GONE);
+                itemBatchSelectionDilaog.dismiss();
+            });
+            itemBatchSelectionDilaog.show();
+        }
+    }
+
+    @Override
+    public void onSearchFailure(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
     @SuppressLint("SetTextI18n")
     @Override
     public void onSuccessRedeemPoints(PortFolioModel model) {
@@ -671,5 +751,7 @@ public class HomeActivity extends AppCompatActivity implements ConnectivityRecei
         } else {
 // This is important, otherwise the result will not be passed to the fragment
         }
+
+        homeActivityController.searchItemProducts(result.getContents());
     }
 }
