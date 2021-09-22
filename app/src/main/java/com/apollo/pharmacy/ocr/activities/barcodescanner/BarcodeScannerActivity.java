@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 
 import androidx.annotation.Nullable;
@@ -30,6 +31,7 @@ public class BarcodeScannerActivity extends AppCompatActivity implements Barcode
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         barcodeScannerBinding = DataBindingUtil.setContentView(this, R.layout.activity_barcode_scanner);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         barcodeScannerBinding.setCallback(this);
 
         if (getSupportActionBar() != null) {
