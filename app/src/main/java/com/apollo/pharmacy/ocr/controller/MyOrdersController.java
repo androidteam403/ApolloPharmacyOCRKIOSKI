@@ -33,7 +33,7 @@ public class MyOrdersController {
         request.setMobNo(SessionManager.INSTANCE.getMobilenumber());
         ApiInterface apiInterface = ApiClient.getApiService(Constants.Get_Order_History_For_User);
         Utils.showDialog(context, context.getResources().getString(R.string.label_fetching_order_history));
-        Call<List<OrderHistoryResponse>> call = apiInterface.getOrderHistory(request);
+        Call<List<OrderHistoryResponse>> call = apiInterface.getOrderHistory();//request
         call.enqueue(new CallbackWithRetry<List<OrderHistoryResponse>>(call) {
             @Override
             public void onResponse(@NonNull Call<List<OrderHistoryResponse>> call, @NonNull Response<List<OrderHistoryResponse>> response) {
