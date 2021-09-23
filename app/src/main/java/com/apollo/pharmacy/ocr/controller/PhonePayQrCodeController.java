@@ -1,6 +1,5 @@
 package com.apollo.pharmacy.ocr.controller;
 
-import android.app.Activity;
 import android.content.Context;
 
 import com.apollo.pharmacy.ocr.R;
@@ -59,6 +58,7 @@ public class PhonePayQrCodeController {
             }
         });
     }
+
     public void handleOrderPlaceService(Context context, PlaceOrderReqModel placeOrderReqModel) {
         //        Utils.showDialog(activity, "Loading…");
 
@@ -89,13 +89,18 @@ public class PhonePayQrCodeController {
     public void getPhonePayPaymentSuccess(PhonePayQrCodeResponse response) {
         Utils.showDialog(activity, "Loading…");
         ApiInterface api = ApiClient.getApiService();
-        PhonePayQrCodeResponse responsseAsRequest = new PhonePayQrCodeResponse();
-        responsseAsRequest.setMessage(response.getMessage());
-        responsseAsRequest.setProviderReferenceId(response.getProviderReferenceId());
-        responsseAsRequest.setQrCode(response.getQrCode());
-        responsseAsRequest.setStatus(response.getStatus());
+        PhonePayQrCodeRequest phonePayQrCodeRequest = new PhonePayQrCodeRequest();
+        phonePayQrCodeRequest.setAmount(1.0);
+        phonePayQrCodeRequest.setExpiresIn(2000);
+        phonePayQrCodeRequest.setMessage("");
+        phonePayQrCodeRequest.setOriginalTransactionId("");
+        phonePayQrCodeRequest.setProviderReferenceId("");
+        phonePayQrCodeRequest.setReqType("CHECKPAYMENTSTATUS");
+        phonePayQrCodeRequest.setStoreId("16001");
+        phonePayQrCodeRequest.setTransactionId(Utils.getOrderedID());
+        phonePayQrCodeRequest.setUrl("http://172.16.2.251:8033/PHONEPEUAT/APOLLO/PhonePe");
 
-        Call<PhonePayQrCodeResponse> call = api.GET_PhonePay_Qr_payment_Success(responsseAsRequest);
+        Call<PhonePayQrCodeResponse> call = api.GET_PhonePay_Qr_payment_Success(phonePayQrCodeRequest);
         call.enqueue(new Callback<PhonePayQrCodeResponse>() {
             @Override
             public void onResponse(@NotNull Call<PhonePayQrCodeResponse> call, @NotNull Response<PhonePayQrCodeResponse> response) {

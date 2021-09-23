@@ -219,7 +219,7 @@ public interface ApiInterface {
     Call<PhonePayQrCodeResponse> GET_PhonePay_Qr_Code(@Body PhonePayQrCodeRequest phonePayQrCodeRequest);
 
     @POST("http://online.apollopharmacy.org:51/EPOS/WalletService.svc/GetQRCodePaymentDetails")
-    Call<PhonePayQrCodeResponse> GET_PhonePay_Qr_payment_Success(@Body PhonePayQrCodeResponse responseasRequest);
+    Call<PhonePayQrCodeResponse> GET_PhonePay_Qr_payment_Success(@Body PhonePayQrCodeRequest phonePayQrCodeRequest);
 
     @POST("https://online.apollopharmacy.org/REC/api/upcrossapiselling")
     Call<UpCellCrossCellResponse> GET_UPCELL_CROSSCELL_OFEERS(@Body UpCellCrossCellRequest upCellCrossCellRequest);
