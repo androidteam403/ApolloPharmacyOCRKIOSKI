@@ -104,7 +104,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginStart="@dimen/five_dp"
-                            android:text="12 Mar 2021"
+                            android:text=""
                             android:textColor="@color/black"
                             android:textStyle="bold" />
 
@@ -131,7 +131,7 @@
                             android:layout_gravity="center_vertical"
                             android:layout_marginStart="@dimen/two_dp"
                             android:layout_marginEnd="@dimen/fifteen_dp"
-                            android:text="119.75"
+                            android:text=""
                             android:textColor="@color/black"
                             android:textStyle="bold" />
 

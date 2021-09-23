@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -35,7 +36,6 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
 
     private Dialog dialog;
     private DialogItemBatchSelectionBinding dialogItemBatchSelectionBinding;
-
     private boolean negativeExist = false;
 
 
@@ -271,9 +271,12 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
 //        });
     }
 
+    public BatchListResponse getBatchAvilableData() {
+        return batchListResponse;
+    }
 
     public void setPositiveListener(View.OnClickListener okListener) {
-        dialogItemBatchSelectionBinding.dialogButtonOK.setOnClickListener(okListener);
+            dialogItemBatchSelectionBinding.dialogButtonOK.setOnClickListener(okListener);
     }
 
     public void setUnitIncreaseListener(View.OnClickListener setIncreaseListener) {
@@ -323,9 +326,11 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
 
     }
 
+    private BatchListResponse batchListResponse;
 
     @Override
     public void setSuccessBatchList(BatchListResponse batchListResponse) {
+        this.batchListResponse = batchListResponse;
         if (batchListResponse != null && batchListResponse.getBatchList() != null && batchListResponse.getBatchList().size() > 0) {
             dialogItemBatchSelectionBinding.date.setText(batchListResponse.getBatchList().get(0).getExpDate());
             dialogItemBatchSelectionBinding.price.setText(String.valueOf(batchListResponse.getBatchList().get(0).getPrice()));
@@ -346,9 +351,11 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
             });
         }
     }
+
     public double getItemProice() {
         return itemPrice;
     }
+
     @Override
     public void onFailureBatchList() {
 

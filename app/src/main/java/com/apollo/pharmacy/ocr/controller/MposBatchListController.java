@@ -27,7 +27,7 @@ public class MposBatchListController {
     public void getBatchList(String artcode) {
         Utils.showDialog(activity, "Loading…");
         ApiInterface api = ApiClient.getApiService();
-        BatchListRequest batchListRequest=new BatchListRequest();
+        BatchListRequest batchListRequest = new BatchListRequest();
         batchListRequest.setArticleCode(artcode);
         batchListRequest.setCustomerState("");
         batchListRequest.setDataAreaId("ahel");
@@ -43,6 +43,7 @@ public class MposBatchListController {
                 if (response.body() != null) {
                     mposBatchListListener.setSuccessBatchList(response.body());
                 }
+                Utils.dismissDialog();
             }
 
             @Override

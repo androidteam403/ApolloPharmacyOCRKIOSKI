@@ -30,15 +30,18 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.apollo.pharmacy.ocr.R;
 import com.apollo.pharmacy.ocr.activities.checkout.CheckoutActivity;
+import com.apollo.pharmacy.ocr.adapters.CrossCellAdapter;
 import com.apollo.pharmacy.ocr.adapters.MyCartListAdapter;
 import com.apollo.pharmacy.ocr.adapters.PromotionsAdapter;
 import com.apollo.pharmacy.ocr.adapters.TrendingNowAdapter;
+import com.apollo.pharmacy.ocr.adapters.UpCellAdapter;
 import com.apollo.pharmacy.ocr.controller.MyCartController;
 import com.apollo.pharmacy.ocr.controller.UploadBgImageController;
 import com.apollo.pharmacy.ocr.dialog.CartDeletedItemsDialog;
@@ -55,6 +58,7 @@ import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
 import com.apollo.pharmacy.ocr.model.Product;
 import com.apollo.pharmacy.ocr.model.ScannedData;
 import com.apollo.pharmacy.ocr.model.ScannedMedicine;
+import com.apollo.pharmacy.ocr.model.UpCellCrossCellResponse;
 import com.apollo.pharmacy.ocr.model.UserAddress;
 import com.apollo.pharmacy.ocr.receiver.ConnectivityReceiver;
 import com.apollo.pharmacy.ocr.utility.Constants;
@@ -126,6 +130,7 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
     private static final String TAG = MyCartActivity.class.getSimpleName();
     private TextView timerHeaderText, timerChildText;
     private long minVal = 0, secVal = 0;
+    RecyclerView crossCell_recycle, upcell_recycle;
 
     @Override
     public void onSuccessProductList(HashMap<String, GetProductListResponse> productList) {
@@ -758,8 +763,6 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
         helpText.setText(getResources().getString(R.string.faq));
         faqLayout.setOnClickListener(view -> startActivity(new Intent(MyCartActivity.this, FAQActivity.class)));
 
-        
-
 
         ImageView customerCareImg = findViewById(R.id.customer_care_icon);
         LinearLayout customerHelpLayout = findViewById(R.id.customer_help_layout);
@@ -873,6 +876,9 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
         }
 
         myCartController = new MyCartController(this);
+        myCartController.upcellCrosscellList("7353910637");
+        upcell_recycle = findViewById(R.id.up_cell_data_recycle);
+        crossCell_recycle = findViewById(R.id.cross_cell_data_recycle);
         RecyclerView promotionproductrecycleerview = findViewById(R.id.promotionsRecyclerView);
         promotionproductrecycleerview.setLayoutManager(new GridLayoutManager(MyCartActivity.this, 3));
         RecyclerView trendingnowproductrecycleerview = findViewById(R.id.trendingnowproductrecycleerview);
@@ -1487,6 +1493,38 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
         SessionManager.INSTANCE.setScannedImagePath(res.getImageUrl());
         uploadBgImageController.handleUploadImageService(res.getImageUrl());
         handleScannedImageView();
+    }
+
+    List<UpCellCrossCellResponse.Crossselling> crosssellingList = new ArrayList<>();
+    List<UpCellCrossCellResponse.Upselling> upsellingList = new ArrayList<>();
+
+    @Override
+    public void onSuccessSearchItemApi(UpCellCrossCellResponse body) {
+        if (body.getCrossselling().size() > 0) {
+            crosssellingList.add(body.getCrossselling().get(0));
+            crosssellingList.add(body.getCrossselling().get(1));
+            crosssellingList.add(body.getCrossselling().get(2));
+
+            upsellingList.add(body.getUpselling().get(0));
+            upsellingList.add(body.getUpselling().get(1));
+            upsellingList.add(body.getUpselling().get(2));
+        }
+        CrossCellAdapter crossCellAdapter = new CrossCellAdapter(this, crosssellingList);
+        RecyclerView.LayoutManager mLayoutManager4 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        crossCell_recycle.setLayoutManager(mLayoutManager4);
+        crossCell_recycle.setItemAnimator(new DefaultItemAnimator());
+        crossCell_recycle.setAdapter(crossCellAdapter);
+
+        UpCellAdapter upCellAdapter = new UpCellAdapter(this, upsellingList);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        upcell_recycle.setLayoutManager(mLayoutManager);
+        upcell_recycle.setItemAnimator(new DefaultItemAnimator());
+        upcell_recycle.setAdapter(upCellAdapter);
+    }
+
+    @Override
+    public void onSearchFailure(String message) {
+
     }
 
     @Override

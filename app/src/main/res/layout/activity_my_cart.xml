@@ -383,6 +383,7 @@
                             android:id="@+id/scan_new_prescription"
                             android:layout_width="@dimen/one_hundred_eighty_dp"
                             android:layout_height="@dimen/one_hundred_eighty_dp"
+                            android:visibility="gone"
                             android:layout_below="@+id/curation_view_layout"
                             android:layout_centerHorizontal="true"
                             android:src="@drawable/scan_products1" />

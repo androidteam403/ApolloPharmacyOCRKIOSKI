@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/products_grid_view_item_container"
         android:layout_width="@dimen/one_hundred_fifty_dp"
         android:layout_height="@dimen/two_hundred_twenty_dp"
@@ -9,9 +11,10 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
             <LinearLayout
+                android:layout_gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -29,7 +32,7 @@
                         android:layout_marginTop="@dimen/five_dp"
                         android:layout_marginBottom="@dimen/ten_dp"
                         android:contentDescription="@string/app_name"
-                        android:src="@drawable/icon_paytm" />
+                        android:src="@drawable/ic_pharma" />
 
                     <TextView
                         android:id="@+id/textview_product_name"
@@ -78,7 +81,9 @@
                             android:id="@+id/textview_product_cost"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="@dimen/ten_dp"
+                            android:layout_marginEnd="@dimen/two_dp"
+                            android:textStyle="bold"
+                            android:text="@string/rupee"
                             android:textColor="@color/colorBlack"
                             android:textSize="@dimen/twelve_sp" />
 
@@ -86,11 +91,14 @@
                             android:id="@+id/textview_product_offercost"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:textStyle="bold"
+                            android:text="1,800.00"
                             android:textColor="@color/colorBlack"
                             android:textSize="@dimen/twelve_sp" />
                     </LinearLayout>
 
                     <TextView
+                        android:visibility="gone"
                         android:id="@+id/save_textview"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -213,7 +221,7 @@
                 android:background="@drawable/offer_circular_price_bg"
                 android:elevation="@dimen/two_dp"
                 android:gravity="center_horizontal"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -245,3 +253,4 @@
             </RelativeLayout>
         </FrameLayout>
     </LinearLayout>
+</layout>

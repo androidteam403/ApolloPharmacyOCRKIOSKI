@@ -67,6 +67,7 @@ import com.apollo.pharmacy.ocr.model.ScannedMedicine;
 import com.apollo.pharmacy.ocr.model.Searchsuggestionrequest;
 import com.apollo.pharmacy.ocr.model.SubCategoryItemModel;
 import com.apollo.pharmacy.ocr.model.Suggestion_Product;
+import com.apollo.pharmacy.ocr.model.UpCellCrossCellResponse;
 import com.apollo.pharmacy.ocr.network.ApiClient;
 import com.apollo.pharmacy.ocr.network.ApiInterface;
 import com.apollo.pharmacy.ocr.receiver.ConnectivityReceiver;
@@ -1033,6 +1034,16 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
         }
 //        search_auto_complete_text = true;
         myAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onSuccessSearchUpcellCroscellApi(UpCellCrossCellResponse body) {
+
+    }
+
+    @Override
+    public void onSearchFailureUpcellCroscell(String message) {
+
     }
 
     @Override
