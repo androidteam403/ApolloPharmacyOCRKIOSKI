@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.apollo.pharmacy.ocr.R;
+import com.apollo.pharmacy.ocr.adapters.CategoryGridItemAdapter;
 import com.apollo.pharmacy.ocr.adapters.MedicineSearchAdapter;
 import com.apollo.pharmacy.ocr.adapters.MyOffersAdapter;
 import com.apollo.pharmacy.ocr.controller.MyOffersController;
@@ -31,6 +32,7 @@ import com.apollo.pharmacy.ocr.enums.ViewMode;
 import com.apollo.pharmacy.ocr.interfaces.CartCountListener;
 import com.apollo.pharmacy.ocr.interfaces.MyOffersListener;
 import com.apollo.pharmacy.ocr.model.GetProductListResponse;
+import com.apollo.pharmacy.ocr.model.ItemSearchResponse;
 import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
 import com.apollo.pharmacy.ocr.model.Product;
 import com.apollo.pharmacy.ocr.model.ProductSearch;
@@ -57,7 +59,7 @@ import static com.apollo.pharmacy.ocr.utility.Constants.Promotions;
 import static com.apollo.pharmacy.ocr.utility.Constants.TrendingNow;
 
 public class MyOffersActivity extends AppCompatActivity implements MyOffersListener, CartCountListener,
-        ConnectivityReceiver.ConnectivityReceiverListener {
+        ConnectivityReceiver.ConnectivityReceiverListener, CategoryGridItemAdapter.CheckOutData {
 
     public MyOffersController myOffersController;
     public ArrayList<ProductSearch> searchResult1;
@@ -409,6 +411,11 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
     }
 
     @Override
+    public void onSuccessSearchItemApi(ItemSearchResponse itemSearchResponse) {
+
+    }
+
+    @Override
     public void onSearchFailure(String error) {
         Utils.showCustomAlertDialog(MyOffersActivity.this, error, false, getApplicationContext().getResources().getString(R.string.label_ok), "");
     }
@@ -757,11 +764,11 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
     @Override
     public void cartCount(int count) {
         if (count != 0) {
-            myCartCount.setVisibility(View.VISIBLE);
-            myCartCount.setText(String.valueOf(count));
-            itemsCount.setVisibility(View.VISIBLE);
-            plusIcon.setVisibility(View.VISIBLE);
-            checkOutImage.setVisibility(View.VISIBLE);
+//            myCartCount.setVisibility(View.VISIBLE);
+//            myCartCount.setText(String.valueOf(count));
+//            itemsCount.setVisibility(View.VISIBLE);
+//            plusIcon.setVisibility(View.VISIBLE);
+//            checkOutImage.setVisibility(View.VISIBLE);
             checkOutImage.setImageResource(R.drawable.checkout_cart);
             itemsCount.setText(count + " " + getApplicationContext().getResources().getString(R.string.label_items) + " " + getApplicationContext().getResources().getString(R.string.label_added));
         } else {
@@ -853,5 +860,14 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
         });
         s.addAll(dataList);
         return new ArrayList<>(s);
+    }
+
+    @Override
+    public void checkoutData() {
+        finish();
+        Intent intent1 = new Intent(MyOffersActivity.this, MyCartActivity.class);
+        intent1.putExtra("activityname", "AddMoreActivity");
+        startActivity(intent1);
+        overridePendingTransition(R.animator.trans_right_in, R.animator.trans_right_out);
     }
 }

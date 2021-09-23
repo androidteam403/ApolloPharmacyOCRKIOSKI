@@ -38,6 +38,7 @@ import com.apollo.pharmacy.ocr.model.OrdersResult;
 import com.apollo.pharmacy.ocr.model.OrdersResult_new;
 import com.apollo.pharmacy.ocr.model.Paymentdetails;
 import com.apollo.pharmacy.ocr.model.Paymentdetails_new;
+import com.apollo.pharmacy.ocr.model.PhonePayQrCodeResponse;
 import com.apollo.pharmacy.ocr.model.PinelabTransaction_cancelresponse;
 import com.apollo.pharmacy.ocr.model.Pinelabs_paymenttransaction_response;
 import com.apollo.pharmacy.ocr.model.Pinelabs_transaction_payment_request;

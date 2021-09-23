@@ -54,4 +54,7 @@ object ApplicationConstant {
     const val FCM_MEDICINE_RECEIVED = "fcm_medicine_received"
     const val KIOSK_SETUP_RESPONSE = "KioskSetupResponse"
     const val DYNAMIC_ORDER_ID = "DynamicOrderID"
+
+    val STORE_ID = "store_id"
+    val TERMINAL_ID = "terminal_id"
 }

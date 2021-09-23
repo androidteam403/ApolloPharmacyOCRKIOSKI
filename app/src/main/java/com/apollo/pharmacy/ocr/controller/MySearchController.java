@@ -1,17 +1,33 @@
 package com.apollo.pharmacy.ocr.controller;
 
+import androidx.annotation.NonNull;
+
 import com.apollo.pharmacy.ocr.interfaces.MyOffersListener;
+import com.apollo.pharmacy.ocr.interfaces.MySearchCallback;
+import com.apollo.pharmacy.ocr.model.ItemSearchRequest;
+import com.apollo.pharmacy.ocr.model.ItemSearchResponse;
 import com.apollo.pharmacy.ocr.model.SubCategoryItemModel;
+import com.apollo.pharmacy.ocr.network.ApiClient;
+import com.apollo.pharmacy.ocr.network.ApiInterface;
 import com.apollo.pharmacy.ocr.utility.Constants;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class MySearchController {
     MyOffersListener myOffersListener;
+    MySearchCallback mySearchCallback;
 
-    public MySearchController(MyOffersListener listInterface) {
+    public MySearchController(MyOffersListener listInterface,MySearchCallback mySearchCallback) {
         myOffersListener = listInterface;
+        this.mySearchCallback = mySearchCallback;
     }
+
+
 
     public void setFMCGListData(ArrayList<SubCategoryItemModel> subCategoryItemArr) {
         subCategoryItemArr.clear();
@@ -126,4 +142,35 @@ public class MySearchController {
         subCategoryItemModel.setSelected(false);
         subCategoryItemArr.add(subCategoryItemModel);
     }
+
+    public void searchItemProducts(String item) {
+        ApiInterface apiInterface = ApiClient.getApiService();
+        ItemSearchRequest itemSearchRequest = new ItemSearchRequest();
+        itemSearchRequest.setCorpCode("0");
+        itemSearchRequest.setIsGeneric(false);
+        itemSearchRequest.setIsInitial(true);
+        itemSearchRequest.setIsStockCheck(true);
+        itemSearchRequest.setSearchString(item);
+        itemSearchRequest.setStoreID("16001");
+        Call<ItemSearchResponse> call = apiInterface.getSearchItemApiCall(itemSearchRequest);
+        call.enqueue(new Callback<ItemSearchResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<ItemSearchResponse> call, @NonNull Response<ItemSearchResponse> response) {
+                if (response.isSuccessful()) {
+                    Gson gson = new Gson();
+                    String json = gson.toJson(response.body());
+                    System.out.println("void data" + json);
+                    ItemSearchResponse itemSearchResponse = response.body();
+                    assert itemSearchResponse != null;
+                    mySearchCallback.onSuccessBarcodeItemApi(itemSearchResponse);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ItemSearchResponse> call, @NonNull Throwable t) {
+                mySearchCallback.onFailureBarcodeItemApi(t.getMessage());
+            }
+        });
+    }
+
 }

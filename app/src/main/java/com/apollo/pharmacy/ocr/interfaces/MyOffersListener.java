@@ -1,6 +1,7 @@
 package com.apollo.pharmacy.ocr.interfaces;
 
 import com.apollo.pharmacy.ocr.model.GetProductListResponse;
+import com.apollo.pharmacy.ocr.model.ItemSearchResponse;
 import com.apollo.pharmacy.ocr.model.Suggestion_Product;
 
 import java.util.HashMap;
@@ -27,4 +28,8 @@ public interface MyOffersListener {
     void onSuccessLoadMorePromotions(GetProductListResponse body);
 
     void onFailureLoadMorePromotions(String message);
+
+    void onSuccessSearchItemApi(ItemSearchResponse itemSearchResponse);
+
+
 }
