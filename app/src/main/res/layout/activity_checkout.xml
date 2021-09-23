@@ -51,6 +51,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:orientation="horizontal"
+                    android:visibility="@{model.isFmcgPharma ? view.VISIBLE : view.GONE}"
                     tools:ignore="UseCompoundDrawables">
 
                     <ImageView
@@ -127,6 +128,7 @@
                     android:orientation="horizontal"
                     android:paddingTop="@dimen/five_dp"
                     android:paddingBottom="@dimen/five_dp"
+                    android:visibility="@{model.isPharma ? view.VISIBLE:view.GONE}"
                     android:weightSum="6">
 
                     <RelativeLayout
@@ -287,6 +289,7 @@
                     android:layout_height="@dimen/one_hundred_dp"
                     android:orientation="horizontal"
                     android:paddingBottom="@dimen/five_dp"
+                    android:visibility="@{model.isFmcg ? view.VISIBLE:view.GONE}"
                     android:weightSum="6">
 
                     <RelativeLayout
@@ -526,11 +529,17 @@
     <data>
 
         <variable
+            name="view"
+            type="android.view.View" />
+
+        <variable
             name="callback"
             type="com.apollo.pharmacy.ocr.activities.checkout.CheckoutListener" />
 
         <variable
             name="model"
             type="com.apollo.pharmacy.ocr.activities.checkout.CheckoutActivity.CheckoutuiModel" />
+
+
     </data>
 </layout>

@@ -16,17 +16,18 @@ import com.apollo.pharmacy.ocr.R;
 import com.apollo.pharmacy.ocr.controller.PhonePayQrCodeController;
 import com.apollo.pharmacy.ocr.databinding.ActivityPaymentOptionsBinding;
 import com.apollo.pharmacy.ocr.interfaces.PhonePayQrCodeListener;
+import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
 import com.apollo.pharmacy.ocr.model.PhonePayQrCodeResponse;
 import com.apollo.pharmacy.ocr.model.PlaceOrderReqModel;
 import com.apollo.pharmacy.ocr.model.PlaceOrderResModel;
 import com.apollo.pharmacy.ocr.model.StateCodes;
 import com.apollo.pharmacy.ocr.model.UserAddress;
-import com.apollo.pharmacy.ocr.utility.NetworkUtils;
 import com.apollo.pharmacy.ocr.utility.SessionManager;
 import com.apollo.pharmacy.ocr.utility.Utils;
 import com.google.zxing.WriterException;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
@@ -34,16 +35,55 @@ import androidmads.library.qrgenearator.QRGEncoder;
 public class PaymentOptionsActivity extends AppCompatActivity implements PhonePayQrCodeListener {
     private ActivityPaymentOptionsBinding activityPaymentOptionsBinding;
     private double pharmaTotalData = 0.0;
+    private List<OCRToDigitalMedicineResponse> dataList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activityPaymentOptionsBinding = DataBindingUtil.setContentView(this, R.layout.activity_payment_options);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        OrderDetailsuiModel orderDetailsuiModel = new OrderDetailsuiModel();
         if (getIntent() != null) {
             pharmaTotalData = (double) getIntent().getDoubleExtra("fmcgTotal", 0.0);
+            orderDetailsuiModel.setPharmaHomeDelivery(getIntent().getBooleanExtra("isPharmaHomeDelivery", false));
+            orderDetailsuiModel.setFmcgHomeDelivery(getIntent().getBooleanExtra("isFmcgHomeDelivery", false));
         }
-
+        if (null != SessionManager.INSTANCE.getDataList())
+            this.dataList = SessionManager.INSTANCE.getDataList();
+        if (dataList != null && dataList.size() > 0) {
+            int pharmaMedicineCount = 0;
+            int fmcgMedicineCount = 0;
+            double pharmaTotal = 0.0;
+            double fmcgTotal = 0.0;
+            boolean isFmcg = false;
+            boolean isPharma = false;
+            for (OCRToDigitalMedicineResponse data : dataList) {
+                if (data.getMedicineType() != null) {
+                    if (data.getMedicineType().equals("PHARMA")) {
+                        isPharma = true;
+                        pharmaMedicineCount++;
+                        pharmaTotal = pharmaTotal + (Double.parseDouble(data.getArtprice()) * data.getQty());
+                    } else {
+                        isFmcg = true;
+                        fmcgMedicineCount++;
+                        fmcgTotal = fmcgTotal + (Double.parseDouble(data.getArtprice()) * data.getQty());
+                    }
+                }
+            }
+//            fmcgToatalPass = fmcgTotal;
+            orderDetailsuiModel.setPharmaCount(String.valueOf(pharmaMedicineCount));
+            orderDetailsuiModel.setFmcgCount(String.valueOf(fmcgMedicineCount));
+            orderDetailsuiModel.setPharmaTotal(getResources().getString(R.string.rupee) + String.valueOf(pharmaTotal));
+            orderDetailsuiModel.setFmcgTotal(getResources().getString(R.string.rupee) + String.valueOf(fmcgTotal));
+            orderDetailsuiModel.setTotalMedicineCount(String.valueOf(dataList.size()));
+            orderDetailsuiModel.setMedicineTotal(getResources().getString(R.string.rupee) + String.valueOf(pharmaTotal + fmcgTotal));
+            orderDetailsuiModel.setFmcgPharma(isPharma && isFmcg);
+            orderDetailsuiModel.setFmcg(isFmcg);
+            orderDetailsuiModel.setPharma(isPharma);
+            activityPaymentOptionsBinding.setModel(orderDetailsuiModel);
+        }
         activityPaymentOptionsBinding.pharmaTotal.setText(getResources().getString(R.string.rupee) + String.valueOf(pharmaTotalData));
 
         listeners();
@@ -237,7 +277,7 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
 
     @Override
     public void onSuccessPlaceOrder(PlaceOrderResModel body) {
-        if (body.getOrdersResult().getStatus()){
+        if (body.getOrdersResult().getStatus()) {
             Intent intent = new Intent(PaymentOptionsActivity.this, OrderinProgressActivity.class);
             startActivity(intent);
             overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
@@ -337,4 +377,105 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
         phonePayQrCodeController.handleOrderPlaceService(PaymentOptionsActivity.this, placeOrderReqModel);
     }
 
+    public class OrderDetailsuiModel {
+        private String pharmaCount;
+        private String fmcgCount;
+        private String fmcgTotal;
+        private String pharmaTotal;
+        private String totalMedicineCount;
+        private String medicineTotal;
+        private boolean isFmcgPharma;
+        private boolean isFmcg;
+        private boolean isPharma;
+        private boolean isPharmaHomeDelivery;
+        private boolean isFmcgHomeDelivery;
+
+        public String getPharmaCount() {
+            return pharmaCount;
+        }
+
+        public void setPharmaCount(String pharmaCount) {
+            this.pharmaCount = pharmaCount;
+        }
+
+        public String getFmcgCount() {
+            return fmcgCount;
+        }
+
+        public void setFmcgCount(String fmcgCount) {
+            this.fmcgCount = fmcgCount;
+        }
+
+        public String getFmcgTotal() {
+            return fmcgTotal;
+        }
+
+        public void setFmcgTotal(String fmcgTotal) {
+            this.fmcgTotal = fmcgTotal;
+        }
+
+        public String getPharmaTotal() {
+            return pharmaTotal;
+        }
+
+        public void setPharmaTotal(String pharmaTotal) {
+            this.pharmaTotal = pharmaTotal;
+        }
+
+        public String getTotalMedicineCount() {
+            return totalMedicineCount;
+        }
+
+        public void setTotalMedicineCount(String totalMedicineCount) {
+            this.totalMedicineCount = totalMedicineCount;
+        }
+
+        public String getMedicineTotal() {
+            return medicineTotal;
+        }
+
+        public void setMedicineTotal(String medicineTotal) {
+            this.medicineTotal = medicineTotal;
+        }
+
+        public boolean isFmcgPharma() {
+            return isFmcgPharma;
+        }
+
+        public void setFmcgPharma(boolean fmcgPharma) {
+            isFmcgPharma = fmcgPharma;
+        }
+
+        public boolean isFmcg() {
+            return isFmcg;
+        }
+
+        public void setFmcg(boolean fmcg) {
+            isFmcg = fmcg;
+        }
+
+        public boolean isPharma() {
+            return isPharma;
+        }
+
+        public void setPharma(boolean pharma) {
+            isPharma = pharma;
+        }
+
+        public boolean isPharmaHomeDelivery() {
+            return isPharmaHomeDelivery;
+        }
+
+        public void setPharmaHomeDelivery(boolean pharmaHomeDelivery) {
+            isPharmaHomeDelivery = pharmaHomeDelivery;
+        }
+
+        public boolean isFmcgHomeDelivery() {
+            return isFmcgHomeDelivery;
+        }
+
+        public void setFmcgHomeDelivery(boolean fmcgHomeDelivery) {
+            isFmcgHomeDelivery = fmcgHomeDelivery;
+        }
+    }
 }

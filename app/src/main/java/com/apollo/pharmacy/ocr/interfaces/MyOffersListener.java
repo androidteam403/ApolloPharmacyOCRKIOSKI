@@ -35,4 +35,6 @@ public interface MyOffersListener {
     void onSuccessSearchUpcellCroscellApi(UpCellCrossCellResponse body);
 
     void onSearchFailureUpcellCroscell(String message);
+
+
 }
