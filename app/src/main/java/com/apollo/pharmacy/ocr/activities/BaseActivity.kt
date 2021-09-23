@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.apollo.pharmacy.ocr.R
 import com.apollo.pharmacy.ocr.utility.LanguageManager.Companion.setLocale
 
-open class BaseActivity : AppCompatActivity() {
+open class BaseActivity() : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
