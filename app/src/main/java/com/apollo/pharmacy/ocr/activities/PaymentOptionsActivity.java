@@ -144,8 +144,8 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
         activityPaymentOptionsBinding.verify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PhonePayQrCodeController phonePayQrCodeController = new PhonePayQrCodeController(getApplicationContext(), PaymentOptionsActivity.this);
-                phonePayQrCodeController.getPhonePayPaymentSuccess(phonePayQrCodeResponse);
+//                PhonePayQrCodeController phonePayQrCodeController = new PhonePayQrCodeController(getApplicationContext(), PaymentOptionsActivity.this);
+//                phonePayQrCodeController.getPhonePayPaymentSuccess(phonePayQrCodeResponse);
             }
         });
         paymentTicksUnticksHandlings();
@@ -268,6 +268,8 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
             // the bitmap is set inside our image
             // view using .setimagebitmap method.
             activityPaymentOptionsBinding.idIVQrcode.setImageBitmap(bitmap);
+
+
         } catch (WriterException e) {
             // this method is called for
             // exception handling.
@@ -287,6 +289,16 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
     @Override
     public void onFailureService(String string) {
 
+    }
+
+    @Override
+    public void onSuccessPhonepePaymentDetails(PhonePayQrCodeResponse phonePayQrCodeResponse) {
+        if (phonePayQrCodeResponse.getStatus()) {
+            placeOrder();
+        } else {
+            PhonePayQrCodeController phonePayQrCodeController = new PhonePayQrCodeController(getApplicationContext(), PaymentOptionsActivity.this);
+            phonePayQrCodeController.getPhonePayPaymentSuccess();
+        }
     }
 
     private void placeOrder() {

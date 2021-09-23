@@ -52,13 +52,14 @@
                         android:textColor="@color/colorWhite"
                         android:textSize="@dimen/fourteen_sp"
                         android:textStyle="bold" />
+
                     <LinearLayout
                         android:id="@+id/continue_shopping"
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/fifty_dp"
                         android:layout_alignParentEnd="true"
-                        android:layout_marginEnd="@dimen/twenty_dp"
                         android:layout_marginTop="@dimen/ten_dp"
+                        android:layout_marginEnd="@dimen/twenty_dp"
                         android:background="@drawable/okay_btn_bg"
                         android:orientation="horizontal">
 
@@ -385,8 +386,8 @@
                             android:layout_height="@dimen/one_hundred_eighty_dp"
                             android:layout_below="@+id/curation_view_layout"
                             android:layout_centerHorizontal="true"
-                            android:visibility="gone"
-                            android:src="@drawable/scan_products1" />
+                            android:src="@drawable/scan_products1"
+                            android:visibility="gone" />
                     </RelativeLayout>
 
 
