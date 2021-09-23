@@ -3,6 +3,7 @@ package com.apollo.pharmacy.ocr.controller;
 import android.content.Context;
 
 import com.apollo.pharmacy.ocr.R;
+import com.apollo.pharmacy.ocr.activities.PaymentOptionsActivity;
 import com.apollo.pharmacy.ocr.interfaces.PhonePayQrCodeListener;
 import com.apollo.pharmacy.ocr.model.PhonePayQrCodeRequest;
 import com.apollo.pharmacy.ocr.model.PhonePayQrCodeResponse;
@@ -49,6 +50,7 @@ public class PhonePayQrCodeController {
                 if (response.body() != null) {
 //                    Utils.dismissDialog();
                     phonePayQrCodeListener.onSuccessGetPhonePayQrCodeUpi(response.body());
+                   getPhonePayPaymentSuccess();
                 }
             }
 
@@ -86,7 +88,7 @@ public class PhonePayQrCodeController {
         });
     }
 
-    public void getPhonePayPaymentSuccess(PhonePayQrCodeResponse response) {
+    public void getPhonePayPaymentSuccess() {
         Utils.showDialog(activity, "Loading…");
         ApiInterface api = ApiClient.getApiService();
         PhonePayQrCodeRequest phonePayQrCodeRequest = new PhonePayQrCodeRequest();
@@ -106,7 +108,7 @@ public class PhonePayQrCodeController {
             public void onResponse(@NotNull Call<PhonePayQrCodeResponse> call, @NotNull Response<PhonePayQrCodeResponse> response) {
                 if (response.body() != null) {
                     Utils.dismissDialog();
-//                    phonePayQrCodeListener.onSuccessGetPhonePayQrCodeUpi(response.body());
+                    phonePayQrCodeListener.onSuccessPhonepePaymentDetails(response.body());
                 }
             }
 
@@ -116,4 +118,5 @@ public class PhonePayQrCodeController {
             }
         });
     }
+
 }

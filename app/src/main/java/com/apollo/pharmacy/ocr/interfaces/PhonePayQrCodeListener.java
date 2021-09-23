@@ -9,4 +9,6 @@ public interface PhonePayQrCodeListener {
     void onSuccessPlaceOrder(PlaceOrderResModel body);
 
     void onFailureService(String string);
+
+    void onSuccessPhonepePaymentDetails(PhonePayQrCodeResponse phonePayQrCodeResponse);
 }
