@@ -385,6 +385,7 @@
                             android:layout_height="@dimen/one_hundred_eighty_dp"
                             android:layout_below="@+id/curation_view_layout"
                             android:layout_centerHorizontal="true"
+                            android:visibility="gone"
                             android:src="@drawable/scan_products1" />
                     </RelativeLayout>
 

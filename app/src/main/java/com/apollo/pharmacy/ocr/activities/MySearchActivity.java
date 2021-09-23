@@ -32,6 +32,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentTransaction;
@@ -41,6 +42,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.apollo.pharmacy.ocr.R;
+import com.apollo.pharmacy.ocr.activities.barcodescanner.BarcodeScannerActivity;
 import com.apollo.pharmacy.ocr.adapters.CategoryGridItemAdapter;
 import com.apollo.pharmacy.ocr.adapters.MedicineSearchAdapter;
 import com.apollo.pharmacy.ocr.adapters.ProductsCustomAdapter;
@@ -53,6 +55,7 @@ import com.apollo.pharmacy.ocr.enums.ViewMode;
 import com.apollo.pharmacy.ocr.fragments.KeyboardFragment;
 import com.apollo.pharmacy.ocr.interfaces.CartCountListener;
 import com.apollo.pharmacy.ocr.interfaces.MyOffersListener;
+import com.apollo.pharmacy.ocr.interfaces.MySearchCallback;
 import com.apollo.pharmacy.ocr.interfaces.SubCategoryListener;
 import com.apollo.pharmacy.ocr.model.Category_request;
 import com.apollo.pharmacy.ocr.model.GetProductListResponse;
@@ -76,6 +79,8 @@ import com.apollo.pharmacy.ocr.utility.NetworkUtils;
 import com.apollo.pharmacy.ocr.utility.SessionManager;
 import com.apollo.pharmacy.ocr.utility.Utils;
 import com.google.gson.Gson;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -94,7 +99,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.FuncN;
 import rx.schedulers.Schedulers;
 
-public class MySearchActivity extends AppCompatActivity implements SubCategoryListener, MyOffersListener, CartCountListener,
+public class MySearchActivity extends AppCompatActivity implements SubCategoryListener, MySearchCallback, MyOffersListener, CartCountListener,
         ConnectivityReceiver.ConnectivityReceiverListener, KeyboardFragment.OnClickKeyboard, AdapterView.OnItemSelectedListener, CategoryGridItemAdapter.CheckOutData, MedicineSearchAdapter.AddToCartCallBackData {
 
     Context context;
@@ -177,7 +182,7 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
         clearSearchText = findViewById(R.id.clear_search_text);
 
         doneProductsLayout.setVisibility(View.GONE);
-        mySearchController = new MySearchController(this);
+        mySearchController = new MySearchController(this, this);
         myOffersController = new MyOffersController(this);
 
         Spinner categorySpinner = (Spinner) findViewById(R.id.category_spinner);
@@ -518,56 +523,70 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
         scanProducts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view1) {
-                transColorId.setVisibility(View.VISIBLE);
+//                transColorId.setVisibility(View.VISIBLE);
+
+
                 ProductScanDialog productScanDialog = new ProductScanDialog(MySearchActivity.this);
+
                 productScanDialog.setPositiveListener(view -> {
                     productScanDialog.dismiss();
-                    ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(MySearchActivity.this, null);
-                    ProductSearch medicine = new ProductSearch();
-                    medicine.setSku("APC0005");
-                    medicine.setQty(1);
-                    medicine.setName("Static");
-                    medicine.setPrice("6");
-                    medicine.setMou("");
-
-                    itemBatchSelectionDilaog.setUnitIncreaseListener(view3 -> {
-                        medicine.setQty(medicine.getQty() + 1);
-                        itemBatchSelectionDilaog.setQtyCount("" + medicine.getQty());
-                    });
-                    itemBatchSelectionDilaog.setUnitDecreaseListener(view4 -> {
-                        if (medicine.getQty() > 1) {
-                            medicine.setQty(medicine.getQty() - 1);
-                            itemBatchSelectionDilaog.setQtyCount("" + medicine.getQty());
-                        }
-                    });
-                    itemBatchSelectionDilaog.setPositiveListener(view2 -> {
-                        transColorId.setVisibility(View.GONE);
-
-                        Intent intent = new Intent("cardReceiver");
-                        intent.putExtra("message", "Addtocart");
-                        intent.putExtra("product_sku", medicine.getSku());
-                        intent.putExtra("product_name", medicine.getName());
-                        intent.putExtra("product_quantyty", itemBatchSelectionDilaog.getQtyCount().toString());
-                        intent.putExtra("product_price", String.valueOf(medicine.getPrice()));
-                        // intent.putExtra("product_container", product_container);
-                        intent.putExtra("product_mou", String.valueOf(medicine.getMou()));
-                        intent.putExtra("product_position", String.valueOf(0));
-                        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
-                        addToCartCallBack();
-                        itemBatchSelectionDilaog.dismiss();
-
-                    });
-                    itemBatchSelectionDilaog.setNegativeListener(v -> {
-                        transColorId.setVisibility(View.GONE);
-                        itemBatchSelectionDilaog.dismiss();
-                    });
-                    itemBatchSelectionDilaog.show();
+                    new IntentIntegrator(MySearchActivity.this).setCaptureActivity(BarcodeScannerActivity.class).initiateScan();
                 });
-                productScanDialog.setNegativeListener(v -> {
-                    transColorId.setVisibility(View.GONE);
+                productScanDialog.setNegativeListener(view -> {
                     productScanDialog.dismiss();
                 });
                 productScanDialog.show();
+
+
+//                ProductScanDialog productScanDialog = new ProductScanDialog(MySearchActivity.this);
+//                productScanDialog.setPositiveListener(view -> {
+//                    productScanDialog.dismiss();
+//                    ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(MySearchActivity.this, null);
+//                    ProductSearch medicine = new ProductSearch();
+//                    medicine.setSku("APC0005");
+//                    medicine.setQty(1);
+//                    medicine.setName("Static");
+//                    medicine.setPrice("6");
+//                    medicine.setMou("");
+//
+//                    itemBatchSelectionDilaog.setUnitIncreaseListener(view3 -> {
+//                        medicine.setQty(medicine.getQty() + 1);
+//                        itemBatchSelectionDilaog.setQtyCount("" + medicine.getQty());
+//                    });
+//                    itemBatchSelectionDilaog.setUnitDecreaseListener(view4 -> {
+//                        if (medicine.getQty() > 1) {
+//                            medicine.setQty(medicine.getQty() - 1);
+//                            itemBatchSelectionDilaog.setQtyCount("" + medicine.getQty());
+//                        }
+//                    });
+//                    itemBatchSelectionDilaog.setPositiveListener(view2 -> {
+//                        transColorId.setVisibility(View.GONE);
+//
+//                        Intent intent = new Intent("cardReceiver");
+//                        intent.putExtra("message", "Addtocart");
+//                        intent.putExtra("product_sku", medicine.getSku());
+//                        intent.putExtra("product_name", medicine.getName());
+//                        intent.putExtra("product_quantyty", itemBatchSelectionDilaog.getQtyCount().toString());
+//                        intent.putExtra("product_price", String.valueOf(medicine.getPrice()));
+//                        // intent.putExtra("product_container", product_container);
+//                        intent.putExtra("product_mou", String.valueOf(medicine.getMou()));
+//                        intent.putExtra("product_position", String.valueOf(0));
+//                        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+//                        addToCartCallBack();
+//                        itemBatchSelectionDilaog.dismiss();
+//
+//                    });
+//                    itemBatchSelectionDilaog.setNegativeListener(v -> {
+//                        transColorId.setVisibility(View.GONE);
+//                        itemBatchSelectionDilaog.dismiss();
+//                    });
+//                    itemBatchSelectionDilaog.show();
+//                });
+//                productScanDialog.setNegativeListener(v -> {
+//                    transColorId.setVisibility(View.GONE);
+//                    productScanDialog.dismiss();
+//                });
+//                productScanDialog.show();
             }
         });
         hideKeyboardEmptyPlaceClick();
@@ -689,7 +708,8 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
+                new IntentFilter("cardReceiver"));
         LocalBroadcastManager.getInstance(this).registerReceiver(mCartMessageReceiver,
                 new IntentFilter("UpdateCartItemCount"));
 
@@ -1505,5 +1525,101 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
             hideKeyBoard();
             return false;
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+//check for null
+        if (result != null) {
+            if (result.getContents() == null) {
+                Toast.makeText(this, "Scan Cancelled", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, result.getContents(), Toast.LENGTH_LONG).show();
+                mySearchController.searchItemProducts(result.getContents());
+            }
+        } else {
+// This is important, otherwise the result will not be passed to the fragment
+        }
+
+    }
+
+    @Override
+    public void onSuccessBarcodeItemApi(ItemSearchResponse itemSearchResponse) {
+        if (itemSearchResponse.getItemList() != null && itemSearchResponse.getItemList().size() > 0) {
+            ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(MySearchActivity.this, itemSearchResponse.getItemList().get(0).getArtCode());
+            ProductSearch medicine = new ProductSearch();
+
+            medicine.setName(itemSearchResponse.getItemList().get(0).getGenericName());
+            medicine.setSku(itemSearchResponse.getItemList().get(0).getArtCode());
+            medicine.setQty(1);
+            medicine.setDescription(itemSearchResponse.getItemList().get(0).getDescription());
+            medicine.setCategory(itemSearchResponse.getItemList().get(0).getCategory());
+            medicine.setMedicineType(itemSearchResponse.getItemList().get(0).getCategory());
+            medicine.setIsInStock(itemSearchResponse.getItemList().get(0).getStockqty() != 0 ? 1 : 0);
+            medicine.setIsPrescriptionRequired(0);
+            medicine.setPrice(itemSearchResponse.getItemList().get(0).getMrp());
+
+
+            itemBatchSelectionDilaog.setUnitIncreaseListener(view3 -> {
+                medicine.setQty(medicine.getQty() + 1);
+                itemBatchSelectionDilaog.setQtyCount("" + medicine.getQty());
+            });
+            itemBatchSelectionDilaog.setUnitDecreaseListener(view4 -> {
+                if (medicine.getQty() > 1) {
+                    medicine.setQty(medicine.getQty() - 1);
+                    itemBatchSelectionDilaog.setQtyCount("" + medicine.getQty());
+                }
+            });
+            itemBatchSelectionDilaog.setPositiveListener(view2 -> {
+//                activityHomeBinding.transColorId.setVisibility(View.GONE);
+                Intent intent = new Intent("cardReceiver");
+                intent.putExtra("message", "Addtocart");
+                intent.putExtra("product_sku", medicine.getSku());
+                intent.putExtra("product_name", medicine.getName());
+                intent.putExtra("product_quantyty", itemBatchSelectionDilaog.getQtyCount().toString());
+                intent.putExtra("product_price", String.valueOf(itemBatchSelectionDilaog.getItemProice()));//String.valueOf(medicine.getPrice())
+                // intent.putExtra("product_container", product_container);
+                intent.putExtra("medicineType", medicine.getMedicineType());
+                intent.putExtra("product_mou", String.valueOf(medicine.getMou()));
+                intent.putExtra("product_position", String.valueOf(0));
+                LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+//                OCRToDigitalMedicineResponse ocrToDigitalMedicineResponse = new OCRToDigitalMedicineResponse();
+//                ocrToDigitalMedicineResponse.setArtCode(medicine.getSku());
+//                ocrToDigitalMedicineResponse.setArtName(medicine.getName());
+//                ocrToDigitalMedicineResponse.setQty(Integer.parseInt(itemBatchSelectionDilaog.getQtyCount().toString()));
+//                ocrToDigitalMedicineResponse.setArtprice(String.valueOf(itemBatchSelectionDilaog.getItemProice()));
+//                ocrToDigitalMedicineResponse.setMedicineType(medicine.getMedicineType());
+//                ocrToDigitalMedicineResponse.setMou(String.valueOf(medicine.getMou()));
+//                if (null != SessionManager.INSTANCE.getDataList()) {
+//                    this.dataList = SessionManager.INSTANCE.getDataList();
+//                    dataList.add(ocrToDigitalMedicineResponse);
+//                    SessionManager.INSTANCE.setDataList(dataList);
+//                } else {
+//                    dataList.add(ocrToDigitalMedicineResponse);
+//                    SessionManager.INSTANCE.setDataList(dataList);
+//                }
+
+                itemBatchSelectionDilaog.dismiss();
+                Intent intent1 = new Intent(MySearchActivity.this, MyCartActivity.class);
+                intent1.putExtra("activityname", "AddMoreActivity");
+                startActivity(intent1);
+                finish();
+                overridePendingTransition(R.animator.trans_right_in, R.animator.trans_right_out);
+            });
+            itemBatchSelectionDilaog.setNegativeListener(v -> {
+//                activityHomeBinding.transColorId.setVisibility(View.GONE);
+                itemBatchSelectionDilaog.dismiss();
+            });
+            itemBatchSelectionDilaog.show();
+        }
+
+    }
+
+    @Override
+    public void onFailureBarcodeItemApi(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+
     }
 }

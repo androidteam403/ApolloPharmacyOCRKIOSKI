@@ -21,6 +21,8 @@ import java.util.List;
 public class CheckoutActivity extends AppCompatActivity implements CheckoutListener {
     private ActivityCheckoutBinding activityCheckoutBinding;
     private List<OCRToDigitalMedicineResponse> dataList;
+    private boolean isPharmaHomeDelivery = true;
+    private boolean isFmcgHomeDelivery = false;
 
     public static Intent getStartIntent(Context context, List<OCRToDigitalMedicineResponse> dataList) {
         Intent intent = new Intent(context, CheckoutActivity.class);
@@ -49,12 +51,16 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
                 int fmcgMedicineCount = 0;
                 double pharmaTotal = 0.0;
                 double fmcgTotal = 0.0;
+                boolean isFmcg = false;
+                boolean isPharma = false;
                 for (OCRToDigitalMedicineResponse data : dataList) {
                     if (data.getMedicineType() != null) {
                         if (data.getMedicineType().equals("PHARMA")) {
+                            isPharma = true;
                             pharmaMedicineCount++;
                             pharmaTotal = pharmaTotal + (Double.parseDouble(data.getArtprice()) * data.getQty());
                         } else {
+                            isFmcg = true;
                             fmcgMedicineCount++;
                             fmcgTotal = fmcgTotal + (Double.parseDouble(data.getArtprice()) * data.getQty());
                         }
@@ -68,14 +74,19 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
                 checkoutuiModel.setFmcgTotal(getResources().getString(R.string.rupee) + String.valueOf(fmcgTotal));
                 checkoutuiModel.setTotalMedicineCount(String.valueOf(dataList.size()));
                 checkoutuiModel.setMedicineTotal(getResources().getString(R.string.rupee) + String.valueOf(pharmaTotal + fmcgTotal));
+                checkoutuiModel.setFmcgPharma(isPharma && isFmcg);
+                checkoutuiModel.setFmcg(isFmcg);
+                checkoutuiModel.setPharma(isPharma);
                 activityCheckoutBinding.setModel(checkoutuiModel);
             }
         }
     }
 
+
     @Override
     public void onClickNeedHomeDelivery() {
 //        deliveryModeHandle();
+        isPharmaHomeDelivery = true;
         activityCheckoutBinding.payandCollectatCounter.setBackground(getResources().getDrawable(R.drawable.bg_lite_grey));
         activityCheckoutBinding.payandCollectatCounterText.setTextColor(getResources().getColor(R.color.grey_color));
         activityCheckoutBinding.payandCollectatCounterImg.setImageDrawable(getResources().getDrawable(R.drawable.tick_white));
@@ -89,6 +100,7 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
     @Override
     public void onClickPayandCollectatCounter() {
 //        deliveryModeHandle();
+        isPharmaHomeDelivery = false;
         activityCheckoutBinding.needHomeDelivery.setBackground(getResources().getDrawable(R.drawable.bg_lite_grey));
         activityCheckoutBinding.needHomeDeliveryText.setTextColor(getResources().getColor(R.color.grey_color));
         activityCheckoutBinding.needHomeDeliveryImg.setImageDrawable(getResources().getDrawable(R.drawable.tick_white));
@@ -102,6 +114,7 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
     @Override
     public void onClickNeedHomeDelivery1() {
 //        deliveryModeHandle();
+        isFmcgHomeDelivery = true;
         activityCheckoutBinding.payhereandCarry.setBackground(getResources().getDrawable(R.drawable.bg_lite_grey));
         activityCheckoutBinding.payHereAndcarryText.setTextColor(getResources().getColor(R.color.grey_color));
         activityCheckoutBinding.payHereAndcarryImg.setImageDrawable(getResources().getDrawable(R.drawable.tick_white));
@@ -114,6 +127,7 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
     @Override
     public void onClickPayhereandCarry() {
 //        deliveryModeHandle();
+        isFmcgHomeDelivery = false;
         activityCheckoutBinding.needHomeDelivery1.setBackground(getResources().getDrawable(R.drawable.bg_lite_grey));
         activityCheckoutBinding.needHomeDelivery1Text.setTextColor(getResources().getColor(R.color.grey_color));
         activityCheckoutBinding.needHomeDelivery1Img.setImageDrawable(getResources().getDrawable(R.drawable.tick_white));
@@ -133,6 +147,8 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
         Toast.makeText(this, "You clicked on Paynow", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(CheckoutActivity.this, PaymentOptionsActivity.class);
         intent.putExtra("fmcgTotal", fmcgToatalPass);
+        intent.putExtra("isPharmaHomeDelivery", isPharmaHomeDelivery);
+        intent.putExtra("isFmcgHomeDelivery", isFmcgHomeDelivery);
         startActivity(intent);
         overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
     }
@@ -162,6 +178,9 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
         private String pharmaTotal;
         private String totalMedicineCount;
         private String medicineTotal;
+        private boolean isFmcgPharma;
+        private boolean isFmcg;
+        private boolean isPharma;
 
         public String getPharmaCount() {
             return pharmaCount;
@@ -209,6 +228,30 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
 
         public void setMedicineTotal(String medicineTotal) {
             this.medicineTotal = medicineTotal;
+        }
+
+        public boolean isFmcgPharma() {
+            return isFmcgPharma;
+        }
+
+        public void setFmcgPharma(boolean fmcgPharma) {
+            isFmcgPharma = fmcgPharma;
+        }
+
+        public boolean isFmcg() {
+            return isFmcg;
+        }
+
+        public void setFmcg(boolean fmcg) {
+            isFmcg = fmcg;
+        }
+
+        public boolean isPharma() {
+            return isPharma;
+        }
+
+        public void setPharma(boolean pharma) {
+            isPharma = pharma;
         }
     }
 }

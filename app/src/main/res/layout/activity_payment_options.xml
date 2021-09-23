@@ -99,7 +99,150 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:visibility="@{model.isPharma ? view.VISIBLE : view.GONE}">
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/margin_10dp">
+
+                            <TextView
+                                android:layout_width="150dp"
+                                android:layout_height="70dp"
+                                android:layout_marginTop="@dimen/margin_10dp"
+                                android:background="@drawable/plain_background_rectangle_border"
+                                android:textSize="@dimen/fourteen_sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:background="@color/white"
+                                android:paddingLeft="@dimen/three_dp"
+                                android:paddingRight="@dimen/three_dp"
+                                android:text="Order Type"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:text="Pharma"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/sixteen_sp"
+                                android:textStyle="bold" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/margin_10dp">
+
+                            <TextView
+                                android:layout_width="120dp"
+                                android:layout_height="70dp"
+                                android:layout_marginTop="@dimen/margin_10dp"
+                                android:background="@drawable/plain_background_rectangle_border"
+                                android:textSize="@dimen/fourteen_sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:background="@color/white"
+                                android:paddingLeft="@dimen/three_dp"
+                                android:paddingRight="@dimen/three_dp"
+                                android:text="Items"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:text="@{model.pharmaCount}"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/sixteen_sp"
+                                android:textStyle="bold" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/margin_10dp">
+
+                            <TextView
+                                android:layout_width="150dp"
+                                android:layout_height="70dp"
+                                android:layout_marginTop="@dimen/margin_10dp"
+                                android:background="@drawable/plain_background_rectangle_border"
+                                android:textSize="@dimen/fourteen_sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:background="@color/white"
+                                android:paddingLeft="@dimen/three_dp"
+                                android:paddingRight="@dimen/three_dp"
+                                android:text="Total Amount"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/pharma_total"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:text="@{model.pharmaTotal}"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/sixteen_sp"
+                                android:textStyle="bold" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/margin_10dp">
+
+                            <TextView
+                                android:layout_width="150dp"
+                                android:layout_height="70dp"
+                                android:layout_marginTop="@dimen/margin_10dp"
+                                android:background="@drawable/plain_background_rectangle_border"
+                                android:textSize="@dimen/fourteen_sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:background="@color/white"
+                                android:paddingLeft="@dimen/three_dp"
+                                android:paddingRight="@dimen/three_dp"
+                                android:text="Delivery Type"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:text="@{model.isPharmaHomeDelivery ? `Home Delivery` : `Pay and collect \n at counter`}"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/sixteen_sp"
+                                android:textStyle="bold" />
+                        </RelativeLayout>
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:visibility="@{model.isFmcg ? view.VISIBLE : view.GONE}">
 
                         <RelativeLayout
                             android:layout_width="wrap_content"
@@ -161,7 +304,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerInParent="true"
-                                android:text="5"
+                                android:text="@{model.fmcgCount}"
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/sixteen_sp"
                                 android:textStyle="bold" />
@@ -191,11 +334,11 @@
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:id="@+id/pharma_total"
+                                android:id="@+id/fmcg_total"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerInParent="true"
-                                android:text="\u20B9 812.85"
+                                android:text="@{model.fmcgTotal}"
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/sixteen_sp"
                                 android:textStyle="bold" />
@@ -228,7 +371,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerInParent="true"
-                                android:text="Home Delivery"
+                                android:text="@{model.FmcgHomeDelivery ? `Home Delivery` : `Pay here &amp; Carry`}"
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/sixteen_sp"
                                 android:textStyle="bold" />
@@ -693,10 +836,10 @@ instructions on your phone to complete\nthe payment"
                                     android:id="@+id/idIVQrcode"
                                     android:layout_width="300dp"
                                     android:layout_height="300dp"
-                                    android:paddingTop="@dimen/fifty_dp"
-                                    android:paddingBottom="@dimen/fifty_dp"
                                     android:layout_gravity="center"
-                                    android:contentDescription="qr_code" />
+                                    android:contentDescription="qr_code"
+                                    android:paddingTop="@dimen/fifty_dp"
+                                    android:paddingBottom="@dimen/fifty_dp" />
 
 
                             </LinearLayout>
@@ -809,4 +952,15 @@ above 400 Rupees"
         </LinearLayout>
 
     </RelativeLayout>
+
+    <data>
+
+        <variable
+            name="view"
+            type="android.view.View" />
+
+        <variable
+            name="model"
+            type="com.apollo.pharmacy.ocr.activities.PaymentOptionsActivity.OrderDetailsuiModel" />
+    </data>
 </layout>

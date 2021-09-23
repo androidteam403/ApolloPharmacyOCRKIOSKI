@@ -181,6 +181,7 @@ public class HomeActivity extends AppCompatActivity implements ConnectivityRecei
         dashboardApolloIcon.setClickable(false);
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
                 new IntentFilter("cardReceiver"));
+
         mySearchLayout.setOnClickListener(v -> {
             mySearchLayout.setBackgroundResource(R.color.selected_menu_color);
             dashboardSearchIcon.setImageResource(R.drawable.dashboard_search_hover);
@@ -384,59 +385,11 @@ public class HomeActivity extends AppCompatActivity implements ConnectivityRecei
         activityHomeBinding.scanProducts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view1) {
-//                activityHomeBinding.transColorId.setVisibility(View.VISIBLE);
                 ProductScanDialog productScanDialog = new ProductScanDialog(HomeActivity.this);
 
                 productScanDialog.setPositiveListener(view -> {
                     productScanDialog.dismiss();
                     new IntentIntegrator(HomeActivity.this).setCaptureActivity(BarcodeScannerActivity.class).initiateScan();
-
-
-//                    ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(HomeActivity.this,null);
-//                    ProductSearch medicine = new ProductSearch();
-//                    medicine.setSku("APC0005");
-//                    medicine.setQty(1);
-//                    medicine.setName("Dolo");
-//                    medicine.setMedicineType("PHAMRA");
-//                    medicine.setPrice("6");
-//                    medicine.setMou("");
-//
-//                    itemBatchSelectionDilaog.setUnitIncreaseListener(view3 -> {
-//                        medicine.setQty(medicine.getQty() + 1);
-//                        itemBatchSelectionDilaog.setQtyCount("" + medicine.getQty());
-//                    });
-//                    itemBatchSelectionDilaog.setUnitDecreaseListener(view4 -> {
-//                        if (medicine.getQty() > 1) {
-//                            medicine.setQty(medicine.getQty() - 1);
-//                            itemBatchSelectionDilaog.setQtyCount("" + medicine.getQty());
-//                        }
-//                    });
-//                    itemBatchSelectionDilaog.setPositiveListener(view2 -> {
-//                        activityHomeBinding.transColorId.setVisibility(View.GONE);
-//                        Intent intent = new Intent("cardReceiver");
-//                        intent.putExtra("message", "Addtocart");
-//                        intent.putExtra("product_sku", medicine.getSku());
-//                        intent.putExtra("medicineType", medicine.getMedicineType());
-//                        intent.putExtra("product_name", medicine.getName());
-//                        intent.putExtra("product_quantyty", itemBatchSelectionDilaog.getQtyCount().toString());
-//                        intent.putExtra("product_price", String.valueOf(medicine.getPrice()));
-//                        // intent.putExtra("product_container", product_container);
-//                        intent.putExtra("product_mou", String.valueOf(medicine.getMou()));
-//                        intent.putExtra("product_position", String.valueOf(0));
-//                        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
-//                        itemBatchSelectionDilaog.dismiss();
-//                        Intent intent1 = new Intent(HomeActivity.this, MyCartActivity.class);
-//                        intent.putExtra("activityname", "AddMoreActivity");
-//                        startActivity(intent1);
-//                        finish();
-//                        overridePendingTransition(R.animator.trans_right_in, R.animator.trans_right_out);
-//                    });
-//                    itemBatchSelectionDilaog.setNegativeListener(v -> {
-//                        activityHomeBinding.transColorId.setVisibility(View.GONE);
-//                        itemBatchSelectionDilaog.dismiss();
-//                    });
-//                    itemBatchSelectionDilaog.show();
-
                 });
                 productScanDialog.setNegativeListener(v -> {
                     activityHomeBinding.transColorId.setVisibility(View.GONE);
@@ -601,7 +554,6 @@ public class HomeActivity extends AppCompatActivity implements ConnectivityRecei
             });
             itemBatchSelectionDilaog.setPositiveListener(view2 -> {
                 activityHomeBinding.transColorId.setVisibility(View.GONE);
-
 //                Intent intent = new Intent("cardReceiver");
 //                intent.putExtra("message", "Addtocart");
 //                intent.putExtra("product_sku", medicine.getSku());
@@ -747,11 +699,11 @@ public class HomeActivity extends AppCompatActivity implements ConnectivityRecei
                 Toast.makeText(this, "Scan Cancelled", Toast.LENGTH_LONG).show();
             } else {
                 Toast.makeText(this, result.getContents(), Toast.LENGTH_LONG).show();
+                homeActivityController.searchItemProducts(result.getContents());
             }
         } else {
 // This is important, otherwise the result will not be passed to the fragment
         }
 
-        homeActivityController.searchItemProducts(result.getContents());
     }
 }

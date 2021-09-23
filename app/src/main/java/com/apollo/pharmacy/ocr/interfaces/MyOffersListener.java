@@ -30,4 +30,6 @@ public interface MyOffersListener {
     void onFailureLoadMorePromotions(String message);
 
     void onSuccessSearchItemApi(ItemSearchResponse itemSearchResponse);
+
+
 }
