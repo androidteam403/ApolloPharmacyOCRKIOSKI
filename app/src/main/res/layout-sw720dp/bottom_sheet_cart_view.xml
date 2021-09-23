@@ -67,6 +67,16 @@
                     android:layout_below="@+id/offers_header_layout"
                     android:layout_marginStart="@dimen/five_dp"
                     android:layout_marginEnd="@dimen/five_dp"
+                    android:layout_marginBottom="@dimen/fifteen_dp"
+                    android:visibility="gone" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/cross_cell_data_recycle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/offers_header_layout"
+                    android:layout_marginStart="@dimen/five_dp"
+                    android:layout_marginEnd="@dimen/five_dp"
                     android:layout_marginBottom="@dimen/fifteen_dp" />
             </RelativeLayout>
 
@@ -135,7 +145,18 @@
                     android:layout_below="@+id/trending_header_layout"
                     android:layout_marginStart="@dimen/five_dp"
                     android:layout_marginEnd="@dimen/five_dp"
+                    android:layout_marginBottom="@dimen/fifteen_dp"
+                    android:visibility="gone" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/up_cell_data_recycle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/trending_header_layout"
+                    android:layout_marginStart="@dimen/five_dp"
+                    android:layout_marginEnd="@dimen/five_dp"
                     android:layout_marginBottom="@dimen/fifteen_dp" />
+
             </RelativeLayout>
 
             <TextView
