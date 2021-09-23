@@ -752,11 +752,11 @@ public class HomeActivity extends AppCompatActivity implements ConnectivityRecei
                 Toast.makeText(this, "Scan Cancelled", Toast.LENGTH_LONG).show();
             } else {
                 Toast.makeText(this, result.getContents(), Toast.LENGTH_LONG).show();
+                homeActivityController.searchItemProducts(result.getContents());
             }
         } else {
 // This is important, otherwise the result will not be passed to the fragment
         }
 
-        homeActivityController.searchItemProducts(result.getContents());
     }
 }
