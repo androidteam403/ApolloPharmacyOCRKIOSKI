@@ -413,6 +413,10 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
             activityMyOffersBinding.crossSellingCountTxt.setText(String.valueOf(crosssellingList.size()));
             activityMyOffersBinding.upSellingItemCountLayout.setVisibility(View.GONE);
             activityMyOffersBinding.upSellingItemCountTxt.setText("0");
+            activityMyOffersBinding.nodataFound.setVisibility(View.GONE);
+            if (crosssellingList.size() < 1) {
+                activityMyOffersBinding.nodataFound.setVisibility(View.VISIBLE);
+            }
         });
 
         activityMyOffersBinding.upSellingTrendingLayout.setOnClickListener(v -> {
@@ -441,7 +445,10 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
             activityMyOffersBinding.crossSellingCountTxt.setText("0");
             activityMyOffersBinding.upSellingItemCountLayout.setVisibility(View.VISIBLE);
             activityMyOffersBinding.upSellingItemCountTxt.setText(String.valueOf(upsellingList.size()));
-
+            activityMyOffersBinding.nodataFound.setVisibility(View.GONE);
+            if (upsellingList.size() < 1) {
+                activityMyOffersBinding.nodataFound.setVisibility(View.VISIBLE);
+            }
         });
     }
 
@@ -451,7 +458,7 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
 
     @Override
     public void onSuccessSearchUpcellCroscellApi(UpCellCrossCellResponse productList) {
-        if (productList != null && productList.getCrossselling().size() > 0) {
+        if (productList != null && productList.getCrossselling() != null && productList.getCrossselling().size() > 0) {
             crosssellingList = productList.getCrossselling();
 
             activityMyOffersBinding.upSellingTrendingrecycleerviewNew.setVisibility(View.GONE);
@@ -470,10 +477,18 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
             activityMyOffersBinding.crossSellingCountTxt.setText(String.valueOf(crosssellingList.size()));
             activityMyOffersBinding.upSellingItemCountLayout.setVisibility(View.GONE);
             activityMyOffersBinding.upSellingItemCountTxt.setText("0");
-
+            activityMyOffersBinding.nodataFound.setVisibility(View.GONE);
+        } else {
+            activityMyOffersBinding.crossSellingRecycleNew.setVisibility(View.GONE);
+            activityMyOffersBinding.nodataFound.setVisibility(View.VISIBLE);
         }
-        if (productList != null && productList.getUpselling().size() > 0)
+        if (productList != null && productList.getUpselling() != null && productList.getUpselling().size() > 0) {
             upsellingList = productList.getUpselling();
+            activityMyOffersBinding.nodataFound.setVisibility(View.GONE);
+        } else {
+            activityMyOffersBinding.crossSellingRecycleNew.setVisibility(View.GONE);
+            activityMyOffersBinding.nodataFound.setVisibility(View.VISIBLE);
+        }
     }
 
     private int screeSize() {
@@ -631,7 +646,8 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
     }
 
     @Override
-    public void onSuccessProductListMainCategory(HashMap<String, GetProductListResponse> productList) {
+    public void onSuccessProductListMainCategory
+            (HashMap<String, GetProductListResponse> productList) {
     }
 
     @Override
@@ -1008,7 +1024,8 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
         declineButton.setOnClickListener(v -> dialog.dismiss());
     }
 
-    public List<OCRToDigitalMedicineResponse> removeDuplicate(List<OCRToDigitalMedicineResponse> dataList) {
+    public List<OCRToDigitalMedicineResponse> removeDuplicate
+            (List<OCRToDigitalMedicineResponse> dataList) {
         Set<OCRToDigitalMedicineResponse> s = new TreeSet<OCRToDigitalMedicineResponse>(new Comparator<OCRToDigitalMedicineResponse>() {
             @Override
             public int compare(OCRToDigitalMedicineResponse o1, OCRToDigitalMedicineResponse o2) {

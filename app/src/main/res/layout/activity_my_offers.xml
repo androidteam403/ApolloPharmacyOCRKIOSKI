@@ -55,11 +55,11 @@
                                 android:textStyle="bold" />
 
                             <ImageView
-                                android:visibility="gone"
                                 android:layout_width="@dimen/one_hundred_dp"
                                 android:layout_height="@dimen/fifty_dp"
                                 android:layout_alignParentEnd="true"
-                                android:src="@drawable/scan_products1" />
+                                android:src="@drawable/scan_products1"
+                                android:visibility="gone" />
 
                             <TextView
                                 android:id="@+id/checkout_text"
@@ -443,6 +443,25 @@
                                             android:layout_width="match_parent"
                                             android:layout_height="match_parent"
                                             android:visibility="gone" />
+
+                                        <RelativeLayout
+                                            android:visibility="gone"
+                                            android:id="@+id/nodata_found"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent">
+
+                                            <TextView
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:layout_centerInParent="true"
+                                                android:layout_gravity="center"
+                                                android:gravity="center"
+                                                android:text="No Data Found"
+                                                android:textColor="@color/RED"
+                                                android:textSize="@dimen/fifteen_sp"
+                                                android:textStyle="bold" />
+                                        </RelativeLayout>
+
                                     </LinearLayout>
 
                                     <!--                                <ImageView-->
