@@ -83,6 +83,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="@dimen/two_dp"
                             android:textStyle="bold"
+                            android:visibility="gone"
                             android:text="@string/rupee"
                             android:textColor="@color/colorBlack"
                             android:textSize="@dimen/twelve_sp" />

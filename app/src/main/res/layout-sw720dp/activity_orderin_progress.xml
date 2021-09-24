@@ -36,6 +36,7 @@
                     android:layout_below="@+id/orderisin_progress_text"
                     android:layout_marginStart="@dimen/ten_dp"
                     android:layout_marginEnd="@dimen/ten_dp"
+                    android:visibility="@{model.isPharma ? view.VISIBLE : view.GONE}"
                     android:orientation="horizontal"
                     android:weightSum="6">
 
@@ -158,7 +159,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="\u20B9372.85"
+                                android:text="@{model.pharmaTotal}"
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/eighteen_sp" />
                         </LinearLayout>
@@ -219,7 +220,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Home Delivery"
+                                android:text="@{model.isPharmaHomeDelivery ? `Home Delivery`:`Paid at kiosk`}"
                                 android:textColor="@color/black"
                                 android:textStyle="bold" />
                         </LinearLayout>
@@ -283,6 +284,7 @@
                     android:layout_marginStart="@dimen/ten_dp"
                     android:layout_marginTop="@dimen/ten_dp"
                     android:layout_marginEnd="@dimen/ten_dp"
+                    android:visibility="@{model.isFmcg ? view.VISIBLE : view.GONE}"
                     android:orientation="horizontal"
                     android:weightSum="6">
 
@@ -405,7 +407,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="\u20B9440.00"
+                                android:text="@{model.fmcgTotal}"
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/eighteen_sp" />
                         </LinearLayout>
@@ -466,7 +468,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Paid at kiosk"
+                                android:text="@{model.isFmcgHomeDelivery ? `Home Delivery`:`Paid at kiosk`}"
                                 android:textColor="@color/black"
                                 android:textStyle="bold" />
                         </LinearLayout>
@@ -746,7 +748,15 @@
     <data>
 
         <variable
+            name="view"
+            type="android.view.View" />
+
+        <variable
             name="callback"
             type="com.apollo.pharmacy.ocr.interfaces.OrderinProgressListener" />
+
+        <variable
+            name="model"
+            type="com.apollo.pharmacy.ocr.activities.OrderinProgressActivity.OrderinProgresssuiModel" />
     </data>
 </layout>
