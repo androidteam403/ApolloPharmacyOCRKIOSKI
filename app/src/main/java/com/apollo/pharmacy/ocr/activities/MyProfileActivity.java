@@ -38,6 +38,7 @@ import com.apollo.pharmacy.ocr.model.PortFolioModel;
 import com.apollo.pharmacy.ocr.model.Product;
 import com.apollo.pharmacy.ocr.model.ScannedData;
 import com.apollo.pharmacy.ocr.model.ScannedMedicine;
+import com.apollo.pharmacy.ocr.model.UpCellCrossCellResponse;
 import com.apollo.pharmacy.ocr.model.UserAddress;
 import com.apollo.pharmacy.ocr.network.ApiClient;
 import com.apollo.pharmacy.ocr.network.ApiInterface;
@@ -499,6 +500,16 @@ public class MyProfileActivity extends AppCompatActivity implements MyCartListen
 
     @Override
     public void onSuccessImageService(GetImageRes response) {
+
+    }
+
+    @Override
+    public void onSuccessSearchItemApi(UpCellCrossCellResponse body) {
+
+    }
+
+    @Override
+    public void onSearchFailure(String message) {
 
     }
 

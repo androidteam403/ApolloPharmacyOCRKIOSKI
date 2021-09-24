@@ -95,6 +95,24 @@ object SessionManager {
         return pref.getString(ApplicationConstant.MOBILE_NUMBER, String());
     }
 
+    fun setStoreId(number: String) {
+        editor.putString(ApplicationConstant.STORE_ID, number)
+        editor.apply();
+    }
+
+    fun getStoreId(): String {
+        return pref.getString(ApplicationConstant.STORE_ID, String());
+    }
+
+    fun setTerminalId(number: String) {
+        editor.putString(ApplicationConstant.TERMINAL_ID, number)
+        editor.apply();
+    }
+
+    fun getTerminalId(): String {
+        return pref.getString(ApplicationConstant.TERMINAL_ID, String());
+    }
+
     fun setCartItems(list: List<OCRToDigitalMedicineResponse>) {
         editor.putString(ApplicationConstant.CartItems, Gson().toJson(list))
         editor.apply()
