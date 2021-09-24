@@ -131,6 +131,7 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
     private TextView timerHeaderText, timerChildText;
     private long minVal = 0, secVal = 0;
     RecyclerView crossCell_recycle, upcell_recycle;
+    TextView noDataFound;
 
     @Override
     public void onSuccessProductList(HashMap<String, GetProductListResponse> productList) {
@@ -879,6 +880,7 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
         myCartController.upcellCrosscellList("7353910637");
         upcell_recycle = findViewById(R.id.up_cell_data_recycle);
         crossCell_recycle = findViewById(R.id.cross_cell_data_recycle);
+        noDataFound = findViewById(R.id.no_data);
         RecyclerView promotionproductrecycleerview = findViewById(R.id.promotionsRecyclerView);
         promotionproductrecycleerview.setLayoutManager(new GridLayoutManager(MyCartActivity.this, 3));
         RecyclerView trendingnowproductrecycleerview = findViewById(R.id.trendingnowproductrecycleerview);
@@ -1500,26 +1502,36 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
 
     @Override
     public void onSuccessSearchItemApi(UpCellCrossCellResponse body) {
-        if (body.getCrossselling().size() > 0) {
+        if (body != null && body.getCrossselling() != null && body.getCrossselling().size() > 0) {
+
             crosssellingList.add(body.getCrossselling().get(0));
             crosssellingList.add(body.getCrossselling().get(1));
             crosssellingList.add(body.getCrossselling().get(2));
 
+            CrossCellAdapter crossCellAdapter = new CrossCellAdapter(this, crosssellingList);
+            RecyclerView.LayoutManager mLayoutManager4 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+            crossCell_recycle.setLayoutManager(mLayoutManager4);
+            crossCell_recycle.setItemAnimator(new DefaultItemAnimator());
+            crossCell_recycle.setAdapter(crossCellAdapter);
+            noDataFound.setVisibility(View.GONE);
+        } else {
+            noDataFound.setVisibility(View.VISIBLE);
+        }
+        if (body != null && body.getUpselling() != null && body.getUpselling().size() > 0) {
+
             upsellingList.add(body.getUpselling().get(0));
             upsellingList.add(body.getUpselling().get(1));
             upsellingList.add(body.getUpselling().get(2));
-        }
-        CrossCellAdapter crossCellAdapter = new CrossCellAdapter(this, crosssellingList);
-        RecyclerView.LayoutManager mLayoutManager4 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        crossCell_recycle.setLayoutManager(mLayoutManager4);
-        crossCell_recycle.setItemAnimator(new DefaultItemAnimator());
-        crossCell_recycle.setAdapter(crossCellAdapter);
 
-        UpCellAdapter upCellAdapter = new UpCellAdapter(this, upsellingList);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        upcell_recycle.setLayoutManager(mLayoutManager);
-        upcell_recycle.setItemAnimator(new DefaultItemAnimator());
-        upcell_recycle.setAdapter(upCellAdapter);
+            UpCellAdapter upCellAdapter = new UpCellAdapter(this, upsellingList);
+            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+            upcell_recycle.setLayoutManager(mLayoutManager);
+            upcell_recycle.setItemAnimator(new DefaultItemAnimator());
+            upcell_recycle.setAdapter(upCellAdapter);
+            noDataFound.setVisibility(View.GONE);
+        } else {
+            noDataFound.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
