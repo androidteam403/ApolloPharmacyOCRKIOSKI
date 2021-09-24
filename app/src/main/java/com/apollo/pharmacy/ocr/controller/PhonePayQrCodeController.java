@@ -50,7 +50,7 @@ public class PhonePayQrCodeController {
                 if (response.body() != null) {
 //                    Utils.dismissDialog();
                     phonePayQrCodeListener.onSuccessGetPhonePayQrCodeUpi(response.body());
-                   getPhonePayPaymentSuccess();
+                   getPhonePayPaymentSuccess(phonePayQrCodeRequest.getTransactionId());
                 }
             }
 
@@ -88,7 +88,7 @@ public class PhonePayQrCodeController {
         });
     }
 
-    public void getPhonePayPaymentSuccess() {
+    public void getPhonePayPaymentSuccess(String tranId) {
         Utils.showDialog(activity, "Loading…");
         ApiInterface api = ApiClient.getApiService();
         PhonePayQrCodeRequest phonePayQrCodeRequest = new PhonePayQrCodeRequest();
@@ -99,7 +99,7 @@ public class PhonePayQrCodeController {
         phonePayQrCodeRequest.setProviderReferenceId("");
         phonePayQrCodeRequest.setReqType("CHECKPAYMENTSTATUS");
         phonePayQrCodeRequest.setStoreId("16001");
-        phonePayQrCodeRequest.setTransactionId(Utils.getOrderedID());
+        phonePayQrCodeRequest.setTransactionId(tranId);
         phonePayQrCodeRequest.setUrl("http://172.16.2.251:8033/PHONEPEUAT/APOLLO/PhonePe");
 
         Call<PhonePayQrCodeResponse> call = api.GET_PhonePay_Qr_payment_Success(phonePayQrCodeRequest);
@@ -108,7 +108,7 @@ public class PhonePayQrCodeController {
             public void onResponse(@NotNull Call<PhonePayQrCodeResponse> call, @NotNull Response<PhonePayQrCodeResponse> response) {
                 if (response.body() != null) {
                     Utils.dismissDialog();
-                    phonePayQrCodeListener.onSuccessPhonepePaymentDetails(response.body());
+                    phonePayQrCodeListener.onSuccessPhonepePaymentDetails(response.body(),tranId);
                 }
             }
 

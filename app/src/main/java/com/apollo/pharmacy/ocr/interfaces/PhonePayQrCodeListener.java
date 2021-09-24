@@ -10,5 +10,5 @@ public interface PhonePayQrCodeListener {
 
     void onFailureService(String string);
 
-    void onSuccessPhonepePaymentDetails(PhonePayQrCodeResponse phonePayQrCodeResponse);
+    void onSuccessPhonepePaymentDetails(PhonePayQrCodeResponse phonePayQrCodeResponse,String transactionId);
 }

@@ -292,12 +292,12 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
     }
 
     @Override
-    public void onSuccessPhonepePaymentDetails(PhonePayQrCodeResponse phonePayQrCodeResponse) {
+    public void onSuccessPhonepePaymentDetails(PhonePayQrCodeResponse phonePayQrCodeResponse,String transactionId) {
         if (phonePayQrCodeResponse.getStatus()) {
             placeOrder();
         } else {
             PhonePayQrCodeController phonePayQrCodeController = new PhonePayQrCodeController(getApplicationContext(), PaymentOptionsActivity.this);
-            phonePayQrCodeController.getPhonePayPaymentSuccess();
+            phonePayQrCodeController.getPhonePayPaymentSuccess(transactionId);
         }
     }
 
