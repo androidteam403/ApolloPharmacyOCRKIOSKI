@@ -19,6 +19,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.apollo.pharmacy.ocr.R;
 import com.apollo.pharmacy.ocr.activities.mposstoresetup.MposStoreSetupActivity;
 import com.apollo.pharmacy.ocr.controller.MainActivityController;
+import com.apollo.pharmacy.ocr.dialog.AccesskeyDialog;
 import com.apollo.pharmacy.ocr.interfaces.MainListener;
 import com.apollo.pharmacy.ocr.model.API;
 import com.apollo.pharmacy.ocr.model.Global_api_response;
@@ -91,6 +92,7 @@ public class MainActivity extends BaseActivity implements ConnectivityReceiver.C
         initMarque();
         FirebaseApp.initializeApp(getApplicationContext());
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
+        SessionManager.INSTANCE.setAccessKey("65536");
         zoomAnim();
 //        crash.setText("crash");
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -98,7 +100,6 @@ public class MainActivity extends BaseActivity implements ConnectivityReceiver.C
         int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
         decorView.setSystemUiVisibility(uiOptions);
         LinearLayout faqLayout = findViewById(R.id.help_layout);
-//        crash.setText("crash");
         faqLayout.setOnClickListener(view -> startActivity(new Intent(MainActivity.this, FAQActivity.class)));
         mainLangLayout = findViewById(R.id.main_lang_layout);
         moreLangLayout = findViewById(R.id.more_lang_layout);
@@ -167,9 +168,17 @@ public class MainActivity extends BaseActivity implements ConnectivityReceiver.C
 //        urduLangBtn
 
         langContinueLayout.setOnClickListener(view -> {
-            Intent intent = new Intent(MainActivity.this, UserLoginActivity.class);
-            startActivity(intent);
-            overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
+            if (SessionManager.INSTANCE.getAccessKey() != null && SessionManager.INSTANCE.getAccessKey().equals("AP@11@2021")) {
+                Intent intent = new Intent(MainActivity.this, UserLoginActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
+            } else {
+                AccesskeyDialog accesskeyDialog = new AccesskeyDialog(MainActivity.this);
+                accesskeyDialog.onClickSubmit(v1 -> {
+                    accesskeyDialog.listener();
+                });
+                accesskeyDialog.show();
+            }
         });
 
         moreLangContinueLayout.setOnClickListener(v -> {

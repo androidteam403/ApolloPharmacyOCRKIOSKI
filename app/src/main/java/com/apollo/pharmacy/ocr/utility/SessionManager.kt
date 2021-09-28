@@ -372,4 +372,13 @@ object SessionManager {
     fun getDynamicOrderId(): String {
         return pref.getString(ApplicationConstant.DYNAMIC_ORDER_ID, "")
     }
+
+    fun setAccessKey(accessKey: String) {
+        editor.putString(ApplicationConstant.ACCESS_KEY, accessKey)
+        editor.apply()
+    }
+
+    fun getAccessKey(): String {
+        return pref.getString(ApplicationConstant.ACCESS_KEY, "")
+    }
 }
