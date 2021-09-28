@@ -3,7 +3,6 @@ package com.apollo.pharmacy.ocr.activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.View;
@@ -18,7 +17,9 @@ import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.apollo.pharmacy.ocr.R;
+import com.apollo.pharmacy.ocr.activities.mposstoresetup.MposStoreSetupActivity;
 import com.apollo.pharmacy.ocr.controller.MainActivityController;
+import com.apollo.pharmacy.ocr.dialog.AccesskeyDialog;
 import com.apollo.pharmacy.ocr.interfaces.MainListener;
 import com.apollo.pharmacy.ocr.model.API;
 import com.apollo.pharmacy.ocr.model.Global_api_response;
@@ -40,7 +41,7 @@ public class MainActivity extends BaseActivity implements ConnectivityReceiver.C
     private LinearLayout langContinueLayout;
     private TextView englishLangText, tamilLangText, teluguLangText, englishLangBtn, hindiLangBtn, teluguLangBtn, kannadaLangBtn,
             marathiLangBtn, malayalamLangBtn, panjabiLangBtn, tamilLangBtn, gujarathiLangBtn, urduLangBtn, letsBeginText;
-    private ImageView moreLangImage;
+    private ImageView moreLangImage, settings;
     private RelativeLayout mainLangLayout, moreLangLayout;
     private ConstraintLayout constraint_layout;
     private MainActivityController mainActivityController;
@@ -85,7 +86,7 @@ public class MainActivity extends BaseActivity implements ConnectivityReceiver.C
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lang_selection);
         initMarque();
-
+        SessionManager.INSTANCE.setAccessKey("65536");
         zoomAnim();
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         View decorView = getWindow().getDecorView();
@@ -99,6 +100,7 @@ public class MainActivity extends BaseActivity implements ConnectivityReceiver.C
         tamilLangText = findViewById(R.id.tamil_lang_text);
         teluguLangText = findViewById(R.id.telugu_lang_text);
         moreLangImage = findViewById(R.id.more_language_img);
+        settings = findViewById(R.id.settings);
         letsBeginText = findViewById(R.id.lets_begin_text);
         langContinueLayout = findViewById(R.id.lang_continue_layout);
         LinearLayout moreLangContinueLayout = findViewById(R.id.more_lang_continue_layout);
@@ -159,9 +161,17 @@ public class MainActivity extends BaseActivity implements ConnectivityReceiver.C
 //        urduLangBtn
 
         langContinueLayout.setOnClickListener(view -> {
-            Intent intent = new Intent(MainActivity.this, UserLoginActivity.class);
-            startActivity(intent);
-            overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
+            if (SessionManager.INSTANCE.getAccessKey() != null && SessionManager.INSTANCE.getAccessKey().equals("AP@11@2021")) {
+                Intent intent = new Intent(MainActivity.this, UserLoginActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
+            } else {
+                AccesskeyDialog accesskeyDialog = new AccesskeyDialog(MainActivity.this);
+                accesskeyDialog.onClickSubmit(v1 -> {
+                    accesskeyDialog.listener();
+                });
+                accesskeyDialog.show();
+            }
         });
 
         moreLangContinueLayout.setOnClickListener(v -> {
@@ -190,6 +200,16 @@ public class MainActivity extends BaseActivity implements ConnectivityReceiver.C
 //
 //            }
 //        }.start();
+
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, MposStoreSetupActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
+            }
+        });
+
     }
 
     int countVal = 0;
