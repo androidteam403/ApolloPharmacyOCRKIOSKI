@@ -81,13 +81,18 @@ public class MainActivity extends BaseActivity implements ConnectivityReceiver.C
         }
     }
 
+    TextView crash;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lang_selection);
         initMarque();
+//        FirebaseApp.initializeApp(getApplicationContext());
+//        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
         SessionManager.INSTANCE.setAccessKey("65536");
         zoomAnim();
+//        crash.setText("crash");
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         View decorView = getWindow().getDecorView();
         int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;

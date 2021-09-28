@@ -877,7 +877,7 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
         }
 
         myCartController = new MyCartController(this);
-        myCartController.upcellCrosscellList("7353910637");
+        myCartController.upcellCrosscellList("7353910637", MyCartActivity.this);
         upcell_recycle = findViewById(R.id.up_cell_data_recycle);
         crossCell_recycle = findViewById(R.id.cross_cell_data_recycle);
         noDataFound = findViewById(R.id.no_data);
@@ -1425,6 +1425,11 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
     }
 
     @Override
+    public void showSnackBAr() {
+
+    }
+
+    @Override
     public void onClick(int position) {
 
     }
@@ -1499,16 +1504,17 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
 
     List<UpCellCrossCellResponse.Crossselling> crosssellingList = new ArrayList<>();
     List<UpCellCrossCellResponse.Upselling> upsellingList = new ArrayList<>();
+    boolean addToCarLayHandel;
 
     @Override
     public void onSuccessSearchItemApi(UpCellCrossCellResponse body) {
         if (body != null && body.getCrossselling() != null && body.getCrossselling().size() > 0) {
-
+            addToCarLayHandel=false;
             crosssellingList.add(body.getCrossselling().get(0));
             crosssellingList.add(body.getCrossselling().get(1));
             crosssellingList.add(body.getCrossselling().get(2));
 
-            CrossCellAdapter crossCellAdapter = new CrossCellAdapter(this, crosssellingList);
+            CrossCellAdapter crossCellAdapter = new CrossCellAdapter(this, crosssellingList,addToCarLayHandel);
             RecyclerView.LayoutManager mLayoutManager4 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
             crossCell_recycle.setLayoutManager(mLayoutManager4);
             crossCell_recycle.setItemAnimator(new DefaultItemAnimator());

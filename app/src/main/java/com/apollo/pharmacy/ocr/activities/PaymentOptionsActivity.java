@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -36,6 +37,7 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
     private ActivityPaymentOptionsBinding activityPaymentOptionsBinding;
     private double pharmaTotalData = 0.0;
     private List<OCRToDigitalMedicineResponse> dataList;
+    private String customerDeliveryAddress;
 
 
     @Override
@@ -49,6 +51,7 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
             pharmaTotalData = (double) getIntent().getDoubleExtra("fmcgTotal", 0.0);
             orderDetailsuiModel.setPharmaHomeDelivery(getIntent().getBooleanExtra("isPharmaHomeDelivery", false));
             orderDetailsuiModel.setFmcgHomeDelivery(getIntent().getBooleanExtra("isFmcgHomeDelivery", false));
+            customerDeliveryAddress = (String) getIntent().getStringExtra("customerDeliveryAddress");
         }
         if (null != SessionManager.INSTANCE.getDataList())
             this.dataList = SessionManager.INSTANCE.getDataList();
@@ -86,17 +89,31 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
         }
         activityPaymentOptionsBinding.pharmaTotal.setText(getResources().getString(R.string.rupee) + String.valueOf(pharmaTotalData));
 
+        unselectedBgClors();
+        activityPaymentOptionsBinding.scanToPay.setBackgroundResource(R.drawable.ic_payment_methods_selectebg);
+        PaymentInfoLayoutsHandlings();
+        activityPaymentOptionsBinding.scanToPayInfoLay.setVisibility(View.VISIBLE);
+        Utils.showDialog(PaymentOptionsActivity.this, "Loading…");
+        PhonePayQrCodeController phonePayQrCodeController = new PhonePayQrCodeController(getApplicationContext(), PaymentOptionsActivity.this);
+        phonePayQrCodeController.getPhonePayQrCodeGeneration(scanPay);
+
         listeners();
     }
+
+    boolean scanPay = true;
 
     private void listeners() {
         activityPaymentOptionsBinding.scanToPay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 unselectedBgClors();
+                scanPay = true;
                 activityPaymentOptionsBinding.scanToPay.setBackgroundResource(R.drawable.ic_payment_methods_selectebg);
                 PaymentInfoLayoutsHandlings();
                 activityPaymentOptionsBinding.scanToPayInfoLay.setVisibility(View.VISIBLE);
+                Utils.showDialog(PaymentOptionsActivity.this, "Loading…");
+                PhonePayQrCodeController phonePayQrCodeController = new PhonePayQrCodeController(getApplicationContext(), PaymentOptionsActivity.this);
+                phonePayQrCodeController.getPhonePayQrCodeGeneration(scanPay);
             }
         });
         activityPaymentOptionsBinding.recievePaymentSms.setOnClickListener(new View.OnClickListener() {
@@ -115,6 +132,11 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
                 activityPaymentOptionsBinding.upi.setBackgroundResource(R.drawable.ic_payment_methods_selectebg);
                 PaymentInfoLayoutsHandlings();
                 activityPaymentOptionsBinding.upiInfoLay.setVisibility(View.VISIBLE);
+
+                activityPaymentOptionsBinding.tickPhonePay.setImageResource(0);
+                activityPaymentOptionsBinding.tickPhonePayLay.setBackgroundResource(R.drawable.upi_payment_unselected_bg);
+                activityPaymentOptionsBinding.tickPhonePay.setBackgroundResource(R.drawable.round_untick_bg);
+
             }
         });
         activityPaymentOptionsBinding.cashOnDelivery.setOnClickListener(new View.OnClickListener() {
@@ -124,6 +146,15 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
                 activityPaymentOptionsBinding.cashOnDelivery.setBackgroundResource(R.drawable.ic_payment_methods_selectebg);
                 PaymentInfoLayoutsHandlings();
                 activityPaymentOptionsBinding.cashOnDeliveryInfoLay.setVisibility(View.VISIBLE);
+                if (customerDeliveryAddress != null) {
+                    activityPaymentOptionsBinding.deliveryAddress.setText(customerDeliveryAddress);
+                }
+            }
+        });
+        activityPaymentOptionsBinding.backClick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
             }
         });
         activityPaymentOptionsBinding.scanToPayButton.setOnClickListener(new View.OnClickListener() {
@@ -138,14 +169,6 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
             @Override
             public void onClick(View v) {
                 placeOrder();
-            }
-        });
-
-        activityPaymentOptionsBinding.verify.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                PhonePayQrCodeController phonePayQrCodeController = new PhonePayQrCodeController(getApplicationContext(), PaymentOptionsActivity.this);
-//                phonePayQrCodeController.getPhonePayPaymentSuccess(phonePayQrCodeResponse);
             }
         });
         paymentTicksUnticksHandlings();
@@ -211,6 +234,7 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
         activityPaymentOptionsBinding.tickPhonePayLay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                scanPay = false;
                 activityPaymentOptionsBinding.tickPhonePay.setImageResource(R.drawable.tick_mark);
                 activityPaymentOptionsBinding.tickPhonePay.setBackgroundResource(R.drawable.round_tick_bg);
                 activityPaymentOptionsBinding.tickPhonePayLay.setBackgroundResource(R.drawable.upi_payment_selected_bg);
@@ -224,9 +248,9 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
                 activityPaymentOptionsBinding.tickUpi.setBackgroundResource(R.drawable.round_untick_bg);
                 activityPaymentOptionsBinding.tickBhim.setBackgroundResource(R.drawable.round_untick_bg);
 
-
+                Utils.showDialog(PaymentOptionsActivity.this, "Loading…");
                 PhonePayQrCodeController phonePayQrCodeController = new PhonePayQrCodeController(getApplicationContext(), PaymentOptionsActivity.this);
-                phonePayQrCodeController.getPhonePayQrCodeGeneration();
+                phonePayQrCodeController.getPhonePayQrCodeGeneration(scanPay);
             }
         });
     }
@@ -234,10 +258,15 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
     PhonePayQrCodeResponse phonePayQrCodeResponse;
 
     @Override
-    public void onSuccessGetPhonePayQrCodeUpi(PhonePayQrCodeResponse phonePayQrCodeResponse) {
+    public void onSuccessGetPhonePayQrCodeUpi(PhonePayQrCodeResponse phonePayQrCodeResponse, boolean scanpay) {
         this.phonePayQrCodeResponse = phonePayQrCodeResponse;
-        activityPaymentOptionsBinding.upiInfoLay.setVisibility(View.GONE);
-        activityPaymentOptionsBinding.scanPhonePayQrPayLay.setVisibility(View.VISIBLE);
+        if (!scanpay) {
+            activityPaymentOptionsBinding.idIVQrcode.setVisibility(View.VISIBLE);
+            activityPaymentOptionsBinding.qrCodeDisplay.setVisibility(View.GONE);
+        } else {
+            activityPaymentOptionsBinding.qrCodeDisplay.setVisibility(View.VISIBLE);
+            activityPaymentOptionsBinding.idIVQrcode.setVisibility(View.GONE);
+        }
 // below line is for getting
         // the windowmanager service.
         WindowManager manager = (WindowManager) getSystemService(WINDOW_SERVICE);
@@ -267,8 +296,17 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
             bitmap = qrgEncoder.encodeAsBitmap();
             // the bitmap is set inside our image
             // view using .setimagebitmap method.
-            activityPaymentOptionsBinding.idIVQrcode.setImageBitmap(bitmap);
-
+            if (!scanpay) {
+                activityPaymentOptionsBinding.idIVQrcode.setImageBitmap(bitmap);
+                activityPaymentOptionsBinding.qrLogoPhonepay.setVisibility(View.VISIBLE);
+                activityPaymentOptionsBinding.qrLogo.setVisibility(View.GONE);
+                Utils.dismissDialog();
+            } else {
+                activityPaymentOptionsBinding.qrCodeDisplay.setImageBitmap(bitmap);
+                activityPaymentOptionsBinding.qrLogoPhonepay.setVisibility(View.GONE);
+                activityPaymentOptionsBinding.qrLogo.setVisibility(View.VISIBLE);
+                Utils.dismissDialog();
+            }
 
         } catch (WriterException e) {
             // this method is called for
@@ -292,9 +330,22 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
     }
 
     @Override
-    public void onSuccessPhonepePaymentDetails(PhonePayQrCodeResponse phonePayQrCodeResponse,String transactionId) {
+    public void onSuccessPhonepePaymentDetails(PhonePayQrCodeResponse phonePayQrCodeResponse, String transactionId) {
+
         if (phonePayQrCodeResponse.getStatus()) {
-            placeOrder();
+            Toast.makeText(this, "Payment is successfully done", Toast.LENGTH_SHORT).show();
+            activityPaymentOptionsBinding.placeAnOrderScanpayPay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    placeOrder();
+                }
+            });
+            activityPaymentOptionsBinding.placeAnOrderPhonePay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    placeOrder();
+                }
+            });
         } else {
             PhonePayQrCodeController phonePayQrCodeController = new PhonePayQrCodeController(getApplicationContext(), PaymentOptionsActivity.this);
             phonePayQrCodeController.getPhonePayPaymentSuccess(transactionId);

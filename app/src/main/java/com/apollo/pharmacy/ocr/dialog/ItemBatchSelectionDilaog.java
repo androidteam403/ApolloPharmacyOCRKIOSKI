@@ -276,7 +276,7 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
     }
 
     public void setPositiveListener(View.OnClickListener okListener) {
-            dialogItemBatchSelectionBinding.dialogButtonOK.setOnClickListener(okListener);
+        dialogItemBatchSelectionBinding.dialogButtonOK.setOnClickListener(okListener);
     }
 
     public void setUnitIncreaseListener(View.OnClickListener setIncreaseListener) {
@@ -335,7 +335,6 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
             dialogItemBatchSelectionBinding.date.setText(batchListResponse.getBatchList().get(0).getExpDate());
             dialogItemBatchSelectionBinding.price.setText(String.valueOf(batchListResponse.getBatchList().get(0).getPrice()));
             this.itemPrice = batchListResponse.getBatchList().get(0).getPrice();
-            Utils.dismissDialog();
             dialogItemBatchSelectionBinding.batchSelectionData.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -349,6 +348,11 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
                     dialogItemBatchSelectionBinding.batchListRecycle.setNestedScrollingEnabled(false);
                 }
             });
+            Utils.dismissDialog();
+        } else {
+            Utils.dismissDialog();
+//            dialog.dismiss();
+            Toast.makeText(getContext(), "Product Out Of Stock", Toast.LENGTH_LONG).show();
         }
     }
 

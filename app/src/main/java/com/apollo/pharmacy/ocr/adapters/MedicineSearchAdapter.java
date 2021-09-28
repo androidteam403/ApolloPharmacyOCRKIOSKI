@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Filter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -56,7 +57,7 @@ public class MedicineSearchAdapter extends ArrayAdapter<ProductSearch> {
         TextView txtPrice = (TextView) convertView.findViewById(R.id.price);
         TextView txtOfferPrice = (TextView) convertView.findViewById(R.id.offerPrice);
         TextView total_price_textview = (TextView) convertView.findViewById(R.id.total_price_textview);
-        Button btnAddCart = (Button) convertView.findViewById(R.id.search_Addtocart);
+        LinearLayout btnAddCart = (LinearLayout) convertView.findViewById(R.id.search_Addtocart);
         TextView description = (TextView) convertView.findViewById(R.id.description);
 
         ImageView medImage = (ImageView) convertView.findViewById(R.id.medImage);

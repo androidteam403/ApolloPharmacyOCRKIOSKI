@@ -26,7 +26,8 @@ allprojects {
         jcenter()
         maven { url "https://jitpack.io"}
         maven {
-            url 'https://maven.google.com/'
+            url 'https://maven.google.com'
+            name 'Google'
         }
         maven { url 'http://raw.github.com/saki4510t/libcommon/master/repository/' }
         flatDir {

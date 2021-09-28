@@ -169,7 +169,8 @@ public class MyCartController {
         return data;
     }
 
-    public void upcellCrosscellList(String mobileNo) {
+    public void upcellCrosscellList(String mobileNo,Context context) {
+        showDialog(context, context.getResources().getString(R.string.label_please_wait));
         ApiInterface apiInterface = ApiClient.getApiService();
         UpCellCrossCellRequest upCellCrossCellRequest = new UpCellCrossCellRequest();
         upCellCrossCellRequest.setMobileno("7353910637");
@@ -179,12 +180,14 @@ public class MyCartController {
             public void onResponse(@NonNull Call<UpCellCrossCellResponse> call, @NonNull Response<UpCellCrossCellResponse> response) {
                 if (response.isSuccessful()) {
                     myCartListener.onSuccessSearchItemApi(response.body());
+                    Utils.dismissDialog();
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<UpCellCrossCellResponse> call, @NonNull Throwable t) {
                 myCartListener.onSearchFailure(t.getMessage());
+                Utils.dismissDialog();
             }
         });
     }

@@ -3,7 +3,6 @@ package com.apollo.pharmacy.ocr.controller;
 import android.content.Context;
 
 import com.apollo.pharmacy.ocr.R;
-import com.apollo.pharmacy.ocr.activities.PaymentOptionsActivity;
 import com.apollo.pharmacy.ocr.interfaces.PhonePayQrCodeListener;
 import com.apollo.pharmacy.ocr.model.PhonePayQrCodeRequest;
 import com.apollo.pharmacy.ocr.model.PhonePayQrCodeResponse;
@@ -30,7 +29,7 @@ public class PhonePayQrCodeController {
         this.phonePayQrCodeListener = phonePayQrCodeListener;
     }
 
-    public void getPhonePayQrCodeGeneration() {
+    public void getPhonePayQrCodeGeneration(boolean scanpay) {
 //        Utils.showDialog(activity, "Loading…");
         ApiInterface api = ApiClient.getApiService();
         PhonePayQrCodeRequest phonePayQrCodeRequest = new PhonePayQrCodeRequest();
@@ -48,9 +47,9 @@ public class PhonePayQrCodeController {
             @Override
             public void onResponse(@NotNull Call<PhonePayQrCodeResponse> call, @NotNull Response<PhonePayQrCodeResponse> response) {
                 if (response.body() != null) {
+                    phonePayQrCodeListener.onSuccessGetPhonePayQrCodeUpi(response.body(),scanpay);
 //                    Utils.dismissDialog();
-                    phonePayQrCodeListener.onSuccessGetPhonePayQrCodeUpi(response.body());
-                   getPhonePayPaymentSuccess(phonePayQrCodeRequest.getTransactionId());
+                    getPhonePayPaymentSuccess(phonePayQrCodeRequest.getTransactionId());
                 }
             }
 
@@ -62,8 +61,7 @@ public class PhonePayQrCodeController {
     }
 
     public void handleOrderPlaceService(Context context, PlaceOrderReqModel placeOrderReqModel) {
-        //        Utils.showDialog(activity, "Loading…");
-
+        Utils.showDialog(activity, "Loading…");
         ApiInterface apiInterface = ApiClient.getApiService(Constants.Order_Place_With_Prescription_API);
         Call<PlaceOrderResModel> call = apiInterface.PLACE_ORDER_SERVICE_CALL(Constants.New_Order_Place_With_Prescription_Token, placeOrderReqModel);
         call.enqueue(new Callback<PlaceOrderResModel>() {
@@ -75,21 +73,21 @@ public class PhonePayQrCodeController {
                 } else {
                     phonePayQrCodeListener.onFailureService(context.getResources().getString(R.string.label_something_went_wrong));
                 }
-                //                Utils.dismissDialog();
+                Utils.dismissDialog();
 
             }
 
             @Override
             public void onFailure(@NotNull Call<PlaceOrderResModel> call, @NotNull Throwable t) {
                 phonePayQrCodeListener.onFailureService(context.getResources().getString(R.string.label_something_went_wrong));
-                //                Utils.dismissDialog();
+                Utils.dismissDialog();
 
             }
         });
     }
 
     public void getPhonePayPaymentSuccess(String tranId) {
-        Utils.showDialog(activity, "Loading…");
+//        Utils.showDialog(activity, "Loading…");
         ApiInterface api = ApiClient.getApiService();
         PhonePayQrCodeRequest phonePayQrCodeRequest = new PhonePayQrCodeRequest();
         phonePayQrCodeRequest.setAmount(1.0);
@@ -107,14 +105,14 @@ public class PhonePayQrCodeController {
             @Override
             public void onResponse(@NotNull Call<PhonePayQrCodeResponse> call, @NotNull Response<PhonePayQrCodeResponse> response) {
                 if (response.body() != null) {
-                    Utils.dismissDialog();
-                    phonePayQrCodeListener.onSuccessPhonepePaymentDetails(response.body(),tranId);
+//                    Utils.dismissDialog();
+                    phonePayQrCodeListener.onSuccessPhonepePaymentDetails(response.body(), tranId);
                 }
             }
 
             @Override
             public void onFailure(@NotNull Call<PhonePayQrCodeResponse> call, @NotNull Throwable t) {
-                Utils.dismissDialog();
+//                Utils.dismissDialog();
             }
         });
     }

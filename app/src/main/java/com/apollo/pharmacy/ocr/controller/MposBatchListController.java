@@ -43,7 +43,6 @@ public class MposBatchListController {
                 if (response.body() != null) {
                     mposBatchListListener.setSuccessBatchList(response.body());
                 }
-                Utils.dismissDialog();
             }
 
             @Override

@@ -194,4 +194,5 @@
         android:textSize="@dimen/twenty_sp"
         android:textStyle="bold"
         android:visibility="gone" />
+
 </RelativeLayout>
