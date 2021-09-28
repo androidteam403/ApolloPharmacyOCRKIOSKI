@@ -172,7 +172,7 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
         });
 
         myOffersController = new MyOffersController(this);
-        myOffersController.upcellCrosscellList("7353910637", getApplicationContext());
+        myOffersController.upcellCrosscellList("7353910637", MyOffersActivity.this);
         offerLayout = findViewById(R.id.offer_layout);
         trendingLayout = findViewById(R.id.trending_layout);
         offerTxt = findViewById(R.id.offer_name);
@@ -251,6 +251,20 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
                 new IntentFilter("cardReceiver"));
         Constants.getInstance().setConnectivityListener(this);
+
+        activityMyOffersBinding.crossSellingOfferLay.setBackgroundColor(getResources().getColor(R.color.colorWhite));
+        activityMyOffersBinding.crossSellingOfferName.setTextColor(getResources().getColor(R.color.text_dark_blue_color));
+        activityMyOffersBinding.upSellingTrendingLayout.setBackgroundColor(getResources().getColor(R.color.text_dark_blue_color));
+        activityMyOffersBinding.upSellingTrendingName.setTextColor(getResources().getColor(R.color.colorWhite));
+        if (crosssellingList != null && crosssellingList.size() > 0) {
+            activityMyOffersBinding.crossSellingCountLayout.setVisibility(View.VISIBLE);
+            activityMyOffersBinding.crossSellingCountTxt.setText(String.valueOf(crosssellingList.size()));
+        }
+        activityMyOffersBinding.upSellingItemCountLayout.setVisibility(View.GONE);
+        activityMyOffersBinding.upSellingItemCountTxt.setText("0");
+        activityMyOffersBinding.nodataFound.setVisibility(View.GONE);
+
+
         listeners();
     }
 
@@ -395,7 +409,7 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
             activityMyOffersBinding.crossSellingRecycleNew.setVisibility(View.VISIBLE);
             myOffersText = "SpecialOffers";
 
-            MyOfersAdapterNew crossCellAdapter = new MyOfersAdapterNew(this, this, crosssellingList, this);
+            MyOfersAdapterNew crossCellAdapter = new MyOfersAdapterNew(MyOffersActivity.this, this, crosssellingList, this);
             activityMyOffersBinding.crossSellingRecycleNew.setLayoutManager(new GridLayoutManager(this, 7));
             activityMyOffersBinding.crossSellingRecycleNew.setAdapter(crossCellAdapter);
 
@@ -409,8 +423,11 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
             activityMyOffersBinding.crossSellingOfferName.setTextColor(getResources().getColor(R.color.text_dark_blue_color));
             activityMyOffersBinding.upSellingTrendingLayout.setBackgroundColor(getResources().getColor(R.color.text_dark_blue_color));
             activityMyOffersBinding.upSellingTrendingName.setTextColor(getResources().getColor(R.color.colorWhite));
-            activityMyOffersBinding.crossSellingCountLayout.setVisibility(View.VISIBLE);
-            activityMyOffersBinding.crossSellingCountTxt.setText(String.valueOf(crosssellingList.size()));
+            if (crosssellingList != null && crosssellingList.size() > 0) {
+
+                activityMyOffersBinding.crossSellingCountLayout.setVisibility(View.VISIBLE);
+                activityMyOffersBinding.crossSellingCountTxt.setText(String.valueOf(crosssellingList.size()));
+            }
             activityMyOffersBinding.upSellingItemCountLayout.setVisibility(View.GONE);
             activityMyOffersBinding.upSellingItemCountTxt.setText("0");
             activityMyOffersBinding.nodataFound.setVisibility(View.GONE);
@@ -426,7 +443,7 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
             activityMyOffersBinding.upSellingTrendingrecycleerviewNew.setVisibility(View.VISIBLE);
             myOffersText = "TrendingNow";
 
-            MyoffersAdapterTrending trending = new MyoffersAdapterTrending(this, this, upsellingList, this);
+            MyoffersAdapterTrending trending = new MyoffersAdapterTrending(MyOffersActivity.this, this, upsellingList, this);
             activityMyOffersBinding.upSellingTrendingrecycleerviewNew.setLayoutManager(new GridLayoutManager(this, 7));
             activityMyOffersBinding.upSellingTrendingrecycleerviewNew.setAdapter(trending);
 
@@ -443,8 +460,10 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
             activityMyOffersBinding.upSellingTrendingName.setTextColor(getResources().getColor(R.color.text_dark_blue_color));
             activityMyOffersBinding.crossSellingCountLayout.setVisibility(View.GONE);
             activityMyOffersBinding.crossSellingCountTxt.setText("0");
-            activityMyOffersBinding.upSellingItemCountLayout.setVisibility(View.VISIBLE);
-            activityMyOffersBinding.upSellingItemCountTxt.setText(String.valueOf(upsellingList.size()));
+            if (upsellingList != null && upsellingList.size() > 0) {
+                activityMyOffersBinding.upSellingItemCountLayout.setVisibility(View.VISIBLE);
+                activityMyOffersBinding.upSellingItemCountTxt.setText(String.valueOf(upsellingList.size()));
+            }
             activityMyOffersBinding.nodataFound.setVisibility(View.GONE);
             if (upsellingList.size() < 1) {
                 activityMyOffersBinding.nodataFound.setVisibility(View.VISIBLE);
@@ -465,7 +484,7 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
             activityMyOffersBinding.crossSellingRecycleNew.setVisibility(View.VISIBLE);
             myOffersText = "SpecialOffers";
 
-            MyOfersAdapterNew crossCellAdapter = new MyOfersAdapterNew(this, this, crosssellingList, this);
+            MyOfersAdapterNew crossCellAdapter = new MyOfersAdapterNew(MyOffersActivity.this, this, crosssellingList, this);
             activityMyOffersBinding.crossSellingRecycleNew.setLayoutManager(new GridLayoutManager(this, 7));
             activityMyOffersBinding.crossSellingRecycleNew.setAdapter(crossCellAdapter);
 
@@ -489,6 +508,8 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
             activityMyOffersBinding.crossSellingRecycleNew.setVisibility(View.GONE);
             activityMyOffersBinding.nodataFound.setVisibility(View.VISIBLE);
         }
+
+        Utils.dismissDialog();
     }
 
     private int screeSize() {
@@ -867,8 +888,8 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
     @Override
     public void cartCount(int count) {
         if (count != 0) {
-//            myCartCount.setVisibility(View.VISIBLE);
-//            myCartCount.setText(String.valueOf(count));
+            myCartCount.setVisibility(View.VISIBLE);
+            myCartCount.setText(String.valueOf(count));
 //            itemsCount.setVisibility(View.VISIBLE);
 //            plusIcon.setVisibility(View.VISIBLE);
 //            checkOutImage.setVisibility(View.VISIBLE);
@@ -882,6 +903,11 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
             myCartCount.setText("");
             itemsCount.setText("");
         }
+    }
+
+    @Override
+    public void showSnackBAr() {
+
     }
 
     @Override

@@ -100,6 +100,8 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.FuncN;
 import rx.schedulers.Schedulers;
 
+import static com.apollo.pharmacy.ocr.utility.Constants.getContext;
+
 public class MySearchActivity extends AppCompatActivity implements SubCategoryListener, MySearchCallback, MyOffersListener, CartCountListener,
         ConnectivityReceiver.ConnectivityReceiverListener, KeyboardFragment.OnClickKeyboard, AdapterView.OnItemSelectedListener, CategoryGridItemAdapter.CheckOutData, MedicineSearchAdapter.AddToCartCallBackData {
 
@@ -709,8 +711,8 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
-                new IntentFilter("cardReceiver"));
+//        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
+//                new IntentFilter("cardReceiver"));
         LocalBroadcastManager.getInstance(this).registerReceiver(mCartMessageReceiver,
                 new IntentFilter("UpdateCartItemCount"));
 
@@ -1426,6 +1428,11 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
             myCartCount.setText("");
             itemsCount.setText("");
         }
+    }
+
+    @Override
+    public void showSnackBAr() {
+        Utils.showSnackbar(getContext(), constraintLayout, getContext().getResources().getString(R.string.label_out_of_stock));
     }
 
     @Override

@@ -4,7 +4,7 @@ import com.apollo.pharmacy.ocr.model.PhonePayQrCodeResponse;
 import com.apollo.pharmacy.ocr.model.PlaceOrderResModel;
 
 public interface PhonePayQrCodeListener {
-    void onSuccessGetPhonePayQrCodeUpi(PhonePayQrCodeResponse phonePayQrCodeResponse);
+    void onSuccessGetPhonePayQrCodeUpi(PhonePayQrCodeResponse phonePayQrCodeResponse, boolean scanpay);
 
     void onSuccessPlaceOrder(PlaceOrderResModel body);
 

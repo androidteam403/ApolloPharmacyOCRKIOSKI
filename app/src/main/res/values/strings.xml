@@ -449,6 +449,6 @@
     <string name="label_device_registration" translatable="false">Device Registration</string>
     <string name="label_loading" translatable="false">Loading…</string>
 
-
+<string name="label_out_of_stock" translatable="false">Product Out Of Stock</string>
 
 </resources>

@@ -13,6 +13,7 @@ import androidx.databinding.DataBindingUtil;
 import com.apollo.pharmacy.ocr.R;
 import com.apollo.pharmacy.ocr.activities.PaymentOptionsActivity;
 import com.apollo.pharmacy.ocr.databinding.ActivityCheckoutBinding;
+import com.apollo.pharmacy.ocr.dialog.DeliveryAddressDialog;
 import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
 
 import java.io.Serializable;
@@ -82,6 +83,7 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
         }
     }
 
+    String address;
 
     @Override
     public void onClickNeedHomeDelivery() {
@@ -95,6 +97,17 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
         activityCheckoutBinding.needHomeDeliveryText.setTextColor(getResources().getColor(R.color.black));
         activityCheckoutBinding.needHomeDeliveryImg.setImageDrawable(getResources().getDrawable(R.drawable.tick_green));
 
+        DeliveryAddressDialog deliveryAddressDialog = new DeliveryAddressDialog(CheckoutActivity.this);
+        deliveryAddressDialog.setPositiveListener(view -> {
+            if (deliveryAddressDialog.validations()) {
+                address = deliveryAddressDialog.getAddressData();
+                deliveryAddressDialog.dismiss();
+            }
+        });
+        deliveryAddressDialog.setNegativeListener(view -> {
+            deliveryAddressDialog.dismiss();
+        });
+        deliveryAddressDialog.show();
     }
 
     @Override
@@ -122,6 +135,18 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
         activityCheckoutBinding.needHomeDelivery1.setBackground(getResources().getDrawable(R.drawable.blackstroke_yellowsolid));
         activityCheckoutBinding.needHomeDelivery1Text.setTextColor(getResources().getColor(R.color.black));
         activityCheckoutBinding.needHomeDelivery1Img.setImageDrawable(getResources().getDrawable(R.drawable.tick_green));
+
+        DeliveryAddressDialog deliveryAddressDialog = new DeliveryAddressDialog(CheckoutActivity.this);
+        deliveryAddressDialog.setPositiveListener(view -> {
+            if (deliveryAddressDialog.validations()) {
+                address = deliveryAddressDialog.getAddressData();
+                deliveryAddressDialog.dismiss();
+            }
+        });
+        deliveryAddressDialog.setNegativeListener(view -> {
+            deliveryAddressDialog.dismiss();
+        });
+        deliveryAddressDialog.show();
     }
 
     @Override
@@ -149,6 +174,7 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
         intent.putExtra("fmcgTotal", fmcgToatalPass);
         intent.putExtra("isPharmaHomeDelivery", isPharmaHomeDelivery);
         intent.putExtra("isFmcgHomeDelivery", isFmcgHomeDelivery);
+        intent.putExtra("customerDeliveryAddress", address);
         startActivity(intent);
         overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
     }

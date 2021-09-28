@@ -80,6 +80,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="@dimen/five_dp"
+                        android:visibility="invisible"
                         android:layout_marginBottom="@dimen/ten_dp"
                         android:orientation="horizontal">
 

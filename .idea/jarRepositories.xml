@@ -66,5 +66,10 @@
       <option name="name" value="maven4" />
       <option name="url" value="https://oss.jfrog.org/artifactory/oss-snapshot-local" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="Google2" />
+      <option name="name" value="Google2" />
+      <option name="url" value="https://maven.google.com" />
+    </remote-repository>
   </component>
 </project>

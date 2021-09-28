@@ -3,6 +3,7 @@ package com.apollo.pharmacy.ocr.adapters;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -19,10 +20,12 @@ public class CrossCellAdapter extends RecyclerView.Adapter<CrossCellAdapter.View
 
     private Activity activity;
     private List<UpCellCrossCellResponse.Crossselling> upsellList;
+    boolean addToCarLayHandel;
 
-    public CrossCellAdapter(Activity activity, List<UpCellCrossCellResponse.Crossselling> upsellList) {
+    public CrossCellAdapter(Activity activity, List<UpCellCrossCellResponse.Crossselling> upsellList, boolean addToCarLayHandel) {
         this.activity = activity;
         this.upsellList = upsellList;
+        this.addToCarLayHandel = addToCarLayHandel;
     }
 
     @NonNull
@@ -38,6 +41,9 @@ public class CrossCellAdapter extends RecyclerView.Adapter<CrossCellAdapter.View
     public void onBindViewHolder(@NonNull CrossCellAdapter.ViewHolder holder, int position) {
         UpCellCrossCellResponse.Crossselling crossselling = upsellList.get(position);
         holder.adapterAccesariesItemsBinding.itemName.setText(crossselling.getItemname());
+        if (addToCarLayHandel){
+            holder.adapterAccesariesItemsBinding.itemAddtoCartLayout.setVisibility(View.VISIBLE);
+        }
 //        Picasso.with(activity).load(Uri.parse(String.valueOf(upsell.getImage()))).error(R.drawable.placeholder_image).into(holder.adapterAccesariesItemsBinding.image);
     }
 
