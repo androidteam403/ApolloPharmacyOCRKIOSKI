@@ -132,12 +132,12 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
     private ConstraintLayout constraintLayout;
     private KeyboardFragment keyboardFrag;
     private Handler handler = new Handler();
-    private LinearLayout itemCountLayout, fcItemCountLayout, pharmaItemCountLayout, fmcgLayout, pharmaLayout, subSubParentLayout, checkOutNewBtn;
+    private LinearLayout itemCountLayout, fcItemCountLayout, pharmaItemCountLayout, fmcgLayout, pharmaLayout, subSubParentLayout;
     private FrameLayout medic_keyboard;
     private TextView plusIcon, itemsCount;
     private ImageView checkOutImage;
     private TextView fmcgTxt, pharmaTxt, fcItemCountTxt, pharmaItemCountTxt;
-    private ImageView searchImg;
+    private ImageView searchImg, checkOutNewBtn;
     private LinearLayout imageLayout;
     private boolean tabFlag;
     private boolean search_auto_complete_text;
@@ -240,7 +240,7 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
 
         initUi();
 
-        if (null != SessionManager.INSTANCE.getDataList())
+        if (null != SessionManager.INSTANCE.getDataList() && SessionManager.INSTANCE.getDataList().size() > 0)
             checkOutNewBtn.setVisibility(View.VISIBLE);
         else
             checkOutNewBtn.setVisibility(View.GONE);
@@ -830,7 +830,7 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
                 Utils.showSnackbar(MySearchActivity.this, constraintLayout, getApplicationContext().getResources().getString(R.string.label_item_added_cart));
                 cartCount(dataList.size());
             }
-            if (null != SessionManager.INSTANCE.getDataList())
+            if (null != SessionManager.INSTANCE.getDataList() && SessionManager.INSTANCE.getDataList().size() > 0)
                 checkOutNewBtn.setVisibility(View.VISIBLE);
             else
                 checkOutNewBtn.setVisibility(View.GONE);

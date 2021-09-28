@@ -19,6 +19,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.apollo.pharmacy.ocr.R;
 import com.apollo.pharmacy.ocr.activities.mposstoresetup.MposStoreSetupActivity;
 import com.apollo.pharmacy.ocr.controller.MainActivityController;
+import com.apollo.pharmacy.ocr.dialog.AccesskeyDialog;
 import com.apollo.pharmacy.ocr.interfaces.MainListener;
 import com.apollo.pharmacy.ocr.model.API;
 import com.apollo.pharmacy.ocr.model.Global_api_response;
@@ -85,7 +86,7 @@ public class MainActivity extends BaseActivity implements ConnectivityReceiver.C
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lang_selection);
         initMarque();
-
+        SessionManager.INSTANCE.setAccessKey("65536");
         zoomAnim();
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         View decorView = getWindow().getDecorView();
@@ -160,9 +161,17 @@ public class MainActivity extends BaseActivity implements ConnectivityReceiver.C
 //        urduLangBtn
 
         langContinueLayout.setOnClickListener(view -> {
-            Intent intent = new Intent(MainActivity.this, UserLoginActivity.class);
-            startActivity(intent);
-            overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
+            if (SessionManager.INSTANCE.getAccessKey() != null && SessionManager.INSTANCE.getAccessKey().equals("AP@11@2021")) {
+                Intent intent = new Intent(MainActivity.this, UserLoginActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
+            } else {
+                AccesskeyDialog accesskeyDialog = new AccesskeyDialog(MainActivity.this);
+                accesskeyDialog.onClickSubmit(v1 -> {
+                    accesskeyDialog.listener();
+                });
+                accesskeyDialog.show();
+            }
         });
 
         moreLangContinueLayout.setOnClickListener(v -> {

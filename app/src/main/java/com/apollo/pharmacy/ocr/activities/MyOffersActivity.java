@@ -62,6 +62,7 @@ import java.util.TreeSet;
 
 import static com.apollo.pharmacy.ocr.utility.Constants.Promotions;
 import static com.apollo.pharmacy.ocr.utility.Constants.TrendingNow;
+import static com.apollo.pharmacy.ocr.utility.Utils.dismissDialog;
 
 public class MyOffersActivity extends AppCompatActivity implements MyOffersListener, CartCountListener,
         ConnectivityReceiver.ConnectivityReceiverListener, CategoryGridItemAdapter.CheckOutData {
@@ -489,6 +490,8 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
             activityMyOffersBinding.crossSellingRecycleNew.setVisibility(View.GONE);
             activityMyOffersBinding.nodataFound.setVisibility(View.VISIBLE);
         }
+        Utils.dismissDialog();
+
     }
 
     private int screeSize() {

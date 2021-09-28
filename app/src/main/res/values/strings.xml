@@ -448,7 +448,9 @@
     <string name="label_store_setup" translatable="false">Store Setup</string>
     <string name="label_device_registration" translatable="false">Device Registration</string>
     <string name="label_loading" translatable="false">Loading…</string>
-
+    <string name="label_please_enter_valid_key">Please enter valid key</string>
+    <string name="label_submit">Submit</string>
+    <string name="label_please_login_with_access_key">Please Login with access key</string>
 
 
 </resources>

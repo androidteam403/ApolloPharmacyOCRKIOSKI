@@ -1459,11 +1459,11 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
                 int product_quantyty = data.getQty();
                 String product_container = data.getContainer();
                 String product_price = data.getArtprice();
-
                 OCRToDigitalMedicineResponse loadobject = new OCRToDigitalMedicineResponse();
                 loadobject.setArtCode(product_sku);
                 loadobject.setArtName(product_name);
                 loadobject.setQty(product_quantyty);
+                loadobject.setMedicineType(data.getMedicineType());
                 loadobject.setContainer(product_container);
                 loadobject.setArtprice(product_price);
                 dataList.add(loadobject);
@@ -1573,6 +1573,7 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
             loadobject.setArtCode(dataList.get(position).getArtCode());
             loadobject.setArtName(dataList.get(position).getArtName());
             loadobject.setQty(dataList.get(position).getQty());
+            loadobject.setMedicineType(dataList.get(position).getMedicineType());
             loadobject.setContainer(dataList.get(position).getContainer());
             loadobject.setArtprice(dataList.get(position).getArtprice());
             deletedataList.add(loadobject);

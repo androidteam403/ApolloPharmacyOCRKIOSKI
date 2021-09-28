@@ -130,14 +130,14 @@ public class MyOffersController {
 
                 @Override
                 public void onError(Throwable e) {
-                    dismissDialog();
+//                    dismissDialog();
                     myOffersListener.onFailure(e.getMessage());
                     e.printStackTrace();
                 }
 
                 @Override
                 public void onNext(HashMap<String, GetProductListResponse> o) {
-                    dismissDialog();
+//                    dismissDialog();
                     myOffersListener.onSuccessProductList(o);
                 }
             });
@@ -247,7 +247,7 @@ public class MyOffersController {
             @Override
             public void onResponse(@NonNull Call<UpCellCrossCellResponse> call, @NonNull Response<UpCellCrossCellResponse> response) {
                 if (response.isSuccessful()) {
-                    dismissDialog();
+//                    dismissDialog();
                     myOffersListener.onSuccessSearchUpcellCroscellApi(response.body());
                 }
             }

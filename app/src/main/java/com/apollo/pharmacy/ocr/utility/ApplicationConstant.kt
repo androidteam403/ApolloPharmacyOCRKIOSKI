@@ -57,4 +57,5 @@ object ApplicationConstant {
 
     val STORE_ID = "store_id"
     val TERMINAL_ID = "terminal_id"
+    const val ACCESS_KEY = "ACCESS_KEY"
 }
