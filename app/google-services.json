@@ -1,34 +1,33 @@
 {
   "project_info": {
-    "project_number": "638645833972",
-    "firebase_url": "https://apollopharmacyocr-3ae99.firebaseio.com",
-    "project_id": "apollopharmacyocr-3ae99",
-    "storage_bucket": "apollopharmacyocr-3ae99.appspot.com"
+    "project_number": "781246295451",
+    "project_id": "kiosk-f4fe9",
+    "storage_bucket": "kiosk-f4fe9.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:638645833972:android:c48066634a6419e65a4ea1",
+        "mobilesdk_app_id": "1:781246295451:android:33e3ea78dce8b63ddb053e",
         "android_client_info": {
           "package_name": "com.apollo.pharmacy.ocr"
         }
       },
       "oauth_client": [
         {
-          "client_id": "638645833972-kp0o04risk44ttjb435vbgsnj12pmfeg.apps.googleusercontent.com",
+          "client_id": "781246295451-sjb9fcr21pghklc8r8epa0q2q0ig4tar.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCpRjZAQY9tOlmCwb_0GmCsxy0XW_tf888"
+          "current_key": "AIzaSyD-_PL-59_CA_3knt0FJXFxq0-jlpxL6Es"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "638645833972-kp0o04risk44ttjb435vbgsnj12pmfeg.apps.googleusercontent.com",
+              "client_id": "781246295451-sjb9fcr21pghklc8r8epa0q2q0ig4tar.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

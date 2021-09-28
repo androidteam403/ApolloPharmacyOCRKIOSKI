@@ -20,13 +20,18 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.databinding.DataBindingUtil;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.apollo.pharmacy.ocr.R;
+import com.apollo.pharmacy.ocr.adapters.MyOfersAdapterNew;
 import com.apollo.pharmacy.ocr.adapters.PromotionsAdapter;
 import com.apollo.pharmacy.ocr.controller.MyCartController;
+import com.apollo.pharmacy.ocr.databinding.ActivityMyProfileBinding;
 import com.apollo.pharmacy.ocr.enums.ViewMode;
 import com.apollo.pharmacy.ocr.interfaces.CartCountListener;
 import com.apollo.pharmacy.ocr.interfaces.MyCartListener;
@@ -38,6 +43,7 @@ import com.apollo.pharmacy.ocr.model.PortFolioModel;
 import com.apollo.pharmacy.ocr.model.Product;
 import com.apollo.pharmacy.ocr.model.ScannedData;
 import com.apollo.pharmacy.ocr.model.ScannedMedicine;
+import com.apollo.pharmacy.ocr.model.UpCellCrossCellResponse;
 import com.apollo.pharmacy.ocr.model.UserAddress;
 import com.apollo.pharmacy.ocr.network.ApiClient;
 import com.apollo.pharmacy.ocr.network.ApiInterface;
@@ -75,11 +81,12 @@ public class MyProfileActivity extends AppCompatActivity implements MyCartListen
     private List<OCRToDigitalMedicineResponse> dataList = new ArrayList<>();
     private ConstraintLayout constraintLayout;
     private MyCartController myCartController;
+    private ActivityMyProfileBinding activityMyProfileBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_profile);
+        activityMyProfileBinding = DataBindingUtil.setContentView(this, R.layout.activity_my_profile);
         context = this;
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         initViewProfile();
@@ -92,6 +99,9 @@ public class MyProfileActivity extends AppCompatActivity implements MyCartListen
         outofstock_array = new ArrayList<Product>();
         stockin_array = new ArrayList<Product>();
         myCartController = new MyCartController(this);
+
+        myCartController.upcellCrosscellList("7353910637", MyProfileActivity.this);
+
 
         myCartCount = findViewById(R.id.lblCartCnt);
         TextView promotionViewAll = findViewById(R.id.promotion_viewAll);
@@ -160,6 +170,9 @@ public class MyProfileActivity extends AppCompatActivity implements MyCartListen
 
         SessionManager.INSTANCE.setCurrentPage(ApplicationConstant.ACTIVITY_ADDMORE);
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiverAddmore, new IntentFilter("MedicineReciverAddMore"));
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
+                new IntentFilter("cardReceiver"));
     }
 
     /* view components*/
@@ -503,6 +516,27 @@ public class MyProfileActivity extends AppCompatActivity implements MyCartListen
     }
 
     @Override
+    public void onSuccessSearchItemApi(UpCellCrossCellResponse body) {
+        if (body != null && body.getCrossselling() != null && body.getCrossselling().size() > 0) {
+            MyOfersAdapterNew crossCellAdapter = new MyOfersAdapterNew(MyProfileActivity.this, this, body.getCrossselling(), this);
+            RecyclerView.LayoutManager mLayoutManager4 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+            activityMyProfileBinding.crossCellDataRecycle.setLayoutManager(mLayoutManager4);
+            activityMyProfileBinding.crossCellDataRecycle.setItemAnimator(new DefaultItemAnimator());
+            activityMyProfileBinding.crossCellDataRecycle.setAdapter(crossCellAdapter);
+            activityMyProfileBinding.nodataFound.setVisibility(View.GONE);
+            activityMyProfileBinding.promotionViewAll.setVisibility(View.VISIBLE);
+        } else {
+            activityMyProfileBinding.nodataFound.setVisibility(View.VISIBLE);
+            activityMyProfileBinding.promotionViewAll.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onSearchFailure(String message) {
+
+    }
+
+    @Override
     public void onNetworkConnectionChanged(boolean isConnected) {
         if (isConnected) {
             findViewById(R.id.networkErrorLayout).setVisibility(View.GONE);
@@ -539,11 +573,88 @@ public class MyProfileActivity extends AppCompatActivity implements MyCartListen
     }
 
     @Override
+    public void showSnackBAr() {
+
+    }
+
+    @Override
     public void onPause() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiverAddmore);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
         super.onPause();
         Constants.getInstance().setConnectivityListener(null);
     }
+
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String message = intent.getStringExtra("message");
+            if (message.equalsIgnoreCase("Addtocart")) {
+                if (null != SessionManager.INSTANCE.getDataList()) {
+                    if (SessionManager.INSTANCE.getDataList().size() > 0) {
+                        cartCount(SessionManager.INSTANCE.getDataList().size());
+                        dataList = SessionManager.INSTANCE.getDataList();
+                    }
+                }
+                boolean product_avilable = false;
+                if (null != dataList) {
+                    int count = 0;
+                    for (OCRToDigitalMedicineResponse data : dataList) {
+                        if (data.getArtCode() != null) {
+                            if (data.getArtCode().equalsIgnoreCase(intent.getStringExtra("product_sku"))) {
+                                product_avilable = true;
+                                int qty = data.getQty();
+                                qty = qty + 1;
+                                dataList.remove(count);
+                                OCRToDigitalMedicineResponse object1 = new OCRToDigitalMedicineResponse();
+                                object1.setArtName(intent.getStringExtra("product_name"));
+                                object1.setArtCode(intent.getStringExtra("product_sku"));
+                                object1.setMedicineType(intent.getStringExtra("medicineType"));
+                                object1.setQty(Integer.parseInt(intent.getStringExtra("product_quantyty")));
+                                if (null != intent.getStringExtra("product_price")) {
+                                    object1.setArtprice(intent.getStringExtra("product_price"));
+                                } else {
+                                    object1.setArtprice(String.valueOf(intent.getStringExtra("product_price")));
+                                }
+                                object1.setMou(String.valueOf(intent.getStringExtra("product_mou")));
+//                                object1.setQty(qty);
+                                object1.setContainer("Strip");
+                                dataList.add(object1);
+                                SessionManager.INSTANCE.setDataList(dataList);
+                                break;
+                            } else {
+                                product_avilable = false;
+                            }
+                        }
+                        count = count + 1;
+                    }
+                    if (!product_avilable) {
+                        OCRToDigitalMedicineResponse object1 = new OCRToDigitalMedicineResponse();
+                        object1.setArtName(intent.getStringExtra("product_name"));
+                        object1.setArtCode(intent.getStringExtra("product_sku"));
+                        object1.setMedicineType(intent.getStringExtra("medicineType"));
+                        object1.setQty(Integer.parseInt(intent.getStringExtra("product_quantyty")));
+                        if (null != intent.getStringExtra("product_price")) {
+                            object1.setArtprice(intent.getStringExtra("product_price"));
+                        } else {
+                            object1.setArtprice(String.valueOf(intent.getStringExtra("product_price")));
+                        }
+                        object1.setMou(String.valueOf(intent.getStringExtra("product_mou")));
+//                        object1.setQty(1);
+                        object1.setContainer("Strip");
+                        dataList.add(object1);
+                        SessionManager.INSTANCE.setDataList(dataList);
+                    }
+                }
+                Utils.showSnackbar(MyProfileActivity.this, constraintLayout, getApplicationContext().getResources().getString(R.string.label_item_added_cart));
+                cartCount(dataList.size());
+            }
+//            if (null != SessionManager.INSTANCE.getDataList())
+//                checkOutNewBtn.setVisibility(View.VISIBLE);
+//            else
+//                checkOutNewBtn.setVisibility(View.GONE);
+        }
+    };
 
     private final BroadcastReceiver mMessageReceiverAddmore = new BroadcastReceiver() {
         @Override

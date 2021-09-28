@@ -30,14 +30,18 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.apollo.pharmacy.ocr.R;
+import com.apollo.pharmacy.ocr.activities.checkout.CheckoutActivity;
+import com.apollo.pharmacy.ocr.adapters.CrossCellAdapter;
 import com.apollo.pharmacy.ocr.adapters.MyCartListAdapter;
 import com.apollo.pharmacy.ocr.adapters.PromotionsAdapter;
 import com.apollo.pharmacy.ocr.adapters.TrendingNowAdapter;
+import com.apollo.pharmacy.ocr.adapters.UpCellAdapter;
 import com.apollo.pharmacy.ocr.controller.MyCartController;
 import com.apollo.pharmacy.ocr.controller.UploadBgImageController;
 import com.apollo.pharmacy.ocr.dialog.CartDeletedItemsDialog;
@@ -54,6 +58,7 @@ import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
 import com.apollo.pharmacy.ocr.model.Product;
 import com.apollo.pharmacy.ocr.model.ScannedData;
 import com.apollo.pharmacy.ocr.model.ScannedMedicine;
+import com.apollo.pharmacy.ocr.model.UpCellCrossCellResponse;
 import com.apollo.pharmacy.ocr.model.UserAddress;
 import com.apollo.pharmacy.ocr.receiver.ConnectivityReceiver;
 import com.apollo.pharmacy.ocr.utility.Constants;
@@ -64,6 +69,7 @@ import com.apollo.pharmacy.ocr.utility.Utils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -124,6 +130,8 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
     private static final String TAG = MyCartActivity.class.getSimpleName();
     private TextView timerHeaderText, timerChildText;
     private long minVal = 0, secVal = 0;
+    RecyclerView crossCell_recycle, upcell_recycle;
+    TextView noDataFound;
 
     @Override
     public void onSuccessProductList(HashMap<String, GetProductListResponse> productList) {
@@ -374,7 +382,7 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
         public void onReceive(Context context, Intent intent) {
             String message = intent.getStringExtra("message");
             if (message.equalsIgnoreCase("ImageName")) {
-               //SessionManager.INSTANCE.setDynamicOrderId(intent.getStringExtra("imageId"));
+                //SessionManager.INSTANCE.setDynamicOrderId(intent.getStringExtra("imageId"));
                 myCartController.handleImageService(intent.getStringExtra("data"));
             }
         }
@@ -737,6 +745,7 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
         });
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -754,6 +763,7 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
         TextView helpText = findViewById(R.id.help_text);
         helpText.setText(getResources().getString(R.string.faq));
         faqLayout.setOnClickListener(view -> startActivity(new Intent(MyCartActivity.this, FAQActivity.class)));
+
 
         ImageView customerCareImg = findViewById(R.id.customer_care_icon);
         LinearLayout customerHelpLayout = findViewById(R.id.customer_help_layout);
@@ -867,6 +877,10 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
         }
 
         myCartController = new MyCartController(this);
+        myCartController.upcellCrosscellList("7353910637", MyCartActivity.this);
+        upcell_recycle = findViewById(R.id.up_cell_data_recycle);
+        crossCell_recycle = findViewById(R.id.cross_cell_data_recycle);
+        noDataFound = findViewById(R.id.no_data);
         RecyclerView promotionproductrecycleerview = findViewById(R.id.promotionsRecyclerView);
         promotionproductrecycleerview.setLayoutManager(new GridLayoutManager(MyCartActivity.this, 3));
         RecyclerView trendingnowproductrecycleerview = findViewById(R.id.trendingnowproductrecycleerview);
@@ -983,40 +997,48 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
         }
 
         checkOutImage.setOnClickListener(arg0 -> {
-            if (curationViewLayout.getVisibility() == View.GONE) {
-                if (dataList.size() > 0) {
-                    if (curationFlag) {
-                        if (curationDoneFlag) {
-                            checkDeliveryOption();
-                        } else {
-                            final Dialog dialog = new Dialog(MyCartActivity.this);
-                            dialog.setContentView(R.layout.view_curation_alert_dialog);
-                            if (dialog.getWindow() != null)
-                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                            dialog.show();
-                            TextView dialogTitleText = dialog.findViewById(R.id.dialog_info);
-                            Button okButton = dialog.findViewById(R.id.dialog_ok);
-                            Button declineButton = dialog.findViewById(R.id.dialog_cancel);
-                            dialogTitleText.setText(getResources().getString(R.string.label_curation_in_progress_text));
-                            okButton.setText(getResources().getString(R.string.label_ok));
-                            declineButton.setText(getResources().getString(R.string.label_cancel_text));
-                            okButton.setOnClickListener(v -> {
-                                dialog.dismiss();
-                                if (countdown_timer != null)
-                                    countdown_timer.cancel();
-                                checkDeliveryOption();
-                            });
-                            declineButton.setOnClickListener(v -> dialog.dismiss());
-                        }
-                    } else {
-                        checkDeliveryOption();
-                    }
-                } else {
-                    Utils.showSnackbar(MyCartActivity.this, constraint_Layout, getApplicationContext().getResources().getString(R.string.label_min_order_item_alert));
-                }
+            if (dataList != null && dataList.size() > 0) {
+                startActivity(CheckoutActivity.getStartIntent(this, dataList));
+                overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
             } else {
-                Utils.showSnackbar(MyCartActivity.this, constraint_Layout, getApplicationContext().getResources().getString(R.string.label_curation_progress_wait));
+                Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "No items added to cart", Snackbar.LENGTH_SHORT);
+                snackbar.getView().setBackgroundColor(getResources().getColor(R.color.color_yellow_button));
+                snackbar.show();
             }
+//            if (curationViewLayout.getVisibility() == View.GONE) {
+//                if (dataList.size() > 0) {
+//                    if (curationFlag) {
+//                        if (curationDoneFlag) {
+//                            checkDeliveryOption();
+//                        } else {
+//                            final Dialog dialog = new Dialog(MyCartActivity.this);
+//                            dialog.setContentView(R.layout.view_curation_alert_dialog);
+//                            if (dialog.getWindow() != null)
+//                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//                            dialog.show();
+//                            TextView dialogTitleText = dialog.findViewById(R.id.dialog_info);
+//                            Button okButton = dialog.findViewById(R.id.dialog_ok);
+//                            Button declineButton = dialog.findViewById(R.id.dialog_cancel);
+//                            dialogTitleText.setText(getResources().getString(R.string.label_curation_in_progress_text));
+//                            okButton.setText(getResources().getString(R.string.label_ok));
+//                            declineButton.setText(getResources().getString(R.string.label_cancel_text));
+//                            okButton.setOnClickListener(v -> {
+//                                dialog.dismiss();
+//                                if (countdown_timer != null)
+//                                    countdown_timer.cancel();
+//                                checkDeliveryOption();
+//                            });
+//                            declineButton.setOnClickListener(v -> dialog.dismiss());
+//                        }
+//                    } else {
+//                        checkDeliveryOption();
+//                    }
+//                } else {
+//                    Utils.showSnackbar(MyCartActivity.this, constraint_Layout, getApplicationContext().getResources().getString(R.string.label_min_order_item_alert));
+//                }
+//            } else {
+//                Utils.showSnackbar(MyCartActivity.this, constraint_Layout, getApplicationContext().getResources().getString(R.string.label_curation_progress_wait));
+//            }
         });
 
         promotionViewAll.setOnClickListener(arg0 -> {
@@ -1160,6 +1182,14 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
                 window.setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT);
             }
         });
+//        checkOutImage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(MyCartActivity.this, PaymentOptionsActivity.class);
+//                startActivity(intent);
+//                overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
+//            }
+//        });
     }
 
     private void startcountertimer() {
@@ -1395,6 +1425,11 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
     }
 
     @Override
+    public void showSnackBAr() {
+
+    }
+
+    @Override
     public void onClick(int position) {
 
     }
@@ -1429,11 +1464,11 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
                 int product_quantyty = data.getQty();
                 String product_container = data.getContainer();
                 String product_price = data.getArtprice();
-
                 OCRToDigitalMedicineResponse loadobject = new OCRToDigitalMedicineResponse();
                 loadobject.setArtCode(product_sku);
                 loadobject.setArtName(product_name);
                 loadobject.setQty(product_quantyty);
+                loadobject.setMedicineType(data.getMedicineType());
                 loadobject.setContainer(product_container);
                 loadobject.setArtprice(product_price);
                 dataList.add(loadobject);
@@ -1465,6 +1500,49 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
         SessionManager.INSTANCE.setScannedImagePath(res.getImageUrl());
         uploadBgImageController.handleUploadImageService(res.getImageUrl());
         handleScannedImageView();
+    }
+
+    List<UpCellCrossCellResponse.Crossselling> crosssellingList = new ArrayList<>();
+    List<UpCellCrossCellResponse.Upselling> upsellingList = new ArrayList<>();
+    boolean addToCarLayHandel;
+
+    @Override
+    public void onSuccessSearchItemApi(UpCellCrossCellResponse body) {
+        if (body != null && body.getCrossselling() != null && body.getCrossselling().size() > 0) {
+            addToCarLayHandel=false;
+            crosssellingList.add(body.getCrossselling().get(0));
+            crosssellingList.add(body.getCrossselling().get(1));
+            crosssellingList.add(body.getCrossselling().get(2));
+
+            CrossCellAdapter crossCellAdapter = new CrossCellAdapter(this, crosssellingList,addToCarLayHandel);
+            RecyclerView.LayoutManager mLayoutManager4 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+            crossCell_recycle.setLayoutManager(mLayoutManager4);
+            crossCell_recycle.setItemAnimator(new DefaultItemAnimator());
+            crossCell_recycle.setAdapter(crossCellAdapter);
+            noDataFound.setVisibility(View.GONE);
+        } else {
+            noDataFound.setVisibility(View.VISIBLE);
+        }
+        if (body != null && body.getUpselling() != null && body.getUpselling().size() > 0) {
+
+            upsellingList.add(body.getUpselling().get(0));
+            upsellingList.add(body.getUpselling().get(1));
+            upsellingList.add(body.getUpselling().get(2));
+
+            UpCellAdapter upCellAdapter = new UpCellAdapter(this, upsellingList);
+            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+            upcell_recycle.setLayoutManager(mLayoutManager);
+            upcell_recycle.setItemAnimator(new DefaultItemAnimator());
+            upcell_recycle.setAdapter(upCellAdapter);
+            noDataFound.setVisibility(View.GONE);
+        } else {
+            noDataFound.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void onSearchFailure(String message) {
+
     }
 
     @Override
@@ -1501,6 +1579,7 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
             loadobject.setArtCode(dataList.get(position).getArtCode());
             loadobject.setArtName(dataList.get(position).getArtName());
             loadobject.setQty(dataList.get(position).getQty());
+            loadobject.setMedicineType(dataList.get(position).getMedicineType());
             loadobject.setContainer(dataList.get(position).getContainer());
             loadobject.setArtprice(dataList.get(position).getArtprice());
             deletedataList.add(loadobject);
