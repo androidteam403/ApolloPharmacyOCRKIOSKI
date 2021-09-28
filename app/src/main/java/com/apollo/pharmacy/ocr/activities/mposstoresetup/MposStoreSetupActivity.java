@@ -27,6 +27,7 @@ import com.apollo.pharmacy.ocr.activities.mposstoresetup.model.StoreListResponse
 import com.apollo.pharmacy.ocr.activities.mposstoresetup.model.StoreSetupModel;
 import com.apollo.pharmacy.ocr.databinding.MposStoreSetupActivityBinding;
 import com.apollo.pharmacy.ocr.model.DeviceRegistrationResponse;
+import com.apollo.pharmacy.ocr.service.MyFirebaseInstanceIDService;
 import com.apollo.pharmacy.ocr.utility.SessionManager;
 import com.apollo.pharmacy.ocr.utility.Utils;
 import com.google.android.gms.common.ConnectionResult;
