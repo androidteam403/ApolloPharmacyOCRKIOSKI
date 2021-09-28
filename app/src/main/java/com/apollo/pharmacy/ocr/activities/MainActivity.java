@@ -31,8 +31,6 @@ import com.apollo.pharmacy.ocr.utility.SessionManager;
 import com.apollo.pharmacy.ocr.utility.Utils;
 import com.apollo.pharmacy.ocr.widget.MarqueeView;
 import com.apollo.pharmacy.ocr.widget.MarqueeViewRight;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.List;
@@ -90,8 +88,8 @@ public class MainActivity extends BaseActivity implements ConnectivityReceiver.C
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lang_selection);
         initMarque();
-        FirebaseApp.initializeApp(getApplicationContext());
-        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
+//        FirebaseApp.initializeApp(getApplicationContext());
+//        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
         SessionManager.INSTANCE.setAccessKey("65536");
         zoomAnim();
 //        crash.setText("crash");

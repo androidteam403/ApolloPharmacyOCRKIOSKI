@@ -58,7 +58,7 @@ public class DeliveryAddressDialog {
     String userAddress;
 
     public String getAddressData() {
-        userAddress = deliveryAddressDialog.address.getText().toString() + deliveryAddressDialog.zipCode.getText().toString() + deliveryAddressDialog.city.getText().toString() +
+        userAddress = deliveryAddressDialog.address.getText().toString() +","+ deliveryAddressDialog.zipCode.getText().toString() +","+ deliveryAddressDialog.city.getText().toString() +","+
                 deliveryAddressDialog.state.getText().toString();
         return userAddress;
     }

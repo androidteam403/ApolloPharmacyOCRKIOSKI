@@ -222,7 +222,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_marginEnd="@dimen/five_dp"
-                            android:background="@drawable/blackstroke_yellowsolid"
+                            android:background="@color/lite_grey"
                             android:gravity="center"
                             android:onClick="@{()-> callback.onClickNeedHomeDelivery()}"
                             android:orientation="vertical">
@@ -232,7 +232,7 @@
                                 android:layout_width="@dimen/twenty_dp"
                                 android:layout_height="@dimen/twenty_dp"
                                 android:contentDescription="@string/app_name"
-                                android:src="@drawable/tick_green" />
+                                android:src="@drawable/tick_white" />
 
                             <TextView
                                 android:id="@+id/need_home_delivery_text"
@@ -240,7 +240,7 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
                                 android:text="@string/label_need_home_ndelivery"
-                                android:textColor="@color/black"
+                                android:textColor="@color/grey_color"
                                 android:textSize="@dimen/fourteen_sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
@@ -417,7 +417,7 @@
                             android:id="@+id/payhereand_Carry"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="@drawable/blackstroke_yellowsolid"
+                            android:background="@color/lite_grey"
                             android:gravity="center"
                             android:onClick="@{()-> callback.onClickPayhereandCarry()}"
                             android:orientation="vertical"
@@ -428,7 +428,7 @@
                                 android:layout_width="@dimen/twenty_dp"
                                 android:layout_height="@dimen/twenty_dp"
                                 android:contentDescription="@string/app_name"
-                                android:src="@drawable/tick_green" />
+                                android:src="@drawable/tick_white" />
 
                             <TextView
                                 android:id="@+id/pay_here_andcarry_text"
@@ -436,7 +436,7 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
                                 android:text="Pay here &amp; Carry"
-                                android:textColor="@color/black"
+                                android:textColor="@color/grey_color"
                                 android:textSize="@dimen/fourteen_sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
