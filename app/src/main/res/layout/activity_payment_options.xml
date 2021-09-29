@@ -687,7 +687,7 @@ instructions on your phone to complete\nthe payment"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/twenty_five_dp"
-                            android:visibility="gone">
+                            android:visibility="visible">
 
                             <LinearLayout
                                 android:layout_width="550dp"
@@ -869,15 +869,14 @@ instructions on your phone to complete\nthe payment"
 
                                 <RelativeLayout
                                     android:layout_width="wrap_content"
+                                    android:layout_marginStart="@dimen/forty_dp"
                                     android:layout_height="wrap_content">
 
                                     <ImageView
                                         android:id="@+id/idIVQrcode"
                                         android:layout_width="180dp"
                                         android:layout_height="180dp"
-                                        android:layout_marginStart="@dimen/forty_dp"
                                         android:contentDescription="qr_code"
-                                        android:src="@drawable/apollo_circle_logo"
                                         android:visibility="gone" />
 
                                     <ImageView
@@ -901,7 +900,7 @@ instructions on your phone to complete\nthe payment"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/fifteen_dp"
-                            android:visibility="visible">
+                            android:visibility="gone">
 
                             <LinearLayout
                                 android:layout_width="match_parent"

@@ -16,6 +16,7 @@ import androidx.databinding.DataBindingUtil;
 import com.apollo.pharmacy.ocr.R;
 import com.apollo.pharmacy.ocr.controller.PhonePayQrCodeController;
 import com.apollo.pharmacy.ocr.databinding.ActivityPaymentOptionsBinding;
+import com.apollo.pharmacy.ocr.dialog.DeliveryAddressDialog;
 import com.apollo.pharmacy.ocr.interfaces.PhonePayQrCodeListener;
 import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
 import com.apollo.pharmacy.ocr.model.PhonePayQrCodeResponse;
@@ -38,7 +39,7 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
     private double pharmaTotalData = 0.0;
     private List<OCRToDigitalMedicineResponse> dataList;
     private String customerDeliveryAddress;
-
+    private double grandTotalAmount = 0.0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +86,7 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
             orderDetailsuiModel.setFmcgPharma(isPharma && isFmcg);
             orderDetailsuiModel.setFmcg(isFmcg);
             orderDetailsuiModel.setPharma(isPharma);
+            grandTotalAmount = pharmaTotal + fmcgTotal;
             activityPaymentOptionsBinding.setModel(orderDetailsuiModel);
         }
         activityPaymentOptionsBinding.pharmaTotal.setText(getResources().getString(R.string.rupee) + String.valueOf(pharmaTotalData));
@@ -95,7 +97,27 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
         activityPaymentOptionsBinding.scanToPayInfoLay.setVisibility(View.VISIBLE);
         Utils.showDialog(PaymentOptionsActivity.this, "Loading…");
         PhonePayQrCodeController phonePayQrCodeController = new PhonePayQrCodeController(getApplicationContext(), PaymentOptionsActivity.this);
-        phonePayQrCodeController.getPhonePayQrCodeGeneration(scanPay);
+        phonePayQrCodeController.getPhonePayQrCodeGeneration(scanPay, grandTotalAmount);
+
+        activityPaymentOptionsBinding.changeDeliveryAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DeliveryAddressDialog deliveryAddressDialog = new DeliveryAddressDialog(PaymentOptionsActivity.this);
+                deliveryAddressDialog.setPositiveListener(view1 -> {
+                    if (deliveryAddressDialog.validations()) {
+                        customerDeliveryAddress = deliveryAddressDialog.getAddressData();
+                        if (customerDeliveryAddress != null) {
+                            activityPaymentOptionsBinding.deliveryAddress.setText(customerDeliveryAddress);
+                        }
+                        deliveryAddressDialog.dismiss();
+                    }
+                });
+                deliveryAddressDialog.setNegativeListener(view2 -> {
+                    deliveryAddressDialog.dismiss();
+                });
+                deliveryAddressDialog.show();
+            }
+        });
 
         listeners();
     }
@@ -113,7 +135,7 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
                 activityPaymentOptionsBinding.scanToPayInfoLay.setVisibility(View.VISIBLE);
                 Utils.showDialog(PaymentOptionsActivity.this, "Loading…");
                 PhonePayQrCodeController phonePayQrCodeController = new PhonePayQrCodeController(getApplicationContext(), PaymentOptionsActivity.this);
-                phonePayQrCodeController.getPhonePayQrCodeGeneration(scanPay);
+                phonePayQrCodeController.getPhonePayQrCodeGeneration(scanPay, grandTotalAmount);
             }
         });
         activityPaymentOptionsBinding.recievePaymentSms.setOnClickListener(new View.OnClickListener() {
@@ -155,6 +177,18 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
             @Override
             public void onClick(View view) {
                 onBackPressed();
+            }
+        });
+        activityPaymentOptionsBinding.placeAnOrderScanpayPay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(PaymentOptionsActivity.this, "Payment is not done", Toast.LENGTH_SHORT).show();
+            }
+        });
+        activityPaymentOptionsBinding.placeAnOrderPhonePay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(PaymentOptionsActivity.this, "Payment is not done", Toast.LENGTH_SHORT).show();
             }
         });
         activityPaymentOptionsBinding.scanToPayButton.setOnClickListener(new View.OnClickListener() {
@@ -250,7 +284,7 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
 
                 Utils.showDialog(PaymentOptionsActivity.this, "Loading…");
                 PhonePayQrCodeController phonePayQrCodeController = new PhonePayQrCodeController(getApplicationContext(), PaymentOptionsActivity.this);
-                phonePayQrCodeController.getPhonePayQrCodeGeneration(scanPay);
+                phonePayQrCodeController.getPhonePayQrCodeGeneration(scanPay, grandTotalAmount);
             }
         });
     }
@@ -329,10 +363,13 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
 
     }
 
+    boolean scanpayData;
+
     @Override
     public void onSuccessPhonepePaymentDetails(PhonePayQrCodeResponse phonePayQrCodeResponse, String transactionId) {
 
         if (phonePayQrCodeResponse.getStatus()) {
+            scanpayData = true;
             Toast.makeText(this, "Payment is successfully done", Toast.LENGTH_SHORT).show();
             activityPaymentOptionsBinding.placeAnOrderScanpayPay.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -347,6 +384,7 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
                 }
             });
         } else {
+            scanpayData = false;
             PhonePayQrCodeController phonePayQrCodeController = new PhonePayQrCodeController(getApplicationContext(), PaymentOptionsActivity.this);
             phonePayQrCodeController.getPhonePayPaymentSuccess(transactionId);
         }

@@ -3,6 +3,7 @@ package com.apollo.pharmacy.ocr.activities.checkout;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -24,8 +25,7 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
     private List<OCRToDigitalMedicineResponse> dataList;
     private boolean isPharmaHomeDelivery = false;
     private boolean isFmcgHomeDelivery = false;
-    private boolean deliveryTypeClickPharma = false;
-    private boolean deliveryTypeClickFmcg = false;
+
 
     public static Intent getStartIntent(Context context, List<OCRToDigitalMedicineResponse> dataList) {
         Intent intent = new Intent(context, CheckoutActivity.class);
@@ -83,6 +83,19 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
                 activityCheckoutBinding.setModel(checkoutuiModel);
             }
         }
+
+        activityCheckoutBinding.reviewCartPharma.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+        activityCheckoutBinding.reviewCartFmcg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
     }
 
     String address;
@@ -90,7 +103,6 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
     @Override
     public void onClickNeedHomeDelivery() {
 //        deliveryModeHandle();
-        deliveryTypeClickPharma = true;
         isPharmaHomeDelivery = true;
         activityCheckoutBinding.payandCollectatCounter.setBackground(getResources().getDrawable(R.drawable.bg_lite_grey));
         activityCheckoutBinding.payandCollectatCounterText.setTextColor(getResources().getColor(R.color.grey_color));
@@ -100,24 +112,25 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
         activityCheckoutBinding.needHomeDeliveryText.setTextColor(getResources().getColor(R.color.black));
         activityCheckoutBinding.needHomeDeliveryImg.setImageDrawable(getResources().getDrawable(R.drawable.tick_green));
 
-        DeliveryAddressDialog deliveryAddressDialog = new DeliveryAddressDialog(CheckoutActivity.this);
-        deliveryAddressDialog.setPositiveListener(view -> {
-            if (deliveryAddressDialog.validations()) {
-                address = deliveryAddressDialog.getAddressData();
+        if (address == null) {
+            DeliveryAddressDialog deliveryAddressDialog = new DeliveryAddressDialog(CheckoutActivity.this);
+            deliveryAddressDialog.setPositiveListener(view -> {
+                if (deliveryAddressDialog.validations()) {
+                    address = deliveryAddressDialog.getAddressData();
+                    deliveryAddressDialog.dismiss();
+                }
+            });
+            deliveryAddressDialog.setNegativeListener(view -> {
                 deliveryAddressDialog.dismiss();
-            }
-        });
-        deliveryAddressDialog.setNegativeListener(view -> {
-            deliveryAddressDialog.dismiss();
-        });
-        deliveryAddressDialog.show();
+            });
+            deliveryAddressDialog.show();
+        }
     }
 
     @Override
     public void onClickPayandCollectatCounter() {
 //        deliveryModeHandle();
         isPharmaHomeDelivery = false;
-        deliveryTypeClickPharma = true;
         activityCheckoutBinding.needHomeDelivery.setBackground(getResources().getDrawable(R.drawable.bg_lite_grey));
         activityCheckoutBinding.needHomeDeliveryText.setTextColor(getResources().getColor(R.color.grey_color));
         activityCheckoutBinding.needHomeDeliveryImg.setImageDrawable(getResources().getDrawable(R.drawable.tick_white));
@@ -132,7 +145,6 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
     public void onClickNeedHomeDelivery1() {
 //        deliveryModeHandle();
         isFmcgHomeDelivery = true;
-        deliveryTypeClickFmcg = true;
         activityCheckoutBinding.payhereandCarry.setBackground(getResources().getDrawable(R.drawable.bg_lite_grey));
         activityCheckoutBinding.payHereAndcarryText.setTextColor(getResources().getColor(R.color.grey_color));
         activityCheckoutBinding.payHereAndcarryImg.setImageDrawable(getResources().getDrawable(R.drawable.tick_white));
@@ -140,25 +152,25 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
         activityCheckoutBinding.needHomeDelivery1.setBackground(getResources().getDrawable(R.drawable.blackstroke_yellowsolid));
         activityCheckoutBinding.needHomeDelivery1Text.setTextColor(getResources().getColor(R.color.black));
         activityCheckoutBinding.needHomeDelivery1Img.setImageDrawable(getResources().getDrawable(R.drawable.tick_green));
-
-        DeliveryAddressDialog deliveryAddressDialog = new DeliveryAddressDialog(CheckoutActivity.this);
-        deliveryAddressDialog.setPositiveListener(view -> {
-            if (deliveryAddressDialog.validations()) {
-                address = deliveryAddressDialog.getAddressData();
+        if (address == null) {
+            DeliveryAddressDialog deliveryAddressDialog = new DeliveryAddressDialog(CheckoutActivity.this);
+            deliveryAddressDialog.setPositiveListener(view -> {
+                if (deliveryAddressDialog.validations()) {
+                    address = deliveryAddressDialog.getAddressData();
+                    deliveryAddressDialog.dismiss();
+                }
+            });
+            deliveryAddressDialog.setNegativeListener(view -> {
                 deliveryAddressDialog.dismiss();
-            }
-        });
-        deliveryAddressDialog.setNegativeListener(view -> {
-            deliveryAddressDialog.dismiss();
-        });
-        deliveryAddressDialog.show();
+            });
+            deliveryAddressDialog.show();
+        }
     }
 
     @Override
     public void onClickPayhereandCarry() {
 //        deliveryModeHandle();
         isFmcgHomeDelivery = false;
-        deliveryTypeClickFmcg = true;
         activityCheckoutBinding.needHomeDelivery1.setBackground(getResources().getDrawable(R.drawable.bg_lite_grey));
         activityCheckoutBinding.needHomeDelivery1Text.setTextColor(getResources().getColor(R.color.grey_color));
         activityCheckoutBinding.needHomeDelivery1Img.setImageDrawable(getResources().getDrawable(R.drawable.tick_white));
@@ -175,20 +187,8 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
 
     @Override
     public void onClickPaynow() {
-        if (deliveryTypeClickPharma && deliveryTypeClickFmcg) {
-            if (isPharmaHomeDelivery || isFmcgHomeDelivery) {
-                if (address != null) {
-                    Intent intent = new Intent(CheckoutActivity.this, PaymentOptionsActivity.class);
-                    intent.putExtra("fmcgTotal", fmcgToatalPass);
-                    intent.putExtra("isPharmaHomeDelivery", isPharmaHomeDelivery);
-                    intent.putExtra("isFmcgHomeDelivery", isFmcgHomeDelivery);
-                    intent.putExtra("customerDeliveryAddress", address);
-                    startActivity(intent);
-                    overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
-                } else {
-                    Toast.makeText(this, "Please Fill Address Form", Toast.LENGTH_SHORT).show();
-                }
-            } else {
+        if (isPharmaHomeDelivery || isFmcgHomeDelivery) {
+            if (address != null) {
                 Intent intent = new Intent(CheckoutActivity.this, PaymentOptionsActivity.class);
                 intent.putExtra("fmcgTotal", fmcgToatalPass);
                 intent.putExtra("isPharmaHomeDelivery", isPharmaHomeDelivery);
@@ -196,13 +196,17 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
                 intent.putExtra("customerDeliveryAddress", address);
                 startActivity(intent);
                 overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
+            } else {
+                Toast.makeText(this, "Please Fill Address Form", Toast.LENGTH_SHORT).show();
             }
-
         } else {
-            if (!deliveryTypeClickPharma)
-                Toast.makeText(this, "Please Select Delivery Type for Pharma", Toast.LENGTH_SHORT).show();
-            if (!deliveryTypeClickFmcg)
-                Toast.makeText(this, "Please Select Delivery Type for Fmcg", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(CheckoutActivity.this, PaymentOptionsActivity.class);
+            intent.putExtra("fmcgTotal", fmcgToatalPass);
+            intent.putExtra("isPharmaHomeDelivery", isPharmaHomeDelivery);
+            intent.putExtra("isFmcgHomeDelivery", isFmcgHomeDelivery);
+            intent.putExtra("customerDeliveryAddress", address);
+            startActivity(intent);
+            overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
         }
     }
 
