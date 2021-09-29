@@ -20,7 +20,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.databinding.DataBindingUtil;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -31,7 +30,6 @@ import com.apollo.pharmacy.ocr.R;
 import com.apollo.pharmacy.ocr.adapters.MyOfersAdapterNew;
 import com.apollo.pharmacy.ocr.adapters.PromotionsAdapter;
 import com.apollo.pharmacy.ocr.controller.MyCartController;
-import com.apollo.pharmacy.ocr.databinding.ActivityMyProfileBinding;
 import com.apollo.pharmacy.ocr.enums.ViewMode;
 import com.apollo.pharmacy.ocr.interfaces.CartCountListener;
 import com.apollo.pharmacy.ocr.interfaces.MyCartListener;
@@ -77,16 +75,17 @@ public class MyProfileActivity extends AppCompatActivity implements MyCartListen
     private HashMap<String, GetProductListResponse> productListResponseHashMap;
     private List<String> specialOfferList;
     private ArrayList<Product> outofstock_array, stockin_array;
-    private TextView myCartCount;
+    private TextView myCartCount,promotionViewAll,nodataFound;
     private List<OCRToDigitalMedicineResponse> dataList = new ArrayList<>();
     private ConstraintLayout constraintLayout;
     private MyCartController myCartController;
-    private ActivityMyProfileBinding activityMyProfileBinding;
+    private RecyclerView crossCellDataRecycle;
+//    private ActivityMyProfileBinding activityMyProfileBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        activityMyProfileBinding = DataBindingUtil.setContentView(this, R.layout.activity_my_profile);
+        setContentView(R.layout.activity_my_profile);
         context = this;
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         initViewProfile();
@@ -94,7 +93,9 @@ public class MyProfileActivity extends AppCompatActivity implements MyCartListen
 
         RecyclerView promotionsRecyclerView = findViewById(R.id.promotionsRecyclerView);
         promotionsRecyclerView.setLayoutManager(new GridLayoutManager(MyProfileActivity.this, 6));
-
+        crossCellDataRecycle = findViewById(R.id.cross_cell_data_recycle);
+        promotionViewAll=findViewById(R.id.promotion_viewAll);
+        nodataFound=findViewById(R.id.nodata_found);
         product_list_array = new ArrayList<Product>();
         outofstock_array = new ArrayList<Product>();
         stockin_array = new ArrayList<Product>();
@@ -520,14 +521,14 @@ public class MyProfileActivity extends AppCompatActivity implements MyCartListen
         if (body != null && body.getCrossselling() != null && body.getCrossselling().size() > 0) {
             MyOfersAdapterNew crossCellAdapter = new MyOfersAdapterNew(MyProfileActivity.this, this, body.getCrossselling(), this);
             RecyclerView.LayoutManager mLayoutManager4 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-            activityMyProfileBinding.crossCellDataRecycle.setLayoutManager(mLayoutManager4);
-            activityMyProfileBinding.crossCellDataRecycle.setItemAnimator(new DefaultItemAnimator());
-            activityMyProfileBinding.crossCellDataRecycle.setAdapter(crossCellAdapter);
-            activityMyProfileBinding.nodataFound.setVisibility(View.GONE);
-            activityMyProfileBinding.promotionViewAll.setVisibility(View.VISIBLE);
+            crossCellDataRecycle.setLayoutManager(mLayoutManager4);
+            crossCellDataRecycle.setItemAnimator(new DefaultItemAnimator());
+            crossCellDataRecycle.setAdapter(crossCellAdapter);
+            nodataFound.setVisibility(View.GONE);
+            promotionViewAll.setVisibility(View.VISIBLE);
         } else {
-            activityMyProfileBinding.nodataFound.setVisibility(View.VISIBLE);
-            activityMyProfileBinding.promotionViewAll.setVisibility(View.GONE);
+            nodataFound.setVisibility(View.VISIBLE);
+            promotionViewAll.setVisibility(View.GONE);
         }
     }
 
