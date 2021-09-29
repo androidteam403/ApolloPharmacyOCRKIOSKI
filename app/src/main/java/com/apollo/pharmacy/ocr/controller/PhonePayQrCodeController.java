@@ -29,11 +29,11 @@ public class PhonePayQrCodeController {
         this.phonePayQrCodeListener = phonePayQrCodeListener;
     }
 
-    public void getPhonePayQrCodeGeneration(boolean scanpay) {
+    public void getPhonePayQrCodeGeneration(boolean scanpay,double grandTotal) {
 //        Utils.showDialog(activity, "Loading…");
         ApiInterface api = ApiClient.getApiService();
         PhonePayQrCodeRequest phonePayQrCodeRequest = new PhonePayQrCodeRequest();
-        phonePayQrCodeRequest.setAmount(1.0);
+        phonePayQrCodeRequest.setAmount(grandTotal);
         phonePayQrCodeRequest.setExpiresIn(2000);
         phonePayQrCodeRequest.setMessage("");
         phonePayQrCodeRequest.setOriginalTransactionId("");

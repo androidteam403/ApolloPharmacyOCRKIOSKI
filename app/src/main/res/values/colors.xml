@@ -65,6 +65,7 @@
     <color name="color_review_order">#a4c1c7</color>
     <color name="review_color_blue">#27bbc5</color>
     <color name="ask_apollo_view_color">#a0e4e5</color>
+    <color name="very_light">#F0F8F8</color>
     <color name="ask_apollo_divider_color">#def6f6</color>
     <color name="ask_apollo_or_bg">#dff7f7</color>
     <color name="color_order_summary_green">#00a652</color>

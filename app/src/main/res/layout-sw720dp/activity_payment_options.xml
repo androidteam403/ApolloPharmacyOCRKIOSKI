@@ -76,7 +76,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/sixty_dp"
+                    android:layout_marginTop="@dimen/forty_dp"
                     android:background="@drawable/dialog_background"
                     android:orientation="vertical">
 

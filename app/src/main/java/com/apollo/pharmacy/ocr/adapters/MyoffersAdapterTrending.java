@@ -94,14 +94,14 @@ public class MyoffersAdapterTrending extends RecyclerView.Adapter<MyoffersAdapte
                     object1.setContainer("Strip");
                     datalist.add(object1);
                     itemBatchSelectionDilaog.setQtyCount(String.valueOf(qty));
-                    cartCountListener.cartCount(datalist.size());
-                    SessionManager.INSTANCE.setDataList(datalist);
-                    if (context instanceof MyCartActivity) {
-                        ((MyCartActivity) context).message_string = "cartupdate";
-                    }
-                    if (context instanceof MyCartActivity) {
-                        ((MyCartActivity) context).updatecartlist();
-                    }
+//                    cartCountListener.cartCount(datalist.size());
+//                    SessionManager.INSTANCE.setDataList(datalist);
+//                    if (context instanceof MyCartActivity) {
+//                        ((MyCartActivity) context).message_string = "cartupdate";
+//                    }
+//                    if (context instanceof MyCartActivity) {
+//                        ((MyCartActivity) context).updatecartlist();
+//                    }
                 });
 
                 itemBatchSelectionDilaog.setUnitDecreaseListener(view2 -> {
@@ -131,11 +131,11 @@ public class MyoffersAdapterTrending extends RecyclerView.Adapter<MyoffersAdapte
                         object1.setContainer("Strip");
                         datalist.add(object1);
 
-                        SessionManager.INSTANCE.setDataList(datalist);
+//                        SessionManager.INSTANCE.setDataList(datalist);
                         itemBatchSelectionDilaog.setQtyCount(String.valueOf(qty));
-                        if (context instanceof MyCartActivity) {
-                            ((MyCartActivity) context).message_string = "cartupdate";
-                        }
+//                        if (context instanceof MyCartActivity) {
+//                            ((MyCartActivity) context).message_string = "cartupdate";
+//                        }
                     } else {
                         int qty1 = Integer.parseInt(itemBatchSelectionDilaog.getQtyCount().toString());
                         qty1 = qty1 - 1;
@@ -154,14 +154,14 @@ public class MyoffersAdapterTrending extends RecyclerView.Adapter<MyoffersAdapte
 //                        if (itemAddToCartLayout.getVisibility() == View.VISIBLE) {
 //                            cartCountListener.cartCount(datalist.size());
 //                        }
-                        if (context instanceof MyCartActivity) {
-                            ((MyCartActivity) context).message_string = "cartdelete";
-                            ((MyCartActivity) context).delete_item_sku = product_code;
-                        }
+//                        if (context instanceof MyCartActivity) {
+//                            ((MyCartActivity) context).message_string = "cartdelete";
+//                            ((MyCartActivity) context).delete_item_sku = product_code;
+//                        }
                     }
-                    if (context instanceof MyCartActivity) {
-                        ((MyCartActivity) context).updatecartlist();
-                    }
+//                    if (context instanceof MyCartActivity) {
+//                        ((MyCartActivity) context).updatecartlist();
+//                    }
 
                 });
 
