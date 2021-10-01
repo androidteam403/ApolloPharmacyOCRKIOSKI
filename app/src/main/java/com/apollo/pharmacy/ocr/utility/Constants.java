@@ -23,8 +23,6 @@ public class Constants extends Application {
     public static String GET_STORE_LIST = "http://lms.apollopharmacy.org:8033/APK/apollompos/Self/STORELIST";
 
 
-
-
     public static String Add_FCM_Token = "";
     public static String Send_Otp = "";
     public static String Get_Past_Prescription = "";
