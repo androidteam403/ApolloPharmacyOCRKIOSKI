@@ -2,11 +2,15 @@ package com.apollo.pharmacy.ocr.controller;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
+
 import com.apollo.pharmacy.ocr.R;
 import com.apollo.pharmacy.ocr.interfaces.MyCartListener;
 import com.apollo.pharmacy.ocr.model.Category_request;
 import com.apollo.pharmacy.ocr.model.GetImageRes;
 import com.apollo.pharmacy.ocr.model.GetProductListResponse;
+import com.apollo.pharmacy.ocr.model.UpCellCrossCellRequest;
+import com.apollo.pharmacy.ocr.model.UpCellCrossCellResponse;
 import com.apollo.pharmacy.ocr.model.UserAddress;
 import com.apollo.pharmacy.ocr.network.ApiClient;
 import com.apollo.pharmacy.ocr.network.ApiInterface;
@@ -163,5 +167,28 @@ public class MyCartController {
                 data.put(categList.get(i), (GetProductListResponse) args[i]);
             }
         return data;
+    }
+
+    public void upcellCrosscellList(String mobileNo,Context context) {
+        showDialog(context, context.getResources().getString(R.string.label_please_wait));
+        ApiInterface apiInterface = ApiClient.getApiService();
+        UpCellCrossCellRequest upCellCrossCellRequest = new UpCellCrossCellRequest();
+        upCellCrossCellRequest.setMobileno("7353910637");
+        Call<UpCellCrossCellResponse> call = apiInterface.GET_UPCELL_CROSSCELL_OFEERS(upCellCrossCellRequest);
+        call.enqueue(new Callback<UpCellCrossCellResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<UpCellCrossCellResponse> call, @NonNull Response<UpCellCrossCellResponse> response) {
+                if (response.isSuccessful()) {
+                    myCartListener.onSuccessSearchItemApi(response.body());
+                    Utils.dismissDialog();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<UpCellCrossCellResponse> call, @NonNull Throwable t) {
+                myCartListener.onSearchFailure(t.getMessage());
+                Utils.dismissDialog();
+            }
+        });
     }
 }
