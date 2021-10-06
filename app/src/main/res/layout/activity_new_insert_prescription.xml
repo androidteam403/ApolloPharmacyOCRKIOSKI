@@ -20,7 +20,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:orientation="vertical"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/scan_pres_image"
@@ -91,7 +91,7 @@
                     android:clickable="true"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -323,6 +323,24 @@
 
 
         </LinearLayout>
+
+        <ImageView
+            android:id="@+id/gallery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/app_name"
+            android:padding="@dimen/fifteen_dp"
+            android:src="@drawable/ic_image_camera" />
+
+        <Button
+            android:background="@color/DARKRED"
+            android:id="@+id/upload_prescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/gallery"
+            android:textColor="@color/white"
+            android:layout_marginStart="@dimen/fifteen_dp"
+            android:text="Upload" />
     </RelativeLayout>
 
     <data>

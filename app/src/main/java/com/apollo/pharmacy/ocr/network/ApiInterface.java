@@ -28,6 +28,7 @@ import com.apollo.pharmacy.ocr.model.OrderPushingResponse;
 import com.apollo.pharmacy.ocr.model.OrderPushingResponse_new;
 import com.apollo.pharmacy.ocr.model.PhonePayQrCodeRequest;
 import com.apollo.pharmacy.ocr.model.PhonePayQrCodeResponse;
+import com.apollo.pharmacy.ocr.model.PincodeValidateResponse;
 import com.apollo.pharmacy.ocr.model.PinelabTransaction_cancelresponse;
 import com.apollo.pharmacy.ocr.model.Pinelabs_paymenttransaction_response;
 import com.apollo.pharmacy.ocr.model.Pinelabs_transaction_payment_request;
@@ -223,5 +224,9 @@ public interface ApiInterface {
 
     @POST("https://online.apollopharmacy.org/REC/api/upcrossapiselling")
     Call<UpCellCrossCellResponse> GET_UPCELL_CROSSCELL_OFEERS(@Body UpCellCrossCellRequest upCellCrossCellRequest);
+
+    @POST("http://20.197.57.170/rest//V1/pincode/getstatecountry")
+    Call<List<PincodeValidateResponse>> doPincodeValidateApi(@Header("authorization") String token, @Body Object pincodeValidateRequest);
+
 
 }

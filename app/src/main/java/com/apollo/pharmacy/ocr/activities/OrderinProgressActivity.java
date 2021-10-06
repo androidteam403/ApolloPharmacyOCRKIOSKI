@@ -71,6 +71,12 @@ public class OrderinProgressActivity extends AppCompatActivity implements Orderi
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        onClickContinueShopping();
+    }
+
+    @Override
     public void onClickContinueShopping() {
         Toast.makeText(this, "You clicked", Toast.LENGTH_SHORT).show();
         List<OCRToDigitalMedicineResponse> dataList = new ArrayList<>();

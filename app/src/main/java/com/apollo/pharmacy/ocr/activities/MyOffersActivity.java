@@ -261,8 +261,13 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
             activityMyOffersBinding.crossSellingCountLayout.setVisibility(View.VISIBLE);
             activityMyOffersBinding.crossSellingCountTxt.setText(String.valueOf(crosssellingList.size()));
         }
-        activityMyOffersBinding.upSellingItemCountLayout.setVisibility(View.GONE);
-        activityMyOffersBinding.upSellingItemCountTxt.setText("0");
+        if(upsellingList!=null&&upsellingList.size()>0) {
+            activityMyOffersBinding.upSellingItemCountLayout.setVisibility(View.VISIBLE);
+            activityMyOffersBinding.upSellingItemCountTxt.setText(String.valueOf(upsellingList.size()));
+        }else {
+            activityMyOffersBinding.upSellingItemCountLayout.setVisibility(View.GONE);
+            activityMyOffersBinding.upSellingItemCountTxt.setText("0");
+        }
         activityMyOffersBinding.nodataFound.setVisibility(View.GONE);
 
 
@@ -429,8 +434,13 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
                 activityMyOffersBinding.crossSellingCountLayout.setVisibility(View.VISIBLE);
                 activityMyOffersBinding.crossSellingCountTxt.setText(String.valueOf(crosssellingList.size()));
             }
-            activityMyOffersBinding.upSellingItemCountLayout.setVisibility(View.GONE);
-            activityMyOffersBinding.upSellingItemCountTxt.setText("0");
+            if(upsellingList!=null&&upsellingList.size()>0) {
+                activityMyOffersBinding.upSellingItemCountLayout.setVisibility(View.VISIBLE);
+                activityMyOffersBinding.upSellingItemCountTxt.setText(String.valueOf(upsellingList.size()));
+            }else {
+                activityMyOffersBinding.upSellingItemCountLayout.setVisibility(View.GONE);
+                activityMyOffersBinding.upSellingItemCountTxt.setText("0");
+            }
             activityMyOffersBinding.nodataFound.setVisibility(View.GONE);
             if (crosssellingList.size() < 1) {
                 activityMyOffersBinding.nodataFound.setVisibility(View.VISIBLE);
@@ -459,8 +469,13 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
             activityMyOffersBinding.crossSellingOfferName.setTextColor(getResources().getColor(R.color.colorWhite));
             activityMyOffersBinding.upSellingTrendingLayout.setBackgroundColor(getResources().getColor(R.color.colorWhite));
             activityMyOffersBinding.upSellingTrendingName.setTextColor(getResources().getColor(R.color.text_dark_blue_color));
-            activityMyOffersBinding.crossSellingCountLayout.setVisibility(View.GONE);
-            activityMyOffersBinding.crossSellingCountTxt.setText("0");
+            if(crosssellingList!=null&&crosssellingList.size()>0) {
+                activityMyOffersBinding.crossSellingCountLayout.setVisibility(View.VISIBLE);
+                activityMyOffersBinding.crossSellingCountTxt.setText(String.valueOf(crosssellingList.size()));
+            }else {
+                activityMyOffersBinding.crossSellingCountLayout.setVisibility(View.GONE);
+                activityMyOffersBinding.crossSellingCountTxt.setText("0");
+            }
             if (upsellingList != null && upsellingList.size() > 0) {
                 activityMyOffersBinding.upSellingItemCountLayout.setVisibility(View.VISIBLE);
                 activityMyOffersBinding.upSellingItemCountTxt.setText(String.valueOf(upsellingList.size()));
@@ -495,8 +510,6 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
             activityMyOffersBinding.upSellingTrendingName.setTextColor(getResources().getColor(R.color.colorWhite));
             activityMyOffersBinding.crossSellingCountLayout.setVisibility(View.VISIBLE);
             activityMyOffersBinding.crossSellingCountTxt.setText(String.valueOf(crosssellingList.size()));
-            activityMyOffersBinding.upSellingItemCountLayout.setVisibility(View.GONE);
-            activityMyOffersBinding.upSellingItemCountTxt.setText("0");
             activityMyOffersBinding.nodataFound.setVisibility(View.GONE);
         } else {
             activityMyOffersBinding.crossSellingRecycleNew.setVisibility(View.GONE);
@@ -508,6 +521,14 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
         } else {
             activityMyOffersBinding.crossSellingRecycleNew.setVisibility(View.GONE);
             activityMyOffersBinding.nodataFound.setVisibility(View.VISIBLE);
+        }
+
+        if (upsellingList != null && upsellingList.size() > 0) {
+            activityMyOffersBinding.upSellingItemCountLayout.setVisibility(View.VISIBLE);
+            activityMyOffersBinding.upSellingItemCountTxt.setText(String.valueOf(upsellingList.size()));
+        }else {
+            activityMyOffersBinding.upSellingItemCountLayout.setVisibility(View.GONE);
+            activityMyOffersBinding.upSellingItemCountTxt.setText("0");
         }
 
         Utils.dismissDialog();

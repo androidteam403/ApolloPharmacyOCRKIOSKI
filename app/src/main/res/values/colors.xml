@@ -115,4 +115,8 @@
     <color name="customer_doctor_divider">#ccccce</color>
     <color name="nav_header_color">#28baba</color>
 
+    <color name="transperent_black_color">#CC000000</color>
+    <color name="light_transperent_black_color">#9E000000</color>
+
+
 </resources>

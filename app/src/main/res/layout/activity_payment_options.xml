@@ -188,6 +188,7 @@
                                 android:text="@{model.pharmaTotal}"
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/sixteen_sp"
+                                android:maxLength="7"
                                 android:textStyle="bold" />
                         </RelativeLayout>
 
@@ -330,6 +331,7 @@
                                 android:text="@{model.fmcgTotal}"
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/sixteen_sp"
+                                android:maxLength="7"
                                 android:textStyle="bold" />
                         </RelativeLayout>
 
@@ -529,6 +531,7 @@
 
                                     <LinearLayout
                                         android:layout_width="wrap_content"
+                                        android:layout_marginBottom="@dimen/ten_dp"
                                         android:layout_height="wrap_content"
                                         android:orientation="vertical">
 
@@ -544,6 +547,7 @@ instructions on your phone to complete\nthe payment"
                                             android:textColor="@color/black" />
 
                                         <TextView
+                                            android:visibility="gone"
                                             android:id="@+id/place_an_order_scanpay_pay"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
@@ -574,6 +578,8 @@ instructions on your phone to complete\nthe payment"
                                 </LinearLayout>
 
                                 <RelativeLayout
+                                    android:layout_marginTop="@dimen/ten_dp"
+                                    android:layout_marginBottom="@dimen/fifteen_dp"
                                     android:layout_gravity="center_vertical"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content">
@@ -583,7 +589,6 @@ instructions on your phone to complete\nthe payment"
                                         android:layout_width="180dp"
                                         android:layout_height="150dp"
                                         android:layout_gravity="center_vertical"
-                                        android:layout_marginStart="@dimen/five_dp"
                                         android:contentDescription="@string/app_name" />
 
                                     <ImageView
@@ -699,7 +704,7 @@ instructions on your phone to complete\nthe payment"
 
                                 <LinearLayout
                                     android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
+                                    android:layout_height="180dp"
                                     android:layout_marginTop="@dimen/five_dp"
                                     android:orientation="vertical">
 
@@ -719,7 +724,8 @@ instructions on your phone to complete\nthe payment"
                                         android:layout_height="wrap_content"
                                         android:layout_marginStart="@dimen/twenty_dp"
                                         android:layout_marginTop="@dimen/five_dp"
-                                        android:text="Select  your UPI app"
+                                        android:textStyle="bold"
+                                        android:text="Pay via phone pay"
                                         android:textColor="@color/black"
                                         android:textSize="@dimen/fourteen_sp" />
 
@@ -727,6 +733,7 @@ instructions on your phone to complete\nthe payment"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_marginStart="@dimen/twenty_dp"
+                                        android:layout_marginTop="@dimen/five_dp"
                                         android:orientation="horizontal">
 
                                         <RelativeLayout
@@ -785,7 +792,7 @@ instructions on your phone to complete\nthe payment"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:layout_marginStart="@dimen/ten_dp"
-                                            android:background="@drawable/upi_payment_unselected_bg">
+                                            android:background="@drawable/upi_payment_selected_bg">
 
                                             <ImageView
                                                 android:id="@+id/tick_phone_pay"
@@ -793,13 +800,14 @@ instructions on your phone to complete\nthe payment"
                                                 android:layout_height="@dimen/thirty_dp"
                                                 android:layout_gravity="center_vertical"
                                                 android:background="@drawable/round_untick_bg"
+                                                android:visibility="gone"
                                                 android:padding="@dimen/two_dp" />
 
                                             <ImageView
-                                                android:layout_width="80dp"
-                                                android:layout_height="30dp"
+                                                android:layout_width="180dp"
+                                                android:layout_height="60dp"
+                                                android:layout_centerInParent="true"
                                                 android:layout_marginStart="@dimen/five_dp"
-                                                android:layout_toEndOf="@id/tick_phone_pay"
                                                 android:contentDescription="@string/app_name"
                                                 android:src="@drawable/phone_pay_payment_icon" />
 
@@ -808,6 +816,7 @@ instructions on your phone to complete\nthe payment"
                                     </LinearLayout>
 
                                     <TextView
+                                        android:visibility="gone"
                                         android:id="@+id/place_an_order_phone_pay"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
@@ -870,6 +879,8 @@ instructions on your phone to complete\nthe payment"
                                 <RelativeLayout
                                     android:layout_width="wrap_content"
                                     android:layout_marginStart="@dimen/forty_dp"
+                                    android:layout_marginTop="@dimen/ten_dp"
+                                    android:layout_marginBottom="@dimen/ten_dp"
                                     android:layout_height="wrap_content">
 
                                     <ImageView
@@ -976,7 +987,7 @@ above 400 Rupees"
                                             android:layout_height="wrap_content"
                                             android:background="@drawable/upi_payment_unselected_bg"
                                             android:padding="@dimen/ten_dp"
-                                            android:text="Flat No :314, A1 Block\nMadhapu,PipeLine Road\nHyderabad : 500032"
+                                            android:hint="@string/Address"
                                             android:textColor="@color/black" />
 
                                         <TextView

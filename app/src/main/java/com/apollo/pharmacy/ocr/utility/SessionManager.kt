@@ -104,6 +104,16 @@ object SessionManager {
         return pref.getString(ApplicationConstant.STORE_ID, String());
     }
 
+    fun setEposUrl(number: String) {
+        editor.putString(ApplicationConstant.EPOS_URL, number)
+        editor.apply();
+    }
+
+    fun getEposUrl(): String {
+        return pref.getString(ApplicationConstant.EPOS_URL, String());
+    }
+
+
     fun setTerminalId(number: String) {
         editor.putString(ApplicationConstant.TERMINAL_ID, number)
         editor.apply();
@@ -380,5 +390,14 @@ object SessionManager {
 
     fun getAccessKey(): String {
         return pref.getString(ApplicationConstant.ACCESS_KEY, "")
+    }
+
+    fun setAccessDialogHandler(accessKey: String) {
+        editor.putString(ApplicationConstant.ACESS_DIALOG_HANDEL, accessKey)
+        editor.apply()
+    }
+
+    fun getAccessDialogHandler(): String {
+        return pref.getString(ApplicationConstant.ACESS_DIALOG_HANDEL, "")
     }
 }

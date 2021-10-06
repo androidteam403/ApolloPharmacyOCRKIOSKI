@@ -8,7 +8,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
@@ -55,10 +54,13 @@ public class AccesskeyDialog {
         accesskeyBinding.parent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                InputMethodManager inputManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-
-                inputManager.hideSoftInputFromWindow(dialog.getCurrentFocus().getWindowToken(),
-                        InputMethodManager.HIDE_NOT_ALWAYS);            }
+                View view1 = dialog.getCurrentFocus();
+                if (view1 != null) {
+                    InputMethodManager inputManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputManager.hideSoftInputFromWindow(dialog.getCurrentFocus().getWindowToken(),
+                            InputMethodManager.HIDE_NOT_ALWAYS);
+                }
+            }
         });
     }
 
@@ -78,11 +80,10 @@ public class AccesskeyDialog {
         if (validate()) {
             SessionManager.INSTANCE.setAccessKey(accesskeyBinding.accesskeyTextinput.getText().toString().trim());
             Toast.makeText(context, "You Submitted", Toast.LENGTH_SHORT).show();
-            dismiss();
         }
     }
 
-    private boolean validate() {
+    public boolean validate() {
         if (!accesskeyBinding.accesskeyTextinput.getText().toString().trim().equals("AP@11@2021")) {
             accesskeyBinding.accesskeyErrorBg.setBackground(context.getResources().getDrawable(R.drawable.phone_error_alert_bg));
             accesskeyBinding.accesskeyErrorText.setVisibility(View.VISIBLE);

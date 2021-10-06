@@ -104,7 +104,7 @@
     <string name="label_serial_number_eighteen" translatable="false">18</string>
 
     <string name="Lets_Begin">"Let's Begin"</string>
-    <string name="Mobile_Number">Mobile Number</string>
+    <string name="Mobile_Number">Mobile Number*</string>
     <string name="Back">Back</string>
     <string name="Home">Home</string>
 

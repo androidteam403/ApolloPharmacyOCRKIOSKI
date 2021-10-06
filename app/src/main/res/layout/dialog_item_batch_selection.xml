@@ -8,14 +8,13 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/transparent_color"
-        android:stateListAnimator="@null">
+        android:background="@color/transperent_black_color">
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/dialog_background"
-            android:layout_centerInParent="true">
+            android:layout_centerInParent="true"
+            android:background="@drawable/dialog_background">
 
             <LinearLayout
                 android:id="@+id/dialog_item_batch_inner_parent_layout"
@@ -257,6 +256,30 @@
                 </LinearLayout>
 
             </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/loadingPanel"
+            style="@style/GenericProgressBackground"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <ProgressBar
+                android:id="@+id/progress_loader"
+                style="@style/GenericProgressIndicator"
+                android:layout_centerInParent="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/progress_loader"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="@dimen/five_dp"
+                android:text="Loading ..."
+                android:textColor="@color/white"
+                android:textSize="@dimen/sixteen_sp"
+                android:textStyle="normal" />
         </RelativeLayout>
 
     </RelativeLayout>
