@@ -20,6 +20,9 @@ public class Constants extends Application {
     public static String CheckServiceAvailability = "http://lms.apollopharmacy.org:8033/MOBILEAPP/Apollo/Common/";
     public static String UPLOAD_IMAGE_URL = "http://pharmacydesk.apollopharmacy.org:83/Apollo/Uploadpresc";
 
+    public static String GET_STORE_LIST = "http://lms.apollopharmacy.org:8033/APK/apollompos/Self/STORELIST";
+
+
     public static String Add_FCM_Token = "";
     public static String Send_Otp = "";
     public static String Get_Past_Prescription = "";
@@ -60,6 +63,9 @@ public class Constants extends Application {
     public static String Send_Sms_Api = "https://online.apollopharmacy.org/";
     public static String Order_Place_With_Prescription_API = "https://online.apollopharmacy.org/UAT/OrderPlace.svc/";
     public static String Order_Place_With_Prescription_Token = "9f15bdd0fcd5423190c2e877ba02bel";
+
+
+    public static String New_Order_Place_With_Prescription_Token = "9f15bdd0fcd5423190c2e877ba0228APM";
 
     public static final String DIRECTORY_NAME = "USBCamera";
 

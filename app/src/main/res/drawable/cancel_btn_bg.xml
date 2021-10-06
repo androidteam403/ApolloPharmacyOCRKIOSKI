@@ -5,9 +5,9 @@
     <stroke
         android:width="@dimen/three_dp"
         android:color="@color/colorWhite" />
-    <padding
-        android:bottom="@dimen/ten_dp"
-        android:left="@dimen/thirty_dp"
-        android:right="@dimen/thirty_dp"
-        android:top="@dimen/ten_dp" />
+<!--    <padding-->
+<!--        android:bottom="@dimen/ten_dp"-->
+<!--        android:left="@dimen/thirty_dp"-->
+<!--        android:right="@dimen/thirty_dp"-->
+<!--        android:top="@dimen/ten_dp" />-->
 </shape>

@@ -50,8 +50,20 @@ public class ProductSearch implements Serializable {
     @SerializedName("mou")
     @Expose
     private String mou;
+    @SerializedName("Category")
+    @Expose
+    private String Category;
 
+    private String medicineType;
     private Integer qty;
+
+    public String getMedicineType() {
+        return medicineType;
+    }
+
+    public void setMedicineType(String medicineType) {
+        this.medicineType = medicineType;
+    }
 
     public Integer getQty() {
         return qty;
@@ -171,5 +183,13 @@ public class ProductSearch implements Serializable {
 
     public void setIsPrescriptionRequired(int isPrescriptionRequired) {
         this.isPrescriptionRequired = isPrescriptionRequired;
+    }
+
+    public String getCategory() {
+        return Category;
+    }
+
+    public void setCategory(String category) {
+        Category = category;
     }
 }
