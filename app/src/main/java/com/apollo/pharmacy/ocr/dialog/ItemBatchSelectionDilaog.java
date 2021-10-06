@@ -232,7 +232,9 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
 //        batchSelection();
 
         MposBatchListController batchListController = new MposBatchListController(this, context);
+        dialogItemBatchSelectionBinding.loadingPanel.setVisibility(View.VISIBLE);
         batchListController.getBatchList(articalCode);
+
     }
 
     private AdapterItemBatchSelection adapterItemBatchSelection;
@@ -340,6 +342,7 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
             dialogItemBatchSelectionBinding.date.setText(batchListResponse.getBatchList().get(0).getExpDate());
             dialogItemBatchSelectionBinding.price.setText(String.valueOf(batchListResponse.getBatchList().get(0).getPrice()));
             this.itemPrice = batchListResponse.getBatchList().get(0).getPrice();
+            dialogItemBatchSelectionBinding.loadingPanel.setVisibility(View.GONE);
             dialogItemBatchSelectionBinding.batchSelectionData.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -356,8 +359,9 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
             Utils.dismissDialog();
         } else {
             Utils.dismissDialog();
-//            dialog.dismiss();
+            dialog.dismiss();
             Toast.makeText(getContext(), "Product Out Of Stock", Toast.LENGTH_LONG).show();
+            dialogItemBatchSelectionBinding.loadingPanel.setVisibility(View.GONE);
         }
     }
 

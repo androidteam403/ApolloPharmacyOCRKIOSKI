@@ -4,12 +4,15 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
@@ -17,6 +20,16 @@ import com.apollo.pharmacy.ocr.R;
 import com.apollo.pharmacy.ocr.activities.yourorderstatus.YourOrderStatusActivity;
 import com.apollo.pharmacy.ocr.databinding.ActivityNewInsertPrescriptionBinding;
 import com.apollo.pharmacy.ocr.dialog.ChooseDeliveryType;
+import com.apollo.pharmacy.ocr.model.PlaceOrderReqModel;
+import com.apollo.pharmacy.ocr.utility.ImageManager;
+import com.apollo.pharmacy.ocr.utility.Utils;
+
+import net.alhazmy13.mediapicker.Image.ImagePicker;
+
+import java.io.File;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class InsertPrescriptionActivityNew extends AppCompatActivity implements InsertPrescriptionActivityNewListener {
     private ActivityNewInsertPrescriptionBinding activityNewInsertPrescriptionBinding;
@@ -72,6 +85,32 @@ public class InsertPrescriptionActivityNew extends AppCompatActivity implements 
                     chooseDeliveryType.dismiss();
                 });
                 chooseDeliveryType.show();
+            }
+        });
+
+        activityNewInsertPrescriptionBinding.gallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new ImagePicker.Builder(InsertPrescriptionActivityNew.this)
+                        .mode(ImagePicker.Mode.CAMERA_AND_GALLERY)
+                        .compressLevel(ImagePicker.ComperesLevel.MEDIUM)
+                        .directory(ImagePicker.Directory.DEFAULT)
+                        .extension(ImagePicker.Extension.PNG)
+                        .scale(600, 600)
+                        .allowMultipleImages(true)
+                        .enableDebuggingMode(true)
+                        .build();
+            }
+        });
+
+        activityNewInsertPrescriptionBinding.uploadPrescription.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mPaths != null && mPaths.size() > 0) {
+                    handleUploadImageService();
+                } else {
+                    Toast.makeText(InsertPrescriptionActivityNew.this, "Please select an image", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -148,5 +187,72 @@ public class InsertPrescriptionActivityNew extends AppCompatActivity implements 
     @Override
     public void onClickZoomOut() {
 //        activityNewInsertPrescriptionBinding.prescriptionFullviewImg.zoomOut();
+    }
+
+    private List<String> mPaths = new ArrayList<>();
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == ImagePicker.IMAGE_PICKER_REQUEST_CODE && resultCode == RESULT_OK) {
+            List<String> mPathsDummy = data.getStringArrayListExtra(ImagePicker.EXTRA_IMAGE_PATH);
+            if (mPaths != null) {
+                if (mPathsDummy != null && mPathsDummy.size() > 0) {
+                    for (String path : mPathsDummy) {
+                        mPaths.add(path);
+                    }
+                }
+            } else {
+                mPaths = new ArrayList<>();
+                if (mPathsDummy != null && mPathsDummy.size() > 0) {
+                    for (String path : mPathsDummy) {
+                        mPaths.add(path);
+                    }
+                }
+            }
+        }
+
+    }
+
+
+    ArrayList<PlaceOrderReqModel.PrescUrlEntity> prescEntityArray = new ArrayList<>();
+
+    private void handleUploadImageService() {
+        try {
+            for (int i = 0; i < mPaths.size(); i++) {
+                final InputStream imageStream = InsertPrescriptionActivityNew.this.getContentResolver().openInputStream(Uri.fromFile(new File(mPaths.get(i))));
+                final int imageLength = imageStream.available();
+                final Handler handler = new Handler();
+                int finalI = i;
+                Thread th = new Thread(() -> {
+                    try {
+                        final String imageName = ImageManager.UploadImage(imageStream, imageLength, Utils.getTransactionGeneratedId() + "_" + finalI, "", "");
+                        handler.post(() -> {
+                            PlaceOrderReqModel.PrescUrlEntity prescEntity = new PlaceOrderReqModel.PrescUrlEntity();
+                            prescEntity.setUrl(imageName);
+                            prescEntityArray.add(prescEntity);
+                            if (mPaths.size() == prescEntityArray.size()) {
+//                                doPlaceOrder();
+                            }
+                        });
+                    } catch (Exception ex) {
+                        final String exceptionMessage = ex.getMessage();
+                        handler.post(() -> showMessage(exceptionMessage));
+                    }
+                });
+                th.start();
+            }
+        } catch (Exception ex) {
+            showMessage(ex.getMessage());
+        }
+    }
+
+    private void showMessage(String message) {
+        if (message != null) {
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, getApplicationContext().getResources().getString(R.string.label_something_went_wrong), Toast.LENGTH_SHORT).show();
+        }
     }
 }

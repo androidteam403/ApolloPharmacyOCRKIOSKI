@@ -88,17 +88,20 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
             @Override
             public void onClick(View view) {
                 onBackPressed();
+                overridePendingTransition(R.animator.trans_right_in, R.animator.trans_right_out);
             }
         });
         activityCheckoutBinding.reviewCartFmcg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onBackPressed();
+                overridePendingTransition(R.animator.trans_right_in, R.animator.trans_right_out);
             }
         });
     }
 
     String address;
+    String name, singleAdd, pincode, city, state;
 
     @Override
     public void onClickNeedHomeDelivery() {
@@ -117,6 +120,11 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
             deliveryAddressDialog.setPositiveListener(view -> {
                 if (deliveryAddressDialog.validations()) {
                     address = deliveryAddressDialog.getAddressData();
+                    name = deliveryAddressDialog.getName();
+                    singleAdd = deliveryAddressDialog.getAddress();
+                    pincode = deliveryAddressDialog.getPincode();
+                    city = deliveryAddressDialog.getCity();
+                    state = deliveryAddressDialog.getState();
                     deliveryAddressDialog.dismiss();
                 }
             });
@@ -157,6 +165,11 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
             deliveryAddressDialog.setPositiveListener(view -> {
                 if (deliveryAddressDialog.validations()) {
                     address = deliveryAddressDialog.getAddressData();
+                    name = deliveryAddressDialog.getName();
+                    singleAdd = deliveryAddressDialog.getAddress();
+                    pincode = deliveryAddressDialog.getPincode();
+                    city = deliveryAddressDialog.getCity();
+                    state = deliveryAddressDialog.getState();
                     deliveryAddressDialog.dismiss();
                 }
             });
@@ -183,6 +196,13 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
     @Override
     public void onClickBack() {
         onBackPressed();
+        overridePendingTransition(R.animator.trans_right_in, R.animator.trans_right_out);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.animator.trans_right_in, R.animator.trans_right_out);
     }
 
     @Override
@@ -194,6 +214,11 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
                 intent.putExtra("isPharmaHomeDelivery", isPharmaHomeDelivery);
                 intent.putExtra("isFmcgHomeDelivery", isFmcgHomeDelivery);
                 intent.putExtra("customerDeliveryAddress", address);
+                intent.putExtra("name", name);
+                intent.putExtra("singleAdd", singleAdd);
+                intent.putExtra("pincode", pincode);
+                intent.putExtra("city", city);
+                intent.putExtra("state", state);
                 startActivity(intent);
                 overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
             } else {
@@ -205,6 +230,11 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
             intent.putExtra("isPharmaHomeDelivery", isPharmaHomeDelivery);
             intent.putExtra("isFmcgHomeDelivery", isFmcgHomeDelivery);
             intent.putExtra("customerDeliveryAddress", address);
+            intent.putExtra("name", name);
+            intent.putExtra("singleAdd", singleAdd);
+            intent.putExtra("pincode", pincode);
+            intent.putExtra("city", city);
+            intent.putExtra("state", state);
             startActivity(intent);
             overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
         }

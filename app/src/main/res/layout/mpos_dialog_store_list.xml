@@ -11,74 +11,88 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="@color/white">
+        android:background="@color/transperent_black_color"
+        android:orientation="vertical">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/grey"
-            android:padding="@dimen/five_dp">
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/one_hundred_dp"
+            android:layout_marginTop="@dimen/fifty_dp"
+            android:layout_marginEnd="@dimen/one_hundred_dp"
+            android:layout_marginBottom="@dimen/fifty_dp"
+            android:background="@color/white"
+            android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="@dimen/five_dp"
-                android:text="@string/label_select_store"
-                android:textColor="@color/black"
-                android:textSize="@dimen/fourteen_sp" />
-
-            <ImageView
-                android:layout_width="@dimen/thirty_dp"
-                android:layout_height="@dimen/thirty_dp"
-                android:layout_alignParentEnd="true"
-                android:contentDescription="@string/app_name"
-                android:tint="@color/white"
-                android:onClick="@{()-> callback.dismissDialog()}"
-                android:padding="@dimen/five_dp"
-                android:src="@drawable/ic_close_view" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/EditTextInputLayoutStyle"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/ten_dp">
+                android:layout_height="40dp"
+                android:background="@color/colorPrimary"
+                android:padding="@dimen/five_dp">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/doctor_name_search"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="@dimen/five_dp"
+                    android:text="@string/label_select_store"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sixteen_sp" />
+
+                <ImageView
+                    android:layout_width="@dimen/thirty_dp"
+                    android:layout_height="@dimen/thirty_dp"
+                    android:layout_alignParentEnd="true"
+                    android:contentDescription="@string/app_name"
+                    android:onClick="@{()-> callback.dismissDialog()}"
+                    android:padding="@dimen/five_dp"
+                    android:src="@drawable/ic_close_view"
+                    android:tint="@color/white" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/EditTextInputLayoutStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="top"
-                    android:hint="Search by store name"
-                    android:imeOptions="actionDone"
-                    android:inputType="text"
-                    android:padding="@dimen/ten_dp"
-                    android:singleLine="true"
-                    android:textSize="@dimen/fifteen_sp" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_margin="@dimen/ten_dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/doctor_name_search"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="top"
+                        android:hint="Search by store name"
+                        android:imeOptions="actionDone"
+                        android:inputType="text"
+                        android:textStyle="normal"
+                        android:padding="@dimen/ten_dp"
+                        android:singleLine="true"
+                        android:textSize="@dimen/fifteen_sp" />
+                </com.google.android.material.textfield.TextInputLayout>
 
 
+                <ImageView
+                    android:layout_width="@dimen/twenty_seven_dp"
+                    android:layout_height="@dimen/twenty_seven_dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/twenty_dp"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/ic_search" />
+            </RelativeLayout>
 
-            <ImageView
-                android:layout_width="@dimen/twenty_seven_dp"
-                android:layout_height="@dimen/twenty_seven_dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="@dimen/twenty_dp"
-                android:contentDescription="@string/app_name"
-                android:src="@drawable/ic_search" />
-        </RelativeLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/stores_recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/five_dp"
+                android:layout_marginEnd="@dimen/five_dp" />
+        </LinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/stores_recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/five_dp"
-            android:layout_marginEnd="@dimen/five_dp" />
     </LinearLayout>
 </layout>

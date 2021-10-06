@@ -38,7 +38,7 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
     private ActivityPaymentOptionsBinding activityPaymentOptionsBinding;
     private double pharmaTotalData = 0.0;
     private List<OCRToDigitalMedicineResponse> dataList;
-    private String customerDeliveryAddress;
+    private String customerDeliveryAddress, name, singleAdd, pincode, city, state;
     private double grandTotalAmount = 0.0;
 
     @Override
@@ -53,6 +53,11 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
             orderDetailsuiModel.setPharmaHomeDelivery(getIntent().getBooleanExtra("isPharmaHomeDelivery", false));
             orderDetailsuiModel.setFmcgHomeDelivery(getIntent().getBooleanExtra("isFmcgHomeDelivery", false));
             customerDeliveryAddress = (String) getIntent().getStringExtra("customerDeliveryAddress");
+            name = (String) getIntent().getStringExtra("name");
+            singleAdd = (String) getIntent().getStringExtra("singleAdd");
+            pincode = (String) getIntent().getStringExtra("pincode");
+            city = (String) getIntent().getStringExtra("city");
+            state = (String) getIntent().getStringExtra("state");
         }
         if (null != SessionManager.INSTANCE.getDataList())
             this.dataList = SessionManager.INSTANCE.getDataList();
@@ -103,6 +108,9 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
             @Override
             public void onClick(View view) {
                 DeliveryAddressDialog deliveryAddressDialog = new DeliveryAddressDialog(PaymentOptionsActivity.this);
+                if (name != null && singleAdd != null && pincode != null && city != null && state != null) {
+                    deliveryAddressDialog.setDeliveryAddress(name, singleAdd, pincode, city, state);
+                }
                 deliveryAddressDialog.setPositiveListener(view1 -> {
                     if (deliveryAddressDialog.validations()) {
                         customerDeliveryAddress = deliveryAddressDialog.getAddressData();
@@ -123,6 +131,10 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
     }
 
     boolean scanPay = true;
+    boolean upiScan;
+    boolean normalScan;
+
+    boolean firstQrCodePhonePay;
 
     private void listeners() {
         activityPaymentOptionsBinding.scanToPay.setOnClickListener(new View.OnClickListener() {
@@ -134,8 +146,14 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
                 PaymentInfoLayoutsHandlings();
                 activityPaymentOptionsBinding.scanToPayInfoLay.setVisibility(View.VISIBLE);
                 Utils.showDialog(PaymentOptionsActivity.this, "Loading…");
-                PhonePayQrCodeController phonePayQrCodeController = new PhonePayQrCodeController(getApplicationContext(), PaymentOptionsActivity.this);
-                phonePayQrCodeController.getPhonePayQrCodeGeneration(scanPay, grandTotalAmount);
+                if (!qrCodeFirstTimeHandel) {
+                    PhonePayQrCodeController phonePayQrCodeController = new PhonePayQrCodeController(getApplicationContext(), PaymentOptionsActivity.this);
+                    phonePayQrCodeController.getPhonePayQrCodeGeneration(scanPay, grandTotalAmount);
+                } else {
+                    qrCodeData(qrCode, scanPay);
+                }
+                normalScan = true;
+                upiScan = false;
             }
         });
         activityPaymentOptionsBinding.recievePaymentSms.setOnClickListener(new View.OnClickListener() {
@@ -158,7 +176,16 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
                 activityPaymentOptionsBinding.tickPhonePay.setImageResource(0);
                 activityPaymentOptionsBinding.tickPhonePayLay.setBackgroundResource(R.drawable.upi_payment_unselected_bg);
                 activityPaymentOptionsBinding.tickPhonePay.setBackgroundResource(R.drawable.round_untick_bg);
-
+                scanPay = false;
+                Utils.showDialog(PaymentOptionsActivity.this, "Loading…");
+                if (!qrCodeFirstTimeHandel) {
+                    PhonePayQrCodeController phonePayQrCodeController = new PhonePayQrCodeController(getApplicationContext(), PaymentOptionsActivity.this);
+                    phonePayQrCodeController.getPhonePayQrCodeGeneration(scanPay, grandTotalAmount);
+                } else {
+                    qrCodeData(qrCode, scanPay);
+                }
+                upiScan = true;
+                normalScan = false;
             }
         });
         activityPaymentOptionsBinding.cashOnDelivery.setOnClickListener(new View.OnClickListener() {
@@ -202,7 +229,25 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
         activityPaymentOptionsBinding.placeAnOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                placeOrder();
+                if (activityPaymentOptionsBinding.deliveryAddress.getText().toString() != null &&
+                        !activityPaymentOptionsBinding.deliveryAddress.getText().toString().isEmpty()) {
+                    placeOrder();
+                } else {
+                    DeliveryAddressDialog deliveryAddressDialog = new DeliveryAddressDialog(PaymentOptionsActivity.this);
+                    deliveryAddressDialog.setPositiveListener(view1 -> {
+                        if (deliveryAddressDialog.validations()) {
+                            customerDeliveryAddress = deliveryAddressDialog.getAddressData();
+                            if (customerDeliveryAddress != null) {
+                                activityPaymentOptionsBinding.deliveryAddress.setText(customerDeliveryAddress);
+                            }
+                            deliveryAddressDialog.dismiss();
+                        }
+                    });
+                    deliveryAddressDialog.setNegativeListener(view2 -> {
+                        deliveryAddressDialog.dismiss();
+                    });
+                    deliveryAddressDialog.show();
+                }
             }
         });
         paymentTicksUnticksHandlings();
@@ -268,32 +313,42 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
         activityPaymentOptionsBinding.tickPhonePayLay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                scanPay = false;
-                activityPaymentOptionsBinding.tickPhonePay.setImageResource(R.drawable.tick_mark);
-                activityPaymentOptionsBinding.tickPhonePay.setBackgroundResource(R.drawable.round_tick_bg);
-                activityPaymentOptionsBinding.tickPhonePayLay.setBackgroundResource(R.drawable.upi_payment_selected_bg);
-
-                activityPaymentOptionsBinding.tickUpi.setImageResource(0);
-                activityPaymentOptionsBinding.tickBhim.setImageResource(0);
-
-                activityPaymentOptionsBinding.tickUpiLay.setBackgroundResource(R.drawable.upi_payment_unselected_bg);
-                activityPaymentOptionsBinding.tickBhimLay.setBackgroundResource(R.drawable.upi_payment_unselected_bg);
-
-                activityPaymentOptionsBinding.tickUpi.setBackgroundResource(R.drawable.round_untick_bg);
-                activityPaymentOptionsBinding.tickBhim.setBackgroundResource(R.drawable.round_untick_bg);
-
-                Utils.showDialog(PaymentOptionsActivity.this, "Loading…");
-                PhonePayQrCodeController phonePayQrCodeController = new PhonePayQrCodeController(getApplicationContext(), PaymentOptionsActivity.this);
-                phonePayQrCodeController.getPhonePayQrCodeGeneration(scanPay, grandTotalAmount);
+//                scanPay = false;
+//                activityPaymentOptionsBinding.tickPhonePay.setImageResource(R.drawable.tick_mark);
+//                activityPaymentOptionsBinding.tickPhonePay.setBackgroundResource(R.drawable.round_tick_bg);
+//                activityPaymentOptionsBinding.tickPhonePayLay.setBackgroundResource(R.drawable.upi_payment_selected_bg);
+//
+//                activityPaymentOptionsBinding.tickUpi.setImageResource(0);
+//                activityPaymentOptionsBinding.tickBhim.setImageResource(0);
+//
+//                activityPaymentOptionsBinding.tickUpiLay.setBackgroundResource(R.drawable.upi_payment_unselected_bg);
+//                activityPaymentOptionsBinding.tickBhimLay.setBackgroundResource(R.drawable.upi_payment_unselected_bg);
+//
+//                activityPaymentOptionsBinding.tickUpi.setBackgroundResource(R.drawable.round_untick_bg);
+//                activityPaymentOptionsBinding.tickBhim.setBackgroundResource(R.drawable.round_untick_bg);
+//
+//                Utils.showDialog(PaymentOptionsActivity.this, "Loading…");
+//                if (!firstQrCodePhonePay) {
+//                    PhonePayQrCodeController phonePayQrCodeController = new PhonePayQrCodeController(getApplicationContext(), PaymentOptionsActivity.this);
+//                    phonePayQrCodeController.getPhonePayQrCodeGeneration(scanPay, grandTotalAmount);
+//                    firstQrCodePhonePay = true;
+//                }
             }
         });
     }
 
-    PhonePayQrCodeResponse phonePayQrCodeResponse;
+
+    String qrCode;
+    boolean qrCodeFirstTimeHandel;
 
     @Override
     public void onSuccessGetPhonePayQrCodeUpi(PhonePayQrCodeResponse phonePayQrCodeResponse, boolean scanpay) {
-        this.phonePayQrCodeResponse = phonePayQrCodeResponse;
+        qrCodeFirstTimeHandel = true;
+        qrCode = (String) phonePayQrCodeResponse.getQrCode();
+        qrCodeData((String) phonePayQrCodeResponse.getQrCode(), scanpay);
+    }
+
+    private void qrCodeData(String qrcode, boolean scanpay) {
         if (!scanpay) {
             activityPaymentOptionsBinding.idIVQrcode.setVisibility(View.VISIBLE);
             activityPaymentOptionsBinding.qrCodeDisplay.setVisibility(View.GONE);
@@ -324,7 +379,7 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
 
         // setting this dimensions inside our qr code
         // encoder to generate our qr code.
-        qrgEncoder = new QRGEncoder((String) phonePayQrCodeResponse.getQrCode(), null, QRGContents.Type.TEXT, dimen);
+        qrgEncoder = new QRGEncoder((String) qrcode, null, QRGContents.Type.TEXT, dimen);
         try {
             // getting our qrcode in the form of bitmap.
             bitmap = qrgEncoder.encodeAsBitmap();
@@ -355,6 +410,7 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
             Intent intent = new Intent(PaymentOptionsActivity.this, OrderinProgressActivity.class);
             startActivity(intent);
             overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
+            paymentSuccess = false;
         }
     }
 
@@ -363,31 +419,55 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
 
     }
 
-    boolean scanpayData;
 
     @Override
     public void onSuccessPhonepePaymentDetails(PhonePayQrCodeResponse phonePayQrCodeResponse, String transactionId) {
 
         if (phonePayQrCodeResponse.getStatus()) {
-            scanpayData = true;
             Toast.makeText(this, "Payment is successfully done", Toast.LENGTH_SHORT).show();
-            activityPaymentOptionsBinding.placeAnOrderScanpayPay.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    placeOrder();
-                }
-            });
-            activityPaymentOptionsBinding.placeAnOrderPhonePay.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    placeOrder();
-                }
-            });
+//            activityPaymentOptionsBinding.placeAnOrderScanpayPay.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    if (normalScan) {
+//                        placeOrder();
+//                    } else {
+//                        Toast.makeText(PaymentOptionsActivity.this, "Payment is not done", Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//            });
+//            activityPaymentOptionsBinding.placeAnOrderPhonePay.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    if (upiScan) {
+//                        placeOrder();
+//                    } else {
+//                        Toast.makeText(PaymentOptionsActivity.this, "Payment is not done", Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//            });
+
+            placeOrder();
+
         } else {
-            scanpayData = false;
-            PhonePayQrCodeController phonePayQrCodeController = new PhonePayQrCodeController(getApplicationContext(), PaymentOptionsActivity.this);
-            phonePayQrCodeController.getPhonePayPaymentSuccess(transactionId);
+            if (paymentSuccess) {
+                PhonePayQrCodeController phonePayQrCodeController = new PhonePayQrCodeController(getApplicationContext(), PaymentOptionsActivity.this);
+                phonePayQrCodeController.getPhonePayPaymentSuccess(transactionId);
+            }
         }
+    }
+
+    boolean paymentSuccess = true;
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.animator.trans_right_in, R.animator.trans_right_out);
+        paymentSuccess = false;
     }
 
     private void placeOrder() {

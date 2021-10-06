@@ -79,6 +79,11 @@ public class MainActivity extends BaseActivity implements ConnectivityReceiver.C
         if (!ConnectivityReceiver.isConnected()) {
             findViewById(R.id.networkErrorLayout).setVisibility(View.VISIBLE);
         }
+
+//        if (SessionManager.INSTANCE.getAccessDialogHandler().equals("Dismiss")) {
+//            AccesskeyDialog accesskeyDialog=new AccesskeyDialog(MainActivity.this);
+//            accesskeyDialog.dismiss();
+//        }
     }
 
     TextView crash;
@@ -87,10 +92,36 @@ public class MainActivity extends BaseActivity implements ConnectivityReceiver.C
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lang_selection);
+
+        if (SessionManager.INSTANCE.getAccessKey() != null && SessionManager.INSTANCE.getAccessKey().equals("AP@11@2021")) {
+            if (SessionManager.INSTANCE.getStoreId() != null && !SessionManager.INSTANCE.getStoreId().isEmpty()
+                    && SessionManager.INSTANCE.getTerminalId() != null && !SessionManager.INSTANCE.getTerminalId().isEmpty() &&
+                    SessionManager.INSTANCE.getEposUrl() != null && !SessionManager.INSTANCE.getEposUrl().isEmpty()) {
+//                Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
+            } else {
+                Intent intent = new Intent(MainActivity.this, MposStoreSetupActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
+            }
+        } else {
+            AccesskeyDialog accesskeyDialog = new AccesskeyDialog(MainActivity.this);
+            accesskeyDialog.onClickSubmit(v1 -> {
+                accesskeyDialog.listener();
+                if (accesskeyDialog.validate()) {
+                    Intent intent = new Intent(MainActivity.this, MposStoreSetupActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
+                    accesskeyDialog.dismiss();
+                }
+            });
+            accesskeyDialog.show();
+        }
+
+
         initMarque();
 //        FirebaseApp.initializeApp(getApplicationContext());
 //        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
-        SessionManager.INSTANCE.setAccessKey("65536");
+//        SessionManager.INSTANCE.setAccessKey("65536");
         zoomAnim();
 //        crash.setText("crash");
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -166,16 +197,16 @@ public class MainActivity extends BaseActivity implements ConnectivityReceiver.C
 //        urduLangBtn
 
         langContinueLayout.setOnClickListener(view -> {
-            if (SessionManager.INSTANCE.getAccessKey() != null && SessionManager.INSTANCE.getAccessKey().equals("AP@11@2021")) {
+            if (SessionManager.INSTANCE.getStoreId() != null && !SessionManager.INSTANCE.getStoreId().isEmpty()
+                    && SessionManager.INSTANCE.getTerminalId() != null && !SessionManager.INSTANCE.getTerminalId().isEmpty() &&
+                    SessionManager.INSTANCE.getEposUrl() != null && !SessionManager.INSTANCE.getEposUrl().isEmpty()) {
                 Intent intent = new Intent(MainActivity.this, UserLoginActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
             } else {
-                AccesskeyDialog accesskeyDialog = new AccesskeyDialog(MainActivity.this);
-                accesskeyDialog.onClickSubmit(v1 -> {
-                    accesskeyDialog.listener();
-                });
-                accesskeyDialog.show();
+                Intent intent = new Intent(MainActivity.this, MposStoreSetupActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
             }
         });
 

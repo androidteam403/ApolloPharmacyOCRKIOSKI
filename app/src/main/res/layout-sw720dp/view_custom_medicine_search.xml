@@ -181,38 +181,28 @@
                     android:visibility="gone" />
 
                 <LinearLayout
+                    android:id="@+id/search_Addtocart"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
+                    android:layout_gravity="center"
                     android:layout_weight="1.5"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
-                    <FrameLayout
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/inc_button" />
+
+                    <TextView
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <LinearLayout
-                            android:id="@+id/search_Addtocart"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="center"
-                            android:orientation="horizontal">
-
-
-                            <ImageView
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:layout_gravity="center"
-                                android:src="@drawable/inc_button" />
-
-                            <Button
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:background="@null"
-                                android:text="Add to cart"
-                                android:textAlignment="viewStart"
-                                android:textColor="@color/screenbackground" />
-                        </LinearLayout>
-                    </FrameLayout>
+                        android:layout_height="match_parent"
+                        android:text="Add to cart"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center_vertical"
+                        android:background="@color/white"
+                        android:textColor="@color/screenbackground" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

@@ -11,23 +11,24 @@
             android:id="@+id/parent_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="@dimen/ten_dp">
+            android:layout_marginBottom="@dimen/thirty_dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="@dimen/one_hundred_dp"
-                android:layout_marginTop="38dp"
+                android:layout_marginTop="@dimen/seventy_dp"
                 android:layout_marginRight="@dimen/one_hundred_dp"
-                android:layout_marginBottom="@dimen/fifteen_dp"
+                android:layout_marginBottom="@dimen/fifty_dp"
                 android:background="@drawable/custom_dialog_bg">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/five_hundred_fifty_dp"
                     android:layout_marginLeft="@dimen/ten_dp"
+                    android:layout_marginTop="@dimen/ten_dp"
                     android:layout_marginRight="@dimen/ten_dp"
-                    android:layout_marginBottom="@dimen/fifteen_dp"
+                    android:layout_marginBottom="@dimen/seventy_dp"
                     android:orientation="vertical"
                     android:weightSum="1">
 
@@ -35,6 +36,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:layout_marginTop="@dimen/twenty_dp"
                         android:gravity="center"
                         android:text="@string/label_enter_address"
                         android:textColor="@color/colorWhite"
@@ -44,14 +46,16 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_marginTop="@dimen/twenty_dp"
+                        android:layout_marginBottom="@dimen/ten_dp"
                         android:orientation="vertical">
 
                         <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_marginBottom="@dimen/five_dp"
                             card_view:cardBackgroundColor="@android:color/white"
                             card_view:cardCornerRadius="@dimen/twelve_dp"
+                            card_view:cardElevation="@dimen/eight_dp"
                             card_view:cardUseCompatPadding="true">
 
                             <LinearLayout
@@ -72,7 +76,7 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_marginStart="@dimen/fifteen_dp"
-                                        android:layout_marginTop="@dimen/five_dp"
+                                        android:layout_marginTop="@dimen/twenty_dp"
                                         android:layout_marginEnd="@dimen/ten_dp">
 
                                         <com.google.android.material.textfield.TextInputEditText
@@ -93,7 +97,7 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_marginStart="@dimen/fifteen_dp"
-                                        android:layout_marginTop="@dimen/five_dp"
+                                        android:layout_marginTop="@dimen/twenty_dp"
                                         android:layout_marginEnd="@dimen/ten_dp"
                                         app:counterEnabled="true"
                                         app:counterMaxLength="200">
@@ -124,7 +128,7 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_marginStart="@dimen/five_dp"
-                                        android:layout_marginTop="@dimen/five_dp"
+                                        android:layout_marginTop="@dimen/twenty_dp"
                                         android:layout_marginEnd="@dimen/fifteen_dp">
 
                                         <com.google.android.material.textfield.TextInputEditText
@@ -132,8 +136,6 @@
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
                                             android:digits="0123456789"
-                                            android:focusable="false"
-                                            android:focusableInTouchMode="false"
                                             android:gravity="top"
                                             android:hint="@string/Mobile_Number"
                                             android:imeOptions="actionNext"
@@ -149,7 +151,7 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_marginStart="@dimen/five_dp"
-                                        android:layout_marginTop="@dimen/five_dp"
+                                        android:layout_marginTop="@dimen/twenty_dp"
                                         android:layout_marginEnd="@dimen/fifteen_dp">
 
                                         <com.google.android.material.textfield.TextInputEditText
@@ -171,7 +173,7 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_marginStart="@dimen/five_dp"
-                                        android:layout_marginTop="@dimen/five_dp"
+                                        android:layout_marginTop="@dimen/twenty_dp"
                                         android:layout_marginEnd="@dimen/fifteen_dp">
 
                                         <com.google.android.material.textfield.TextInputEditText
@@ -181,7 +183,6 @@
                                             android:focusable="false"
                                             android:gravity="top"
                                             android:hint="@string/label_city_input"
-                                            android:imeOptions="actionNext"
                                             android:inputType="none"
                                             android:padding="@dimen/ten_dp"
                                             android:singleLine="true"
@@ -193,7 +194,7 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_marginStart="@dimen/five_dp"
-                                        android:layout_marginTop="@dimen/five_dp"
+                                        android:layout_marginTop="@dimen/twenty_dp"
                                         android:layout_marginEnd="@dimen/fifteen_dp">
 
                                         <com.google.android.material.textfield.TextInputEditText
@@ -203,7 +204,6 @@
                                             android:focusable="false"
                                             android:gravity="top"
                                             android:hint="@string/label_state_input"
-                                            android:imeOptions="actionDone"
                                             android:inputType="none"
                                             android:padding="@dimen/ten_dp"
                                             android:singleLine="true"
@@ -220,13 +220,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|bottom"
+                android:layout_marginBottom="@dimen/twenty_five_dp"
                 android:orientation="horizontal"
                 android:weightSum="1">
 
                 <LinearLayout
                     android:id="@+id/dialogButtonOK"
                     android:layout_width="@dimen/one_hundred_fifty_dp"
-                    android:layout_height="@dimen/forty_dp"
+                    android:layout_height="@dimen/sixty_dp"
                     android:layout_marginEnd="@dimen/twenty_dp"
                     android:background="@drawable/scan_btn_bg"
                     android:gravity="center"
@@ -238,14 +239,14 @@
                         android:gravity="center"
                         android:text="@string/label_ok"
                         android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/eighteen_sp"
+                        android:textSize="@dimen/twenty_five_sp"
                         android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/dialogButtonNO"
                     android:layout_width="@dimen/one_hundred_fifty_dp"
-                    android:layout_height="@dimen/forty_dp"
+                    android:layout_height="@dimen/sixty_dp"
                     android:layout_marginStart="@dimen/twenty_dp"
                     android:background="@drawable/cancel_btn_bg"
                     android:gravity="center"
@@ -254,19 +255,20 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:gravity="center"
                         android:text="@string/label_cancel_text"
                         android:textAllCaps="false"
                         android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/eighteen_sp"
+                        android:textSize="@dimen/twenty_five_sp"
                         android:textStyle="bold" />
                 </LinearLayout>
             </LinearLayout>
 
             <ImageView
                 android:layout_width="@dimen/one_hundred_dp"
-                android:layout_height="@dimen/forty_dp"
+                android:layout_height="@dimen/sixty_dp"
                 android:layout_gravity="center|top"
-                android:layout_marginTop="@dimen/five_dp"
+                android:layout_marginTop="@dimen/thirty_dp"
                 android:background="@drawable/icon_popup_navigation"
                 android:contentDescription="@string/app_name" />
 

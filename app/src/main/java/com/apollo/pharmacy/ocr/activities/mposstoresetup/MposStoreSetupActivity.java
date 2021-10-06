@@ -11,7 +11,9 @@ import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -27,7 +29,6 @@ import com.apollo.pharmacy.ocr.activities.mposstoresetup.model.StoreListResponse
 import com.apollo.pharmacy.ocr.activities.mposstoresetup.model.StoreSetupModel;
 import com.apollo.pharmacy.ocr.databinding.MposStoreSetupActivityBinding;
 import com.apollo.pharmacy.ocr.model.DeviceRegistrationResponse;
-import com.apollo.pharmacy.ocr.service.MyFirebaseInstanceIDService;
 import com.apollo.pharmacy.ocr.utility.SessionManager;
 import com.apollo.pharmacy.ocr.utility.Utils;
 import com.google.android.gms.common.ConnectionResult;
@@ -74,6 +75,23 @@ public class MposStoreSetupActivity extends BaseActivity implements GoogleApiCli
         mposStoreSetupActivityBinding = DataBindingUtil.setContentView(this, R.layout.mpos_store_setup_activity);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        mposStoreSetupActivityBinding.deletePar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+                SessionManager.INSTANCE.setAccessDialogHandler("Dismiss");
+            }
+        });
+        mposStoreSetupActivityBinding.parent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                View view1 = MposStoreSetupActivity.this.getCurrentFocus();
+                if (view1 != null) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
+            }
+        });
         setUp();
     }
 
@@ -107,6 +125,11 @@ public class MposStoreSetupActivity extends BaseActivity implements GoogleApiCli
             mposStoreSetupActivityBinding.storeLongitude.setText(String.valueOf((int) storeSetupModel.getStoreLongitude()));
 
         }
+        if (SessionManager.INSTANCE.getTerminalId() != null && SessionManager.INSTANCE.getEposUrl() != null) {
+            mposStoreSetupActivityBinding.terminalIdText.setText(SessionManager.INSTANCE.getTerminalId());
+            mposStoreSetupActivityBinding.baseUrl.setText(SessionManager.INSTANCE.getEposUrl());
+        }
+
         setUpGClient();
     }
 
@@ -336,6 +359,8 @@ public class MposStoreSetupActivity extends BaseActivity implements GoogleApiCli
 
             SessionManager.INSTANCE.setStoreId(storeIdNumber);
             SessionManager.INSTANCE.setTerminalId(mposStoreSetupActivityBinding.terminalIdText.getText().toString());
+            SessionManager.INSTANCE.setEposUrl(mposStoreSetupActivityBinding.baseUrl.getText().toString());
+            SessionManager.INSTANCE.setAccessDialogHandler("Dismiss");
         }
     }
 

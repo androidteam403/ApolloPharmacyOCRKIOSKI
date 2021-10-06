@@ -33,7 +33,7 @@ public class PhonePayQrCodeController {
 //        Utils.showDialog(activity, "Loading…");
         ApiInterface api = ApiClient.getApiService();
         PhonePayQrCodeRequest phonePayQrCodeRequest = new PhonePayQrCodeRequest();
-        phonePayQrCodeRequest.setAmount(grandTotal);
+        phonePayQrCodeRequest.setAmount(1.0);
         phonePayQrCodeRequest.setExpiresIn(2000);
         phonePayQrCodeRequest.setMessage("");
         phonePayQrCodeRequest.setOriginalTransactionId("");
@@ -46,7 +46,7 @@ public class PhonePayQrCodeController {
         call.enqueue(new Callback<PhonePayQrCodeResponse>() {
             @Override
             public void onResponse(@NotNull Call<PhonePayQrCodeResponse> call, @NotNull Response<PhonePayQrCodeResponse> response) {
-                if (response.body() != null) {
+                if (response.body() != null&&response.body().getQrCode()!=null) {
                     phonePayQrCodeListener.onSuccessGetPhonePayQrCodeUpi(response.body(),scanpay);
 //                    Utils.dismissDialog();
                     getPhonePayPaymentSuccess(phonePayQrCodeRequest.getTransactionId());
@@ -61,7 +61,7 @@ public class PhonePayQrCodeController {
     }
 
     public void handleOrderPlaceService(Context context, PlaceOrderReqModel placeOrderReqModel) {
-        Utils.showDialog(activity, "Loading…");
+        Utils.showDialog(context, "Loading…");
         ApiInterface apiInterface = ApiClient.getApiService(Constants.Order_Place_With_Prescription_API);
         Call<PlaceOrderResModel> call = apiInterface.PLACE_ORDER_SERVICE_CALL(Constants.New_Order_Place_With_Prescription_Token, placeOrderReqModel);
         call.enqueue(new Callback<PlaceOrderResModel>() {
