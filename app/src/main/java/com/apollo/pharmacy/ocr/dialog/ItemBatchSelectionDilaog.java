@@ -5,8 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import androidx.databinding.DataBindingUtil;
@@ -293,8 +295,11 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
     }
 
     public void show() {
-
-        dialog.show();
+        try {
+            dialog.show();
+        } catch (WindowManager.BadTokenException e) {
+            Log.e("=====WindowManagerBad ", e.toString());
+        }
     }
 
     public void dismiss() {

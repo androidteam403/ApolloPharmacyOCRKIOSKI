@@ -47,6 +47,7 @@ import com.apollo.pharmacy.ocr.adapters.CategoryGridItemAdapter;
 import com.apollo.pharmacy.ocr.adapters.MedicineSearchAdapter;
 import com.apollo.pharmacy.ocr.adapters.ProductsCustomAdapter;
 import com.apollo.pharmacy.ocr.adapters.SubCategoryListAdapter;
+import com.apollo.pharmacy.ocr.controller.HomeActivityController;
 import com.apollo.pharmacy.ocr.controller.MyOffersController;
 import com.apollo.pharmacy.ocr.controller.MySearchController;
 import com.apollo.pharmacy.ocr.dialog.ItemBatchSelectionDilaog;
@@ -79,9 +80,12 @@ import com.apollo.pharmacy.ocr.utility.Constants;
 import com.apollo.pharmacy.ocr.utility.NetworkUtils;
 import com.apollo.pharmacy.ocr.utility.SessionManager;
 import com.apollo.pharmacy.ocr.utility.Utils;
+import com.apollo.pharmacy.ocr.zebrasdk.BaseActivity;
+import com.apollo.pharmacy.ocr.zebrasdk.helper.ScannerAppEngine;
 import com.google.gson.Gson;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.zebra.scannercontrol.FirmwareUpdateEvent;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -102,8 +106,9 @@ import rx.schedulers.Schedulers;
 
 import static com.apollo.pharmacy.ocr.utility.Constants.getContext;
 
-public class MySearchActivity extends AppCompatActivity implements SubCategoryListener, MySearchCallback, MyOffersListener, CartCountListener,
-        ConnectivityReceiver.ConnectivityReceiverListener, KeyboardFragment.OnClickKeyboard, AdapterView.OnItemSelectedListener, CategoryGridItemAdapter.CheckOutData, MedicineSearchAdapter.AddToCartCallBackData {
+public class MySearchActivity extends BaseActivity implements SubCategoryListener, MySearchCallback, MyOffersListener, CartCountListener,
+        ConnectivityReceiver.ConnectivityReceiverListener, KeyboardFragment.OnClickKeyboard, AdapterView.OnItemSelectedListener, CategoryGridItemAdapter.CheckOutData,
+        MedicineSearchAdapter.AddToCartCallBackData, ScannerAppEngine.IScannerAppEngineDevEventsDelegate {
 
     Context context;
     List<OCRToDigitalMedicineResponse> dataList = new ArrayList<>();
@@ -703,6 +708,7 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
     @Override
     protected void onResume() {
         super.onResume();
+        addDevEventsDelegate(this);
         MySearchActivity.this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -1554,7 +1560,7 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
             if (result.getContents() == null) {
                 Toast.makeText(this, "Scan Cancelled", Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(this, result.getContents(), Toast.LENGTH_LONG).show();
+//                Toast.makeText(this, result.getContents(), Toast.LENGTH_LONG).show();
                 mySearchController.searchItemProducts(result.getContents());
             }
         } else {
@@ -1620,17 +1626,18 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
 //                }
 
                 itemBatchSelectionDilaog.dismiss();
-                Intent intent1 = new Intent(MySearchActivity.this, MyCartActivity.class);
-                intent1.putExtra("activityname", "AddMoreActivity");
-                startActivity(intent1);
-                finish();
-                overridePendingTransition(R.animator.trans_right_in, R.animator.trans_right_out);
+//                Intent intent1 = new Intent(MySearchActivity.this, MyCartActivity.class);
+//                intent1.putExtra("activityname", "AddMoreActivity");
+//                startActivity(intent1);
+//                finish();
+//                overridePendingTransition(R.animator.trans_right_in, R.animator.trans_right_out);
             });
             itemBatchSelectionDilaog.setNegativeListener(v -> {
 //                activityHomeBinding.transColorId.setVisibility(View.GONE);
                 itemBatchSelectionDilaog.dismiss();
             });
             itemBatchSelectionDilaog.show();
+            Utils.dismissDialog();
         }
 
     }
@@ -1638,6 +1645,33 @@ public class MySearchActivity extends AppCompatActivity implements SubCategoryLi
     @Override
     public void onFailureBarcodeItemApi(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void scannerBarcodeEvent(byte[] barcodeData, int barcodeType, int scannerID) {
+        String barcode_code = new String(barcodeData);
+        if (barcode_code != null) {
+//            Toast.makeText(this, barcode_code, Toast.LENGTH_LONG).show();
+            Utils.showDialog(this,"Plaese wait...");
+            mySearchController.searchItemProducts(barcode_code);
+        } else {
+            Toast.makeText(this, "Scan Cancelled", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void scannerFirmwareUpdateEvent(FirmwareUpdateEvent firmwareUpdateEvent) {
+
+    }
+
+    @Override
+    public void scannerImageEvent(byte[] imageData) {
+
+    }
+
+    @Override
+    public void scannerVideoEvent(byte[] videoData) {
 
     }
 }

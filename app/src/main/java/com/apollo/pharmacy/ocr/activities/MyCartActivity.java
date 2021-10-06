@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -66,11 +67,14 @@ import com.apollo.pharmacy.ocr.utility.NetworkUtils;
 import com.apollo.pharmacy.ocr.utility.Session;
 import com.apollo.pharmacy.ocr.utility.SessionManager;
 import com.apollo.pharmacy.ocr.utility.Utils;
+import com.apollo.pharmacy.ocr.zebrasdk.BaseActivity;
+import com.apollo.pharmacy.ocr.zebrasdk.helper.ScannerAppEngine;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
+import com.zebra.scannercontrol.FirmwareUpdateEvent;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -80,8 +84,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class MyCartActivity extends AppCompatActivity implements OnItemClickListener, CartCountListener, MyCartListener,
-        ConnectivityReceiver.ConnectivityReceiverListener, CheckPrescriptionListener, UploadBgImageListener {
+public class MyCartActivity extends BaseActivity implements OnItemClickListener, CartCountListener, MyCartListener,
+        ConnectivityReceiver.ConnectivityReceiverListener, CheckPrescriptionListener, UploadBgImageListener, ScannerAppEngine.IScannerAppEngineDevEventsDelegate {
 
     private ImageView checkOutImage;
     private PromotionsAdapter promotionadaptor;
@@ -528,6 +532,7 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
     @Override
     public void onResume() {
         super.onResume();
+        addDevEventsDelegate(this);
         MyCartActivity.this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -750,6 +755,7 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_cart);
+        addDevEventsDelegate(this);
 
         dataList = new ArrayList<>();
         deletedataList = new ArrayList<>();
@@ -1767,5 +1773,25 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
     @Override
     public void onSuccessUploadBgImage() {
         Utils.printMessage(TAG, "Successfully Image Uploaded");
+    }
+
+    @Override
+    public void scannerBarcodeEvent(byte[] barcodeData, int barcodeType, int scannerID) {
+//        Toast.makeText(this, "Item scanned in cart screen", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void scannerFirmwareUpdateEvent(FirmwareUpdateEvent firmwareUpdateEvent) {
+
+    }
+
+    @Override
+    public void scannerImageEvent(byte[] imageData) {
+
+    }
+
+    @Override
+    public void scannerVideoEvent(byte[] videoData) {
+
     }
 }

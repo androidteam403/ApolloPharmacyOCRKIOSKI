@@ -14,6 +14,15 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+
+
     <uses-permission
         android:name="android.permission.WRITE_SECURE_SETTINGS"
         tools:ignore="ProtectedPermissions" />
@@ -106,10 +115,10 @@
         <activity
             android:name=".activities.HomeActivity"
             android:screenOrientation="landscape">
-            <!--            <intent-filter>-->
-            <!--                <action android:name="android.intent.action.MAIN" />-->
-            <!--                <category android:name="android.intent.category.LAUNCHER" />-->
-            <!--            </intent-filter>-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
         </activity>
         <activity
             android:name=".activities.USBCameraActivity"
@@ -182,6 +191,19 @@
             android:screenOrientation="landscape" />
         <activity
             android:name=".activities.barcodescanner.BarcodeScannerActivity"
+            android:screenOrientation="landscape">
+
+        </activity>
+        <activity
+            android:name=".activities.barcodegenerationforconnect.BarcodeGenerationtoConnectActivity"
+            android:screenOrientation="landscape">
+
+        </activity>
+        <activity
+            android:name=".activities.scanproduct.ScanProductActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".activities.scanimage.ScanImageActivity"
             android:screenOrientation="landscape" />
 
         <meta-data

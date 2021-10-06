@@ -2,6 +2,7 @@ package com.apollo.pharmacy.ocr.activities;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -23,19 +24,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.apollo.pharmacy.ocr.R;
-import com.apollo.pharmacy.ocr.activities.barcodescanner.BarcodeScannerActivity;
-import com.apollo.pharmacy.ocr.activities.insertprescriptionnew.InsertPrescriptionActivityNew;
+import com.apollo.pharmacy.ocr.activities.barcodegenerationforconnect.BarcodeGenerationtoConnectActivity;
 import com.apollo.pharmacy.ocr.controller.HomeActivityController;
 import com.apollo.pharmacy.ocr.databinding.ActivityHomeBinding;
 import com.apollo.pharmacy.ocr.dialog.ItemBatchSelectionDilaog;
-import com.apollo.pharmacy.ocr.dialog.ProductScanDialog;
 import com.apollo.pharmacy.ocr.interfaces.HomeListener;
 import com.apollo.pharmacy.ocr.model.CategoryList;
 import com.apollo.pharmacy.ocr.model.Categorylist_Response;
@@ -49,15 +47,18 @@ import com.apollo.pharmacy.ocr.utility.Constants;
 import com.apollo.pharmacy.ocr.utility.NetworkUtils;
 import com.apollo.pharmacy.ocr.utility.SessionManager;
 import com.apollo.pharmacy.ocr.utility.Utils;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
+import com.apollo.pharmacy.ocr.zebrasdk.BaseActivity;
+import com.apollo.pharmacy.ocr.zebrasdk.helper.ScannerAppEngine;
+import com.zebra.scannercontrol.FirmwareUpdateEvent;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeActivity extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener, HomeListener {
+import okhttp3.internal.Util;
+
+public class HomeActivity extends BaseActivity implements ConnectivityReceiver.ConnectivityReceiverListener, HomeListener, ScannerAppEngine.IScannerAppEngineDevEventsDelegate {
 
     private TextView myCartCount, welcomeTxt;
     private boolean isUploadPrescription = false;
@@ -79,6 +80,7 @@ public class HomeActivity extends AppCompatActivity implements ConnectivityRecei
     @Override
     protected void onResume() {
         super.onResume();
+        addDevEventsDelegate(this);
         HomeActivity.this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -101,6 +103,9 @@ public class HomeActivity extends AppCompatActivity implements ConnectivityRecei
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activityHomeBinding = DataBindingUtil.setContentView(this, R.layout.activity_home);
+//        addDevConnectionsDelegate(this);
+        addDevEventsDelegate(this);
+
         ImageView customerCareImg = findViewById(R.id.customer_care_icon);
         LinearLayout customerHelpLayout = findViewById(R.id.customer_help_layout);
         customerHelpLayout.setVisibility(View.VISIBLE);
@@ -367,11 +372,15 @@ public class HomeActivity extends AppCompatActivity implements ConnectivityRecei
 
             //new code
 
-            Utils.dismissDialog();
-            finish();
-            Intent intent = new Intent(this, InsertPrescriptionActivityNew.class);
+//            Utils.dismissDialog();
+//            finish();
+//            Intent intent = new Intent(this, InsertPrescriptionActivityNew.class);
+//            startActivity(intent);
+//            overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
+
+            Intent intent = new Intent(HomeActivity.this, BarcodeGenerationtoConnectActivity.class);
+            intent.putExtra(com.apollo.pharmacy.ocr.zebrasdk.helper.Constants.SCANNER_MODE, "Image");
             startActivity(intent);
-            overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
         });
 
         uploadPrescriptionBtn.setOnClickListener(v -> {
@@ -388,65 +397,76 @@ public class HomeActivity extends AppCompatActivity implements ConnectivityRecei
         activityHomeBinding.scanProducts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view1) {
+                if (Constants.isAnyScannerConnected) {
+                    Utils.showSnackbar(HomeActivity.this, constraintLayout, "Scanner connected already");
+
+//                    Toast.makeText(HomeActivity.this, "Scanner connected already", Toast.LENGTH_SHORT).show();
+                } else {
+                    Intent intent = new Intent(HomeActivity.this, BarcodeGenerationtoConnectActivity.class);
+                    intent.putExtra(com.apollo.pharmacy.ocr.zebrasdk.helper.Constants.SCANNER_MODE, "BARCODE");
+                    startActivityForResult(intent, BarcodeGenerationtoConnectActivity.BARCODE_GENERATIONTO_CONNECT_ACTIVITY);
+                }
+
+
 //                activityHomeBinding.transColorId.setVisibility(View.VISIBLE);
-                ProductScanDialog productScanDialog = new ProductScanDialog(HomeActivity.this);
-
-                productScanDialog.setPositiveListener(view -> {
-                    productScanDialog.dismiss();
-                    new IntentIntegrator(HomeActivity.this).setCaptureActivity(BarcodeScannerActivity.class).initiateScan();
-
-
-//                    ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(HomeActivity.this,null);
-//                    ProductSearch medicine = new ProductSearch();
-//                    medicine.setSku("APC0005");
-//                    medicine.setQty(1);
-//                    medicine.setName("Dolo");
-//                    medicine.setMedicineType("PHAMRA");
-//                    medicine.setPrice("6");
-//                    medicine.setMou("");
+//                ProductScanDialog productScanDialog = new ProductScanDialog(HomeActivity.this);
 //
-//                    itemBatchSelectionDilaog.setUnitIncreaseListener(view3 -> {
-//                        medicine.setQty(medicine.getQty() + 1);
-//                        itemBatchSelectionDilaog.setQtyCount("" + medicine.getQty());
-//                    });
-//                    itemBatchSelectionDilaog.setUnitDecreaseListener(view4 -> {
-//                        if (medicine.getQty() > 1) {
-//                            medicine.setQty(medicine.getQty() - 1);
-//                            itemBatchSelectionDilaog.setQtyCount("" + medicine.getQty());
-//                        }
-//                    });
-//                    itemBatchSelectionDilaog.setPositiveListener(view2 -> {
-//                        activityHomeBinding.transColorId.setVisibility(View.GONE);
-//                        Intent intent = new Intent("cardReceiver");
-//                        intent.putExtra("message", "Addtocart");
-//                        intent.putExtra("product_sku", medicine.getSku());
-//                        intent.putExtra("medicineType", medicine.getMedicineType());
-//                        intent.putExtra("product_name", medicine.getName());
-//                        intent.putExtra("product_quantyty", itemBatchSelectionDilaog.getQtyCount().toString());
-//                        intent.putExtra("product_price", String.valueOf(medicine.getPrice()));
-//                        // intent.putExtra("product_container", product_container);
-//                        intent.putExtra("product_mou", String.valueOf(medicine.getMou()));
-//                        intent.putExtra("product_position", String.valueOf(0));
-//                        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
-//                        itemBatchSelectionDilaog.dismiss();
-//                        Intent intent1 = new Intent(HomeActivity.this, MyCartActivity.class);
-//                        intent.putExtra("activityname", "AddMoreActivity");
-//                        startActivity(intent1);
-//                        finish();
-//                        overridePendingTransition(R.animator.trans_right_in, R.animator.trans_right_out);
-//                    });
-//                    itemBatchSelectionDilaog.setNegativeListener(v -> {
-//                        activityHomeBinding.transColorId.setVisibility(View.GONE);
-//                        itemBatchSelectionDilaog.dismiss();
-//                    });
-//                    itemBatchSelectionDilaog.show();
-
-                });
-                productScanDialog.setNegativeListener(v -> {
-                    activityHomeBinding.transColorId.setVisibility(View.GONE);
-                    productScanDialog.dismiss();
-                });
-                productScanDialog.show();
+//                productScanDialog.setPositiveListener(view -> {
+//                    productScanDialog.dismiss();
+//                    new IntentIntegrator(HomeActivity.this).setCaptureActivity(BarcodeScannerActivity.class).initiateScan();
+//
+//
+////                    ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(HomeActivity.this,null);
+////                    ProductSearch medicine = new ProductSearch();
+////                    medicine.setSku("APC0005");
+////                    medicine.setQty(1);
+////                    medicine.setName("Dolo");
+////                    medicine.setMedicineType("PHAMRA");
+////                    medicine.setPrice("6");
+////                    medicine.setMou("");
+////
+////                    itemBatchSelectionDilaog.setUnitIncreaseListener(view3 -> {
+////                        medicine.setQty(medicine.getQty() + 1);
+////                        itemBatchSelectionDilaog.setQtyCount("" + medicine.getQty());
+////                    });
+////                    itemBatchSelectionDilaog.setUnitDecreaseListener(view4 -> {
+////                        if (medicine.getQty() > 1) {
+////                            medicine.setQty(medicine.getQty() - 1);
+////                            itemBatchSelectionDilaog.setQtyCount("" + medicine.getQty());
+////                        }
+////                    });
+////                    itemBatchSelectionDilaog.setPositiveListener(view2 -> {
+////                        activityHomeBinding.transColorId.setVisibility(View.GONE);
+////                        Intent intent = new Intent("cardReceiver");
+////                        intent.putExtra("message", "Addtocart");
+////                        intent.putExtra("product_sku", medicine.getSku());
+////                        intent.putExtra("medicineType", medicine.getMedicineType());
+////                        intent.putExtra("product_name", medicine.getName());
+////                        intent.putExtra("product_quantyty", itemBatchSelectionDilaog.getQtyCount().toString());
+////                        intent.putExtra("product_price", String.valueOf(medicine.getPrice()));
+////                        // intent.putExtra("product_container", product_container);
+////                        intent.putExtra("product_mou", String.valueOf(medicine.getMou()));
+////                        intent.putExtra("product_position", String.valueOf(0));
+////                        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+////                        itemBatchSelectionDilaog.dismiss();
+////                        Intent intent1 = new Intent(HomeActivity.this, MyCartActivity.class);
+////                        intent.putExtra("activityname", "AddMoreActivity");
+////                        startActivity(intent1);
+////                        finish();
+////                        overridePendingTransition(R.animator.trans_right_in, R.animator.trans_right_out);
+////                    });
+////                    itemBatchSelectionDilaog.setNegativeListener(v -> {
+////                        activityHomeBinding.transColorId.setVisibility(View.GONE);
+////                        itemBatchSelectionDilaog.dismiss();
+////                    });
+////                    itemBatchSelectionDilaog.show();
+//
+//                });
+//                productScanDialog.setNegativeListener(v -> {
+//                    activityHomeBinding.transColorId.setVisibility(View.GONE);
+//                    productScanDialog.dismiss();
+//                });
+//                productScanDialog.show();
             }
         });
     }
@@ -635,17 +655,18 @@ public class HomeActivity extends AppCompatActivity implements ConnectivityRecei
 //                }
 
                 itemBatchSelectionDilaog.dismiss();
-                Intent intent1 = new Intent(HomeActivity.this, MyCartActivity.class);
-                intent1.putExtra("activityname", "AddMoreActivity");
-                startActivity(intent1);
-                finish();
-                overridePendingTransition(R.animator.trans_right_in, R.animator.trans_right_out);
+//                Intent intent1 = new Intent(HomeActivity.this, MyCartActivity.class);
+//                intent1.putExtra("activityname", "AddMoreActivity");
+//                startActivity(intent1);
+//                finish();
+//                overridePendingTransition(R.animator.trans_right_in, R.animator.trans_right_out);
             });
             itemBatchSelectionDilaog.setNegativeListener(v -> {
                 activityHomeBinding.transColorId.setVisibility(View.GONE);
                 itemBatchSelectionDilaog.dismiss();
             });
             itemBatchSelectionDilaog.show();
+            Utils.dismissDialog();
         }
     }
 
@@ -741,23 +762,83 @@ public class HomeActivity extends AppCompatActivity implements ConnectivityRecei
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
         super.onPause();
     }
-
-
+    private int scannerID;
+    private int scannerType;
+    static int picklistMode;
+    static boolean pagerMotorAvailable;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-//check for null
-        if (result != null) {
-            if (result.getContents() == null) {
-                Toast.makeText(this, "Scan Cancelled", Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(this, result.getContents(), Toast.LENGTH_LONG).show();
-                homeActivityController.searchItemProducts(result.getContents());
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == BarcodeGenerationtoConnectActivity.BARCODE_GENERATIONTO_CONNECT_ACTIVITY) {
+                if (data != null) {
+
+                    scannerID = (int) data.getSerializableExtra(com.apollo.pharmacy.ocr.zebrasdk.helper.Constants.SCANNER_ID);
+                    BaseActivity.lastConnectedScannerID = scannerID;
+                    String scannerName =(String) data.getSerializableExtra(com.apollo.pharmacy.ocr.zebrasdk.helper.Constants.SCANNER_NAME);
+                    String address =(String) data.getSerializableExtra(com.apollo.pharmacy.ocr.zebrasdk.helper.Constants.SCANNER_ADDRESS);
+                    scannerType = (int) data.getSerializableExtra(com.apollo.pharmacy.ocr.zebrasdk.helper.Constants.SCANNER_TYPE);
+
+                    picklistMode = (int) data.getSerializableExtra(com.apollo.pharmacy.ocr.zebrasdk.helper.Constants.PICKLIST_MODE);
+
+                    pagerMotorAvailable = (Boolean) data.getSerializableExtra(com.apollo.pharmacy.ocr.zebrasdk.helper.Constants.PAGER_MOTOR_STATUS);
+
+                    Constants.currentScannerId = scannerID;
+                    Constants.currentScannerName = scannerName;
+                    Constants.currentScannerAddress = address;
+
+
+//                    String barcode_code = (String) data.getSerializableExtra("barcode_code");
+//                    if (barcode_code != null) {
+//                        Utils.showDialog(this,"Plaese wait...");
+//                        homeActivityController.searchItemProducts(barcode_code);
+//                    } else {
+//                        Toast.makeText(this, "Scan Cancelled", Toast.LENGTH_LONG).show();
+//                    }
+                }
             }
-        } else {
-// This is important, otherwise the result will not be passed to the fragment
         }
+
+
+//        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+////check for null
+//        if (result != null) {
+//            if (result.getContents() == null) {
+//                Toast.makeText(this, "Scan Cancelled", Toast.LENGTH_LONG).show();
+//            } else {
+//                Toast.makeText(this, result.getContents(), Toast.LENGTH_LONG).show();
+//                homeActivityController.searchItemProducts(result.getContents());
+//            }
+//        } else {
+//// This is important, otherwise the result will not be passed to the fragment
+//        }
+
+    }
+
+    @Override
+    public void scannerBarcodeEvent(byte[] barcodeData, int barcodeType, int scannerID) {
+        String barcode_code = new String(barcodeData);
+        if (barcode_code != null) {
+//            Toast.makeText(this, barcode_code, Toast.LENGTH_LONG).show();
+            Utils.showDialog(this,"Plaese wait...");
+            homeActivityController.searchItemProducts(barcode_code);
+        } else {
+            Toast.makeText(this, "Scan Cancelled", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void scannerFirmwareUpdateEvent(FirmwareUpdateEvent firmwareUpdateEvent) {
+
+    }
+
+    @Override
+    public void scannerImageEvent(byte[] imageData) {
+
+    }
+
+    @Override
+    public void scannerVideoEvent(byte[] videoData) {
 
     }
 }

@@ -9,6 +9,7 @@
 
     <string name="Choose_Your_Language_tamil" translatable="false">மொழியை தேர்ந்தெடுங்கள்</string>
     <string name="Choose_Your_Language_telugu" translatable="false">మీ భాషను ఎంచుకోండి</string>
+    <string name="continue_txt">Continue</string>
 
     <!--Language list-->
     <string name="language_english" translatable="false">English</string>
