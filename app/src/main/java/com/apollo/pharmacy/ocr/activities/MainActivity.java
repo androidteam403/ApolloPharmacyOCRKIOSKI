@@ -162,7 +162,7 @@ public class MainActivity extends BaseActivity implements ConnectivityReceiver.C
         constraint_layout = findViewById(R.id.constraint_layout);
         mainActivityController = new MainActivityController(this);
 
-        SessionManager.INSTANCE.logoutUser();
+//        SessionManager.INSTANCE.logoutUser();
 
         new Handler().postDelayed(() -> onlineMedicineStoreText.setVisibility(View.VISIBLE), 2000);
 
