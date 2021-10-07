@@ -92,6 +92,8 @@ public class MposStoreSetupActivity extends BaseActivity implements GoogleApiCli
                 }
             }
         });
+//        mposStoreSetupActivityBinding.baseUrl.setText("http://online.apollopharmacy.org:51/EPOS/");
+        SessionManager.INSTANCE.setEposUrl("http://online.apollopharmacy.org:51/EPOS/");
         setUp();
     }
 

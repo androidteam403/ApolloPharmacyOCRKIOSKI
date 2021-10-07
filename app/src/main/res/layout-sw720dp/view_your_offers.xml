@@ -4,7 +4,7 @@
     <LinearLayout
         android:id="@+id/products_grid_view_item_container"
         android:layout_width="@dimen/one_hundred_fifty_dp"
-        android:layout_height="@dimen/two_hundred_twenty_dp"
+        android:layout_height="@dimen/one_hundred_fifty_dp"
         android:layout_marginBottom="@dimen/one_dp"
         android:background="@color/colorWhite"
         android:orientation="vertical">

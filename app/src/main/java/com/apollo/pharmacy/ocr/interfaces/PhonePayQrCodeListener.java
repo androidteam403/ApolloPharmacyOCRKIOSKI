@@ -6,7 +6,7 @@ import com.apollo.pharmacy.ocr.model.PlaceOrderResModel;
 public interface PhonePayQrCodeListener {
     void onSuccessGetPhonePayQrCodeUpi(PhonePayQrCodeResponse phonePayQrCodeResponse, boolean scanpay);
 
-    void onSuccessPlaceOrder(PlaceOrderResModel body);
+    void onSuccessPlaceOrderFMCG(PlaceOrderResModel body);
 
     void onFailureService(String string);
 

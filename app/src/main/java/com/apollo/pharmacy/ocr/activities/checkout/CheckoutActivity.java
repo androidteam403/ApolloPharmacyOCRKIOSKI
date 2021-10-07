@@ -16,6 +16,7 @@ import com.apollo.pharmacy.ocr.activities.PaymentOptionsActivity;
 import com.apollo.pharmacy.ocr.databinding.ActivityCheckoutBinding;
 import com.apollo.pharmacy.ocr.dialog.DeliveryAddressDialog;
 import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
+import com.apollo.pharmacy.ocr.utility.SessionManager;
 
 import java.io.Serializable;
 import java.util.List;
@@ -27,12 +28,12 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
     private boolean isFmcgHomeDelivery = false;
 
 
-    public static Intent getStartIntent(Context context, List<OCRToDigitalMedicineResponse> dataList) {
-        Intent intent = new Intent(context, CheckoutActivity.class);
-        intent.putExtra("dataList", (Serializable) dataList);
-        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        return intent;
-    }
+//    public static Intent getStartIntent(Context context, List<OCRToDigitalMedicineResponse> dataList) {
+//        Intent intent = new Intent(context, CheckoutActivity.class);
+//        intent.putExtra("dataList", (Serializable) dataList);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+//        return intent;
+//    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,8 +48,9 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
     double fmcgToatalPass = 0.0;
 
     private void setUp() {
-        if (getIntent() != null) {
-            dataList = (List<OCRToDigitalMedicineResponse>) getIntent().getSerializableExtra("dataList");
+        dataList = SessionManager.INSTANCE.getDataList();
+        if (dataList!= null&&dataList.size()>0) {
+//            dataList = (List<OCRToDigitalMedicineResponse>) getIntent().getSerializableExtra("dataList");
             if (dataList != null && dataList.size() > 0) {
                 int pharmaMedicineCount = 0;
                 int fmcgMedicineCount = 0;
@@ -222,7 +224,27 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
                 startActivity(intent);
                 overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
             } else {
-                Toast.makeText(this, "Please Fill Address Form", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "Please Fill Address Form", Toast.LENGTH_SHORT).show();
+
+                if (address == null) {
+                    DeliveryAddressDialog deliveryAddressDialog = new DeliveryAddressDialog(CheckoutActivity.this);
+                    deliveryAddressDialog.setPositiveListener(view -> {
+                        if (deliveryAddressDialog.validations()) {
+                            address = deliveryAddressDialog.getAddressData();
+                            name = deliveryAddressDialog.getName();
+                            singleAdd = deliveryAddressDialog.getAddress();
+                            pincode = deliveryAddressDialog.getPincode();
+                            city = deliveryAddressDialog.getCity();
+                            state = deliveryAddressDialog.getState();
+                            deliveryAddressDialog.dismiss();
+                        }
+                    });
+                    deliveryAddressDialog.setNegativeListener(view -> {
+                        deliveryAddressDialog.dismiss();
+                    });
+                    deliveryAddressDialog.show();
+                }
+
             }
         } else {
             Intent intent = new Intent(CheckoutActivity.this, PaymentOptionsActivity.class);

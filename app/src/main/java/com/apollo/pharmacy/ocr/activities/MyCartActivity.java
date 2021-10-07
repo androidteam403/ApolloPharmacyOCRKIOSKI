@@ -1004,7 +1004,9 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
 
         checkOutImage.setOnClickListener(arg0 -> {
             if (dataList != null && dataList.size() > 0) {
-                startActivity(CheckoutActivity.getStartIntent(this, dataList));
+//                startActivity(CheckoutActivity.getStartIntent(this, dataList));
+                Intent intent=new Intent(this,CheckoutActivity.class);
+                startActivity(intent);
                 overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
             } else {
                 Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "No items added to cart", Snackbar.LENGTH_SHORT);

@@ -20,8 +20,8 @@ public class ImageManager {
 
     public static final String storageConnectionString = "DefaultEndpointsProtocol=https;"
             //public static final String storageConnectionString = "https://aptestingweb.file.core.windows.net/testing"
-            + "AccountName=aptestingweb;"
-            + "AccountKey=Zj7CmXnxWtfpEYYE0F2Qhugczl4rnAZCs/mqMMaVom5H0d31ji/1+/7xSBAXu6sJvcE6YmhvPgoRyAN+uVcXkg==";
+            + "AccountName=pharmtest;"
+            + "AccountKey=dhJpbROM1e6MzzjAHPXyP52+w1U+cN2DQKnqwc77Uwp6LkIH/9k2hHktS3zpfJPCEQdL2jcqYdANTdEox+Fiww==";
 
     private static CloudBlobContainer getContainer(String uploadImageUrl, String uploadImageKey) throws Exception {
         // Retrieve storage account from connection-string.
@@ -33,7 +33,7 @@ public class ImageManager {
 
         // Get a reference to a container.
         // The container name must be lower case
-        CloudBlobContainer container = blobClient.getContainerReference("images");
+        CloudBlobContainer container = blobClient.getContainerReference("cms");
 
         return container;
     }

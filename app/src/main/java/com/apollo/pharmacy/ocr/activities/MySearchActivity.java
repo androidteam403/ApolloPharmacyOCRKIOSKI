@@ -33,7 +33,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -47,7 +46,6 @@ import com.apollo.pharmacy.ocr.adapters.CategoryGridItemAdapter;
 import com.apollo.pharmacy.ocr.adapters.MedicineSearchAdapter;
 import com.apollo.pharmacy.ocr.adapters.ProductsCustomAdapter;
 import com.apollo.pharmacy.ocr.adapters.SubCategoryListAdapter;
-import com.apollo.pharmacy.ocr.controller.HomeActivityController;
 import com.apollo.pharmacy.ocr.controller.MyOffersController;
 import com.apollo.pharmacy.ocr.controller.MySearchController;
 import com.apollo.pharmacy.ocr.dialog.ItemBatchSelectionDilaog;
@@ -1040,10 +1038,14 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
         if (m != null) {
             for (ItemSearchResponse.Item r : m.getItemList()) {
                 ProductSearch product = new ProductSearch();
-                product.setName(r.getGenericName());
+                product.setName(r.getDescription());
                 product.setSku(r.getArtCode());
                 product.setQty(1);
-                product.setDescription(r.getDescription());
+                if (r.getGenericName() != null && !r.getGenericName().isEmpty()) {
+                    product.setDescription(r.getGenericName());
+                } else {
+                    product.setDescription(r.getManufacture());
+                }
                 product.setCategory(r.getCategory());
                 product.setMedicineType(r.getCategory());
 //                product.setId(r.getId());
@@ -1653,7 +1655,7 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
         String barcode_code = new String(barcodeData);
         if (barcode_code != null) {
 //            Toast.makeText(this, barcode_code, Toast.LENGTH_LONG).show();
-            Utils.showDialog(this,"Plaese wait...");
+            Utils.showDialog(this, "Plaese wait...");
             mySearchController.searchItemProducts(barcode_code);
         } else {
             Toast.makeText(this, "Scan Cancelled", Toast.LENGTH_LONG).show();

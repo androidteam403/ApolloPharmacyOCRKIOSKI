@@ -39,7 +39,11 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
     private double pharmaTotalData = 0.0;
     private List<OCRToDigitalMedicineResponse> dataList;
     private String customerDeliveryAddress, name, singleAdd, pincode, city, state;
-    private double grandTotalAmount = 0.0;
+    private double grandTotalAmountFmcg = 0.0;
+    private double grandTotalAmountPharma = 0.0;
+    private boolean isPharmaOrder;
+    private boolean isFmcgOrder;
+    private boolean isPharmadeliveryType, isFmcgDeliveryType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +54,8 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
         OrderDetailsuiModel orderDetailsuiModel = new OrderDetailsuiModel();
         if (getIntent() != null) {
             pharmaTotalData = (double) getIntent().getDoubleExtra("fmcgTotal", 0.0);
+            isFmcgDeliveryType = getIntent().getBooleanExtra("isPharmaHomeDelivery", false);
+            isPharmadeliveryType = getIntent().getBooleanExtra("isFmcgHomeDelivery", false);
             orderDetailsuiModel.setPharmaHomeDelivery(getIntent().getBooleanExtra("isPharmaHomeDelivery", false));
             orderDetailsuiModel.setFmcgHomeDelivery(getIntent().getBooleanExtra("isFmcgHomeDelivery", false));
             customerDeliveryAddress = (String) getIntent().getStringExtra("customerDeliveryAddress");
@@ -59,6 +65,7 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
             city = (String) getIntent().getStringExtra("city");
             state = (String) getIntent().getStringExtra("state");
         }
+
         if (null != SessionManager.INSTANCE.getDataList())
             this.dataList = SessionManager.INSTANCE.getDataList();
         if (dataList != null && dataList.size() > 0) {
@@ -72,10 +79,12 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
                 if (data.getMedicineType() != null) {
                     if (data.getMedicineType().equals("PHARMA")) {
                         isPharma = true;
+                        isPharmaOrder = true;
                         pharmaMedicineCount++;
                         pharmaTotal = pharmaTotal + (Double.parseDouble(data.getArtprice()) * data.getQty());
                     } else {
                         isFmcg = true;
+                        isFmcgOrder = true;
                         fmcgMedicineCount++;
                         fmcgTotal = fmcgTotal + (Double.parseDouble(data.getArtprice()) * data.getQty());
                     }
@@ -91,9 +100,55 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
             orderDetailsuiModel.setFmcgPharma(isPharma && isFmcg);
             orderDetailsuiModel.setFmcg(isFmcg);
             orderDetailsuiModel.setPharma(isPharma);
-            grandTotalAmount = pharmaTotal + fmcgTotal;
+            grandTotalAmountFmcg = fmcgTotal;
+            grandTotalAmountPharma = pharmaTotal;
             activityPaymentOptionsBinding.setModel(orderDetailsuiModel);
         }
+        if (orderDetailsuiModel.isPharma && !orderDetailsuiModel.isFmcg) {
+            activityPaymentOptionsBinding.paymentHeaderParent.setVisibility(View.GONE);
+            activityPaymentOptionsBinding.confirmOnlyPharmaOrder.setVisibility(View.VISIBLE);
+            activityPaymentOptionsBinding.confirmOnlyPharmaOrder.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+//                    if (activityPaymentOptionsBinding.deliveryAddress.getText().toString() != null &&
+//                            !activityPaymentOptionsBinding.deliveryAddress.getText().toString().isEmpty()) {
+//                    placeOrder();
+
+                    if (isFmcgOrder) {
+                        isFmcgOrder = false;
+                        placeOrderFmcg();
+                    } else {
+                        isPharmaOrder = false;
+                        placeOrderPharma();
+                    }
+
+//                    } else {
+//                        DeliveryAddressDialog deliveryAddressDialog = new DeliveryAddressDialog(PaymentOptionsActivity.this);
+//                        deliveryAddressDialog.setPositiveListener(view1 -> {
+//                            if (deliveryAddressDialog.validations()) {
+//                                customerDeliveryAddress = deliveryAddressDialog.getAddressData();
+//                                if (customerDeliveryAddress != null) {
+//                                    activityPaymentOptionsBinding.deliveryAddress.setText(customerDeliveryAddress);
+//
+//                                    name = deliveryAddressDialog.getName();
+//                                    singleAdd = deliveryAddressDialog.getAddress();
+//                                    pincode = deliveryAddressDialog.getPincode();
+//                                    city = deliveryAddressDialog.getCity();
+//                                    state = deliveryAddressDialog.getState();
+//
+//                                }
+//                                deliveryAddressDialog.dismiss();
+//                            }
+//                        });
+//                        deliveryAddressDialog.setNegativeListener(view2 -> {
+//                            deliveryAddressDialog.dismiss();
+//                        });
+//                        deliveryAddressDialog.show();
+//                    }
+                }
+            });
+        }
+
         activityPaymentOptionsBinding.pharmaTotal.setText(getResources().getString(R.string.rupee) + String.valueOf(pharmaTotalData));
 
         unselectedBgClors();
@@ -102,7 +157,7 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
         activityPaymentOptionsBinding.scanToPayInfoLay.setVisibility(View.VISIBLE);
         Utils.showDialog(PaymentOptionsActivity.this, "Loading…");
         PhonePayQrCodeController phonePayQrCodeController = new PhonePayQrCodeController(getApplicationContext(), PaymentOptionsActivity.this);
-        phonePayQrCodeController.getPhonePayQrCodeGeneration(scanPay, grandTotalAmount);
+        phonePayQrCodeController.getPhonePayQrCodeGeneration(scanPay, grandTotalAmountFmcg);
 
         activityPaymentOptionsBinding.changeDeliveryAddress.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,6 +171,13 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
                         customerDeliveryAddress = deliveryAddressDialog.getAddressData();
                         if (customerDeliveryAddress != null) {
                             activityPaymentOptionsBinding.deliveryAddress.setText(customerDeliveryAddress);
+
+                            name = deliveryAddressDialog.getName();
+                            singleAdd = deliveryAddressDialog.getAddress();
+                            pincode = deliveryAddressDialog.getPincode();
+                            city = deliveryAddressDialog.getCity();
+                            state = deliveryAddressDialog.getState();
+
                         }
                         deliveryAddressDialog.dismiss();
                     }
@@ -131,10 +193,6 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
     }
 
     boolean scanPay = true;
-    boolean upiScan;
-    boolean normalScan;
-
-    boolean firstQrCodePhonePay;
 
     private void listeners() {
         activityPaymentOptionsBinding.scanToPay.setOnClickListener(new View.OnClickListener() {
@@ -148,12 +206,10 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
                 Utils.showDialog(PaymentOptionsActivity.this, "Loading…");
                 if (!qrCodeFirstTimeHandel) {
                     PhonePayQrCodeController phonePayQrCodeController = new PhonePayQrCodeController(getApplicationContext(), PaymentOptionsActivity.this);
-                    phonePayQrCodeController.getPhonePayQrCodeGeneration(scanPay, grandTotalAmount);
+                    phonePayQrCodeController.getPhonePayQrCodeGeneration(scanPay, grandTotalAmountFmcg);
                 } else {
                     qrCodeData(qrCode, scanPay);
                 }
-                normalScan = true;
-                upiScan = false;
             }
         });
         activityPaymentOptionsBinding.recievePaymentSms.setOnClickListener(new View.OnClickListener() {
@@ -168,6 +224,7 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
         activityPaymentOptionsBinding.upi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                scanPay = false;
                 unselectedBgClors();
                 activityPaymentOptionsBinding.upi.setBackgroundResource(R.drawable.ic_payment_methods_selectebg);
                 PaymentInfoLayoutsHandlings();
@@ -176,16 +233,13 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
                 activityPaymentOptionsBinding.tickPhonePay.setImageResource(0);
                 activityPaymentOptionsBinding.tickPhonePayLay.setBackgroundResource(R.drawable.upi_payment_unselected_bg);
                 activityPaymentOptionsBinding.tickPhonePay.setBackgroundResource(R.drawable.round_untick_bg);
-                scanPay = false;
                 Utils.showDialog(PaymentOptionsActivity.this, "Loading…");
                 if (!qrCodeFirstTimeHandel) {
                     PhonePayQrCodeController phonePayQrCodeController = new PhonePayQrCodeController(getApplicationContext(), PaymentOptionsActivity.this);
-                    phonePayQrCodeController.getPhonePayQrCodeGeneration(scanPay, grandTotalAmount);
+                    phonePayQrCodeController.getPhonePayQrCodeGeneration(scanPay, grandTotalAmountFmcg);
                 } else {
                     qrCodeData(qrCode, scanPay);
                 }
-                upiScan = true;
-                normalScan = false;
             }
         });
         activityPaymentOptionsBinding.cashOnDelivery.setOnClickListener(new View.OnClickListener() {
@@ -231,7 +285,16 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
             public void onClick(View v) {
                 if (activityPaymentOptionsBinding.deliveryAddress.getText().toString() != null &&
                         !activityPaymentOptionsBinding.deliveryAddress.getText().toString().isEmpty()) {
-                    placeOrder();
+//                    placeOrder();
+
+                    if (isFmcgOrder) {
+                        isFmcgOrder = false;
+                        placeOrderFmcg();
+                    } else {
+                        isPharmaOrder = false;
+                        placeOrderPharma();
+                    }
+
                 } else {
                     DeliveryAddressDialog deliveryAddressDialog = new DeliveryAddressDialog(PaymentOptionsActivity.this);
                     deliveryAddressDialog.setPositiveListener(view1 -> {
@@ -239,6 +302,13 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
                             customerDeliveryAddress = deliveryAddressDialog.getAddressData();
                             if (customerDeliveryAddress != null) {
                                 activityPaymentOptionsBinding.deliveryAddress.setText(customerDeliveryAddress);
+
+                                name = deliveryAddressDialog.getName();
+                                singleAdd = deliveryAddressDialog.getAddress();
+                                pincode = deliveryAddressDialog.getPincode();
+                                city = deliveryAddressDialog.getCity();
+                                state = deliveryAddressDialog.getState();
+
                             }
                             deliveryAddressDialog.dismiss();
                         }
@@ -250,6 +320,8 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
                 }
             }
         });
+
+
         paymentTicksUnticksHandlings();
     }
 
@@ -404,13 +476,46 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
         }
     }
 
+    String fmcgOrderId;
+    String pharmaOrderId;
+    boolean onlineAmountPaid;
+
     @Override
-    public void onSuccessPlaceOrder(PlaceOrderResModel body) {
+    public void onSuccessPlaceOrderFMCG(PlaceOrderResModel body) {
         if (body.getOrdersResult().getStatus()) {
-            Intent intent = new Intent(PaymentOptionsActivity.this, OrderinProgressActivity.class);
-            startActivity(intent);
-            overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
-            paymentSuccess = false;
+            if (!isFmcgOrder && !isPharmaOrder) {
+                if (pharmaOrderId == null) {
+                    pharmaOrderId = body.getOrdersResult().getOrderNo().toString();
+                    paymentSuccess = false;
+                    Utils.dismissDialog();
+                }
+                if (fmcgOrderId == null) {
+                    fmcgOrderId = body.getOrdersResult().getOrderNo().toString();
+                    paymentSuccess = false;
+                    Utils.dismissDialog();
+                }
+            }
+            if (isFmcgOrder) {
+                pharmaOrderId = body.getOrdersResult().getOrderNo().toString();
+                placeOrderFmcg();
+                isFmcgOrder = false;
+            } else if (isPharmaOrder) {
+                fmcgOrderId = body.getOrdersResult().getOrderNo().toString();
+                placeOrderPharma();
+                isPharmaOrder = false;
+            }
+            if (!isFmcgOrder && !isPharmaOrder) {
+                if (pharmaOrderId != null && fmcgOrderId != null) {
+                    Intent intent = new Intent(PaymentOptionsActivity.this, OrderinProgressActivity.class);
+                    intent.putExtra("PharmaOrderPlacedData", pharmaOrderId);
+                    intent.putExtra("FmcgOrderPlacedData", fmcgOrderId);
+                    intent.putExtra("OnlineAmountPaid", onlineAmountPaid);
+                    startActivity(intent);
+                    overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
+                }
+            }
+        } else {
+            Toast.makeText(this, "Order is not Placed", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -425,29 +530,14 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
 
         if (phonePayQrCodeResponse.getStatus()) {
             Toast.makeText(this, "Payment is successfully done", Toast.LENGTH_SHORT).show();
-//            activityPaymentOptionsBinding.placeAnOrderScanpayPay.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    if (normalScan) {
-//                        placeOrder();
-//                    } else {
-//                        Toast.makeText(PaymentOptionsActivity.this, "Payment is not done", Toast.LENGTH_SHORT).show();
-//                    }
-//                }
-//            });
-//            activityPaymentOptionsBinding.placeAnOrderPhonePay.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    if (upiScan) {
-//                        placeOrder();
-//                    } else {
-//                        Toast.makeText(PaymentOptionsActivity.this, "Payment is not done", Toast.LENGTH_SHORT).show();
-//                    }
-//                }
-//            });
-
-            placeOrder();
-
+            onlineAmountPaid = true;
+            if (isFmcgOrder) {
+                isFmcgOrder = false;
+                placeOrderFmcg();
+            } else {
+                isPharmaOrder = false;
+                placeOrderPharma();
+            }
         } else {
             if (paymentSuccess) {
                 PhonePayQrCodeController phonePayQrCodeController = new PhonePayQrCodeController(getApplicationContext(), PaymentOptionsActivity.this);
@@ -470,23 +560,41 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
         paymentSuccess = false;
     }
 
-    private void placeOrder() {
+    private boolean loader;
+
+    private void placeOrderFmcg() {
         String userSelectedAdd = "";
         String selectedStateCode = "";
         UserAddress userAddress = new UserAddress();
-        userAddress.setMappingMobile(SessionManager.INSTANCE.getMobilenumber());
-        userAddress.setName("User");
-        userAddress.setMobile(SessionManager.INSTANCE.getMobilenumber());
-        userAddress.setAddress1("Hyderabad");
-        userAddress.setAddress2("");
-        userAddress.setAddress3("");
-        userAddress.setCity("Hyderabad");
-        userAddress.setState("Telangana");
-        userAddress.setIsDefault(1);
-        userAddress.setAddressType("");
-        userAddress.setIsDeleted(0);
-        userAddress.setPincode("500032");
-        userAddress.setItemSelected(true);
+        if (isFmcgDeliveryType) {
+            userAddress.setMappingMobile(SessionManager.INSTANCE.getMobilenumber());
+            userAddress.setName(name);
+            userAddress.setMobile(SessionManager.INSTANCE.getMobilenumber());
+            userAddress.setAddress1(singleAdd);
+            userAddress.setAddress2("");
+            userAddress.setAddress3("");
+            userAddress.setCity(city);
+            userAddress.setState(state);
+            userAddress.setIsDefault(1);
+            userAddress.setAddressType("");
+            userAddress.setIsDeleted(0);
+            userAddress.setPincode(pincode);
+            userAddress.setItemSelected(true);
+        } else {
+            userAddress.setMappingMobile(SessionManager.INSTANCE.getMobilenumber());
+            userAddress.setName("Guru Selvaraj");
+            userAddress.setMobile(SessionManager.INSTANCE.getMobilenumber());
+            userAddress.setAddress1("109 Nehru Nagar, Moolaikaraipatti, Tirunelveli, Tamilnadu");
+            userAddress.setAddress2("");
+            userAddress.setAddress3("");
+            userAddress.setCity("Tirunelveli");
+            userAddress.setState("Telangana");
+            userAddress.setIsDefault(1);
+            userAddress.setAddressType("");
+            userAddress.setIsDeleted(0);
+            userAddress.setPincode("500033");
+            userAddress.setItemSelected(true);
+        }
 //        UserAddress userAddress = SessionManager.INSTANCE.getUseraddress();
         if (null != userAddress.getAddress1() && userAddress.getAddress1().length() > 0) {
             String address = userAddress.getAddress1().toUpperCase() + ", " + userAddress.getCity().toUpperCase() + ", " + userAddress.getState().toUpperCase();
@@ -513,7 +621,144 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
         PlaceOrderReqModel.TpdetailsEntity tpDetailsEntity = new PlaceOrderReqModel.TpdetailsEntity();
         tpDetailsEntity.setOrderId(Utils.getTransactionGeneratedId());
         tpDetailsEntity.setShopId("16001");
-        tpDetailsEntity.setShippingMethod("HOME DELIVERY");
+        if (isFmcgDeliveryType) {
+            tpDetailsEntity.setShippingMethod("HOME DELIVERY");
+        } else {
+            tpDetailsEntity.setShippingMethod("Pay here and Carry");
+        }
+        if (onlineAmountPaid) {
+            tpDetailsEntity.setPaymentMethod("Online Payment");
+        } else {
+            tpDetailsEntity.setPaymentMethod("COD");
+        }
+        tpDetailsEntity.setVendorName(SessionManager.INSTANCE.getKioskSetupResponse().getKIOSK_ID());
+        PlaceOrderReqModel.CustomerDetailsEntity customerDetailsEntity = new PlaceOrderReqModel.CustomerDetailsEntity();
+        customerDetailsEntity.setMobileNo(SessionManager.INSTANCE.getMobilenumber());
+        customerDetailsEntity.setComm_addr(userSelectedAdd);
+        customerDetailsEntity.setDel_addr(userSelectedAdd);
+        customerDetailsEntity.setFirstName(userAddress.getName());
+        customerDetailsEntity.setLastName(userAddress.getName());
+        customerDetailsEntity.setUHID("");
+        customerDetailsEntity.setCity(stateName);
+        customerDetailsEntity.setPostCode(userAddress.getPincode());
+        customerDetailsEntity.setMailId("");
+        customerDetailsEntity.setAge(25);
+        customerDetailsEntity.setCardNo("");
+        customerDetailsEntity.setPatientName(userAddress.getName());
+        tpDetailsEntity.setCustomerDetails(customerDetailsEntity);
+
+        PlaceOrderReqModel.PaymentDetailsEntity paymentDetailsEntity = new PlaceOrderReqModel.PaymentDetailsEntity();
+        paymentDetailsEntity.setTotalAmount(String.valueOf(grandTotalAmountFmcg));
+        if (onlineAmountPaid) {
+            paymentDetailsEntity.setPaymentSource("Online Payment");
+        } else {
+            paymentDetailsEntity.setPaymentSource("COD");
+        }
+        paymentDetailsEntity.setPaymentStatus("");
+        paymentDetailsEntity.setPaymentOrderId("");
+        tpDetailsEntity.setPaymentDetails(paymentDetailsEntity);
+
+        ArrayList<PlaceOrderReqModel.ItemDetailsEntity> itemDetailsArr = new ArrayList<>();
+        for (int i = 0; i < SessionManager.INSTANCE.getDataList().size(); i++) {
+            PlaceOrderReqModel.ItemDetailsEntity itemDetailsEntity = new PlaceOrderReqModel.ItemDetailsEntity();
+            if (SessionManager.INSTANCE.getDataList().get(i).getMedicineType().equals("FMCG")) {
+                itemDetailsEntity.setItemID(SessionManager.INSTANCE.getDataList().get(i).getArtCode());
+                itemDetailsEntity.setItemName(SessionManager.INSTANCE.getDataList().get(i).getArtName());
+                itemDetailsEntity.setMOU(0);
+                itemDetailsEntity.setPack("");
+                itemDetailsEntity.setQty(SessionManager.INSTANCE.getDataList().get(i).getQty());
+                itemDetailsEntity.setPrice(Double.parseDouble(SessionManager.INSTANCE.getDataList().get(i).getArtprice()));
+                itemDetailsEntity.setStatus(true);
+                itemDetailsArr.add(itemDetailsEntity);
+            }
+        }
+        tpDetailsEntity.setItemDetails(itemDetailsArr);
+        tpDetailsEntity.setDotorName("Apollo");
+        tpDetailsEntity.setStateCode(selectedStateCode);
+        tpDetailsEntity.setTAT("");
+        tpDetailsEntity.setUserId(SessionManager.INSTANCE.getKioskSetupResponse().getKIOSK_ID());
+        tpDetailsEntity.setOrderType("fmcg");
+        tpDetailsEntity.setCouponCode("MED10");
+        tpDetailsEntity.setOrderDate(Utils.getOrderedID());
+        tpDetailsEntity.setRequestType("NONCART");
+        ArrayList<PlaceOrderReqModel.PrescUrlEntity> prescEntityArray = new ArrayList<>();
+        PlaceOrderReqModel.PrescUrlEntity pue = new PlaceOrderReqModel.PrescUrlEntity();
+        pue.setUrl("http://172.16.2.251:8033/ApolloKMD/apolloMedBuddy/Medibuddy/WalletCheck");
+        prescEntityArray.add(pue);
+        tpDetailsEntity.setPrescUrl(prescEntityArray);
+        placeOrderReqModel.setTpdetails(tpDetailsEntity);
+        PhonePayQrCodeController phonePayQrCodeController = new PhonePayQrCodeController(getApplicationContext(), PaymentOptionsActivity.this);
+        if (!loader) {
+            loader = true;
+            Utils.showDialog(PaymentOptionsActivity.this, "Loading…");
+        }
+        phonePayQrCodeController.handleOrderPlaceService(PaymentOptionsActivity.this, placeOrderReqModel);
+    }
+
+    private void placeOrderPharma() {
+        String userSelectedAdd = "";
+        String selectedStateCode = "";
+        UserAddress userAddress = new UserAddress();
+        if (isPharmadeliveryType) {
+            userAddress.setMappingMobile(SessionManager.INSTANCE.getMobilenumber());
+            userAddress.setName(name);
+            userAddress.setMobile(SessionManager.INSTANCE.getMobilenumber());
+            userAddress.setAddress1(singleAdd);
+            userAddress.setAddress2("");
+            userAddress.setAddress3("");
+            userAddress.setCity(city);
+            userAddress.setState(state);
+            userAddress.setIsDefault(1);
+            userAddress.setAddressType("");
+            userAddress.setIsDeleted(0);
+            userAddress.setPincode(pincode);
+            userAddress.setItemSelected(true);
+        } else {
+            userAddress.setMappingMobile(SessionManager.INSTANCE.getMobilenumber());
+            userAddress.setName("Guru Selvaraj");
+            userAddress.setMobile(SessionManager.INSTANCE.getMobilenumber());
+            userAddress.setAddress1("109 Nehru Nagar, Moolaikaraipatti, Tirunelveli, Tamilnadu");
+            userAddress.setAddress2("");
+            userAddress.setAddress3("");
+            userAddress.setCity("Tirunelveli");
+            userAddress.setState("Telangana");
+            userAddress.setIsDefault(1);
+            userAddress.setAddressType("");
+            userAddress.setIsDeleted(0);
+            userAddress.setPincode("500033");
+            userAddress.setItemSelected(true);
+        }
+//        UserAddress userAddress = SessionManager.INSTANCE.getUseraddress();
+        if (null != userAddress.getAddress1() && userAddress.getAddress1().length() > 0) {
+            String address = userAddress.getAddress1().toUpperCase() + ", " + userAddress.getCity().toUpperCase() + ", " + userAddress.getState().toUpperCase();
+            address = address.replace("null", "");
+            userSelectedAdd = address;
+        } else {
+            if (null != userAddress.getCity() && null != userAddress.getState()) {
+                String address = userAddress.getCity().toUpperCase() + ", " + userAddress.getState().toUpperCase();
+                address = address.replace("null", "");
+                userSelectedAdd = address;
+            }
+        }
+
+
+        String stateName = Utils.removeAllDigit(userAddress.getState().trim());
+        for (StateCodes codes : Utils.getStoreListFromAssets(PaymentOptionsActivity.this)) {
+            String codestate_name = codes.getName().trim();
+            if (codestate_name.equalsIgnoreCase(stateName)) {
+                selectedStateCode = codes.getCode();
+            }
+        }
+
+        PlaceOrderReqModel placeOrderReqModel = new PlaceOrderReqModel();
+        PlaceOrderReqModel.TpdetailsEntity tpDetailsEntity = new PlaceOrderReqModel.TpdetailsEntity();
+        tpDetailsEntity.setOrderId(Utils.getTransactionGeneratedId());
+        tpDetailsEntity.setShopId("16001");
+        if (isPharmadeliveryType) {
+            tpDetailsEntity.setShippingMethod("HOME DELIVERY");
+        } else {
+            tpDetailsEntity.setShippingMethod("Pay and collect at counter");
+        }
         tpDetailsEntity.setPaymentMethod("COD");
         tpDetailsEntity.setVendorName(SessionManager.INSTANCE.getKioskSetupResponse().getKIOSK_ID());
         PlaceOrderReqModel.CustomerDetailsEntity customerDetailsEntity = new PlaceOrderReqModel.CustomerDetailsEntity();
@@ -532,13 +777,26 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
         tpDetailsEntity.setCustomerDetails(customerDetailsEntity);
 
         PlaceOrderReqModel.PaymentDetailsEntity paymentDetailsEntity = new PlaceOrderReqModel.PaymentDetailsEntity();
-        paymentDetailsEntity.setTotalAmount("0");
+        paymentDetailsEntity.setTotalAmount(String.valueOf(grandTotalAmountPharma));
         paymentDetailsEntity.setPaymentSource("COD");
         paymentDetailsEntity.setPaymentStatus("");
         paymentDetailsEntity.setPaymentOrderId("");
         tpDetailsEntity.setPaymentDetails(paymentDetailsEntity);
 
         ArrayList<PlaceOrderReqModel.ItemDetailsEntity> itemDetailsArr = new ArrayList<>();
+        for (int i = 0; i < SessionManager.INSTANCE.getDataList().size(); i++) {
+            PlaceOrderReqModel.ItemDetailsEntity itemDetailsEntity = new PlaceOrderReqModel.ItemDetailsEntity();
+            if (SessionManager.INSTANCE.getDataList().get(i).getMedicineType().equals("PHARMA")) {
+                itemDetailsEntity.setItemID(SessionManager.INSTANCE.getDataList().get(i).getArtCode());
+                itemDetailsEntity.setItemName(SessionManager.INSTANCE.getDataList().get(i).getArtName());
+                itemDetailsEntity.setMOU(0);
+                itemDetailsEntity.setPack("");
+                itemDetailsEntity.setQty(SessionManager.INSTANCE.getDataList().get(i).getQty());
+                itemDetailsEntity.setPrice(Double.parseDouble(SessionManager.INSTANCE.getDataList().get(i).getArtprice()));
+                itemDetailsEntity.setStatus(true);
+                itemDetailsArr.add(itemDetailsEntity);
+            }
+        }
         tpDetailsEntity.setItemDetails(itemDetailsArr);
         tpDetailsEntity.setDotorName("Apollo");
         tpDetailsEntity.setStateCode(selectedStateCode);
@@ -555,6 +813,10 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
         tpDetailsEntity.setPrescUrl(prescEntityArray);
         placeOrderReqModel.setTpdetails(tpDetailsEntity);
         PhonePayQrCodeController phonePayQrCodeController = new PhonePayQrCodeController(getApplicationContext(), PaymentOptionsActivity.this);
+        if (!loader) {
+            loader = true;
+            Utils.showDialog(PaymentOptionsActivity.this, "Loading…");
+        }
         phonePayQrCodeController.handleOrderPlaceService(PaymentOptionsActivity.this, placeOrderReqModel);
     }
 

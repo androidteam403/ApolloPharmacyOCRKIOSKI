@@ -21,6 +21,7 @@ import com.apollo.pharmacy.ocr.network.ApiInterface;
 import com.apollo.pharmacy.ocr.network.CallbackWithRetry;
 import com.apollo.pharmacy.ocr.utility.ApplicationConstant;
 import com.apollo.pharmacy.ocr.utility.Constants;
+import com.apollo.pharmacy.ocr.utility.SessionManager;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -208,7 +209,7 @@ public class MyOffersController {
     }
 
     public void searchItemProducts(String item) {
-        ApiInterface apiInterface = ApiClient.getApiService();
+        ApiInterface apiInterface = ApiClient.getApiServiceMposBaseUrl(SessionManager.INSTANCE.getEposUrl());
         ItemSearchRequest itemSearchRequest = new ItemSearchRequest();
         itemSearchRequest.setCorpCode("0");
         itemSearchRequest.setIsGeneric(false);
