@@ -36,6 +36,7 @@ import com.apollo.pharmacy.ocr.interfaces.MyCartListener;
 import com.apollo.pharmacy.ocr.model.CustomerData;
 import com.apollo.pharmacy.ocr.model.GetImageRes;
 import com.apollo.pharmacy.ocr.model.GetProductListResponse;
+import com.apollo.pharmacy.ocr.model.ItemSearchResponse;
 import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
 import com.apollo.pharmacy.ocr.model.PortFolioModel;
 import com.apollo.pharmacy.ocr.model.Product;
@@ -534,6 +535,16 @@ public class MyProfileActivity extends AppCompatActivity implements MyCartListen
 
     @Override
     public void onSearchFailure(String message) {
+
+    }
+
+    @Override
+    public void onSuccessBarcodeItemApi(ItemSearchResponse itemSearchResponse) {
+
+    }
+
+    @Override
+    public void onFailureBarcodeItemApi(String message) {
 
     }
 

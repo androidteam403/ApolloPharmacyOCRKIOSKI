@@ -450,10 +450,11 @@
     <string name="label_device_registration" translatable="false">Device Registration</string>
     <string name="label_loading" translatable="false">Loading…</string>
 
-<string name="label_out_of_stock" translatable="false">Product Out Of Stock</string>
-    <string name="label_please_enter_valid_key">Please enter valid key</string>
-    <string name="label_submit">Submit</string>
-    <string name="label_please_login_with_access_key">Please Login with access key</string>
+    <string name="label_out_of_stock" translatable="false">Product Out Of Stock</string>
+    <string name="label_please_enter_valid_key" translatable="false">Please enter valid key</string>
+    <string name="label_submit" translatable="false">Submit</string>
+    <string name="label_please_login_with_access_key" translatable="false">Please Login with access key</string>
+    <string name="label_about_phone_click_here" translatable="false">About phone (<font color="#0000CC">Click here</font>).</string>
 
 
 </resources>

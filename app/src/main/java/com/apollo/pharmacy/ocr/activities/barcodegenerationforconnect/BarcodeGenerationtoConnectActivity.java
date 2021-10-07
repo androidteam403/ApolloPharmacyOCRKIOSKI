@@ -5,11 +5,13 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Point;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -34,7 +36,6 @@ import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 
 import com.apollo.pharmacy.ocr.R;
-import com.apollo.pharmacy.ocr.activities.scanimage.ScanImageActivity;
 import com.apollo.pharmacy.ocr.activities.scanproduct.ScanProductActivity;
 import com.apollo.pharmacy.ocr.databinding.ActivityBarcodeGenerationtoConnectBinding;
 import com.apollo.pharmacy.ocr.utility.Constants;
@@ -50,6 +51,10 @@ import org.xmlpull.v1.XmlPullParser;
 
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Objects;
+
+
+import dmax.dialog.SpotsDialog;
 
 import static com.apollo.pharmacy.ocr.zebrasdk.helper.Constants.PREFS_NAME;
 import static com.apollo.pharmacy.ocr.zebrasdk.helper.Constants.PREF_DONT_SHOW_INSTRUCTIONS;
@@ -68,15 +73,15 @@ public class BarcodeGenerationtoConnectActivity extends BaseActivity implements 
     private static final int MAX_ALPHANUMERIC_CHARACTERS = 12;
     private static final int MAX_BLUETOOTH_ADDRESS_CHARACTERS = 17;
     public static final String BLUETOOTH_ADDRESS_VALIDATOR = "^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         barcodeGenerationtoConnectBinding = DataBindingUtil.setContentView(this, R.layout.activity_barcode_generationto_connect);
-
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         if (getIntent() != null) {
             scannerMode = getIntent().getStringExtra(com.apollo.pharmacy.ocr.zebrasdk.helper.Constants.SCANNER_MODE);
         }
+
         //Disable bluetooth
         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (!mBluetoothAdapter.isEnabled()) {
@@ -92,6 +97,12 @@ public class BarcodeGenerationtoConnectActivity extends BaseActivity implements 
         } else {
             initialize();
         }
+        barcodeGenerationtoConnectBinding.backpressIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     private void initialize() {
@@ -169,6 +180,7 @@ public class BarcodeGenerationtoConnectActivity extends BaseActivity implements 
      */
     @Override
     public boolean scannerHasConnected(int scannerID) {
+//        Utils.showDialog(this,"Connecting to device...");
         Snackbar.make(findViewById(android.R.id.content), "Scanner connected", Snackbar.LENGTH_SHORT).show();
 
 //        SsaSetSymbologyActivity.resetScanSpeedAnalyticSettings();
@@ -207,7 +219,7 @@ public class BarcodeGenerationtoConnectActivity extends BaseActivity implements 
                 Constants.currentConnectedScannerID = scannerID;
                 Constants.currentConnectedScanner = scannerInfo;
                 Constants.lastConnectedScanner = Constants.currentConnectedScanner;
-                setResult(Activity.RESULT_OK,intent);
+                setResult(Activity.RESULT_OK, intent);
                 finish();
 //                Utils.dismissDialog();
                 break;
@@ -335,12 +347,16 @@ public class BarcodeGenerationtoConnectActivity extends BaseActivity implements 
             if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 x = width / 2;
                 y = x / 3;
+                x = 600;
+                y = 200;
+                layoutParams = new LinearLayout.LayoutParams(600, 200);
             } else {
                 x = width * 2 / 3;
                 y = x / 3;
             }
         }
         barCodeView.setSize(x, y);
+        barCodeView.setBackground(getResources().getDrawable(R.drawable.activity_theme_bg));
         llBarcode.addView(barCodeView, layoutParams);
     }
 
@@ -393,8 +409,7 @@ public class BarcodeGenerationtoConnectActivity extends BaseActivity implements 
                         if (cancelContinueButton.getText().equals(getResources().getString(R.string.cancel))) {
                             if (dialogBTAddress != null) {
                                 dialogBTAddress.dismiss();
-//                                Intent intent = new Intent(HomeActivity.this, SettingsActivity.class);
-//                                startActivity(intent);
+                                finish();
                             }
 
                         } else {
@@ -406,17 +421,7 @@ public class BarcodeGenerationtoConnectActivity extends BaseActivity implements 
                                 dialogBTAddress = null;
                             }
                             onResume();
-//                            startHomeActivityAgain();
                         }
-                    }
-                });
-
-                skipButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-//                        Application.sdkHandler.dcssdkSetSTCEnabledState(false);
-//                        Intent intent = new Intent(HomeActivity.this, ScannersActivity.class);
-//                        startActivity(intent);
                     }
                 });
 
@@ -446,7 +451,7 @@ public class BarcodeGenerationtoConnectActivity extends BaseActivity implements 
                     @Override
                     public void afterTextChanged(Editable s) {
                         userEnteredBluetoothAddress = s.toString();
-                        if(userEnteredBluetoothAddress.length() > MAX_BLUETOOTH_ADDRESS_CHARACTERS)
+                        if (userEnteredBluetoothAddress.length() > MAX_BLUETOOTH_ADDRESS_CHARACTERS)
                             return;
 
                         if (isValidBTAddress(userEnteredBluetoothAddress)) {
@@ -518,7 +523,7 @@ public class BarcodeGenerationtoConnectActivity extends BaseActivity implements 
                             if (currentColonCount < previousColonCount) {
                                 try {
                                     formattedMacAddress = formattedMacAddress.substring(0, selectionStartPosition - 1) + formattedMacAddress.substring(selectionStartPosition);
-                                }catch (Exception e){
+                                } catch (Exception e) {
                                     e.printStackTrace();
                                 }
                                 String cleanMacAddress = clearNonMacCharacters(formattedMacAddress);
@@ -568,7 +573,7 @@ public class BarcodeGenerationtoConnectActivity extends BaseActivity implements 
                 dialogBTAddress.show();
                 Window window = dialogBTAddress.getWindow();
                 if (window != null)
-                    window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    window.setLayout(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 bluetoothMAC = settings.getString(com.apollo.pharmacy.ocr.zebrasdk.helper.Constants.PREF_BT_ADDRESS, "");
             } else {
                 dialogBTAddress.show();
@@ -576,15 +581,11 @@ public class BarcodeGenerationtoConnectActivity extends BaseActivity implements 
         }
         return bluetoothMAC;
     }
-    private void startHomeActivityAgain() {
-        Intent i = new Intent(this, BarcodeGenerationtoConnectActivity.class);
-        i.setAction(Intent.ACTION_MAIN);
-        i.addCategory(Intent.CATEGORY_LAUNCHER);
-        startActivity(i);
-    }
+
     public boolean isValidBTAddress(String text) {
         return text != null && text.length() > 0 && text.matches(BLUETOOTH_ADDRESS_VALIDATOR);
     }
+
     private int getPickListMode(int scannerID) {
         int attrVal = 0;
         String in_xml = "<inArgs><scannerID>" + scannerID + "</scannerID><cmdArgs><arg-xml><attrib_list>402</attrib_list></arg-xml></cmdArgs></inArgs>";
@@ -691,4 +692,10 @@ public class BarcodeGenerationtoConnectActivity extends BaseActivity implements 
             }
         }
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
 }
