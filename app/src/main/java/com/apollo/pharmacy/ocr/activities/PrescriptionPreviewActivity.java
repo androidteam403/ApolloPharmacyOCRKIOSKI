@@ -31,10 +31,12 @@ import com.apollo.pharmacy.ocr.interfaces.PrescriptionPreviewListener;
 import com.apollo.pharmacy.ocr.interfaces.UploadBgImageListener;
 import com.apollo.pharmacy.ocr.model.GetImageRes;
 import com.apollo.pharmacy.ocr.model.GetProductListResponse;
+import com.apollo.pharmacy.ocr.model.ItemSearchResponse;
 import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
 import com.apollo.pharmacy.ocr.model.PrescriptionItem;
 import com.apollo.pharmacy.ocr.model.ScannedData;
 import com.apollo.pharmacy.ocr.model.ScannedMedicine;
+import com.apollo.pharmacy.ocr.model.UpCellCrossCellResponse;
 import com.apollo.pharmacy.ocr.model.UserAddress;
 import com.apollo.pharmacy.ocr.receiver.ConnectivityReceiver;
 import com.apollo.pharmacy.ocr.utility.Constants;
@@ -363,6 +365,26 @@ public class PrescriptionPreviewActivity extends AppCompatActivity implements Pr
         PrescriptionItem prescriptionItem = new PrescriptionItem(imgUrl);
         prescriptionList.add(prescriptionItem);
         prescriptionListAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onSuccessSearchItemApi(UpCellCrossCellResponse body) {
+
+    }
+
+    @Override
+    public void onSearchFailure(String message) {
+
+    }
+
+    @Override
+    public void onSuccessBarcodeItemApi(ItemSearchResponse itemSearchResponse) {
+
+    }
+
+    @Override
+    public void onFailureBarcodeItemApi(String message) {
+
     }
 
     @Override
