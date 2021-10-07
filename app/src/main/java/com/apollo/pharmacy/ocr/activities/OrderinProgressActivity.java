@@ -22,6 +22,9 @@ public class OrderinProgressActivity extends AppCompatActivity implements Orderi
 
     private ActivityOrderinProgressBinding orderinProgressBinding;
     private List<OCRToDigitalMedicineResponse> dataList;
+    private String fmcgOrderId;
+    private String pharmaOrderId;
+    private boolean onlineAmountPaid;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -33,6 +36,18 @@ public class OrderinProgressActivity extends AppCompatActivity implements Orderi
     }
 
     private void setUp() {
+        if (getIntent() != null) {
+            fmcgOrderId = (String) getIntent().getStringExtra("FmcgOrderPlacedData");
+            pharmaOrderId = (String) getIntent().getStringExtra("PharmaOrderPlacedData");
+            onlineAmountPaid = (boolean) getIntent().getBooleanExtra("OnlineAmountPaid", false);
+        }
+        orderinProgressBinding.fmcgRequestId.setText(fmcgOrderId);
+        orderinProgressBinding.pharmaRequestId.setText(pharmaOrderId);
+        if (onlineAmountPaid) {
+            orderinProgressBinding.payTxt.setText("You Paid");
+        } else {
+            orderinProgressBinding.payTxt.setText("You Pay");
+        }
         OrderinProgresssuiModel orderinProgresssuiModel = new OrderinProgresssuiModel();
         if (null != SessionManager.INSTANCE.getDataList())
             this.dataList = SessionManager.INSTANCE.getDataList();

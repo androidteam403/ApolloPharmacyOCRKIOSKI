@@ -8,6 +8,7 @@ import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -107,5 +108,19 @@ public class ApiClient {
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();
+    }
+
+
+    public static ApiInterface getApiServiceMposBaseUrl(String url) {
+        HttpUrl httpUrl = HttpUrl.parse(url);
+        try {
+            if (httpUrl == null) {
+                throw new IllegalArgumentException("");
+            }
+            return getRetrofitInstance(url).create(ApiInterface.class);
+        } catch (IllegalArgumentException i) {
+
+        }
+        return null;
     }
 }

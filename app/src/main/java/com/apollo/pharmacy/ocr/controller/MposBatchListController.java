@@ -7,6 +7,7 @@ import com.apollo.pharmacy.ocr.model.BatchListRequest;
 import com.apollo.pharmacy.ocr.model.BatchListResponse;
 import com.apollo.pharmacy.ocr.network.ApiClient;
 import com.apollo.pharmacy.ocr.network.ApiInterface;
+import com.apollo.pharmacy.ocr.utility.SessionManager;
 import com.apollo.pharmacy.ocr.utility.Utils;
 
 import org.jetbrains.annotations.NotNull;
@@ -26,7 +27,7 @@ public class MposBatchListController {
 
     public void getBatchList(String artcode) {
         Utils.showDialog(activity, "Loading…");
-        ApiInterface api = ApiClient.getApiService();
+        ApiInterface api = ApiClient.getApiServiceMposBaseUrl(SessionManager.INSTANCE.getEposUrl());
         BatchListRequest batchListRequest = new BatchListRequest();
         batchListRequest.setArticleCode(artcode);
         batchListRequest.setCustomerState("");

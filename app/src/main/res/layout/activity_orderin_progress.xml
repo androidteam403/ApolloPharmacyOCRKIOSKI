@@ -95,6 +95,7 @@
                             android:textColor="@color/black" />
 
                         <TextView
+                            android:id="@+id/pharma_request_id"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
@@ -343,6 +344,7 @@
                             android:textColor="@color/black" />
 
                         <TextView
+                            android:id="@+id/fmcg_request_id"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
@@ -397,6 +399,7 @@
                             android:orientation="vertical">
 
                             <TextView
+                                android:id="@+id/pay_txt"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="You Pay"

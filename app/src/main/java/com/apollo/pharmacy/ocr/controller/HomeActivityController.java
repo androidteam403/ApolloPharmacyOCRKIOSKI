@@ -77,7 +77,7 @@ public class HomeActivityController {
     }
 
     public void searchItemProducts(String item) {
-        ApiInterface apiInterface = ApiClient.getApiService();
+        ApiInterface apiInterface = ApiClient.getApiServiceMposBaseUrl(SessionManager.INSTANCE.getEposUrl());
         ItemSearchRequest itemSearchRequest = new ItemSearchRequest();
         itemSearchRequest.setCorpCode("0");
         itemSearchRequest.setIsGeneric(false);
