@@ -387,7 +387,7 @@ public class MyOrdersActivity extends AppCompatActivity implements ConnectivityR
 
     @Override
     public void onOrderHistoryFailure(String error) {
-        Utils.showCustomAlertDialog(MyOrdersActivity.this, getResources().getString(R.string.label_server_err_message), false, getResources().getString(R.string.label_ok), "");
+//        Utils.showCustomAlertDialog(MyOrdersActivity.this, getResources().getString(R.string.label_server_err_message), false, getResources().getString(R.string.label_ok), "");
     }
 
     @Override
