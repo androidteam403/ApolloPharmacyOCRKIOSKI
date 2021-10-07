@@ -183,6 +183,7 @@
                                 android:layout_height="@dimen/twenty_dp"
                                 android:layout_alignParentEnd="true"
                                 android:layout_marginEnd="@dimen/twenty_five_dp"
+                                android:background="@drawable/white_image_bg"
                                 android:contentDescription="@string/app_name" />
                         </RelativeLayout>
                     </LinearLayout>

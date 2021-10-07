@@ -1676,10 +1676,6 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
             }
         } else {
             Utils.showSnackbar(MySearchActivity.this, constraintLayout, "Please complete present action first.");
-            Utils.showDialog(this, "Plaese wait...");
-            mySearchController.searchItemProducts(barcode_code);
-        } else {
-            Toast.makeText(this, "Scan Cancelled", Toast.LENGTH_LONG).show();
         }
     }
 
