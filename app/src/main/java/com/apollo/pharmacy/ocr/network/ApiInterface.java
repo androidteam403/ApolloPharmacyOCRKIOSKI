@@ -204,7 +204,9 @@ public interface ApiInterface {
     @POST("SalesTransactionService.svc/GetItemDetails")//http://online.apollopharmacy.org:51/EPOS/
 //ba8af54b-fa62-11eb-978a-d72b0c462c48
     Call<ItemSearchResponse> getSearchItemApiCall(@Body ItemSearchRequest itemSearchRequest);
-
+    @POST("SalesTransactionService.svc/GetItemDetails")//http://online.apollopharmacy.org:51/EPOS/
+//ba8af54b-fa62-11eb-978a-d72b0c462c48
+    Call<List<ItemSearchResponse.Item>> getSearchItemApiCalls(@Body ItemSearchRequest itemSearchRequest);
 
     @GET("apollompos/Self/STORELIST")
     Call<StoreListResponseModel> GET_STORES_LIST();

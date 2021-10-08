@@ -151,6 +151,7 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
     private EditText searchProducts;
     private ProgressBar pDialog;
     TextView transColorId;
+    private boolean isDialogShow = false;
 
 
     @Override
@@ -1571,6 +1572,7 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
 
     }
 
+
     @Override
     public void onSuccessBarcodeItemApi(ItemSearchResponse itemSearchResponse) {
         if (itemSearchResponse.getItemList() != null && itemSearchResponse.getItemList().size() > 0) {
@@ -1578,6 +1580,7 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
             ProductSearch medicine = new ProductSearch();
 
             medicine.setName(itemSearchResponse.getItemList().get(0).getGenericName());
+            itemBatchSelectionDilaog.setTitle(itemSearchResponse.getItemList().get(0).getGenericName());
             medicine.setSku(itemSearchResponse.getItemList().get(0).getArtCode());
             medicine.setQty(1);
             medicine.setDescription(itemSearchResponse.getItemList().get(0).getDescription());
@@ -1587,17 +1590,18 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
             medicine.setIsPrescriptionRequired(0);
             medicine.setPrice(itemSearchResponse.getItemList().get(0).getMrp());
 
-
             itemBatchSelectionDilaog.setUnitIncreaseListener(view3 -> {
                 medicine.setQty(medicine.getQty() + 1);
                 itemBatchSelectionDilaog.setQtyCount("" + medicine.getQty());
             });
+
             itemBatchSelectionDilaog.setUnitDecreaseListener(view4 -> {
                 if (medicine.getQty() > 1) {
                     medicine.setQty(medicine.getQty() - 1);
                     itemBatchSelectionDilaog.setQtyCount("" + medicine.getQty());
                 }
             });
+
             itemBatchSelectionDilaog.setPositiveListener(view2 -> {
 //                activityHomeBinding.transColorId.setVisibility(View.GONE);
                 Intent intent = new Intent("cardReceiver");
@@ -1626,7 +1630,7 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
 //                    dataList.add(ocrToDigitalMedicineResponse);
 //                    SessionManager.INSTANCE.setDataList(dataList);
 //                }
-
+                isDialogShow = false;
                 itemBatchSelectionDilaog.dismiss();
 //                Intent intent1 = new Intent(MySearchActivity.this, MyCartActivity.class);
 //                intent1.putExtra("activityname", "AddMoreActivity");
@@ -1636,12 +1640,15 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
             });
             itemBatchSelectionDilaog.setNegativeListener(v -> {
 //                activityHomeBinding.transColorId.setVisibility(View.GONE);
+                isDialogShow = false;
                 itemBatchSelectionDilaog.dismiss();
             });
+            isDialogShow = true;
             itemBatchSelectionDilaog.show();
-            Utils.dismissDialog();
+        } else {
+            Utils.showSnackbar(MySearchActivity.this, constraintLayout, "No Item found");
         }
-
+        Utils.dismissDialog();
     }
 
     @Override
@@ -1650,16 +1657,36 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
 
     }
 
+    private int scannerEvent = 0;
+
     @Override
     public void scannerBarcodeEvent(byte[] barcodeData, int barcodeType, int scannerID) {
-        String barcode_code = new String(barcodeData);
-        if (barcode_code != null) {
+        if (!isDialogShow) {
+            if (scannerEvent == 0) {
+                scannerEvent = 1;
+                barcodeEventHandle();
+                String barcode_code = new String(barcodeData);
+                if (barcode_code != null) {
 //            Toast.makeText(this, barcode_code, Toast.LENGTH_LONG).show();
-            Utils.showDialog(this, "Plaese wait...");
-            mySearchController.searchItemProducts(barcode_code);
+                    Utils.showDialog(this, "Plaese wait...");
+                    mySearchController.searchItemProducts(barcode_code);
+                } else {
+                    Toast.makeText(this, "Scan Cancelled", Toast.LENGTH_LONG).show();
+                }
+            }
         } else {
-            Toast.makeText(this, "Scan Cancelled", Toast.LENGTH_LONG).show();
+            Utils.showSnackbar(MySearchActivity.this, constraintLayout, "Please complete present action first.");
         }
+    }
+
+    private void barcodeEventHandle() {
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                scannerEvent = 0;
+            }
+        }, 5000);
     }
 
     @Override

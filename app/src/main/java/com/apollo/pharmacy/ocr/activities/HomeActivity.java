@@ -13,6 +13,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.TranslateAnimation;
@@ -31,6 +32,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.apollo.pharmacy.ocr.R;
 import com.apollo.pharmacy.ocr.activities.barcodegenerationforconnect.BarcodeGenerationtoConnectActivity;
+import com.apollo.pharmacy.ocr.activities.insertprescriptionnew.InsertPrescriptionActivityNew;
 import com.apollo.pharmacy.ocr.controller.HomeActivityController;
 import com.apollo.pharmacy.ocr.databinding.ActivityHomeBinding;
 import com.apollo.pharmacy.ocr.dialog.ItemBatchSelectionDilaog;
@@ -56,8 +58,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import okhttp3.internal.Util;
-
 public class HomeActivity extends BaseActivity implements ConnectivityReceiver.ConnectivityReceiverListener, HomeListener, ScannerAppEngine.IScannerAppEngineDevEventsDelegate {
 
     private TextView myCartCount, welcomeTxt;
@@ -67,6 +67,8 @@ public class HomeActivity extends BaseActivity implements ConnectivityReceiver.C
     private ConstraintLayout constraintLayout;
     private ActivityHomeBinding activityHomeBinding;
     List<OCRToDigitalMedicineResponse> dataList = new ArrayList<>();
+    private ImageView scannerStatus;
+    private boolean isDialogShow = false;
 
     @Override
     public void onNetworkConnectionChanged(boolean isConnected) {
@@ -81,6 +83,7 @@ public class HomeActivity extends BaseActivity implements ConnectivityReceiver.C
     protected void onResume() {
         super.onResume();
         addDevEventsDelegate(this);
+        scannerConnectedorNot();
         HomeActivity.this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -105,7 +108,8 @@ public class HomeActivity extends BaseActivity implements ConnectivityReceiver.C
         activityHomeBinding = DataBindingUtil.setContentView(this, R.layout.activity_home);
 //        addDevConnectionsDelegate(this);
         addDevEventsDelegate(this);
-
+        scannerStatus = (ImageView) findViewById(R.id.scanner_check);
+        scannerConnectedorNot();
         ImageView customerCareImg = findViewById(R.id.customer_care_icon);
         LinearLayout customerHelpLayout = findViewById(R.id.customer_help_layout);
         customerHelpLayout.setVisibility(View.VISIBLE);
@@ -372,15 +376,15 @@ public class HomeActivity extends BaseActivity implements ConnectivityReceiver.C
 
             //new code
 
-//            Utils.dismissDialog();
-//            finish();
-//            Intent intent = new Intent(this, InsertPrescriptionActivityNew.class);
-//            startActivity(intent);
-//            overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
-
-            Intent intent = new Intent(HomeActivity.this, BarcodeGenerationtoConnectActivity.class);
-            intent.putExtra(com.apollo.pharmacy.ocr.zebrasdk.helper.Constants.SCANNER_MODE, "Image");
+            Utils.dismissDialog();
+            finish();
+            Intent intent = new Intent(this, InsertPrescriptionActivityNew.class);
             startActivity(intent);
+            overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
+
+//            Intent intent = new Intent(HomeActivity.this, BarcodeGenerationtoConnectActivity.class);
+//            intent.putExtra(com.apollo.pharmacy.ocr.zebrasdk.helper.Constants.SCANNER_MODE, "Image");
+//            startActivity(intent);
         });
 
         uploadPrescriptionBtn.setOnClickListener(v -> {
@@ -596,13 +600,14 @@ public class HomeActivity extends BaseActivity implements ConnectivityReceiver.C
         Utils.showSnackbar(HomeActivity.this, constraintLayout, message);
     }
 
+
     @Override
     public void onSuccessSearchItemApi(ItemSearchResponse itemSearchResponse) {
         if (itemSearchResponse.getItemList() != null && itemSearchResponse.getItemList().size() > 0) {
             ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(HomeActivity.this, itemSearchResponse.getItemList().get(0).getArtCode());
             ProductSearch medicine = new ProductSearch();
-
             medicine.setName(itemSearchResponse.getItemList().get(0).getGenericName());
+            itemBatchSelectionDilaog.setTitle(itemSearchResponse.getItemList().get(0).getGenericName());
             medicine.setSku(itemSearchResponse.getItemList().get(0).getArtCode());
             medicine.setQty(1);
             medicine.setDescription(itemSearchResponse.getItemList().get(0).getDescription());
@@ -654,6 +659,7 @@ public class HomeActivity extends BaseActivity implements ConnectivityReceiver.C
 //                    SessionManager.INSTANCE.setDataList(dataList);
 //                }
 
+                isDialogShow = false;
                 itemBatchSelectionDilaog.dismiss();
 //                Intent intent1 = new Intent(HomeActivity.this, MyCartActivity.class);
 //                intent1.putExtra("activityname", "AddMoreActivity");
@@ -663,11 +669,16 @@ public class HomeActivity extends BaseActivity implements ConnectivityReceiver.C
             });
             itemBatchSelectionDilaog.setNegativeListener(v -> {
                 activityHomeBinding.transColorId.setVisibility(View.GONE);
+                isDialogShow = false;
                 itemBatchSelectionDilaog.dismiss();
             });
             itemBatchSelectionDilaog.show();
-            Utils.dismissDialog();
+            isDialogShow = true;
+        } else {
+            Utils.showSnackbar(HomeActivity.this, constraintLayout, "No Item found");
         }
+        Utils.dismissDialog();
+
     }
 
     @Override
@@ -762,10 +773,12 @@ public class HomeActivity extends BaseActivity implements ConnectivityReceiver.C
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
         super.onPause();
     }
+
     private int scannerID;
     private int scannerType;
     static int picklistMode;
     static boolean pagerMotorAvailable;
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -775,8 +788,8 @@ public class HomeActivity extends BaseActivity implements ConnectivityReceiver.C
 
                     scannerID = (int) data.getSerializableExtra(com.apollo.pharmacy.ocr.zebrasdk.helper.Constants.SCANNER_ID);
                     BaseActivity.lastConnectedScannerID = scannerID;
-                    String scannerName =(String) data.getSerializableExtra(com.apollo.pharmacy.ocr.zebrasdk.helper.Constants.SCANNER_NAME);
-                    String address =(String) data.getSerializableExtra(com.apollo.pharmacy.ocr.zebrasdk.helper.Constants.SCANNER_ADDRESS);
+                    String scannerName = (String) data.getSerializableExtra(com.apollo.pharmacy.ocr.zebrasdk.helper.Constants.SCANNER_NAME);
+                    String address = (String) data.getSerializableExtra(com.apollo.pharmacy.ocr.zebrasdk.helper.Constants.SCANNER_ADDRESS);
                     scannerType = (int) data.getSerializableExtra(com.apollo.pharmacy.ocr.zebrasdk.helper.Constants.SCANNER_TYPE);
 
                     picklistMode = (int) data.getSerializableExtra(com.apollo.pharmacy.ocr.zebrasdk.helper.Constants.PICKLIST_MODE);
@@ -787,6 +800,7 @@ public class HomeActivity extends BaseActivity implements ConnectivityReceiver.C
                     Constants.currentScannerName = scannerName;
                     Constants.currentScannerAddress = address;
 
+                    scannerConnectedorNot();
 
 //                    String barcode_code = (String) data.getSerializableExtra("barcode_code");
 //                    if (barcode_code != null) {
@@ -815,17 +829,38 @@ public class HomeActivity extends BaseActivity implements ConnectivityReceiver.C
 
     }
 
+    private int scannerEvent = 0;
+
     @Override
     public void scannerBarcodeEvent(byte[] barcodeData, int barcodeType, int scannerID) {
-        String barcode_code = new String(barcodeData);
-        if (barcode_code != null) {
+        if (!isDialogShow) {
+            if (scannerEvent == 0) {
+                scannerEvent = 1;
+                barcodeEventHandle();
+                String barcode_code = new String(barcodeData);
+                if (barcode_code != null) {
 //            Toast.makeText(this, barcode_code, Toast.LENGTH_LONG).show();
-            Utils.showDialog(this,"Plaese wait...");
-            homeActivityController.searchItemProducts(barcode_code);
+                    Utils.showDialog(this, "Plaese wait...");
+                    homeActivityController.searchItemProducts(barcode_code);
+                } else {
+                    Toast.makeText(this, "Scan Cancelled", Toast.LENGTH_LONG).show();
+                }
+            }
         } else {
-            Toast.makeText(this, "Scan Cancelled", Toast.LENGTH_LONG).show();
+            Utils.showSnackbar(HomeActivity.this, constraintLayout, "Please complete present action first");
         }
     }
+
+    private void barcodeEventHandle() {
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                scannerEvent = 0;
+            }
+        }, 5000);
+    }
+
 
     @Override
     public void scannerFirmwareUpdateEvent(FirmwareUpdateEvent firmwareUpdateEvent) {
@@ -840,5 +875,13 @@ public class HomeActivity extends BaseActivity implements ConnectivityReceiver.C
     @Override
     public void scannerVideoEvent(byte[] videoData) {
 
+    }
+
+    private void scannerConnectedorNot() {
+        if (Constants.isAnyScannerConnected) {
+            scannerStatus.setImageDrawable(getResources().getDrawable(R.drawable.tick_green));
+        } else {
+            scannerStatus.setImageDrawable(getResources().getDrawable(R.drawable.cross_icon));
+        }
     }
 }

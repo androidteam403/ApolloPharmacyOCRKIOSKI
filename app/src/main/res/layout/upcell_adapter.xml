@@ -18,6 +18,7 @@
 
             <LinearLayout
                 android:layout_gravity="center"
+                android:layout_margin="2dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -102,6 +103,35 @@
                             android:textStyle="bold"
                             android:textColor="@color/colorBlack"
                             android:textSize="@dimen/twelve_sp" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/item_addto_cart_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/thirty_dp"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="@dimen/five_dp"
+                        android:layout_marginEnd="@dimen/five_dp"
+                        android:background="@color/home_bottom_background"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="@dimen/fifteen_dp"
+                            android:layout_height="@dimen/fifteen_dp"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="@dimen/five_dp"
+                            android:layout_marginEnd="@dimen/five_dp"
+                            android:contentDescription="@string/app_name"
+                            android:src="@drawable/add_to_cart" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginEnd="@dimen/five_dp"
+                            android:text="@string/label_add_to_cart"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/ten_sp" />
                     </LinearLayout>
 
                 </LinearLayout>

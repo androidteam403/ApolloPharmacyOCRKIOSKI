@@ -13,6 +13,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +29,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -46,6 +46,7 @@ import com.apollo.pharmacy.ocr.adapters.UpCellAdapter;
 import com.apollo.pharmacy.ocr.controller.MyCartController;
 import com.apollo.pharmacy.ocr.controller.UploadBgImageController;
 import com.apollo.pharmacy.ocr.dialog.CartDeletedItemsDialog;
+import com.apollo.pharmacy.ocr.dialog.ItemBatchSelectionDilaog;
 import com.apollo.pharmacy.ocr.dialog.ScannedPrescriptionViewDialog;
 import com.apollo.pharmacy.ocr.enums.ViewMode;
 import com.apollo.pharmacy.ocr.interfaces.CartCountListener;
@@ -55,8 +56,10 @@ import com.apollo.pharmacy.ocr.interfaces.OnItemClickListener;
 import com.apollo.pharmacy.ocr.interfaces.UploadBgImageListener;
 import com.apollo.pharmacy.ocr.model.GetImageRes;
 import com.apollo.pharmacy.ocr.model.GetProductListResponse;
+import com.apollo.pharmacy.ocr.model.ItemSearchResponse;
 import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
 import com.apollo.pharmacy.ocr.model.Product;
+import com.apollo.pharmacy.ocr.model.ProductSearch;
 import com.apollo.pharmacy.ocr.model.ScannedData;
 import com.apollo.pharmacy.ocr.model.ScannedMedicine;
 import com.apollo.pharmacy.ocr.model.UpCellCrossCellResponse;
@@ -135,7 +138,8 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
     private TextView timerHeaderText, timerChildText;
     private long minVal = 0, secVal = 0;
     RecyclerView crossCell_recycle, upcell_recycle;
-    TextView noDataFound;
+    TextView noDataFound, noDataFoundCrosssel, noDataFoundUpsel;
+    private boolean isDialogShow = false;
 
     @Override
     public void onSuccessProductList(HashMap<String, GetProductListResponse> productList) {
@@ -287,6 +291,7 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
     @Override
     public void onPause() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceivers);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiverCheckOut);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mPrescriptionMessageReceiver);
         super.onPause();
@@ -887,6 +892,8 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
         upcell_recycle = findViewById(R.id.up_cell_data_recycle);
         crossCell_recycle = findViewById(R.id.cross_cell_data_recycle);
         noDataFound = findViewById(R.id.no_data);
+        noDataFoundCrosssel = findViewById(R.id.no_data_found_crosssell);
+        noDataFoundUpsel = findViewById(R.id.no_data_found_upsell);
         RecyclerView promotionproductrecycleerview = findViewById(R.id.promotionsRecyclerView);
         promotionproductrecycleerview.setLayoutManager(new GridLayoutManager(MyCartActivity.this, 3));
         RecyclerView trendingnowproductrecycleerview = findViewById(R.id.trendingnowproductrecycleerview);
@@ -1005,7 +1012,7 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
         checkOutImage.setOnClickListener(arg0 -> {
             if (dataList != null && dataList.size() > 0) {
 //                startActivity(CheckoutActivity.getStartIntent(this, dataList));
-                Intent intent=new Intent(this,CheckoutActivity.class);
+                Intent intent = new Intent(this, CheckoutActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
             } else {
@@ -1179,6 +1186,8 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiverCheckOut, new IntentFilter("MedicineReciver"));
         LocalBroadcastManager.getInstance(this).registerReceiver(mPrescriptionMessageReceiver, new IntentFilter("PrescriptionReceived"));
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, new IntentFilter("cardReceiverCartItems"));
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceivers, new IntentFilter("cardReceiver"));
+
         Constants.getInstance().setConnectivityListener(this);
 
         addAgainLayout.setOnClickListener(v -> {
@@ -1510,47 +1519,293 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
         handleScannedImageView();
     }
 
-    List<UpCellCrossCellResponse.Crossselling> crosssellingList = new ArrayList<>();
-    List<UpCellCrossCellResponse.Upselling> upsellingList = new ArrayList<>();
+//    List<UpCellCrossCellResponse.Crossselling> crosssellingList = new ArrayList<>();
+//    List<UpCellCrossCellResponse.Upselling> upsellingList = new ArrayList<>();
+
+    List<ItemSearchResponse.Item> crosssellingList = new ArrayList<>();
+    List<ItemSearchResponse.Item> upsellingList = new ArrayList<>();
     boolean addToCarLayHandel;
+    UpCellCrossCellResponse.Crossselling cs;
+    private int crosssellcountforadapter = 0;
+    private int upssellcountforadapter = 0;
 
     @Override
     public void onSuccessSearchItemApi(UpCellCrossCellResponse body) {
+        crosssellcountforadapter = 0;
+        upssellcountforadapter = 0;
+        List<UpCellCrossCellResponse.Crossselling> crossselling = null;
+        List<UpCellCrossCellResponse.Upselling> upselling = null;
         if (body != null && body.getCrossselling() != null && body.getCrossselling().size() > 0) {
-            addToCarLayHandel=false;
-            crosssellingList.add(body.getCrossselling().get(0));
-            crosssellingList.add(body.getCrossselling().get(1));
-            crosssellingList.add(body.getCrossselling().get(2));
-
-            CrossCellAdapter crossCellAdapter = new CrossCellAdapter(this, crosssellingList,addToCarLayHandel);
-            RecyclerView.LayoutManager mLayoutManager4 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-            crossCell_recycle.setLayoutManager(mLayoutManager4);
-            crossCell_recycle.setItemAnimator(new DefaultItemAnimator());
-            crossCell_recycle.setAdapter(crossCellAdapter);
-            noDataFound.setVisibility(View.GONE);
+            addToCarLayHandel = false;
+            crossselling = new ArrayList<>();
+            crossselling.add(body.getCrossselling().get(0));
+            crossselling.add(body.getCrossselling().get(1));
+            crossselling.add(body.getCrossselling().get(2));
+            for (UpCellCrossCellResponse.Crossselling crossSellingList : crossselling) {
+                myCartController.searchItemProducts(crossSellingList.getItemid(), 1);
+            }
         } else {
             noDataFound.setVisibility(View.VISIBLE);
         }
         if (body != null && body.getUpselling() != null && body.getUpselling().size() > 0) {
 
-            upsellingList.add(body.getUpselling().get(0));
-            upsellingList.add(body.getUpselling().get(1));
-            upsellingList.add(body.getUpselling().get(2));
 
-            UpCellAdapter upCellAdapter = new UpCellAdapter(this, upsellingList);
-            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-            upcell_recycle.setLayoutManager(mLayoutManager);
-            upcell_recycle.setItemAnimator(new DefaultItemAnimator());
-            upcell_recycle.setAdapter(upCellAdapter);
-            noDataFound.setVisibility(View.GONE);
+            crossselling = new ArrayList<>();
+            crossselling.add(body.getCrossselling().get(0));
+            crossselling.add(body.getCrossselling().get(1));
+            crossselling.add(body.getCrossselling().get(2));
+            for (UpCellCrossCellResponse.Crossselling crossSellingList : crossselling) {
+                myCartController.searchItemProducts(crossSellingList.getItemid(), 2);
+            }
+
+//            upselling = new ArrayList<>();
+//            upselling.add(body.getUpselling().get(0));
+//            upselling.add(body.getUpselling().get(1));
+//            upselling.add(body.getUpselling().get(2));
+//            for (UpCellCrossCellResponse.Upselling upSelling : upselling) {
+//                myCartController.searchItemProducts(upSelling.getItemid(), 2);
+//            }
         } else {
             noDataFound.setVisibility(View.VISIBLE);
         }
+//        if (crossselling != null && crossselling.size() > 0 || upselling != null && upselling.size() > 0)
+//            upSellCrosssellApiCall(crossselling, upselling);
+
+    }
+
+    @Override
+    public void upSellCrosssellApiCall(List<UpCellCrossCellResponse.Crossselling> crossselling,
+                                       List<UpCellCrossCellResponse.Upselling> upselling) {
+        boolean iscrosssellFinish = true;
+        String itemSku = null;
+        for (int i = 0; i < crossselling.size(); i++) {
+            if (!crossselling.get(i).isCalled()) {
+                crossselling.get(i).setCalled(true);
+                iscrosssellFinish = false;
+                itemSku = crossselling.get(i).getItemid();
+//                myCartController.searchItemProducts(crossselling.get(i).getItemid(), 1, crossselling, upselling, iscrosssellFinish, false);
+                break;
+            }
+        }
+        if (!iscrosssellFinish)
+            myCartController.searchItemProducts(itemSku, 1, crossselling, upselling, iscrosssellFinish, false);
+
+//        if (iscrosssellFinish) {
+//            for (int i = 0; i < upselling.size(); i++) {
+//                if (!upselling.get(i).isCalled()) {
+//                    crossselling.get(i).setCalled(true);
+//                    myCartController.searchItemProducts(crossselling.get(i).getItemid(), 1, crossselling, upselling, true, false);
+//                    break;
+//                }
+//            }
+//        }
     }
 
     @Override
     public void onSearchFailure(String message) {
 
+    }
+
+
+    @Override
+    public void onSuccessBarcodeItemApi(ItemSearchResponse itemSearchResponse, int serviceType) {
+        if (serviceType == 0) {
+            if (itemSearchResponse.getItemList() != null && itemSearchResponse.getItemList().size() > 0) {
+                ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(MyCartActivity.this, itemSearchResponse.getItemList().get(0).getArtCode());
+                ProductSearch medicine = new ProductSearch();
+
+                medicine.setName(itemSearchResponse.getItemList().get(0).getGenericName());
+                itemBatchSelectionDilaog.setTitle(itemSearchResponse.getItemList().get(0).getGenericName());
+                medicine.setSku(itemSearchResponse.getItemList().get(0).getArtCode());
+                medicine.setQty(1);
+                medicine.setDescription(itemSearchResponse.getItemList().get(0).getDescription());
+                medicine.setCategory(itemSearchResponse.getItemList().get(0).getCategory());
+                medicine.setMedicineType(itemSearchResponse.getItemList().get(0).getCategory());
+                medicine.setIsInStock(itemSearchResponse.getItemList().get(0).getStockqty() != 0 ? 1 : 0);
+                medicine.setIsPrescriptionRequired(0);
+                medicine.setPrice(itemSearchResponse.getItemList().get(0).getMrp());
+
+
+                itemBatchSelectionDilaog.setUnitIncreaseListener(view3 -> {
+                    medicine.setQty(medicine.getQty() + 1);
+                    itemBatchSelectionDilaog.setQtyCount("" + medicine.getQty());
+                });
+                itemBatchSelectionDilaog.setUnitDecreaseListener(view4 -> {
+                    if (medicine.getQty() > 1) {
+                        medicine.setQty(medicine.getQty() - 1);
+                        itemBatchSelectionDilaog.setQtyCount("" + medicine.getQty());
+                    }
+                });
+                itemBatchSelectionDilaog.setPositiveListener(view2 -> {
+//                activityHomeBinding.transColorId.setVisibility(View.GONE);
+                    Intent intent = new Intent("cardReceiver");
+                    intent.putExtra("message", "Addtocart");
+                    intent.putExtra("product_sku", medicine.getSku());
+                    intent.putExtra("product_name", medicine.getName());
+                    intent.putExtra("product_quantyty", itemBatchSelectionDilaog.getQtyCount().toString());
+                    intent.putExtra("product_price", String.valueOf(itemBatchSelectionDilaog.getItemProice()));//String.valueOf(medicine.getPrice())
+                    // intent.putExtra("product_container", product_container);
+                    intent.putExtra("medicineType", medicine.getMedicineType());
+                    intent.putExtra("product_mou", String.valueOf(medicine.getMou()));
+                    intent.putExtra("product_position", String.valueOf(0));
+                    LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+//                OCRToDigitalMedicineResponse ocrToDigitalMedicineResponse = new OCRToDigitalMedicineResponse();
+//                ocrToDigitalMedicineResponse.setArtCode(medicine.getSku());
+//                ocrToDigitalMedicineResponse.setArtName(medicine.getName());
+//                ocrToDigitalMedicineResponse.setQty(Integer.parseInt(itemBatchSelectionDilaog.getQtyCount().toString()));
+//                ocrToDigitalMedicineResponse.setArtprice(String.valueOf(itemBatchSelectionDilaog.getItemProice()));
+//                ocrToDigitalMedicineResponse.setMedicineType(medicine.getMedicineType());
+//                ocrToDigitalMedicineResponse.setMou(String.valueOf(medicine.getMou()));
+//                if (null != SessionManager.INSTANCE.getDataList()) {
+//                    this.dataList = SessionManager.INSTANCE.getDataList();
+//                    dataList.add(ocrToDigitalMedicineResponse);
+//                    SessionManager.INSTANCE.setDataList(dataList);
+//                } else {
+//                    dataList.add(ocrToDigitalMedicineResponse);
+//                    SessionManager.INSTANCE.setDataList(dataList);
+//                }
+                    isDialogShow = false;
+                    itemBatchSelectionDilaog.dismiss();
+//                Intent intent1 = new Intent(MySearchActivity.this, MyCartActivity.class);
+//                intent1.putExtra("activityname", "AddMoreActivity");
+//                startActivity(intent1);
+//                finish();
+//                overridePendingTransition(R.animator.trans_right_in, R.animator.trans_right_out);
+                });
+                itemBatchSelectionDilaog.setNegativeListener(v -> {
+//                activityHomeBinding.transColorId.setVisibility(View.GONE);
+                    isDialogShow = false;
+                    itemBatchSelectionDilaog.dismiss();
+                });
+                isDialogShow = true;
+                itemBatchSelectionDilaog.show();
+            } else {
+                Utils.showSnackbar(MyCartActivity.this, constraint_Layout, "No Item found");
+            }
+            Utils.dismissDialog();
+        } else if (serviceType == 1) {
+            crosssellcountforadapter++;
+            if (itemSearchResponse.getItemList() != null && itemSearchResponse.getItemList().size() > 0) {
+                crosssellingList.add(itemSearchResponse.getItemList().get(0));
+                if (crosssellcountforadapter == 3) {
+                    if (crosssellingList != null && crosssellingList.size() > 0) {
+                        CrossCellAdapter crossCellAdapter = new CrossCellAdapter(this, crosssellingList, addToCarLayHandel);
+                        RecyclerView.LayoutManager mLayoutManager4 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+                        crossCell_recycle.setLayoutManager(mLayoutManager4);
+                        crossCell_recycle.setItemAnimator(new DefaultItemAnimator());
+                        crossCell_recycle.setAdapter(crossCellAdapter);
+                        noDataFoundCrosssel.setVisibility(View.GONE);
+                    } else {
+                        noDataFoundCrosssel.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+            if (crosssellcountforadapter == 3 && crosssellingList != null && crosssellingList.size() > 0)
+                noDataFoundCrosssel.setVisibility(View.GONE);
+            else
+                noDataFoundCrosssel.setVisibility(View.VISIBLE);
+        } else if (serviceType == 2) {
+            upssellcountforadapter++;
+            if (itemSearchResponse.getItemList() != null && itemSearchResponse.getItemList().size() > 0) {
+                upsellingList.add(itemSearchResponse.getItemList().get(0));
+                if (upssellcountforadapter == 3) {
+                    if (upsellingList != null && upsellingList.size() > 0) {
+                        UpCellAdapter upCellAdapter = new UpCellAdapter(this, upsellingList);
+                        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+                        upcell_recycle.setLayoutManager(mLayoutManager);
+                        upcell_recycle.setItemAnimator(new DefaultItemAnimator());
+                        upcell_recycle.setAdapter(upCellAdapter);
+                        noDataFoundUpsel.setVisibility(View.GONE);
+                    } else {
+                        noDataFoundUpsel.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+            if (upssellcountforadapter == 3 && upsellingList != null && upsellingList.size() > 0)
+                noDataFoundUpsel.setVisibility(View.GONE);
+            else
+                noDataFoundUpsel.setVisibility(View.VISIBLE);
+        }
+    }
+
+
+    private BroadcastReceiver mMessageReceivers = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String message = intent.getStringExtra("message");
+            if (message.equalsIgnoreCase("Addtocart")) {
+                if (null != SessionManager.INSTANCE.getDataList()) {
+                    if (SessionManager.INSTANCE.getDataList().size() > 0) {
+                        cartCount(SessionManager.INSTANCE.getDataList().size());
+                        dataList = SessionManager.INSTANCE.getDataList();
+                    }
+                }
+                boolean product_avilable = false;
+                if (null != dataList) {
+                    int count = 0;
+                    for (OCRToDigitalMedicineResponse data : dataList) {
+                        if (data.getArtCode() != null) {
+                            if (data.getArtCode().equalsIgnoreCase(intent.getStringExtra("product_sku"))) {
+                                product_avilable = true;
+                                int qty = data.getQty();
+                                qty = qty + 1;
+                                dataList.remove(count);
+                                OCRToDigitalMedicineResponse object1 = new OCRToDigitalMedicineResponse();
+                                object1.setArtName(intent.getStringExtra("product_name"));
+                                object1.setArtCode(intent.getStringExtra("product_sku"));
+                                object1.setMedicineType(intent.getStringExtra("medicineType"));
+                                object1.setQty(Integer.parseInt(intent.getStringExtra("product_quantyty")));
+                                if (null != intent.getStringExtra("product_price")) {
+                                    object1.setArtprice(intent.getStringExtra("product_price"));
+                                } else {
+                                    object1.setArtprice(String.valueOf(intent.getStringExtra("product_price")));
+                                }
+                                object1.setMou(String.valueOf(intent.getStringExtra("product_mou")));
+//                                object1.setQty(qty);
+                                object1.setContainer("Strip");
+                                dataList.add(object1);
+                                SessionManager.INSTANCE.setDataList(dataList);
+                                break;
+                            } else {
+                                product_avilable = false;
+                            }
+                        }
+                        count = count + 1;
+                    }
+                    if (!product_avilable) {
+                        OCRToDigitalMedicineResponse object1 = new OCRToDigitalMedicineResponse();
+                        object1.setArtName(intent.getStringExtra("product_name"));
+                        object1.setArtCode(intent.getStringExtra("product_sku"));
+                        object1.setMedicineType(intent.getStringExtra("medicineType"));
+                        object1.setQty(Integer.parseInt(intent.getStringExtra("product_quantyty")));
+                        if (null != intent.getStringExtra("product_price")) {
+                            object1.setArtprice(intent.getStringExtra("product_price"));
+                        } else {
+                            object1.setArtprice(String.valueOf(intent.getStringExtra("product_price")));
+                        }
+                        object1.setMou(String.valueOf(intent.getStringExtra("product_mou")));
+//                        object1.setQty(1);
+                        object1.setContainer("Strip");
+                        dataList.add(object1);
+                        SessionManager.INSTANCE.setDataList(dataList);
+                    }
+                }
+                Utils.showSnackbar(MyCartActivity.this, constraint_Layout, getApplicationContext().getResources().getString(R.string.label_item_added_cart));
+                cartCount(dataList.size());
+            }
+            if (dataList != null && dataList.size() > 0)
+                if (cartListAdapter != null)
+                    cartListAdapter.notifyDataSetChanged();
+//            if (null != SessionManager.INSTANCE.getDataList() && SessionManager.INSTANCE.getDataList().size() > 0)
+//                checkOutNewBtn.setVisibility(View.VISIBLE);
+//            else
+//                checkOutNewBtn.setVisibility(View.GONE);
+        }
+    };
+
+    @Override
+    public void onFailureBarcodeItemApi(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -1777,9 +2032,36 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
         Utils.printMessage(TAG, "Successfully Image Uploaded");
     }
 
+    private int scannerEvent = 0;
+
     @Override
     public void scannerBarcodeEvent(byte[] barcodeData, int barcodeType, int scannerID) {
-//        Toast.makeText(this, "Item scanned in cart screen", Toast.LENGTH_SHORT).show();
+        if (!isDialogShow) {
+            if (scannerEvent == 0) {
+                scannerEvent = 1;
+                barcodeEventHandle();
+                String barcode_code = new String(barcodeData);
+                if (barcode_code != null) {
+//            Toast.makeText(this, barcode_code, Toast.LENGTH_LONG).show();
+                    Utils.showDialog(this, "Plaese wait...");
+                    myCartController.searchItemProducts(barcode_code, 0);
+                } else {
+                    Toast.makeText(this, "Scan Cancelled", Toast.LENGTH_LONG).show();
+                }
+            }
+        } else {
+            Utils.showSnackbar(MyCartActivity.this, constraint_Layout, "Please complete present action first.");
+        }
+    }
+
+    private void barcodeEventHandle() {
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                scannerEvent = 0;
+            }
+        }, 5000);
     }
 
     @Override
@@ -1796,4 +2078,5 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
     public void scannerVideoEvent(byte[] videoData) {
 
     }
+
 }
