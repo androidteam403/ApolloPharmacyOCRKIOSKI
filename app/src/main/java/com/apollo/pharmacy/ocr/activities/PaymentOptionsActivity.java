@@ -28,6 +28,7 @@ import com.apollo.pharmacy.ocr.utility.SessionManager;
 import com.apollo.pharmacy.ocr.utility.Utils;
 import com.google.zxing.WriterException;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -103,7 +104,9 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
             orderDetailsuiModel.setFmcg(isFmcg);
             orderDetailsuiModel.setPharma(isPharma);
             grandTotalAmountFmcg = fmcgTotal;
-            grandTotalAmountPharma = pharmaTotal;
+            DecimalFormat formatter = new DecimalFormat("#,###.00");
+            String formatted = formatter.format(pharmaTotal);
+            grandTotalAmountPharma = Double.parseDouble(formatted);
             activityPaymentOptionsBinding.setModel(orderDetailsuiModel);
         }
         if (orderDetailsuiModel.isPharma && !orderDetailsuiModel.isFmcg) {

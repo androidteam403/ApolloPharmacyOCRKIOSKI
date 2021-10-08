@@ -100,15 +100,38 @@
 
     </LinearLayout>
 
-    <View
+    <RelativeLayout
         android:id="@+id/strike_through"
         android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="@dimen/three_dp"
-        android:layout_marginEnd="@dimen/three_dp"
-        android:background="@color/order_status_pending_color" />
+        android:layout_height="wrap_content">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/three_dp"
+            android:layout_marginEnd="@dimen/three_dp"
+            android:background="@color/order_status_pending_color"
+            android:visibility="visible" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:alpha="0.4"
+            android:background="@color/lite_grey"
+            android:visibility="visible" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="Stock not available"
+            android:textColor="@color/DARKRED"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
 
     <View
         android:layout_width="match_parent"

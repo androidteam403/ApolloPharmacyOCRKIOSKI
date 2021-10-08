@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -38,7 +39,7 @@ public class ReorderAdapter extends RecyclerView.Adapter<ReorderAdapter.MyViewHo
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         private TextView sno_txt, productname_textview, productqty, totalpricetextview, offerpricetextview;
         private LinearLayout parentLayout;
-        private View strikeThrough;
+        private RelativeLayout strikeThrough;
 
         public MyViewHolder(View view) {
             super(view);
@@ -49,7 +50,6 @@ public class ReorderAdapter extends RecyclerView.Adapter<ReorderAdapter.MyViewHo
             parentLayout = view.findViewById(R.id.parent_layout);
             productqty = view.findViewById(R.id.quantity_txt);
             strikeThrough = view.findViewById(R.id.strike_through);
-
         }
     }
 
@@ -61,7 +61,7 @@ public class ReorderAdapter extends RecyclerView.Adapter<ReorderAdapter.MyViewHo
         holder.productqty.setText(String.valueOf(listItem.getQty()));
         if (listItem.isOutOfStock()) {
             holder.strikeThrough.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             holder.strikeThrough.setVisibility(View.GONE);
         }
         RequestOptions requestOptions = new RequestOptions();

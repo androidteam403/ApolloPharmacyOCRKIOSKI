@@ -416,7 +416,6 @@ public class MyOrdersActivity extends AppCompatActivity implements ConnectivityR
             intent.putExtra("message", "OrderNow");
             intent.putExtra("MedininesNames", new Gson().toJson(reOrderDilaog.dataListLatest()));
             LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
-            reOrderDilaog.dismiss();
         });
         reOrderDilaog.setNegativeListener(view -> {
             reOrderDilaog.dismiss();

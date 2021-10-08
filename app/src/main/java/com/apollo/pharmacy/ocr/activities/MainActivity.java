@@ -23,6 +23,7 @@ import com.apollo.pharmacy.ocr.dialog.AccesskeyDialog;
 import com.apollo.pharmacy.ocr.interfaces.MainListener;
 import com.apollo.pharmacy.ocr.model.API;
 import com.apollo.pharmacy.ocr.model.Global_api_response;
+import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
 import com.apollo.pharmacy.ocr.receiver.ConnectivityReceiver;
 import com.apollo.pharmacy.ocr.utility.Constants;
 import com.apollo.pharmacy.ocr.utility.LanguageManager;
@@ -33,6 +34,7 @@ import com.apollo.pharmacy.ocr.widget.MarqueeView;
 import com.apollo.pharmacy.ocr.widget.MarqueeViewRight;
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -92,6 +94,9 @@ public class MainActivity extends BaseActivity implements ConnectivityReceiver.C
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lang_selection);
+
+        List<OCRToDigitalMedicineResponse> dataList = new ArrayList<>();
+        SessionManager.INSTANCE.setDataList(dataList);
 
         if (SessionManager.INSTANCE.getAccessKey() != null && SessionManager.INSTANCE.getAccessKey().equals("AP@11@2021")) {
             if (SessionManager.INSTANCE.getStoreId() != null && !SessionManager.INSTANCE.getStoreId().isEmpty()
