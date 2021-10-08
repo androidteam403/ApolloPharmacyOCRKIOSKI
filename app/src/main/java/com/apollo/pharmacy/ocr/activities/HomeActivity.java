@@ -607,7 +607,7 @@ public class HomeActivity extends BaseActivity implements ConnectivityReceiver.C
             ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(HomeActivity.this, itemSearchResponse.getItemList().get(0).getArtCode());
             ProductSearch medicine = new ProductSearch();
             medicine.setName(itemSearchResponse.getItemList().get(0).getGenericName());
-            itemBatchSelectionDilaog.setTitle(itemSearchResponse.getItemList().get(0).getGenericName());
+            itemBatchSelectionDilaog.setTitle(itemSearchResponse.getItemList().get(0).getDescription());
             medicine.setSku(itemSearchResponse.getItemList().get(0).getArtCode());
             medicine.setQty(1);
             medicine.setDescription(itemSearchResponse.getItemList().get(0).getDescription());
@@ -634,7 +634,7 @@ public class HomeActivity extends BaseActivity implements ConnectivityReceiver.C
                 Intent intent = new Intent("cardReceiver");
                 intent.putExtra("message", "Addtocart");
                 intent.putExtra("product_sku", medicine.getSku());
-                intent.putExtra("product_name", medicine.getName());
+                intent.putExtra("product_name", medicine.getDescription());
                 intent.putExtra("product_quantyty", itemBatchSelectionDilaog.getQtyCount().toString());
                 intent.putExtra("product_price", String.valueOf(itemBatchSelectionDilaog.getItemProice()));//String.valueOf(medicine.getPrice())
                 // intent.putExtra("product_container", product_container);

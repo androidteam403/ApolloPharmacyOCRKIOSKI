@@ -1583,7 +1583,7 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                 ProductSearch medicine = new ProductSearch();
 
                 medicine.setName(itemSearchResponse.getItemList().get(0).getGenericName());
-                itemBatchSelectionDilaog.setTitle(itemSearchResponse.getItemList().get(0).getGenericName());
+                itemBatchSelectionDilaog.setTitle(itemSearchResponse.getItemList().get(0).getDescription());
                 medicine.setSku(itemSearchResponse.getItemList().get(0).getArtCode());
                 medicine.setQty(1);
                 medicine.setDescription(itemSearchResponse.getItemList().get(0).getDescription());
@@ -1609,7 +1609,7 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                     Intent intent = new Intent("cardReceiver");
                     intent.putExtra("message", "Addtocart");
                     intent.putExtra("product_sku", medicine.getSku());
-                    intent.putExtra("product_name", medicine.getName());
+                    intent.putExtra("product_name", medicine.getDescription());
                     intent.putExtra("product_quantyty", itemBatchSelectionDilaog.getQtyCount().toString());
                     intent.putExtra("product_price", String.valueOf(itemBatchSelectionDilaog.getItemProice()));//String.valueOf(medicine.getPrice())
                     // intent.putExtra("product_container", product_container);
@@ -1758,8 +1758,12 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                         SessionManager.INSTANCE.setDataList(dataList);
                     }
                 }
-                Utils.showSnackbar(MyCartActivity.this, constraint_Layout, getApplicationContext().getResources().getString(R.string.label_item_added_cart));
+                Utils.showSnackbar(MyCartActivity.this, constraint_Layout,getApplicationContext().getResources().getString(R.string.label_item_added_cart) );
                 cartCount(dataList.size());
+                cartListAdapter = new MyCartListAdapter(dataList, MyCartActivity.this);
+                cartItemRecyclerView.setLayoutManager(new LinearLayoutManager(MyCartActivity.this));
+                cartItemRecyclerView.setAdapter(cartListAdapter);
+                cartListAdapter.notifyDataSetChanged();
             }
             if (dataList != null && dataList.size() > 0)
                 if (cartListAdapter != null)
