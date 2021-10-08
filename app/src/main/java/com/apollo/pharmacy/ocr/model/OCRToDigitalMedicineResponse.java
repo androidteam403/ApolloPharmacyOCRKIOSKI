@@ -31,6 +31,7 @@ public class OCRToDigitalMedicineResponse implements Serializable {
     @SerializedName("mou")
     private String mou;
     private String medicineType;
+    private boolean outOfStock;
 
     public OCRToDigitalMedicineResponse() {
 
@@ -41,6 +42,14 @@ public class OCRToDigitalMedicineResponse implements Serializable {
         artName = source.readString();
         container = source.readString();
         qty = source.readInt();
+    }
+
+    public boolean isOutOfStock() {
+        return outOfStock;
+    }
+
+    public void setOutOfStock(boolean outOfStock) {
+        this.outOfStock = outOfStock;
     }
 
     public String getMedicineType() {

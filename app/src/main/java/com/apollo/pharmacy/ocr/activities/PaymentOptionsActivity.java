@@ -28,7 +28,9 @@ import com.apollo.pharmacy.ocr.utility.SessionManager;
 import com.apollo.pharmacy.ocr.utility.Utils;
 import com.google.zxing.WriterException;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import androidmads.library.qrgenearator.QRGContents;
@@ -582,17 +584,17 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
             userAddress.setItemSelected(true);
         } else {
             userAddress.setMappingMobile(SessionManager.INSTANCE.getMobilenumber());
-            userAddress.setName("Guru Selvaraj");
+            userAddress.setName(SessionManager.INSTANCE.getUseraddress().getName());
             userAddress.setMobile(SessionManager.INSTANCE.getMobilenumber());
-            userAddress.setAddress1("109 Nehru Nagar, Moolaikaraipatti, Tirunelveli, Tamilnadu");
+            userAddress.setAddress1(SessionManager.INSTANCE.getUseraddress().getAddress1());
             userAddress.setAddress2("");
             userAddress.setAddress3("");
-            userAddress.setCity("Tirunelveli");
+            userAddress.setCity(SessionManager.INSTANCE.getUseraddress().getCity());
             userAddress.setState("Telangana");
             userAddress.setIsDefault(1);
             userAddress.setAddressType("");
             userAddress.setIsDeleted(0);
-            userAddress.setPincode("500033");
+            userAddress.setPincode(SessionManager.INSTANCE.getUseraddress().getPincode());
             userAddress.setItemSelected(true);
         }
 //        UserAddress userAddress = SessionManager.INSTANCE.getUseraddress();
@@ -679,8 +681,11 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
         tpDetailsEntity.setUserId(SessionManager.INSTANCE.getKioskSetupResponse().getKIOSK_ID());
         tpDetailsEntity.setOrderType("fmcg");
         tpDetailsEntity.setCouponCode("MED10");
-        tpDetailsEntity.setOrderDate(Utils.getOrderedID());
-        tpDetailsEntity.setRequestType("NONCART");
+        Date date = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-M-dd");
+        String strDate = formatter.format(date);
+        tpDetailsEntity.setOrderDate(strDate);
+        tpDetailsEntity.setRequestType("CART");
         ArrayList<PlaceOrderReqModel.PrescUrlEntity> prescEntityArray = new ArrayList<>();
         PlaceOrderReqModel.PrescUrlEntity pue = new PlaceOrderReqModel.PrescUrlEntity();
         pue.setUrl("http://172.16.2.251:8033/ApolloKMD/apolloMedBuddy/Medibuddy/WalletCheck");
@@ -715,17 +720,17 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
             userAddress.setItemSelected(true);
         } else {
             userAddress.setMappingMobile(SessionManager.INSTANCE.getMobilenumber());
-            userAddress.setName("Guru Selvaraj");
+            userAddress.setName(SessionManager.INSTANCE.getUseraddress().getName());
             userAddress.setMobile(SessionManager.INSTANCE.getMobilenumber());
-            userAddress.setAddress1("109 Nehru Nagar, Moolaikaraipatti, Tirunelveli, Tamilnadu");
+            userAddress.setAddress1(SessionManager.INSTANCE.getUseraddress().getAddress1());
             userAddress.setAddress2("");
             userAddress.setAddress3("");
-            userAddress.setCity("Tirunelveli");
+            userAddress.setCity(SessionManager.INSTANCE.getUseraddress().getCity());
             userAddress.setState("Telangana");
             userAddress.setIsDefault(1);
             userAddress.setAddressType("");
             userAddress.setIsDeleted(0);
-            userAddress.setPincode("500033");
+            userAddress.setPincode(SessionManager.INSTANCE.getUseraddress().getPincode());
             userAddress.setItemSelected(true);
         }
 //        UserAddress userAddress = SessionManager.INSTANCE.getUseraddress();
@@ -804,8 +809,11 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
         tpDetailsEntity.setUserId(SessionManager.INSTANCE.getKioskSetupResponse().getKIOSK_ID());
         tpDetailsEntity.setOrderType("Pharma");
         tpDetailsEntity.setCouponCode("MED10");
-        tpDetailsEntity.setOrderDate(Utils.getOrderedID());
-        tpDetailsEntity.setRequestType("NONCART");
+        Date date = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-M-dd");
+        String strDate = formatter.format(date);
+        tpDetailsEntity.setOrderDate(strDate);
+        tpDetailsEntity.setRequestType("CART");
         ArrayList<PlaceOrderReqModel.PrescUrlEntity> prescEntityArray = new ArrayList<>();
         PlaceOrderReqModel.PrescUrlEntity pue = new PlaceOrderReqModel.PrescUrlEntity();
         pue.setUrl("http://172.16.2.251:8033/ApolloKMD/apolloMedBuddy/Medibuddy/WalletCheck");

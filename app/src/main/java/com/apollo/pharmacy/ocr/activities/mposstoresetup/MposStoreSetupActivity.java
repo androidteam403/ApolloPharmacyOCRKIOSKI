@@ -29,6 +29,7 @@ import com.apollo.pharmacy.ocr.activities.mposstoresetup.model.StoreListResponse
 import com.apollo.pharmacy.ocr.activities.mposstoresetup.model.StoreSetupModel;
 import com.apollo.pharmacy.ocr.databinding.MposStoreSetupActivityBinding;
 import com.apollo.pharmacy.ocr.model.DeviceRegistrationResponse;
+import com.apollo.pharmacy.ocr.model.UserAddress;
 import com.apollo.pharmacy.ocr.utility.SessionManager;
 import com.apollo.pharmacy.ocr.utility.Utils;
 import com.google.android.gms.common.ConnectionResult;
@@ -385,6 +386,15 @@ public class MposStoreSetupActivity extends BaseActivity implements GoogleApiCli
         storeIdNumber = item.getStoreId();
         selectedStoreId = item;
         selectedStoreContactNum = item;
+        UserAddress userAddress = new UserAddress();
+        userAddress.setId(Integer.parseInt(item.getStoreId()));
+        userAddress.setCity(item.getCity());
+        userAddress.setAddress1(item.getAddress());
+        userAddress.setName(item.getStoreName());
+        userAddress.setMobile(SessionManager.INSTANCE.getMobilenumber());
+        userAddress.setState(item.getCity());
+        userAddress.setPincode("000000");
+        SessionManager.INSTANCE.setUseraddress(userAddress);
     }
 
 
