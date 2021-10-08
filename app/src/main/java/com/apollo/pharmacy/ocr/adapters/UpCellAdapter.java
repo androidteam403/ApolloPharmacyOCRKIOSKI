@@ -62,7 +62,7 @@ public class UpCellAdapter extends RecyclerView.Adapter<UpCellAdapter.ViewHolder
                 Intent intent = new Intent("cardReceiver");
                 intent.putExtra("message", "Addtocart");
                 intent.putExtra("product_sku", upselling.getArtCode());
-                intent.putExtra("product_name", upselling.getGenericName());
+                intent.putExtra("product_name", upselling.getDescription());
                 intent.putExtra("product_quantyty", upselling.getQty().toString());//txtQty.getText().toString()
                 intent.putExtra("product_price", String.valueOf(itemBatchSelectionDilaog.getItemProice()));//String.valueOf(medicine.getPrice())
                 // intent.putExtra("product_container", product_container);

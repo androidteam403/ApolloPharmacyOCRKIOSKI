@@ -49,7 +49,7 @@ public class CrossCellAdapter extends RecyclerView.Adapter<CrossCellAdapter.View
         }
         holder.adapterAccesariesItemsBinding.itemAddtoCartLayout.setOnClickListener(v -> {
             ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(activity, crossselling.getArtCode());
-            itemBatchSelectionDilaog.setTitle(crossselling.getGenericName());
+            itemBatchSelectionDilaog.setTitle(crossselling.getDescription());
             itemBatchSelectionDilaog.setUnitIncreaseListener(view1 -> {
                 crossselling.setQty(crossselling.getQty() + 1);
                 itemBatchSelectionDilaog.setQtyCount("" + crossselling.getQty());
@@ -67,7 +67,7 @@ public class CrossCellAdapter extends RecyclerView.Adapter<CrossCellAdapter.View
                 Intent intent = new Intent("cardReceiver");
                 intent.putExtra("message", "Addtocart");
                 intent.putExtra("product_sku", crossselling.getArtCode());
-                intent.putExtra("product_name", crossselling.getGenericName());
+                intent.putExtra("product_name", crossselling.getDescription());
                 intent.putExtra("product_quantyty", crossselling.getQty().toString());//txtQty.getText().toString()
                 intent.putExtra("product_price", String.valueOf(itemBatchSelectionDilaog.getItemProice()));//String.valueOf(medicine.getPrice())
                 // intent.putExtra("product_container", product_container);

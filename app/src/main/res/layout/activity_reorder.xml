@@ -138,7 +138,6 @@
                     android:layout_marginBottom="@dimen/three_dp"
                     android:background="@color/DARKRED"
                     android:padding="@dimen/five_dp"
-                    android:layout_below="@id/medicines_recyclerView"
                     android:text="Confirm Order"
                     android:textColor="@color/white"
                     android:textStyle="bold" />
