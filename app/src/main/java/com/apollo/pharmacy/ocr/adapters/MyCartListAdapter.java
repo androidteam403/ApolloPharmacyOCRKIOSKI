@@ -62,8 +62,8 @@ public class MyCartListAdapter extends RecyclerView.Adapter<MyCartListAdapter.Vi
             holder.snoTxt.setText(String.valueOf(position + 1));
             if (cartMedicineList.get(position).getArtName().length() > 0) {
                 holder.productNameTxt.setText(item.getArtName());
-                holder.productQty.setText(String.valueOf(item.getQty()));
             }
+            holder.productQty.setText(String.valueOf(item.getQty()));
             String rupeeSymbol = "\u20B9";
             if (!TextUtils.isEmpty(item.getArtprice())) {
                 holder.offerPriceTxt.setText(rupeeSymbol + String.format(Locale.ENGLISH, "%.2f", Float.parseFloat(item.getArtprice())));
