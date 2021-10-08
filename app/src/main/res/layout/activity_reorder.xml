@@ -32,14 +32,14 @@
                     android:textStyle="bold" />
 
                 <ImageView
-                    android:visibility="gone"
                     android:layout_width="@dimen/thirty_dp"
                     android:layout_height="@dimen/thirty_dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginBottom="@dimen/ten_dp"
                     android:contentDescription="@string/app_name"
-                    android:src="@drawable/close_cart_features" />
+                    android:src="@drawable/close_cart_features"
+                    android:visibility="gone" />
             </RelativeLayout>
 
 
@@ -133,6 +133,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="@dimen/ten_dp"
                     android:orientation="horizontal">
 
                     <TextView
@@ -142,22 +143,24 @@
                         android:layout_marginTop="@dimen/five_dp"
                         android:layout_marginBottom="@dimen/three_dp"
                         android:background="@color/home_bottom_background"
-                        android:padding="@dimen/five_dp"
+                        android:padding="@dimen/eight_dp"
                         android:text="Continue"
                         android:textColor="@color/black"
+                        android:textSize="@dimen/twenty_sp"
                         android:textStyle="bold" />
 
                     <TextView
-                        android:layout_marginStart="@dimen/fifteen_dp"
                         android:id="@+id/dialogButtonNO"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/fifteen_dp"
                         android:layout_marginTop="@dimen/five_dp"
                         android:layout_marginBottom="@dimen/three_dp"
                         android:background="@color/DARKRED"
-                        android:padding="@dimen/five_dp"
+                        android:padding="@dimen/eight_dp"
                         android:text="Cancel"
                         android:textColor="@color/white"
+                        android:textSize="@dimen/twenty_sp"
                         android:textStyle="bold" />
                 </LinearLayout>
 
