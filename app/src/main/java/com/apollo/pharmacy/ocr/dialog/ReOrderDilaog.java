@@ -100,6 +100,7 @@ public class ReOrderDilaog implements ReOrderListener {
         for (int i = 0; i < dataList.size(); i++) {
             if (dataList.get(i).isOutOfStock()) {
                 dataList.remove(dataList.get(i));
+                i--;
             }
         }
         return dataList;

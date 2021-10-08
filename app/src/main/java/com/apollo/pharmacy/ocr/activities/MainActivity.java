@@ -95,8 +95,9 @@ public class MainActivity extends BaseActivity implements ConnectivityReceiver.C
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lang_selection);
 
-        List<OCRToDigitalMedicineResponse> dataList = new ArrayList<>();
+       List<OCRToDigitalMedicineResponse> dataList = new ArrayList<>();
         SessionManager.INSTANCE.setDataList(dataList);
+        SessionManager.INSTANCE.setDeletedDataList(dataList);
 
         if (SessionManager.INSTANCE.getAccessKey() != null && SessionManager.INSTANCE.getAccessKey().equals("AP@11@2021")) {
             if (SessionManager.INSTANCE.getStoreId() != null && !SessionManager.INSTANCE.getStoreId().isEmpty()

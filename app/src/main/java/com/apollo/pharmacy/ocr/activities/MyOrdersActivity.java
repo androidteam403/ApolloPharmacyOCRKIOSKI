@@ -407,7 +407,14 @@ public class MyOrdersActivity extends AppCompatActivity implements ConnectivityR
                     List<OCRToDigitalMedicineResponse> tempCartItemList = new ArrayList<>();
                     tempCartItemList = SessionManager.INSTANCE.getDataList();
                     for (OCRToDigitalMedicineResponse listItem : tempCartItemList) {
-                        reOrderDilaog.dataListLatest().add(listItem);
+                        boolean isItemEqual = false;
+                        for (OCRToDigitalMedicineResponse duplecateItem : reOrderDilaog.dataListLatest()) {
+                            if (duplecateItem.getArtCode().equals(listItem.getArtCode())) {
+                                isItemEqual = true;
+                            }
+                        }
+                        if (!isItemEqual)
+                            reOrderDilaog.dataListLatest().add(listItem);
                     }
                 }
             }
