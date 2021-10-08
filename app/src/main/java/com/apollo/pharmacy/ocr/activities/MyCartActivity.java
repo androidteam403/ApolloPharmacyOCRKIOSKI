@@ -138,7 +138,7 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
     private TextView timerHeaderText, timerChildText;
     private long minVal = 0, secVal = 0;
     RecyclerView crossCell_recycle, upcell_recycle;
-    TextView noDataFound;
+    TextView noDataFound, noDataFoundCrosssel, noDataFoundUpsel;
     private boolean isDialogShow = false;
 
     @Override
@@ -892,6 +892,8 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
         upcell_recycle = findViewById(R.id.up_cell_data_recycle);
         crossCell_recycle = findViewById(R.id.cross_cell_data_recycle);
         noDataFound = findViewById(R.id.no_data);
+        noDataFoundCrosssel = findViewById(R.id.no_data_found_crosssell);
+        noDataFoundUpsel = findViewById(R.id.no_data_found_upsell);
         RecyclerView promotionproductrecycleerview = findViewById(R.id.promotionsRecyclerView);
         promotionproductrecycleerview.setLayoutManager(new GridLayoutManager(MyCartActivity.this, 3));
         RecyclerView trendingnowproductrecycleerview = findViewById(R.id.trendingnowproductrecycleerview);
@@ -1010,7 +1012,7 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
         checkOutImage.setOnClickListener(arg0 -> {
             if (dataList != null && dataList.size() > 0) {
 //                startActivity(CheckoutActivity.getStartIntent(this, dataList));
-                Intent intent=new Intent(this,CheckoutActivity.class);
+                Intent intent = new Intent(this, CheckoutActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
             } else {
@@ -1517,42 +1519,86 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
         handleScannedImageView();
     }
 
-    List<UpCellCrossCellResponse.Crossselling> crosssellingList = new ArrayList<>();
-    List<UpCellCrossCellResponse.Upselling> upsellingList = new ArrayList<>();
+//    List<UpCellCrossCellResponse.Crossselling> crosssellingList = new ArrayList<>();
+//    List<UpCellCrossCellResponse.Upselling> upsellingList = new ArrayList<>();
+
+    List<ItemSearchResponse.Item> crosssellingList = new ArrayList<>();
+    List<ItemSearchResponse.Item> upsellingList = new ArrayList<>();
     boolean addToCarLayHandel;
+    UpCellCrossCellResponse.Crossselling cs;
+    private int crosssellcountforadapter = 0;
+    private int upssellcountforadapter = 0;
 
     @Override
     public void onSuccessSearchItemApi(UpCellCrossCellResponse body) {
+        crosssellcountforadapter = 0;
+        upssellcountforadapter = 0;
+        List<UpCellCrossCellResponse.Crossselling> crossselling = null;
+        List<UpCellCrossCellResponse.Upselling> upselling = null;
         if (body != null && body.getCrossselling() != null && body.getCrossselling().size() > 0) {
             addToCarLayHandel = false;
-            crosssellingList.add(body.getCrossselling().get(0));
-            crosssellingList.add(body.getCrossselling().get(1));
-            crosssellingList.add(body.getCrossselling().get(2));
-
-            CrossCellAdapter crossCellAdapter = new CrossCellAdapter(this, crosssellingList, addToCarLayHandel);
-            RecyclerView.LayoutManager mLayoutManager4 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-            crossCell_recycle.setLayoutManager(mLayoutManager4);
-            crossCell_recycle.setItemAnimator(new DefaultItemAnimator());
-            crossCell_recycle.setAdapter(crossCellAdapter);
-            noDataFound.setVisibility(View.GONE);
+            crossselling = new ArrayList<>();
+            crossselling.add(body.getCrossselling().get(0));
+            crossselling.add(body.getCrossselling().get(1));
+            crossselling.add(body.getCrossselling().get(2));
+            for (UpCellCrossCellResponse.Crossselling crossSellingList : crossselling) {
+                myCartController.searchItemProducts(crossSellingList.getItemid(), 1);
+            }
         } else {
             noDataFound.setVisibility(View.VISIBLE);
         }
         if (body != null && body.getUpselling() != null && body.getUpselling().size() > 0) {
 
-            upsellingList.add(body.getUpselling().get(0));
-            upsellingList.add(body.getUpselling().get(1));
-            upsellingList.add(body.getUpselling().get(2));
 
-            UpCellAdapter upCellAdapter = new UpCellAdapter(this, upsellingList);
-            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-            upcell_recycle.setLayoutManager(mLayoutManager);
-            upcell_recycle.setItemAnimator(new DefaultItemAnimator());
-            upcell_recycle.setAdapter(upCellAdapter);
-            noDataFound.setVisibility(View.GONE);
+            crossselling = new ArrayList<>();
+            crossselling.add(body.getCrossselling().get(0));
+            crossselling.add(body.getCrossselling().get(1));
+            crossselling.add(body.getCrossselling().get(2));
+            for (UpCellCrossCellResponse.Crossselling crossSellingList : crossselling) {
+                myCartController.searchItemProducts(crossSellingList.getItemid(), 2);
+            }
+
+//            upselling = new ArrayList<>();
+//            upselling.add(body.getUpselling().get(0));
+//            upselling.add(body.getUpselling().get(1));
+//            upselling.add(body.getUpselling().get(2));
+//            for (UpCellCrossCellResponse.Upselling upSelling : upselling) {
+//                myCartController.searchItemProducts(upSelling.getItemid(), 2);
+//            }
         } else {
             noDataFound.setVisibility(View.VISIBLE);
         }
+//        if (crossselling != null && crossselling.size() > 0 || upselling != null && upselling.size() > 0)
+//            upSellCrosssellApiCall(crossselling, upselling);
+
+    }
+
+    @Override
+    public void upSellCrosssellApiCall(List<UpCellCrossCellResponse.Crossselling> crossselling,
+                                       List<UpCellCrossCellResponse.Upselling> upselling) {
+        boolean iscrosssellFinish = true;
+        String itemSku = null;
+        for (int i = 0; i < crossselling.size(); i++) {
+            if (!crossselling.get(i).isCalled()) {
+                crossselling.get(i).setCalled(true);
+                iscrosssellFinish = false;
+                itemSku = crossselling.get(i).getItemid();
+//                myCartController.searchItemProducts(crossselling.get(i).getItemid(), 1, crossselling, upselling, iscrosssellFinish, false);
+                break;
+            }
+        }
+        if (!iscrosssellFinish)
+            myCartController.searchItemProducts(itemSku, 1, crossselling, upselling, iscrosssellFinish, false);
+
+//        if (iscrosssellFinish) {
+//            for (int i = 0; i < upselling.size(); i++) {
+//                if (!upselling.get(i).isCalled()) {
+//                    crossselling.get(i).setCalled(true);
+//                    myCartController.searchItemProducts(crossselling.get(i).getItemid(), 1, crossselling, upselling, true, false);
+//                    break;
+//                }
+//            }
+//        }
     }
 
     @Override
@@ -1562,7 +1608,8 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
 
 
     @Override
-    public void onSuccessBarcodeItemApi(ItemSearchResponse itemSearchResponse) {
+    public void onSuccessBarcodeItemApi(ItemSearchResponse itemSearchResponse, int serviceType) {
+        if (serviceType == 0) {
             if (itemSearchResponse.getItemList() != null && itemSearchResponse.getItemList().size() > 0) {
                 ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(MyCartActivity.this, itemSearchResponse.getItemList().get(0).getArtCode());
                 ProductSearch medicine = new ProductSearch();
@@ -1635,9 +1682,52 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
             } else {
                 Utils.showSnackbar(MyCartActivity.this, constraint_Layout, "No Item found");
             }
-        Utils.dismissDialog();
-
+            Utils.dismissDialog();
+        } else if (serviceType == 1) {
+            crosssellcountforadapter++;
+            if (itemSearchResponse.getItemList() != null && itemSearchResponse.getItemList().size() > 0) {
+                crosssellingList.add(itemSearchResponse.getItemList().get(0));
+                if (crosssellcountforadapter == 3) {
+                    if (crosssellingList != null && crosssellingList.size() > 0) {
+                        CrossCellAdapter crossCellAdapter = new CrossCellAdapter(this, crosssellingList, addToCarLayHandel);
+                        RecyclerView.LayoutManager mLayoutManager4 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+                        crossCell_recycle.setLayoutManager(mLayoutManager4);
+                        crossCell_recycle.setItemAnimator(new DefaultItemAnimator());
+                        crossCell_recycle.setAdapter(crossCellAdapter);
+                        noDataFoundCrosssel.setVisibility(View.GONE);
+                    } else {
+                        noDataFoundCrosssel.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+            if (crosssellcountforadapter == 3 && crosssellingList != null && crosssellingList.size() > 0)
+                noDataFoundCrosssel.setVisibility(View.GONE);
+            else
+                noDataFoundCrosssel.setVisibility(View.VISIBLE);
+        } else if (serviceType == 2) {
+            upssellcountforadapter++;
+            if (itemSearchResponse.getItemList() != null && itemSearchResponse.getItemList().size() > 0) {
+                upsellingList.add(itemSearchResponse.getItemList().get(0));
+                if (upssellcountforadapter == 3) {
+                    if (upsellingList != null && upsellingList.size() > 0) {
+                        UpCellAdapter upCellAdapter = new UpCellAdapter(this, upsellingList);
+                        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+                        upcell_recycle.setLayoutManager(mLayoutManager);
+                        upcell_recycle.setItemAnimator(new DefaultItemAnimator());
+                        upcell_recycle.setAdapter(upCellAdapter);
+                        noDataFoundUpsel.setVisibility(View.GONE);
+                    } else {
+                        noDataFoundUpsel.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+            if (upssellcountforadapter == 3 && upsellingList != null && upsellingList.size() > 0)
+                noDataFoundUpsel.setVisibility(View.GONE);
+            else
+                noDataFoundUpsel.setVisibility(View.VISIBLE);
+        }
     }
+
 
     private BroadcastReceiver mMessageReceivers = new BroadcastReceiver() {
         @Override
@@ -1954,12 +2044,12 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                 if (barcode_code != null) {
 //            Toast.makeText(this, barcode_code, Toast.LENGTH_LONG).show();
                     Utils.showDialog(this, "Plaese wait...");
-                    myCartController.searchItemProducts(barcode_code);
+                    myCartController.searchItemProducts(barcode_code, 0);
                 } else {
                     Toast.makeText(this, "Scan Cancelled", Toast.LENGTH_LONG).show();
                 }
             }
-        }else{
+        } else {
             Utils.showSnackbar(MyCartActivity.this, constraint_Layout, "Please complete present action first.");
         }
     }

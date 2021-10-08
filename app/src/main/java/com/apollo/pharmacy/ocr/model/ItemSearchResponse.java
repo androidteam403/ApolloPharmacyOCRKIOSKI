@@ -120,6 +120,7 @@ public class ItemSearchResponse implements Serializable {
         @SerializedName("SubClassification")
         @Expose
         private String subClassification;
+        private Integer qty = 1;
 
         public String getArtCode() {
             return artCode;
@@ -319,6 +320,14 @@ public class ItemSearchResponse implements Serializable {
 
         public void setSubClassification(String subClassification) {
             this.subClassification = subClassification;
+        }
+
+        public Integer getQty() {
+            return qty;
+        }
+
+        public void setQty(Integer qty) {
+            this.qty = qty;
         }
     }
 }

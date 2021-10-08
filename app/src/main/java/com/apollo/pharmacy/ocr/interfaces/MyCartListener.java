@@ -9,6 +9,7 @@ import com.apollo.pharmacy.ocr.model.UserAddress;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public interface MyCartListener {
 
@@ -28,7 +29,10 @@ public interface MyCartListener {
 
     void onSearchFailure(String message);
 
-    void onSuccessBarcodeItemApi(ItemSearchResponse itemSearchResponse);
+    void onSuccessBarcodeItemApi(ItemSearchResponse itemSearchResponse, int serviceType);
 
     void onFailureBarcodeItemApi(String message);
+
+    void upSellCrosssellApiCall(List<UpCellCrossCellResponse.Crossselling> crossselling,
+                                        List<UpCellCrossCellResponse.Upselling> upselling);
 }

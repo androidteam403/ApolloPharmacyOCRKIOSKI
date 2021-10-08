@@ -89,10 +89,11 @@ public class UpCellCrossCellResponse implements Serializable {
         @SerializedName("reason")
         @Expose
         private String reason;
-
         private String offerPrice;
 
+        private String medicineType;
 
+        private boolean isCalled;
         private final static long serialVersionUID = 3686291619582335535L;
 
         public String getOfferPrice() {
@@ -135,6 +136,21 @@ public class UpCellCrossCellResponse implements Serializable {
             this.reason = reason;
         }
 
+        public String getMedicineType() {
+            return medicineType;
+        }
+
+        public void setMedicineType(String medicineType) {
+            this.medicineType = medicineType;
+        }
+
+        public boolean isCalled() {
+            return isCalled;
+        }
+
+        public void setCalled(boolean called) {
+            isCalled = called;
+        }
     }
 
     public class Upselling implements Serializable {
@@ -154,6 +170,9 @@ public class UpCellCrossCellResponse implements Serializable {
 
         private String offerPrice;
 
+        private String medicineType;
+
+        private boolean isCalled;
         private final static long serialVersionUID = 7652799238025050487L;
 
         public String getOfferPrice() {
@@ -196,6 +215,21 @@ public class UpCellCrossCellResponse implements Serializable {
             this.reason = reason;
         }
 
+        public String getMedicineType() {
+            return medicineType;
+        }
+
+        public void setMedicineType(String medicineType) {
+            this.medicineType = medicineType;
+        }
+
+        public boolean isCalled() {
+            return isCalled;
+        }
+
+        public void setCalled(boolean called) {
+            isCalled = called;
+        }
     }
 
 }

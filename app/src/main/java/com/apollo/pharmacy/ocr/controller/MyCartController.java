@@ -172,7 +172,7 @@ public class MyCartController {
         return data;
     }
 
-    public void upcellCrosscellList(String mobileNo,Context context) {
+    public void upcellCrosscellList(String mobileNo, Context context) {
         showDialog(context, context.getResources().getString(R.string.label_please_wait));
         ApiInterface apiInterface = ApiClient.getApiService();
         UpCellCrossCellRequest upCellCrossCellRequest = new UpCellCrossCellRequest();
@@ -194,7 +194,39 @@ public class MyCartController {
             }
         });
     }
-    public void searchItemProducts(String item) {
+
+    public void searchItemProducts(String item, int serviceType) {
+        ApiInterface apiInterface = ApiClient.getApiServiceMposBaseUrl(SessionManager.INSTANCE.getEposUrl());
+        ItemSearchRequest itemSearchRequest = new ItemSearchRequest();
+        itemSearchRequest.setCorpCode("0");
+        itemSearchRequest.setIsGeneric(false);
+        itemSearchRequest.setIsInitial(true);
+        itemSearchRequest.setIsStockCheck(true);
+        itemSearchRequest.setSearchString(item);
+        itemSearchRequest.setStoreID("16001");
+        Call<ItemSearchResponse> call = apiInterface.getSearchItemApiCall(itemSearchRequest);
+        call.enqueue(new Callback<ItemSearchResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<ItemSearchResponse> call, @NonNull Response<ItemSearchResponse> response) {
+                if (response.isSuccessful()) {
+                    Gson gson = new Gson();
+                    String json = gson.toJson(response.body());
+                    System.out.println("void data" + json);
+                    ItemSearchResponse itemSearchResponse = response.body();
+                    assert itemSearchResponse != null;
+                    myCartListener.onSuccessBarcodeItemApi(itemSearchResponse, serviceType);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ItemSearchResponse> call, @NonNull Throwable t) {
+                myCartListener.onFailureBarcodeItemApi(t.getMessage());
+            }
+        });
+    }
+
+    public void searchItemProducts(String item, int serviceType, List<UpCellCrossCellResponse.Crossselling> crossselling,
+                                   List<UpCellCrossCellResponse.Upselling> upselling, boolean iscrosssellFinish, boolean isupsellFinish) {
         ApiInterface apiInterface = ApiClient.getApiService();
         ItemSearchRequest itemSearchRequest = new ItemSearchRequest();
         itemSearchRequest.setCorpCode("0");
@@ -213,7 +245,8 @@ public class MyCartController {
                     System.out.println("void data" + json);
                     ItemSearchResponse itemSearchResponse = response.body();
                     assert itemSearchResponse != null;
-                    myCartListener.onSuccessBarcodeItemApi(itemSearchResponse);
+                    myCartListener.onSuccessBarcodeItemApi(itemSearchResponse, serviceType);
+                    myCartListener.upSellCrosssellApiCall(crossselling,upselling);
                 }
             }
 
@@ -223,5 +256,4 @@ public class MyCartController {
             }
         });
     }
-
 }

@@ -539,12 +539,17 @@ public class MyProfileActivity extends AppCompatActivity implements MyCartListen
     }
 
     @Override
-    public void onSuccessBarcodeItemApi(ItemSearchResponse itemSearchResponse) {
+    public void onSuccessBarcodeItemApi(ItemSearchResponse itemSearchResponse, int serviceType) {
 
     }
 
     @Override
     public void onFailureBarcodeItemApi(String message) {
+
+    }
+
+    @Override
+    public void upSellCrosssellApiCall(List<UpCellCrossCellResponse.Crossselling> crossselling, List<UpCellCrossCellResponse.Upselling> upselling) {
 
     }
 
