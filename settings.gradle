@@ -1,3 +1,4 @@
+include ':BarcodeScannerLibrarys'
 include ':libusbcamera'
 include ':imagepicker'
 include ':app', ':circularimageview', ':library'

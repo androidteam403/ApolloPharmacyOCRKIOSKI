@@ -59,6 +59,7 @@
                 android:layout_gravity="center"
                 android:contentDescription="@string/app_name"
                 android:padding="@dimen/five_dp"
+                android:visibility="gone"
                 android:src="@drawable/decrement" />
 
             <TextView
@@ -77,6 +78,7 @@
                 android:layout_gravity="center"
                 android:contentDescription="@string/app_name"
                 android:padding="@dimen/five_dp"
+                android:visibility="gone"
                 android:src="@drawable/increment" />
         </LinearLayout>
 
