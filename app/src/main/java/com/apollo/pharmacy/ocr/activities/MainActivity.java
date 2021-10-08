@@ -97,6 +97,7 @@ public class MainActivity extends BaseActivity implements ConnectivityReceiver.C
 
         List<OCRToDigitalMedicineResponse> dataList = new ArrayList<>();
         SessionManager.INSTANCE.setDataList(dataList);
+        SessionManager.INSTANCE.setDeletedDataList(dataList);
 
         if (SessionManager.INSTANCE.getAccessKey() != null && SessionManager.INSTANCE.getAccessKey().equals("AP@11@2021")) {
             if (SessionManager.INSTANCE.getStoreId() != null && !SessionManager.INSTANCE.getStoreId().isEmpty()
