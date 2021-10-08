@@ -214,6 +214,8 @@ public class MyCartController {
                     System.out.println("void data" + json);
                     ItemSearchResponse itemSearchResponse = response.body();
                     assert itemSearchResponse != null;
+                    if (itemSearchResponse.getItemList() != null && itemSearchResponse.getItemList().size() > 0)
+                        itemSearchResponse.getItemList().get(0).setMedicineType(itemSearchResponse.getItemList().get(0).getCategory());
                     myCartListener.onSuccessBarcodeItemApi(itemSearchResponse, serviceType);
                 }
             }
@@ -246,7 +248,7 @@ public class MyCartController {
                     ItemSearchResponse itemSearchResponse = response.body();
                     assert itemSearchResponse != null;
                     myCartListener.onSuccessBarcodeItemApi(itemSearchResponse, serviceType);
-                    myCartListener.upSellCrosssellApiCall(crossselling,upselling);
+                    myCartListener.upSellCrosssellApiCall(crossselling, upselling);
                 }
             }
 

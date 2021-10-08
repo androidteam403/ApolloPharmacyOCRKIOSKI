@@ -1548,23 +1548,13 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
             noDataFound.setVisibility(View.VISIBLE);
         }
         if (body != null && body.getUpselling() != null && body.getUpselling().size() > 0) {
-
-
-            crossselling = new ArrayList<>();
-            crossselling.add(body.getCrossselling().get(0));
-            crossselling.add(body.getCrossselling().get(1));
-            crossselling.add(body.getCrossselling().get(2));
-            for (UpCellCrossCellResponse.Crossselling crossSellingList : crossselling) {
-                myCartController.searchItemProducts(crossSellingList.getItemid(), 2);
+            upselling = new ArrayList<>();
+            upselling.add(body.getUpselling().get(0));
+            upselling.add(body.getUpselling().get(1));
+            upselling.add(body.getUpselling().get(2));
+            for (UpCellCrossCellResponse.Upselling upSelling : upselling) {
+                myCartController.searchItemProducts(upSelling.getItemid(), 2);
             }
-
-//            upselling = new ArrayList<>();
-//            upselling.add(body.getUpselling().get(0));
-//            upselling.add(body.getUpselling().get(1));
-//            upselling.add(body.getUpselling().get(2));
-//            for (UpCellCrossCellResponse.Upselling upSelling : upselling) {
-//                myCartController.searchItemProducts(upSelling.getItemid(), 2);
-//            }
         } else {
             noDataFound.setVisibility(View.VISIBLE);
         }
@@ -1576,29 +1566,7 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
     @Override
     public void upSellCrosssellApiCall(List<UpCellCrossCellResponse.Crossselling> crossselling,
                                        List<UpCellCrossCellResponse.Upselling> upselling) {
-        boolean iscrosssellFinish = true;
-        String itemSku = null;
-        for (int i = 0; i < crossselling.size(); i++) {
-            if (!crossselling.get(i).isCalled()) {
-                crossselling.get(i).setCalled(true);
-                iscrosssellFinish = false;
-                itemSku = crossselling.get(i).getItemid();
-//                myCartController.searchItemProducts(crossselling.get(i).getItemid(), 1, crossselling, upselling, iscrosssellFinish, false);
-                break;
-            }
-        }
-        if (!iscrosssellFinish)
-            myCartController.searchItemProducts(itemSku, 1, crossselling, upselling, iscrosssellFinish, false);
 
-//        if (iscrosssellFinish) {
-//            for (int i = 0; i < upselling.size(); i++) {
-//                if (!upselling.get(i).isCalled()) {
-//                    crossselling.get(i).setCalled(true);
-//                    myCartController.searchItemProducts(crossselling.get(i).getItemid(), 1, crossselling, upselling, true, false);
-//                    break;
-//                }
-//            }
-//        }
     }
 
     @Override
