@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.apollo.pharmacy.ocr.R;
 import com.apollo.pharmacy.ocr.adapters.MyOrdersAdapter;
 import com.apollo.pharmacy.ocr.controller.MyOrdersController;
+import com.apollo.pharmacy.ocr.dialog.ReOrderDilaog;
 import com.apollo.pharmacy.ocr.interfaces.MyOrdersListener;
 import com.apollo.pharmacy.ocr.model.Meta;
 import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
@@ -34,8 +35,8 @@ import com.apollo.pharmacy.ocr.model.PricePrescriptionResponse;
 import com.apollo.pharmacy.ocr.model.ScannedData;
 import com.apollo.pharmacy.ocr.model.ScannedMedicine;
 import com.apollo.pharmacy.ocr.receiver.ConnectivityReceiver;
-import com.apollo.pharmacy.ocr.utility.Constants;
 import com.apollo.pharmacy.ocr.utility.ApplicationConstant;
+import com.apollo.pharmacy.ocr.utility.Constants;
 import com.apollo.pharmacy.ocr.utility.NetworkUtils;
 import com.apollo.pharmacy.ocr.utility.SessionManager;
 import com.apollo.pharmacy.ocr.utility.Utils;
@@ -377,7 +378,7 @@ public class MyOrdersActivity extends AppCompatActivity implements ConnectivityR
         if (response.size() > 0) {
             orderdetials_list.addAll(response);
             Collections.reverse(orderdetials_list);
-            orderdetails_adaptor = new MyOrdersAdapter(this, orderdetials_list);
+            orderdetails_adaptor = new MyOrdersAdapter(this, orderdetials_list, this);
             orderListRecyclerView.setAdapter(orderdetails_adaptor);
             orderdetails_adaptor.notifyDataSetChanged();
         } else {
@@ -393,6 +394,34 @@ public class MyOrdersActivity extends AppCompatActivity implements ConnectivityR
     @Override
     public void onDeletePrescriptionSuccess(Meta m) {
 
+    }
+
+    @Override
+    public void onReorderClick(List<OCRToDigitalMedicineResponse> dataList) {
+        ReOrderDilaog reOrderDilaog = new ReOrderDilaog(MyOrdersActivity.this, dataList);
+        reOrderDilaog.setPositiveListener(view -> {
+            reOrderDilaog.dataListLatest();
+
+            if (null != SessionManager.INSTANCE.getDataList()) {
+                if (SessionManager.INSTANCE.getDataList().size() > 0) {
+                    List<OCRToDigitalMedicineResponse> tempCartItemList = new ArrayList<>();
+                    tempCartItemList = SessionManager.INSTANCE.getDataList();
+                    for (OCRToDigitalMedicineResponse listItem : tempCartItemList) {
+                        reOrderDilaog.dataListLatest().add(listItem);
+                    }
+                }
+            }
+            SessionManager.INSTANCE.setDataList(reOrderDilaog.dataListLatest());
+            Intent intent = new Intent("OrderhistoryCardReciver");
+            intent.putExtra("message", "OrderNow");
+            intent.putExtra("MedininesNames", new Gson().toJson(reOrderDilaog.dataListLatest()));
+            LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
+            reOrderDilaog.dismiss();
+        });
+        reOrderDilaog.setNegativeListener(view -> {
+            reOrderDilaog.dismiss();
+        });
+        reOrderDilaog.show();
     }
 
     public void cartCount(int count) {
