@@ -320,17 +320,22 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
         return dialogItemBatchSelectionBinding.unitCount.getText().toString();
     }
 
+    public BatchListResponse.Batch getItemBatchSelectionDataQty() {
+        return itemBatchSelectionDataQtyCompare;
+    }
+
     private double itemPrice;
+
+    BatchListResponse.Batch itemBatchSelectionDataQtyCompare;
 
     @Override
     public void onItemBatchClickData(int position, BatchListResponse.Batch itemBatchSelectionData) {
+        itemBatchSelectionDataQtyCompare = itemBatchSelectionData;
         dialogItemBatchSelectionBinding.dialogItemBatchInnerParentLayout.setBackground(getContext().getResources().getDrawable(R.drawable.dialog_background));
         dialogItemBatchSelectionBinding.recyclerViewLay.setVisibility(View.GONE);
         dialogItemBatchSelectionBinding.date.setText(itemBatchSelectionData.getExpDate());
         dialogItemBatchSelectionBinding.price.setText(String.valueOf(itemBatchSelectionData.getPrice()));
         this.itemPrice = itemBatchSelectionData.getPrice();
-
-
     }
 
     private BatchListResponse batchListResponse;
@@ -342,6 +347,7 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
             dialogItemBatchSelectionBinding.date.setText(batchListResponse.getBatchList().get(0).getExpDate());
             dialogItemBatchSelectionBinding.price.setText(String.valueOf(batchListResponse.getBatchList().get(0).getPrice()));
             this.itemPrice = batchListResponse.getBatchList().get(0).getPrice();
+            this.itemBatchSelectionDataQtyCompare = batchListResponse.getBatchList().get(0);
             dialogItemBatchSelectionBinding.loadingPanel.setVisibility(View.GONE);
             dialogItemBatchSelectionBinding.batchSelectionData.setOnClickListener(new View.OnClickListener() {
                 @Override

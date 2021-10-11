@@ -619,8 +619,12 @@ public class HomeActivity extends BaseActivity implements ConnectivityReceiver.C
 
 
             itemBatchSelectionDilaog.setUnitIncreaseListener(view3 -> {
-                medicine.setQty(medicine.getQty() + 1);
-                itemBatchSelectionDilaog.setQtyCount("" + medicine.getQty());
+                if (itemBatchSelectionDilaog.getItemBatchSelectionDataQty() != null && Integer.parseInt(itemBatchSelectionDilaog.getItemBatchSelectionDataQty().getQOH()) >= (medicine.getQty() + 1)) {
+                    medicine.setQty(medicine.getQty() + 1);
+                    itemBatchSelectionDilaog.setQtyCount("" + medicine.getQty());
+                } else {
+                    Toast.makeText(HomeActivity.this, "Selected quantity is not available in batch", Toast.LENGTH_SHORT).show();
+                }
             });
             itemBatchSelectionDilaog.setUnitDecreaseListener(view4 -> {
                 if (medicine.getQty() > 1) {

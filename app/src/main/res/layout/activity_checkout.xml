@@ -202,7 +202,6 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:gravity="center"
-                                android:maxLength="7"
                                 android:text="@{model.pharmaTotal}"
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/eighteen_sp"
@@ -365,7 +364,6 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:gravity="center"
-                                android:maxLength="7"
                                 android:text="@{model.fmcgTotal}"
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/eighteen_sp"
@@ -467,7 +465,7 @@
                         android:padding="@dimen/three_dp"
                         android:text="@string/label_grand_total"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/fourteen_sp"
+                        android:textSize="@dimen/seventeen_sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -495,7 +493,6 @@
                         android:layout_weight="1"
                         android:gravity="center"
                         android:padding="@dimen/three_dp"
-                        android:maxLength="7"
                         android:text="@{model.medicineTotal}"
                         android:textColor="@color/white"
                         android:textSize="@dimen/twenty_sp"

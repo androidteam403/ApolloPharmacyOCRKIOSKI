@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -54,11 +56,15 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
         activityPaymentOptionsBinding = DataBindingUtil.setContentView(this, R.layout.activity_payment_options);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        if (SessionManager.INSTANCE.getMobilenumber() != null) {
+            activityPaymentOptionsBinding.userNum.setText(SessionManager.INSTANCE.getMobilenumber());
+        }
+
         OrderDetailsuiModel orderDetailsuiModel = new OrderDetailsuiModel();
         if (getIntent() != null) {
             pharmaTotalData = (double) getIntent().getDoubleExtra("fmcgTotal", 0.0);
-            isFmcgDeliveryType = getIntent().getBooleanExtra("isPharmaHomeDelivery", false);
-            isPharmadeliveryType = getIntent().getBooleanExtra("isFmcgHomeDelivery", false);
+            isFmcgDeliveryType = getIntent().getBooleanExtra("isFmcgHomeDelivery", false);
+            isPharmadeliveryType = getIntent().getBooleanExtra("isPharmaHomeDelivery", false);
             orderDetailsuiModel.setPharmaHomeDelivery(getIntent().getBooleanExtra("isPharmaHomeDelivery", false));
             orderDetailsuiModel.setFmcgHomeDelivery(getIntent().getBooleanExtra("isFmcgHomeDelivery", false));
             customerDeliveryAddress = (String) getIntent().getStringExtra("customerDeliveryAddress");
@@ -67,6 +73,12 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
             pincode = (String) getIntent().getStringExtra("pincode");
             city = (String) getIntent().getStringExtra("city");
             state = (String) getIntent().getStringExtra("state");
+        }
+
+        if (isFmcgDeliveryType) {
+            activityPaymentOptionsBinding.cashOnDelivery.setVisibility(View.VISIBLE);
+        } else {
+            activityPaymentOptionsBinding.cashOnDelivery.setVisibility(View.GONE);
         }
 
         if (null != SessionManager.INSTANCE.getDataList())
@@ -96,16 +108,23 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
 //            fmcgToatalPass = fmcgTotal;
             orderDetailsuiModel.setPharmaCount(String.valueOf(pharmaMedicineCount));
             orderDetailsuiModel.setFmcgCount(String.valueOf(fmcgMedicineCount));
-            orderDetailsuiModel.setPharmaTotal(getResources().getString(R.string.rupee) + String.valueOf(pharmaTotal));
-            orderDetailsuiModel.setFmcgTotal(getResources().getString(R.string.rupee) + String.valueOf(fmcgTotal));
+
+            DecimalFormat formatter = new DecimalFormat("#,###.00");
+            String pharmaformatted = formatter.format(pharmaTotal);
+            String fmcgFormatted = formatter.format(fmcgTotal);
+
+            orderDetailsuiModel.setPharmaTotal(getResources().getString(R.string.rupee) + String.valueOf(pharmaformatted));
+            orderDetailsuiModel.setFmcgTotal(getResources().getString(R.string.rupee) + String.valueOf(fmcgFormatted));
             orderDetailsuiModel.setTotalMedicineCount(String.valueOf(dataList.size()));
-            orderDetailsuiModel.setMedicineTotal(getResources().getString(R.string.rupee) + String.valueOf(pharmaTotal + fmcgTotal));
+            String totalprodAmt = formatter.format(pharmaTotal + fmcgTotal);
+            orderDetailsuiModel.setMedicineTotal(getResources().getString(R.string.rupee) + String.valueOf(totalprodAmt));
+
             orderDetailsuiModel.setFmcgPharma(isPharma && isFmcg);
             orderDetailsuiModel.setFmcg(isFmcg);
             orderDetailsuiModel.setPharma(isPharma);
             grandTotalAmountFmcg = fmcgTotal;
-            DecimalFormat formatter = new DecimalFormat("#,###.00");
-            String formatted = formatter.format(pharmaTotal);
+            DecimalFormat formatter1 = new DecimalFormat("#,###.00");
+            String formatted = formatter1.format(pharmaTotal);
             grandTotalAmountPharma = Double.parseDouble(formatted);
             activityPaymentOptionsBinding.setModel(orderDetailsuiModel);
         }
@@ -199,7 +218,9 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
 
     boolean scanPay = true;
 
+
     private void listeners() {
+        Animation fadeInAnimation = AnimationUtils.loadAnimation(PaymentOptionsActivity.this, R.anim.sample_fade_in);
         activityPaymentOptionsBinding.scanToPay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -208,6 +229,7 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
                 activityPaymentOptionsBinding.scanToPay.setBackgroundResource(R.drawable.ic_payment_methods_selectebg);
                 PaymentInfoLayoutsHandlings();
                 activityPaymentOptionsBinding.scanToPayInfoLay.setVisibility(View.VISIBLE);
+                activityPaymentOptionsBinding.scanToPayInfoLay.startAnimation(fadeInAnimation);
                 Utils.showDialog(PaymentOptionsActivity.this, "Loading…");
                 if (!qrCodeFirstTimeHandel) {
                     PhonePayQrCodeController phonePayQrCodeController = new PhonePayQrCodeController(getApplicationContext(), PaymentOptionsActivity.this);
@@ -224,6 +246,7 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
                 activityPaymentOptionsBinding.recievePaymentSms.setBackgroundResource(R.drawable.ic_payment_methods_selectebg);
                 PaymentInfoLayoutsHandlings();
                 activityPaymentOptionsBinding.receivePaymentSmsInfoLay.setVisibility(View.VISIBLE);
+                activityPaymentOptionsBinding.receivePaymentSmsInfoLay.startAnimation(fadeInAnimation);
             }
         });
         activityPaymentOptionsBinding.upi.setOnClickListener(new View.OnClickListener() {
@@ -234,6 +257,7 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
                 activityPaymentOptionsBinding.upi.setBackgroundResource(R.drawable.ic_payment_methods_selectebg);
                 PaymentInfoLayoutsHandlings();
                 activityPaymentOptionsBinding.upiInfoLay.setVisibility(View.VISIBLE);
+                activityPaymentOptionsBinding.upiInfoLay.startAnimation(fadeInAnimation);
 
                 activityPaymentOptionsBinding.tickPhonePay.setImageResource(0);
                 activityPaymentOptionsBinding.tickPhonePayLay.setBackgroundResource(R.drawable.upi_payment_unselected_bg);
@@ -254,6 +278,7 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
                 activityPaymentOptionsBinding.cashOnDelivery.setBackgroundResource(R.drawable.ic_payment_methods_selectebg);
                 PaymentInfoLayoutsHandlings();
                 activityPaymentOptionsBinding.cashOnDeliveryInfoLay.setVisibility(View.VISIBLE);
+                activityPaymentOptionsBinding.cashOnDeliveryInfoLay.startAnimation(fadeInAnimation);
                 if (customerDeliveryAddress != null) {
                     activityPaymentOptionsBinding.deliveryAddress.setText(customerDeliveryAddress);
                 }

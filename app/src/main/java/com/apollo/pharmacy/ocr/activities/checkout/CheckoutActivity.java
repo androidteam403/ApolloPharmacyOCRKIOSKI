@@ -1,11 +1,9 @@
 package com.apollo.pharmacy.ocr.activities.checkout;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,7 +16,7 @@ import com.apollo.pharmacy.ocr.dialog.DeliveryAddressDialog;
 import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
 import com.apollo.pharmacy.ocr.utility.SessionManager;
 
-import java.io.Serializable;
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class CheckoutActivity extends AppCompatActivity implements CheckoutListener {
@@ -49,7 +47,7 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
 
     private void setUp() {
         dataList = SessionManager.INSTANCE.getDataList();
-        if (dataList!= null&&dataList.size()>0) {
+        if (dataList != null && dataList.size() > 0) {
 //            dataList = (List<OCRToDigitalMedicineResponse>) getIntent().getSerializableExtra("dataList");
             if (dataList != null && dataList.size() > 0) {
                 int pharmaMedicineCount = 0;
@@ -75,10 +73,14 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
                 CheckoutuiModel checkoutuiModel = new CheckoutuiModel();
                 checkoutuiModel.setPharmaCount(String.valueOf(pharmaMedicineCount));
                 checkoutuiModel.setFmcgCount(String.valueOf(fmcgMedicineCount));
-                checkoutuiModel.setPharmaTotal(getResources().getString(R.string.rupee) + String.valueOf(pharmaTotal));
-                checkoutuiModel.setFmcgTotal(getResources().getString(R.string.rupee) + String.valueOf(fmcgTotal));
+                DecimalFormat formatter = new DecimalFormat("#,###.00");
+                String pharmaformatted = formatter.format(pharmaTotal);
+                String fmcgFormatted = formatter.format(fmcgTotal);
+                checkoutuiModel.setPharmaTotal(getResources().getString(R.string.rupee) + String.valueOf(pharmaformatted));
+                checkoutuiModel.setFmcgTotal(getResources().getString(R.string.rupee) + String.valueOf(fmcgFormatted));
                 checkoutuiModel.setTotalMedicineCount(String.valueOf(dataList.size()));
-                checkoutuiModel.setMedicineTotal(getResources().getString(R.string.rupee) + String.valueOf(pharmaTotal + fmcgTotal));
+                String totalprodAmt = formatter.format(pharmaTotal + fmcgTotal);
+                checkoutuiModel.setMedicineTotal(getResources().getString(R.string.rupee) + String.valueOf(totalprodAmt));
                 checkoutuiModel.setFmcgPharma(isPharma && isFmcg);
                 checkoutuiModel.setFmcg(isFmcg);
                 checkoutuiModel.setPharma(isPharma);

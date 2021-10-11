@@ -411,8 +411,8 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@{model.fmcgTotal}"
                                 android:maxLength="7"
+                                android:text="@{model.fmcgTotal}"
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/eighteen_sp" />
                         </LinearLayout>
@@ -553,7 +553,8 @@
                             <View
                                 android:layout_width="37dp"
                                 android:layout_height="match_parent"
-                                android:layout_weight="0.05" />
+                                android:layout_weight="0.05"
+                                android:visibility="gone" />
 
                             <ImageView
                                 android:id="@+id/download_ask_apollo_image"
@@ -563,19 +564,20 @@
                                 android:contentDescription="@string/app_name"
                                 android:paddingTop="@dimen/twenty_five_dp"
                                 android:paddingBottom="@dimen/three_dp"
-                                android:src="@drawable/icon_download_ask_app" />
+                                android:src="@drawable/icon_download_ask_app"
+                                android:visibility="gone" />
 
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_weight="0.7"
-                                android:orientation="vertical"
-                                android:weightSum="1">
+                                android:layout_weight="1"
+                                android:orientation="vertical">
 
                                 <View
                                     android:layout_width="match_parent"
                                     android:layout_height="0dp"
-                                    android:layout_weight="0.18" />
+                                    android:layout_weight="0.18"
+                                    android:visibility="gone" />
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
@@ -591,7 +593,8 @@
                                         android:layout_gravity="center"
                                         android:layout_weight="0.4"
                                         android:gravity="center"
-                                        android:orientation="vertical">
+                                        android:orientation="vertical"
+                                        android:visibility="gone">
 
                                         <TextView
                                             android:layout_width="wrap_content"
@@ -615,7 +618,8 @@
                                         android:layout_gravity="center"
                                         android:layout_weight="0.2"
                                         android:gravity="center"
-                                        android:orientation="vertical">
+                                        android:orientation="vertical"
+                                        android:visibility="gone">
 
                                         <RelativeLayout
                                             android:layout_width="wrap_content"
@@ -644,7 +648,8 @@
                                     <LinearLayout
                                         android:layout_width="0dp"
                                         android:layout_height="match_parent"
-                                        android:layout_weight="0.3"
+                                        android:layout_marginTop="@dimen/fifteen_dp"
+                                        android:layout_weight="1"
                                         android:orientation="vertical">
 
                                         <TextView

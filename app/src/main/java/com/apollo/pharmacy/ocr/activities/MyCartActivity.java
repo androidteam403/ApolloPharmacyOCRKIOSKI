@@ -1595,8 +1595,12 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
 
 
                 itemBatchSelectionDilaog.setUnitIncreaseListener(view3 -> {
-                    medicine.setQty(medicine.getQty() + 1);
-                    itemBatchSelectionDilaog.setQtyCount("" + medicine.getQty());
+                    if (itemBatchSelectionDilaog.getItemBatchSelectionDataQty() != null && Integer.parseInt(itemBatchSelectionDilaog.getItemBatchSelectionDataQty().getQOH()) >= (medicine.getQty()+1)) {
+                        medicine.setQty(medicine.getQty() + 1);
+                        itemBatchSelectionDilaog.setQtyCount("" + medicine.getQty());
+                    }else {
+                        Toast.makeText(MyCartActivity.this, "Selected quantity is not available in batch", Toast.LENGTH_SHORT).show();
+                    }
                 });
                 itemBatchSelectionDilaog.setUnitDecreaseListener(view4 -> {
                     if (medicine.getQty() > 1) {
@@ -1758,7 +1762,17 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                         SessionManager.INSTANCE.setDataList(dataList);
                     }
                 }
-                Utils.showSnackbar(MyCartActivity.this, constraint_Layout,getApplicationContext().getResources().getString(R.string.label_item_added_cart) );
+                float grandTotalVal = 0;
+                for (int i = 0; i < dataList.size(); i++) {
+                    if (!TextUtils.isEmpty(dataList.get(i).getArtprice())) {
+                        Float totalPrice = Float.parseFloat(dataList.get(i).getArtprice()) * dataList.get(i).getQty();
+                        grandTotalVal = grandTotalVal + totalPrice;
+                    }
+                }
+                String rupeeSymbol = "\u20B9";
+                grandTotalPrice.setText(rupeeSymbol + "" + String.format("%.2f", grandTotalVal));
+
+                Utils.showSnackbar(MyCartActivity.this, constraint_Layout, getApplicationContext().getResources().getString(R.string.label_item_added_cart));
                 cartCount(dataList.size());
                 cartListAdapter = new MyCartListAdapter(dataList, MyCartActivity.this);
                 cartItemRecyclerView.setLayoutManager(new LinearLayoutManager(MyCartActivity.this));

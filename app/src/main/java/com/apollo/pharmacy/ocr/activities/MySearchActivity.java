@@ -1591,8 +1591,12 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
             medicine.setPrice(itemSearchResponse.getItemList().get(0).getMrp());
 
             itemBatchSelectionDilaog.setUnitIncreaseListener(view3 -> {
-                medicine.setQty(medicine.getQty() + 1);
-                itemBatchSelectionDilaog.setQtyCount("" + medicine.getQty());
+                if (itemBatchSelectionDilaog.getItemBatchSelectionDataQty() != null && Integer.parseInt(itemBatchSelectionDilaog.getItemBatchSelectionDataQty().getQOH()) >= (medicine.getQty()+1)) {
+                    medicine.setQty(medicine.getQty() + 1);
+                    itemBatchSelectionDilaog.setQtyCount("" + medicine.getQty());
+                } else {
+                    Toast.makeText(MySearchActivity.this, "Selected quantity is not available in batch", Toast.LENGTH_SHORT).show();
+                }
             });
 
             itemBatchSelectionDilaog.setUnitDecreaseListener(view4 -> {

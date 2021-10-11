@@ -390,13 +390,13 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:orientation="vertical"
                         android:id="@+id/confirm_only_pharma_order"
                         android:layout_width="match_parent"
-                        android:visibility="gone"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:gravity="center_horizontal">
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical"
+                        android:visibility="gone">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -498,7 +498,7 @@
                                         android:layout_height="wrap_content"
                                         android:layout_centerVertical="true"
                                         android:layout_marginStart="@dimen/twenty_five_dp"
-                                        android:text="Receive PaymentSMS"
+                                        android:text="Receive Payment SMS"
                                         android:textAlignment="center"
                                         android:textColor="@color/black"
                                         android:textSize="@dimen/sixteen_sp" />
@@ -530,8 +530,8 @@
                                         android:textSize="@dimen/sixteen_sp" />
 
                                     <ImageView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
+                                        android:layout_width="24dp"
+                                        android:layout_height="24dp"
                                         android:layout_centerVertical="true"
                                         android:contentDescription="@string/app_name"
                                         android:src="@drawable/upi_icon" />
@@ -543,6 +543,7 @@
                                     android:layout_height="@dimen/fifty_dp"
                                     android:layout_marginStart="@dimen/ten_dp"
                                     android:layout_marginTop="@dimen/five_dp"
+                                    android:layout_marginBottom="@dimen/twenty_five_dp"
                                     android:background="@drawable/ic_payment_methods_unselectebg"
                                     android:padding="@dimen/ten_dp">
 
@@ -701,7 +702,7 @@ instructions on your phone to complete\nthe payment"
                                         android:paddingTop="@dimen/ten_dp"
                                         android:text="Receive Payment SMS"
                                         android:textColor="@color/black"
-                                        android:textSize="@dimen/fourteen_sp"
+                                        android:textSize="@dimen/sixteen_sp"
                                         android:textStyle="bold" />
 
                                     <TextView
@@ -720,7 +721,7 @@ instructions on your phone to complete\nthe payment"
                                         android:layout_marginStart="@dimen/twenty_dp"
                                         android:layout_marginTop="@dimen/three_dp"
                                         android:background="@drawable/upi_payment_unselected_bg"
-                                        android:hint="User name" />
+                                        android:hint="Your name" />
 
                                     <TextView
                                         android:layout_width="wrap_content"
@@ -733,6 +734,7 @@ instructions on your phone to complete\nthe payment"
                                         android:textStyle="bold" />
 
                                     <EditText
+                                        android:id="@+id/user_num"
                                         android:layout_width="350dp"
                                         android:layout_height="35dp"
                                         android:layout_marginStart="@dimen/twenty_dp"
@@ -793,7 +795,7 @@ instructions on your phone to complete\nthe payment"
                                             android:paddingTop="@dimen/ten_dp"
                                             android:text="UPI"
                                             android:textColor="@color/black"
-                                            android:textSize="@dimen/eighteen_sp"
+                                            android:textSize="@dimen/sixteen_sp"
                                             android:textStyle="bold" />
 
                                         <TextView
@@ -865,12 +867,11 @@ instructions on your phone to complete\nthe payment"
 
                                             <RelativeLayout
                                                 android:id="@+id/tick_phone_pay_lay"
-                                                android:layout_width="wrap_content"
-                                                android:layout_height="wrap_content"
+                                                android:layout_width="180dp"
+                                                android:layout_height="100dp"
                                                 android:layout_marginStart="@dimen/ten_dp"
                                                 android:layout_marginTop="@dimen/ten_dp"
-                                                android:layout_marginBottom="@dimen/thirty_dp"
-                                                android:background="@drawable/upi_payment_unselected_bg">
+                                                android:layout_marginBottom="@dimen/thirty_dp">
 
                                                 <ImageView
                                                     android:id="@+id/tick_phone_pay"
@@ -882,8 +883,8 @@ instructions on your phone to complete\nthe payment"
                                                     android:visibility="gone" />
 
                                                 <ImageView
-                                                    android:layout_width="wrap_content"
-                                                    android:layout_height="120dp"
+                                                    android:layout_width="match_parent"
+                                                    android:layout_height="match_parent"
                                                     android:layout_centerInParent="true"
                                                     android:contentDescription="@string/app_name"
                                                     android:src="@drawable/phone_pay_payment_icon" />
@@ -984,7 +985,7 @@ instructions on your phone to complete\nthe payment"
                                 android:id="@+id/cash_on_delivery_info_lay"
                                 android:layout_width="550dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginBottom="@dimen/fifteen_dp"
+                                android:layout_marginBottom="@dimen/twenty_five_dp"
                                 android:visibility="gone">
 
                                 <LinearLayout
@@ -1031,7 +1032,7 @@ above 400 Rupees"
                                                 android:layout_height="wrap_content"
                                                 android:layout_marginStart="@dimen/twenty_dp"
                                                 android:layout_marginTop="56dp"
-                                                android:layout_marginBottom="@dimen/ten_dp"
+                                                android:layout_marginBottom="@dimen/fifteen_dp"
                                                 android:background="@drawable/pament_screen_button_bg"
                                                 android:text="Place an Order"
                                                 android:textColor="@color/white"

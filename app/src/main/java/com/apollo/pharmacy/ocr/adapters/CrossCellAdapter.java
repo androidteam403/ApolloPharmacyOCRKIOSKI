@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -13,6 +14,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.apollo.pharmacy.ocr.R;
+import com.apollo.pharmacy.ocr.activities.MySearchActivity;
 import com.apollo.pharmacy.ocr.databinding.CrossCellAdapterBinding;
 import com.apollo.pharmacy.ocr.dialog.ItemBatchSelectionDilaog;
 import com.apollo.pharmacy.ocr.model.ItemSearchResponse;
@@ -50,9 +52,17 @@ public class CrossCellAdapter extends RecyclerView.Adapter<CrossCellAdapter.View
         holder.adapterAccesariesItemsBinding.itemAddtoCartLayout.setOnClickListener(v -> {
             ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(activity, crossselling.getArtCode());
             itemBatchSelectionDilaog.setTitle(crossselling.getDescription());
+
             itemBatchSelectionDilaog.setUnitIncreaseListener(view1 -> {
-                crossselling.setQty(crossselling.getQty() + 1);
-                itemBatchSelectionDilaog.setQtyCount("" + crossselling.getQty());
+
+
+                if (itemBatchSelectionDilaog.getItemBatchSelectionDataQty() != null && Integer.parseInt(itemBatchSelectionDilaog.getItemBatchSelectionDataQty().getQOH()) >= (crossselling.getQty()+1)) {
+                    crossselling.setQty(crossselling.getQty() + 1);
+                    itemBatchSelectionDilaog.setQtyCount("" + crossselling.getQty());
+                } else {
+                    Toast.makeText(activity, "Selected quantity is not available in batch", Toast.LENGTH_SHORT).show();
+                }
+
             });
 
             itemBatchSelectionDilaog.setUnitDecreaseListener(view2 -> {

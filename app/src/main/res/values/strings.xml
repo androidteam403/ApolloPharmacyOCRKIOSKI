@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">ApolloPharmacyOCR</string>
+    <string name="app_name" translatable="false">ApolloKiosk</string>
     <string name="appbar_scrolling_view_behavior" translatable="false">com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior</string>
 
     <string name="label_scroll_welcome" translatable="false">WELCOME</string>

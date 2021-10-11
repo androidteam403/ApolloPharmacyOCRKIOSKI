@@ -15,6 +15,7 @@ import com.apollo.pharmacy.ocr.interfaces.OrderinProgressListener;
 import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
 import com.apollo.pharmacy.ocr.utility.SessionManager;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,14 +75,25 @@ public class OrderinProgressActivity extends AppCompatActivity implements Orderi
 //            fmcgToatalPass = fmcgTotal;
             orderinProgresssuiModel.setPharmaCount(String.valueOf(pharmaMedicineCount));
             orderinProgresssuiModel.setFmcgCount(String.valueOf(fmcgMedicineCount));
-            orderinProgresssuiModel.setPharmaTotal(getResources().getString(R.string.rupee) + String.valueOf(pharmaTotal));
-            orderinProgresssuiModel.setFmcgTotal(getResources().getString(R.string.rupee) + String.valueOf(fmcgTotal));
+            DecimalFormat formatter = new DecimalFormat("#,###.00");
+            String pharmaformatted = formatter.format(pharmaTotal);
+            String fmcgFormatted = formatter.format(fmcgTotal);
+            orderinProgresssuiModel.setPharmaTotal(getResources().getString(R.string.rupee) + String.valueOf(pharmaformatted));
+            orderinProgresssuiModel.setFmcgTotal(getResources().getString(R.string.rupee) + String.valueOf(fmcgFormatted));
             orderinProgresssuiModel.setTotalMedicineCount(String.valueOf(dataList.size()));
-            orderinProgresssuiModel.setMedicineTotal(getResources().getString(R.string.rupee) + String.valueOf(pharmaTotal + fmcgTotal));
+            String totalprodAmt = formatter.format(pharmaTotal + fmcgTotal);
+
+            orderinProgresssuiModel.setMedicineTotal(getResources().getString(R.string.rupee) + String.valueOf(totalprodAmt));
             orderinProgresssuiModel.setFmcgPharma(isPharma && isFmcg);
             orderinProgresssuiModel.setFmcg(isFmcg);
             orderinProgresssuiModel.setPharma(isPharma);
             orderinProgressBinding.setModel(orderinProgresssuiModel);
+            if (!isPharma && isFmcg) {
+                orderinProgressBinding.orderisinProgressText.setText("Your order is Completed");
+            }
+            if (isPharma && isFmcg || isPharma) {
+                orderinProgressBinding.orderisinProgressText.setText("Your order is in progress");
+            }
         }
     }
 
@@ -99,6 +111,7 @@ public class OrderinProgressActivity extends AppCompatActivity implements Orderi
         Intent intent = new Intent(OrderinProgressActivity.this, MySearchActivity.class);
         startActivity(intent);
         overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
+        finish();
     }
 
     public class OrderinProgresssuiModel {

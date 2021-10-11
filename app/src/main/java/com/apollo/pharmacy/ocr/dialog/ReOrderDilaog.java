@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,8 +20,6 @@ import com.apollo.pharmacy.ocr.model.ItemSearchResponse;
 import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
 
 import java.util.List;
-
-import static com.apollo.pharmacy.ocr.utility.Constants.getContext;
 
 public class ReOrderDilaog implements ReOrderListener {
     private Dialog dialog;
@@ -84,7 +81,7 @@ public class ReOrderDilaog implements ReOrderListener {
                 dataList.get(position).setOutOfStock(true);
             }
         } else {
-            Toast.makeText(getContext(), "Product Out Of Stock", Toast.LENGTH_LONG).show();
+//            Toast.makeText(getContext(), "Product Out Of Stock", Toast.LENGTH_LONG).show();
             dataList.get(position).setOutOfStock(true);
         }
 

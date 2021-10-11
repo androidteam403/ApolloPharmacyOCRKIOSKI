@@ -15,7 +15,6 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.apollo.pharmacy.ocr.R;
-import com.apollo.pharmacy.ocr.activities.MyCartActivity;
 import com.apollo.pharmacy.ocr.databinding.ViewYourOffersBinding;
 import com.apollo.pharmacy.ocr.dialog.ItemBatchSelectionDilaog;
 import com.apollo.pharmacy.ocr.interfaces.CartCountListener;
@@ -69,40 +68,39 @@ public class MyOfersAdapterNew extends RecyclerView.Adapter<MyOfersAdapterNew.Vi
                 itemBatchSelectionDilaog.setTitle(crossselling.getItemname());
 
                 itemBatchSelectionDilaog.setUnitIncreaseListener(view1 -> {
-                    int qty = Integer.parseInt(itemBatchSelectionDilaog.getQtyCount().toString());
-                    qty = qty + 1;
-                    String product_sku = crosssellingList.get(position).getItemid();
-                    int count = 0;
-                    for (OCRToDigitalMedicineResponse data : datalist) {
-                        if (product_sku.equalsIgnoreCase(data.getArtCode())) {
-                            datalist.remove(count);
-                            break;
+
+                    if (itemBatchSelectionDilaog.getItemBatchSelectionDataQty() != null && Float.parseFloat(itemBatchSelectionDilaog.getItemBatchSelectionDataQty().getQOH()) >= Float.parseFloat(itemBatchSelectionDilaog.getQtyCount().toString()) + 1) {
+                        int qty = Integer.parseInt(itemBatchSelectionDilaog.getQtyCount().toString());
+                        qty = qty + 1;
+                        String product_sku = crosssellingList.get(position).getItemid();
+                        int count = 0;
+                        for (OCRToDigitalMedicineResponse data : datalist) {
+                            if (product_sku.equalsIgnoreCase(data.getArtCode())) {
+                                datalist.remove(count);
+                                break;
+                            }
+                            count = count + 1;
                         }
-                        count = count + 1;
+
+                        OCRToDigitalMedicineResponse object1 = new OCRToDigitalMedicineResponse();
+                        object1.setArtName(crosssellingList.get(position).getItemname());
+                        object1.setArtCode(crosssellingList.get(position).getItemid());
+                        crosssellingList.get(position).setOfferPrice("10");
+                        if (null != crosssellingList.get(position).getOfferPrice() && crosssellingList.get(position).getOfferPrice().length() > 0) {
+                            object1.setArtprice(crosssellingList.get(position).getOfferPrice());
+                        } else {
+                            object1.setArtprice(String.valueOf(crosssellingList.get(position).getOfferPrice()));
+                        }
+                        object1.setMou("");
+                        object1.setQty(qty);
+                        object1.setContainer("Strip");
+                        datalist.add(object1);
+                        itemBatchSelectionDilaog.setQtyCount(String.valueOf(qty));
+                    } else {
+                        Toast.makeText(activity, "Selected quantity is not available in batch", Toast.LENGTH_SHORT).show();
                     }
 
-                    OCRToDigitalMedicineResponse object1 = new OCRToDigitalMedicineResponse();
-                    object1.setArtName(crosssellingList.get(position).getItemname());
-                    object1.setArtCode(crosssellingList.get(position).getItemid());
-                    crosssellingList.get(position).setOfferPrice("10");
-                    if (null != crosssellingList.get(position).getOfferPrice() && crosssellingList.get(position).getOfferPrice().length() > 0) {
-                        object1.setArtprice(crosssellingList.get(position).getOfferPrice());
-                    } else {
-                        object1.setArtprice(String.valueOf(crosssellingList.get(position).getOfferPrice()));
-                    }
-                    object1.setMou("");
-                    object1.setQty(qty);
-                    object1.setContainer("Strip");
-                    datalist.add(object1);
-                    itemBatchSelectionDilaog.setQtyCount(String.valueOf(qty));
-//                    cartCountListener.cartCount(datalist.size());
-//                    SessionManager.INSTANCE.setDataList(datalist);
-//                    if (context instanceof MyCartActivity) {
-//                        ((MyCartActivity) context).message_string = "cartupdate";
-//                    }
-//                    if (context instanceof MyCartActivity) {
-//                        ((MyCartActivity) context).updatecartlist();
-//                    }
+
                 });
 
                 itemBatchSelectionDilaog.setUnitDecreaseListener(view2 -> {

@@ -7,11 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
@@ -127,19 +127,25 @@ public class MedicineSearchAdapter extends ArrayAdapter<ProductSearch> {
             itemBatchSelectionDilaog.setTitle(medicine.getName());
 
             itemBatchSelectionDilaog.setUnitIncreaseListener(view1 -> {
-                medicine.setQty(medicine.getQty() + 1);
-                itemBatchSelectionDilaog.setQtyCount("" + medicine.getQty());
-                txtQty.setText("" + medicine.getQty());
-                Object priceobject = medicine.getPrice();
-                if (priceobject instanceof Integer) {
-                    int medicine_price = (int) medicine.getPrice();
-                    int total_price = Integer.parseInt(txtQty.getText().toString()) * medicine_price;
-                    total_price_textview.setText(string + total_price);
+
+                if (itemBatchSelectionDilaog.getItemBatchSelectionDataQty() != null && Integer.parseInt(itemBatchSelectionDilaog.getItemBatchSelectionDataQty().getQOH()) >= (medicine.getQty()+1)) {
+                    medicine.setQty(medicine.getQty() + 1);
+                    itemBatchSelectionDilaog.setQtyCount("" + medicine.getQty());
+                    txtQty.setText("" + medicine.getQty());
+                    Object priceobject = medicine.getPrice();
+                    if (priceobject instanceof Integer) {
+                        int medicine_price = (int) medicine.getPrice();
+                        int total_price = Integer.parseInt(txtQty.getText().toString()) * medicine_price;
+                        total_price_textview.setText(string + total_price);
+                    } else {
+                        double medicine_price = (Double.parseDouble(String.valueOf(medicine.getPrice())));
+                        double total_price = Double.parseDouble(txtQty.getText().toString()) * medicine_price;
+                        total_price_textview.setText(string + total_price);
+                    }
                 } else {
-                    double medicine_price = (Double.parseDouble(String.valueOf(medicine.getPrice())));
-                    double total_price = Double.parseDouble(txtQty.getText().toString()) * medicine_price;
-                    total_price_textview.setText(string + total_price);
+                    Toast.makeText(activity, "Selected quantity is not available in batch", Toast.LENGTH_SHORT).show();
                 }
+
             });
 
             itemBatchSelectionDilaog.setUnitDecreaseListener(view2 -> {

@@ -510,8 +510,8 @@
                                         android:textColor="@color/black" />
 
                                     <ImageView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
+                                        android:layout_width="24dp"
+                                        android:layout_height="24dp"
                                         android:contentDescription="@string/app_name"
                                         android:src="@drawable/upi_icon" />
                                 </RelativeLayout>
@@ -711,6 +711,7 @@ instructions on your phone to complete\nthe payment"
                                         android:textStyle="bold" />
 
                                     <EditText
+                                        android:id="@+id/user_num"
                                         android:layout_width="350dp"
                                         android:layout_height="35dp"
                                         android:layout_marginStart="@dimen/twenty_dp"

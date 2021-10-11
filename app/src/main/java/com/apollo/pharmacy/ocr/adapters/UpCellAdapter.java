@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -13,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.apollo.pharmacy.ocr.R;
 import com.apollo.pharmacy.ocr.databinding.CrossCellAdapterBinding;
-import com.apollo.pharmacy.ocr.databinding.UpcellAdapterBinding;
 import com.apollo.pharmacy.ocr.dialog.ItemBatchSelectionDilaog;
 import com.apollo.pharmacy.ocr.model.ItemSearchResponse;
 
@@ -42,12 +42,21 @@ public class UpCellAdapter extends RecyclerView.Adapter<UpCellAdapter.ViewHolder
     public void onBindViewHolder(@NonNull UpCellAdapter.ViewHolder holder, int position) {
         ItemSearchResponse.Item upselling = upsellList.get(position);
         holder.upcellAdapterBinding.itemName.setText(upselling.getDescription());
+
         holder.upcellAdapterBinding.itemAddtoCartLayout.setOnClickListener(v -> {
             ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(activity, upselling.getArtCode());
             itemBatchSelectionDilaog.setTitle(upselling.getGenericName());
+
             itemBatchSelectionDilaog.setUnitIncreaseListener(view1 -> {
-                upselling.setQty(upselling.getQty() + 1);
-                itemBatchSelectionDilaog.setQtyCount("" + upselling.getQty());
+
+                if (itemBatchSelectionDilaog.getItemBatchSelectionDataQty() != null && Integer.parseInt(itemBatchSelectionDilaog.getItemBatchSelectionDataQty().getQOH()) >= (upselling.getQty() + 1)) {
+                    upselling.setQty(upselling.getQty() + 1);
+                    itemBatchSelectionDilaog.setQtyCount("" + upselling.getQty());
+                } else {
+                    Toast.makeText(activity, "Selected quantity is not available in batch", Toast.LENGTH_SHORT).show();
+                }
+
+
             });
 
             itemBatchSelectionDilaog.setUnitDecreaseListener(view2 -> {
