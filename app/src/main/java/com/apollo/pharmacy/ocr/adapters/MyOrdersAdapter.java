@@ -3,7 +3,6 @@ package com.apollo.pharmacy.ocr.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.apollo.pharmacy.ocr.R;
+import com.apollo.pharmacy.ocr.interfaces.MyOrdersListener;
 import com.apollo.pharmacy.ocr.model.Item;
 import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
 import com.apollo.pharmacy.ocr.model.OrderHistoryResponse;
@@ -29,17 +29,17 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.apollo.pharmacy.ocr.utility.Constants.getContext;
-
 public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.MyViewHolder> {
     private Context mContext;
     private List<OrderHistoryResponse> orderHistoryList;
     private MyOrderTrackInfoAdapter trackInfoAdaptor;
     private List<OCRToDigitalMedicineResponse> dataList;
+    private MyOrdersListener myOrdersListener;
 
-    public MyOrdersAdapter(Context context, List<OrderHistoryResponse> orderHistoryList) {
+    public MyOrdersAdapter(Context context, List<OrderHistoryResponse> orderHistoryList, MyOrdersListener myOrdersListener) {
         mContext = context;
         this.orderHistoryList = orderHistoryList;
+        this.myOrdersListener = myOrdersListener;
     }
 
     @NonNull
@@ -83,24 +83,19 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.MyView
         holder.address_textview.setText(address);
 
 
-        if (!item.getStatusHistory().get(0).getDateTime().equalsIgnoreCase("-"))
-        {
+        if (!item.getStatusHistory().get(0).getDateTime().equalsIgnoreCase("-")) {
             holder.Status_textview.setText(item.getStatusHistory().get(0).getStatus());
         }
-        if (!item.getStatusHistory().get(1).getDateTime().equalsIgnoreCase("-"))
-        {
+        if (!item.getStatusHistory().get(1).getDateTime().equalsIgnoreCase("-")) {
             holder.Status_textview.setText(item.getStatusHistory().get(1).getStatus());
         }
-        if (!item.getStatusHistory().get(2).getDateTime().equalsIgnoreCase("-"))
-        {
+        if (!item.getStatusHistory().get(2).getDateTime().equalsIgnoreCase("-")) {
             holder.Status_textview.setText(item.getStatusHistory().get(2).getStatus());
         }
-        if (!item.getStatusHistory().get(3).getDateTime().equalsIgnoreCase("-"))
-        {
+        if (!item.getStatusHistory().get(3).getDateTime().equalsIgnoreCase("-")) {
             holder.Status_textview.setText(item.getStatusHistory().get(3).getStatus());
         }
-        if (!item.getStatusHistory().get(4).getDateTime().equalsIgnoreCase("-"))
-        {
+        if (!item.getStatusHistory().get(4).getDateTime().equalsIgnoreCase("-")) {
             holder.Status_textview.setText(item.getStatusHistory().get(4).getStatus());
         }
 
@@ -212,8 +207,8 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.MyView
             }
             holder.totalamount_textview.setText(string + String.format("%.2f", Total_amount));
         } else {
-           // holder.totalamount_textview.setText(string + "0.00");
-               holder.totalamount_textview.setText("-");
+            // holder.totalamount_textview.setText(string + "0.00");
+            holder.totalamount_textview.setText("-");
         }
         holder.view_details_layout.setOnClickListener(v -> {
             item.setSelected(true);
@@ -225,31 +220,47 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.MyView
         });
 
         holder.re_order_layout.setOnClickListener(v -> {
+
             List<Item> itemList = item.getItems();
             dataList = new ArrayList<>();
             for (Item medicine : itemList) {
                 OCRToDigitalMedicineResponse data = new OCRToDigitalMedicineResponse();
-                data.setArtName(medicine.getArtName());
+                data.setArtName(TextUtils.isEmpty(medicine.getArtName()) ? "-" : medicine.getArtName());
                 data.setArtCode(medicine.getArtCode());
                 data.setArtprice(String.valueOf(medicine.getMrp()));
                 data.setContainer("");
                 data.setQty(medicine.getQty());
                 dataList.add(data);
             }
-            if (null != SessionManager.INSTANCE.getDataList()) {
-                if (SessionManager.INSTANCE.getDataList().size() > 0) {
-                    List<OCRToDigitalMedicineResponse> tempCartItemList = new ArrayList<>();
-                    tempCartItemList = SessionManager.INSTANCE.getDataList();
-                    for (OCRToDigitalMedicineResponse listItem : tempCartItemList) {
-                        dataList.add(listItem);
-                    }
-                }
-            }
-            SessionManager.INSTANCE.setDataList(dataList);
-            Intent intent = new Intent("OrderhistoryCardReciver");
-            intent.putExtra("message", "OrderNow");
-            intent.putExtra("MedininesNames", new Gson().toJson(dataList));
-            LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
+
+            myOrdersListener.onReorderClick(dataList);
+
+
+//            List<Item> itemList = item.getItems();
+//            dataList = new ArrayList<>();
+//            for (Item medicine : itemList) {
+//                OCRToDigitalMedicineResponse data = new OCRToDigitalMedicineResponse();
+//                data.setArtName(medicine.getArtName());
+//                data.setArtCode(medicine.getArtCode());
+//                data.setArtprice(String.valueOf(medicine.getMrp()));
+//                data.setContainer("");
+//                data.setQty(medicine.getQty());
+//                dataList.add(data);
+//            }
+//            if (null != SessionManager.INSTANCE.getDataList()) {
+//                if (SessionManager.INSTANCE.getDataList().size() > 0) {
+//                    List<OCRToDigitalMedicineResponse> tempCartItemList = new ArrayList<>();
+//                    tempCartItemList = SessionManager.INSTANCE.getDataList();
+//                    for (OCRToDigitalMedicineResponse listItem : tempCartItemList) {
+//                        dataList.add(listItem);
+//                    }
+//                }
+//            }
+//            SessionManager.INSTANCE.setDataList(dataList);
+//            Intent intent = new Intent("OrderhistoryCardReciver");
+//            intent.putExtra("message", "OrderNow");
+//            intent.putExtra("MedininesNames", new Gson().toJson(dataList));
+//            LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
         });
 
         if (item.isSelected()) {
