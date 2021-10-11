@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -125,7 +124,7 @@ public class MedicineSearchAdapter extends ArrayAdapter<ProductSearch> {
 
             ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(context, medicine.getSku());
             itemBatchSelectionDilaog.setTitle(medicine.getName());
-
+            medicine.setQty(1);
             itemBatchSelectionDilaog.setUnitIncreaseListener(view1 -> {
                 medicine.setQty(medicine.getQty() + 1);
                 itemBatchSelectionDilaog.setQtyCount("" + medicine.getQty());

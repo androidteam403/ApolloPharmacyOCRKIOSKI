@@ -50,6 +50,7 @@ public class CrossCellAdapter extends RecyclerView.Adapter<CrossCellAdapter.View
         holder.adapterAccesariesItemsBinding.itemAddtoCartLayout.setOnClickListener(v -> {
             ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(activity, crossselling.getArtCode());
             itemBatchSelectionDilaog.setTitle(crossselling.getDescription());
+            crossselling.setQty(1);
             itemBatchSelectionDilaog.setUnitIncreaseListener(view1 -> {
                 crossselling.setQty(crossselling.getQty() + 1);
                 itemBatchSelectionDilaog.setQtyCount("" + crossselling.getQty());

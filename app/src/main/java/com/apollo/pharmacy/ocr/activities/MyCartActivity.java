@@ -247,25 +247,26 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
     public void onDeleteItemClicked(OCRToDigitalMedicineResponse ocrToDigitalMedicineResponse, int position) {
         cartDeleteItemDialog.dismiss();
         deletedataList.remove(position);
-        dataList.add(ocrToDigitalMedicineResponse);
-        SessionManager.INSTANCE.setDataList(dataList);
+        myCartController.searchItemProducts(ocrToDigitalMedicineResponse.getArtCode(),0);
+//        dataList.add(ocrToDigitalMedicineResponse);
+//        SessionManager.INSTANCE.setDataList(dataList);
         SessionManager.INSTANCE.setDeletedDataList(deletedataList);
         total_itemcount_textview.setText(String.valueOf(dataList.size()));
         cartCount(dataList.size());
-        if (dataList.size() > 0) {
-            float grandTotalVal = 0;
-            for (int i = 0; i < dataList.size(); i++) {
-                if (!TextUtils.isEmpty(dataList.get(i).getArtprice())) {
-                    float totalPrice = Float.parseFloat(dataList.get(i).getArtprice()) * dataList.get(i).getQty();
-                    grandTotalVal = grandTotalVal + totalPrice;
-                }
-            }
-            String rupeeSymbol = "\u20B9";
-            grandTotalPrice.setText(rupeeSymbol + "" + String.format("%.2f", grandTotalVal));
-            grandTotalPriceValue = grandTotalPrice.getText().toString();
-            cartListAdapter.notifyDataSetChanged();
-            checkOutImage.setImageResource(R.drawable.checkout_cart);
-        }
+//        if (dataList.size() > 0) {
+//            float grandTotalVal = 0;
+//            for (int i = 0; i < dataList.size(); i++) {
+//                if (!TextUtils.isEmpty(dataList.get(i).getArtprice())) {
+//                    float totalPrice = Float.parseFloat(dataList.get(i).getArtprice()) * dataList.get(i).getQty();
+//                    grandTotalVal = grandTotalVal + totalPrice;
+//                }
+//            }
+//            String rupeeSymbol = "\u20B9";
+//            grandTotalPrice.setText(rupeeSymbol + "" + String.format("%.2f", grandTotalVal));
+//            grandTotalPriceValue = grandTotalPrice.getText().toString();
+//            cartListAdapter.notifyDataSetChanged();
+//            checkOutImage.setImageResource(R.drawable.checkout_cart);
+//        }
         if (SessionManager.INSTANCE.getDeletedDataList().size() > 0) {
             addAgainLayout.setVisibility(View.VISIBLE);
             removedItemsCount.setText(String.valueOf(SessionManager.INSTANCE.getDeletedDataList().size()));
@@ -1627,6 +1628,7 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
 //                if (null != SessionManager.INSTANCE.getDataList()) {
 //                    this.dataList = SessionManager.INSTANCE.getDataList();
 //                    dataList.add(ocrToDigitalMedicineResponse);
+//                    SessionManager.INSTANCE.setDataList(dataList);
 //                    SessionManager.INSTANCE.setDataList(dataList);
 //                } else {
 //                    dataList.add(ocrToDigitalMedicineResponse);
