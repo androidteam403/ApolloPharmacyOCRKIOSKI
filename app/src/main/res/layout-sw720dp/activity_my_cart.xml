@@ -254,13 +254,17 @@
                         android:orientation="horizontal"
                         android:weightSum="1">
 
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.04" />
+
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_gravity="center_vertical"
-                            android:layout_weight="0.44"
+                            android:layout_weight="0.4"
                             android:gravity="center_vertical"
-                            android:paddingLeft="@dimen/twenty_dp"
                             android:text="@string/Name_of_the_Medicine"
                             android:textColor="@color/colorWhite"
                             android:textSize="@dimen/fifteen_sp"
@@ -384,10 +388,10 @@
                             android:id="@+id/scan_new_prescription"
                             android:layout_width="@dimen/one_hundred_eighty_dp"
                             android:layout_height="@dimen/one_hundred_eighty_dp"
-                            android:visibility="gone"
                             android:layout_below="@+id/curation_view_layout"
                             android:layout_centerHorizontal="true"
-                            android:src="@drawable/scan_products1" />
+                            android:src="@drawable/scan_products1"
+                            android:visibility="gone" />
                     </RelativeLayout>
                 </LinearLayout>
 
