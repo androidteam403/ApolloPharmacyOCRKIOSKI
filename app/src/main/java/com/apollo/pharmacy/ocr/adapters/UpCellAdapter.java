@@ -45,6 +45,7 @@ public class UpCellAdapter extends RecyclerView.Adapter<UpCellAdapter.ViewHolder
 
         holder.upcellAdapterBinding.itemAddtoCartLayout.setOnClickListener(v -> {
             ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(activity, upselling.getArtCode());
+            upselling.setQty(1);
             itemBatchSelectionDilaog.setTitle(upselling.getGenericName());
 
             itemBatchSelectionDilaog.setUnitIncreaseListener(view1 -> {

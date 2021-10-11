@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -48,7 +49,7 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
         if (dialog.getWindow() != null)
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.setCancelable(false);
-
+        batchlistVisbiblityHandling();
         for (OCRToDigitalMedicineResponse data : datalist) {
             if (data.getArtCode() != null) {
                 if (data.getArtCode().equalsIgnoreCase(product.getSku())) {
@@ -230,7 +231,7 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.setCancelable(false);
 //        batchSelection();
-
+        batchlistVisbiblityHandling();
         MposBatchListController batchListController = new MposBatchListController(this, context);
         dialogItemBatchSelectionBinding.loadingPanel.setVisibility(View.VISIBLE);
         batchListController.getBatchList(articalCode);
@@ -352,7 +353,7 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
             dialogItemBatchSelectionBinding.batchSelectionData.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    dialogItemBatchSelectionBinding.dialogItemBatchInnerParentLayout.setBackground(getContext().getResources().getDrawable(R.drawable.dialog_item_batch_inner_parent_layout_bg));
+//                    dialogItemBatchSelectionBinding.dialogItemBatchInnerParentLayout.setBackground(getContext().getResources().getDrawable(R.drawable.dialog_item_batch_inner_parent_layout_bg));
                     dialogItemBatchSelectionBinding.recyclerViewLay.setVisibility(View.VISIBLE);
                     adapterItemBatchSelection = new AdapterItemBatchSelection(getContext(), batchListResponse.getBatchList(), ItemBatchSelectionDilaog.this);
                     RecyclerView.LayoutManager mLayoutManager2 = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
@@ -380,6 +381,16 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
 
     }
 
+    private void batchlistVisbiblityHandling() {
+        dialogItemBatchSelectionBinding.itemselectBatchlistDialogParent.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                dialogItemBatchSelectionBinding.recyclerViewLay.setVisibility(View.GONE);
+
+                return false;
+            }
+        });
+    }
 
 //    public void setPositiveLabel(String positive) {
 //        alertDialogBoxBinding.btnYes.setText(positive);

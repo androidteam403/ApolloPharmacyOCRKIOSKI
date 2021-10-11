@@ -125,7 +125,7 @@ public class MedicineSearchAdapter extends ArrayAdapter<ProductSearch> {
 
             ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(context, medicine.getSku());
             itemBatchSelectionDilaog.setTitle(medicine.getName());
-
+            medicine.setQty(1);
             itemBatchSelectionDilaog.setUnitIncreaseListener(view1 -> {
 
                 if (itemBatchSelectionDilaog.getItemBatchSelectionDataQty() != null && Integer.parseInt(itemBatchSelectionDilaog.getItemBatchSelectionDataQty().getQOH()) >= (medicine.getQty()+1)) {
