@@ -123,9 +123,10 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
             orderDetailsuiModel.setFmcg(isFmcg);
             orderDetailsuiModel.setPharma(isPharma);
             grandTotalAmountFmcg = fmcgTotal;
-            DecimalFormat formatter1 = new DecimalFormat("#,###.00");
-            String formatted = formatter1.format(pharmaTotal);
-            grandTotalAmountPharma = Double.parseDouble(formatted);
+//            DecimalFormat formatter1 = new DecimalFormat("#,###.00");
+//            String formatted = formatter1.format(pharmaTotal);
+//            grandTotalAmountPharma = Double.parseDouble(formatted);
+            grandTotalAmountPharma = pharmaTotal;
             activityPaymentOptionsBinding.setModel(orderDetailsuiModel);
         }
         if (orderDetailsuiModel.isPharma && !orderDetailsuiModel.isFmcg) {

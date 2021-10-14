@@ -2,7 +2,6 @@ package com.apollo.pharmacy.ocr.adapters;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,15 +9,15 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.apollo.pharmacy.ocr.R;
-import com.apollo.pharmacy.ocr.activities.MySearchActivity;
 import com.apollo.pharmacy.ocr.databinding.CrossCellAdapterBinding;
 import com.apollo.pharmacy.ocr.dialog.ItemBatchSelectionDilaog;
 import com.apollo.pharmacy.ocr.model.ItemSearchResponse;
+import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CrossCellAdapter extends RecyclerView.Adapter<CrossCellAdapter.ViewHolder> {
@@ -26,6 +25,8 @@ public class CrossCellAdapter extends RecyclerView.Adapter<CrossCellAdapter.View
     private Activity activity;
     private List<ItemSearchResponse.Item> upsellList;
     boolean addToCarLayHandel;
+    List<OCRToDigitalMedicineResponse> dummyDataList = new ArrayList<>();
+    private float balanceQty;
 
     public CrossCellAdapter(Activity activity, List<ItemSearchResponse.Item> upsellList, boolean addToCarLayHandel) {
         this.activity = activity;
@@ -55,41 +56,52 @@ public class CrossCellAdapter extends RecyclerView.Adapter<CrossCellAdapter.View
 
             crossselling.setQty(1);
             itemBatchSelectionDilaog.setUnitIncreaseListener(view1 -> {
-
-
-                if (itemBatchSelectionDilaog.getItemBatchSelectionDataQty() != null && Integer.parseInt(itemBatchSelectionDilaog.getItemBatchSelectionDataQty().getQOH()) >= (crossselling.getQty()+1)) {
-                    crossselling.setQty(crossselling.getQty() + 1);
+                if (itemBatchSelectionDilaog.getQtyCount() != null && !itemBatchSelectionDilaog.getQtyCount().isEmpty()) {
+                    if (itemBatchSelectionDilaog.getQtyCount() != null && !itemBatchSelectionDilaog.getQtyCount().isEmpty()) {
+                        crossselling.setQty(Integer.parseInt(itemBatchSelectionDilaog.getQtyCount()) + 1);
+                    }else {
+                        crossselling.setQty(crossselling.getQty() + 1);
+                    }
                     itemBatchSelectionDilaog.setQtyCount("" + crossselling.getQty());
                 } else {
-                    Toast.makeText(activity, "Selected quantity is not available in batch", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, "Please enter product quantity", Toast.LENGTH_SHORT).show();
                 }
 
             });
 
             itemBatchSelectionDilaog.setUnitDecreaseListener(view2 -> {
-                if (crossselling.getQty() > 1) {
-                    crossselling.setQty(crossselling.getQty() - 1);
-                    itemBatchSelectionDilaog.setQtyCount("" + crossselling.getQty());
+                if (itemBatchSelectionDilaog.getQtyCount() != null && !itemBatchSelectionDilaog.getQtyCount().isEmpty()) {
+                    if (itemBatchSelectionDilaog.getQtyCount() != null && !itemBatchSelectionDilaog.getQtyCount().isEmpty()) {
+                        crossselling.setQty(Integer.parseInt(itemBatchSelectionDilaog.getQtyCount()));
+                    }
+                    if (crossselling.getQty() > 1) {
+                        crossselling.setQty(crossselling.getQty() - 1);
+                        itemBatchSelectionDilaog.setQtyCount("" + crossselling.getQty());
+                    }
                 }
             });
 
             itemBatchSelectionDilaog.setPositiveListener(view3 -> {
 
-                Intent intent = new Intent("cardReceiver");
-                intent.putExtra("message", "Addtocart");
-                intent.putExtra("product_sku", crossselling.getArtCode());
-                intent.putExtra("product_name", crossselling.getDescription());
-                intent.putExtra("product_quantyty", crossselling.getQty().toString());//txtQty.getText().toString()
-                intent.putExtra("product_price", String.valueOf(itemBatchSelectionDilaog.getItemProice()));//String.valueOf(medicine.getPrice())
-                // intent.putExtra("product_container", product_container);
-                intent.putExtra("medicineType", crossselling.getMedicineType());
-//                intent.putExtra("product_mou", String.valueOf(crossselling.getMou()));
-                intent.putExtra("product_position", String.valueOf(position));
-                LocalBroadcastManager.getInstance(activity).sendBroadcast(intent);
-//                if (addToCartCallBackData!=null) {
-//                    addToCartCallBackData.addToCartCallBack();
-//                }
-                itemBatchSelectionDilaog.dismiss();
+                itemBatchSelectionDilaog.globalBatchListHandlings(crossselling.getDescription(), crossselling.getArtCode(),
+                        balanceQty, dummyDataList, activity, crossselling.getMedicineType());
+
+
+//                Intent intent = new Intent("cardReceiver");
+//                intent.putExtra("message", "Addtocart");
+//                intent.putExtra("product_sku", crossselling.getArtCode());
+//                intent.putExtra("product_name", crossselling.getDescription());
+//                intent.putExtra("product_quantyty", crossselling.getQty().toString());//txtQty.getText().toString()
+//                intent.putExtra("product_price", String.valueOf(itemBatchSelectionDilaog.getItemProice()));//String.valueOf(medicine.getPrice())
+//                // intent.putExtra("product_container", product_container);
+//                intent.putExtra("medicineType", crossselling.getMedicineType());
+////                intent.putExtra("product_mou", String.valueOf(crossselling.getMou()));
+//                intent.putExtra("product_position", String.valueOf(position));
+//                LocalBroadcastManager.getInstance(activity).sendBroadcast(intent);
+////                if (addToCartCallBackData!=null) {
+////                    addToCartCallBackData.addToCartCallBack();
+////                }
+//                itemBatchSelectionDilaog.dismiss();
             });
             itemBatchSelectionDilaog.setNegativeListener(v1 -> {
                 itemBatchSelectionDilaog.dismiss();

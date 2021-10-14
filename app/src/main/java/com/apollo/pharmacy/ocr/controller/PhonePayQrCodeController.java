@@ -44,6 +44,10 @@ public class PhonePayQrCodeController {
         phonePayQrCodeRequest.setStoreId("16001");
         phonePayQrCodeRequest.setTransactionId(Utils.getOrderedID());
         phonePayQrCodeRequest.setUrl("http://172.16.2.251:8033/PHONEPEUAT/APOLLO/PhonePe");
+
+        Gson gson=new Gson();
+        String json=gson.toJson(phonePayQrCodeRequest);
+
         Call<PhonePayQrCodeResponse> call = api.GET_PhonePay_Qr_Code(phonePayQrCodeRequest);
         call.enqueue(new Callback<PhonePayQrCodeResponse>() {
             @Override

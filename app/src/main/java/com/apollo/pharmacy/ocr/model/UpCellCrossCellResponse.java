@@ -93,8 +93,18 @@ public class UpCellCrossCellResponse implements Serializable {
 
         private String medicineType;
 
+        private Integer qty;
+
         private boolean isCalled;
         private final static long serialVersionUID = 3686291619582335535L;
+
+        public Integer getQty() {
+            return qty;
+        }
+
+        public void setQty(Integer qty) {
+            this.qty = qty;
+        }
 
         public String getOfferPrice() {
             return offerPrice;
@@ -171,6 +181,16 @@ public class UpCellCrossCellResponse implements Serializable {
         private String offerPrice;
 
         private String medicineType;
+
+        private Integer qty;
+
+        public Integer getQty() {
+            return qty;
+        }
+
+        public void setQty(Integer qty) {
+            this.qty = qty;
+        }
 
         private boolean isCalled;
         private final static long serialVersionUID = 7652799238025050487L;

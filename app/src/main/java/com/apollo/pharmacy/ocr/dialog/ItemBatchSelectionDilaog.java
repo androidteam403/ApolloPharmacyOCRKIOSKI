@@ -5,11 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import androidx.databinding.DataBindingUtil;
@@ -29,6 +31,7 @@ import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
 import com.apollo.pharmacy.ocr.model.Product;
 import com.apollo.pharmacy.ocr.utility.SessionManager;
 import com.apollo.pharmacy.ocr.utility.Utils;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -236,6 +239,18 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
         dialogItemBatchSelectionBinding.loadingPanel.setVisibility(View.VISIBLE);
         batchListController.getBatchList(articalCode);
 
+        dialogItemBatchSelectionBinding.constraintLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                View view1 = dialog.getCurrentFocus();
+                if (view1 != null) {
+                    InputMethodManager inputManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputManager.hideSoftInputFromWindow(dialog.getCurrentFocus().getWindowToken(),
+                            InputMethodManager.HIDE_NOT_ALWAYS);
+                }
+            }
+        });
+
     }
 
     private AdapterItemBatchSelection adapterItemBatchSelection;
@@ -339,36 +354,48 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
         this.itemPrice = itemBatchSelectionData.getPrice();
     }
 
+    public float getTotalBatchQty() {
+        return overallBatchQuantity;
+    }
+
     private BatchListResponse batchListResponse;
+    float overallBatchQuantity;
 
     @Override
     public void setSuccessBatchList(BatchListResponse batchListResponse) {
-        this.batchListResponse = batchListResponse;
-        if (batchListResponse != null && batchListResponse.getBatchList() != null && batchListResponse.getBatchList().size() > 0) {
-            dialogItemBatchSelectionBinding.date.setText(batchListResponse.getBatchList().get(0).getExpDate());
-            dialogItemBatchSelectionBinding.price.setText(String.valueOf(batchListResponse.getBatchList().get(0).getPrice()));
-            this.itemPrice = batchListResponse.getBatchList().get(0).getPrice();
-            this.itemBatchSelectionDataQtyCompare = batchListResponse.getBatchList().get(0);
-            dialogItemBatchSelectionBinding.loadingPanel.setVisibility(View.GONE);
-            dialogItemBatchSelectionBinding.batchSelectionData.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+        if(batchListResponse!=null&&batchListResponse.getBatchList()!=null&&batchListResponse.getBatchList().size()>0) {
+            this.batchListResponse = batchListResponse;
+
+            for (int i = 0; i < batchListResponse.getBatchList().size(); i++) {
+                overallBatchQuantity += Float.parseFloat(batchListResponse.getBatchList().get(i).getQOH());
+            }
+
+            if (batchListResponse != null && batchListResponse.getBatchList() != null && batchListResponse.getBatchList().size() > 0) {
+                dialogItemBatchSelectionBinding.date.setText(batchListResponse.getBatchList().get(0).getExpDate());
+                dialogItemBatchSelectionBinding.price.setText(String.valueOf(batchListResponse.getBatchList().get(0).getPrice()));
+                this.itemPrice = batchListResponse.getBatchList().get(0).getPrice();
+                this.itemBatchSelectionDataQtyCompare = batchListResponse.getBatchList().get(0);
+                dialogItemBatchSelectionBinding.loadingPanel.setVisibility(View.GONE);
+                dialogItemBatchSelectionBinding.batchSelectionData.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
 //                    dialogItemBatchSelectionBinding.dialogItemBatchInnerParentLayout.setBackground(getContext().getResources().getDrawable(R.drawable.dialog_item_batch_inner_parent_layout_bg));
-                    dialogItemBatchSelectionBinding.recyclerViewLay.setVisibility(View.VISIBLE);
-                    adapterItemBatchSelection = new AdapterItemBatchSelection(getContext(), batchListResponse.getBatchList(), ItemBatchSelectionDilaog.this);
-                    RecyclerView.LayoutManager mLayoutManager2 = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-                    dialogItemBatchSelectionBinding.batchListRecycle.setLayoutManager(mLayoutManager2);
-                    dialogItemBatchSelectionBinding.batchListRecycle.setItemAnimator(new DefaultItemAnimator());
-                    dialogItemBatchSelectionBinding.batchListRecycle.setAdapter(adapterItemBatchSelection);
-                    dialogItemBatchSelectionBinding.batchListRecycle.setNestedScrollingEnabled(false);
-                }
-            });
-            Utils.dismissDialog();
-        } else {
-            Utils.dismissDialog();
-            dialog.dismiss();
-            Toast.makeText(getContext(), "Product Out Of Stock", Toast.LENGTH_LONG).show();
-            dialogItemBatchSelectionBinding.loadingPanel.setVisibility(View.GONE);
+                        dialogItemBatchSelectionBinding.recyclerViewLay.setVisibility(View.VISIBLE);
+                        adapterItemBatchSelection = new AdapterItemBatchSelection(getContext(), batchListResponse.getBatchList(), ItemBatchSelectionDilaog.this);
+                        RecyclerView.LayoutManager mLayoutManager2 = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+                        dialogItemBatchSelectionBinding.batchListRecycle.setLayoutManager(mLayoutManager2);
+                        dialogItemBatchSelectionBinding.batchListRecycle.setItemAnimator(new DefaultItemAnimator());
+                        dialogItemBatchSelectionBinding.batchListRecycle.setAdapter(adapterItemBatchSelection);
+                        dialogItemBatchSelectionBinding.batchListRecycle.setNestedScrollingEnabled(false);
+                    }
+                });
+                Utils.dismissDialog();
+            } else {
+                Utils.dismissDialog();
+                dialog.dismiss();
+                Toast.makeText(getContext(), "Product Out Of Stock", Toast.LENGTH_LONG).show();
+                dialogItemBatchSelectionBinding.loadingPanel.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -420,6 +447,183 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
 
         public void setPrice(String price) {
             this.price = price;
+        }
+    }
+
+    List<OCRToDigitalMedicineResponse> dummyDataList = new ArrayList<>();
+    private float balanceQty;
+
+    public void globalBatchListHandlings(String itemName, String itemId, float balanceQtying, List<OCRToDigitalMedicineResponse> dummyDataListing, Context context, String medicineType) {
+        if (getBatchAvilableData() != null && getBatchAvilableData().getBatchList() != null && getBatchAvilableData().getBatchList().size() > 0) {
+            if (getQtyCount() != null && !getQtyCount().isEmpty()) {
+                if (getTotalBatchQty() >= Float.parseFloat(getQtyCount())) {
+                    if (Float.parseFloat(getItemBatchSelectionDataQty().getQOH()) >= Float.parseFloat(getQtyCount())) {
+                        OCRToDigitalMedicineResponse data = new OCRToDigitalMedicineResponse();
+                        data.setArtName(TextUtils.isEmpty(itemName) ? "-" : itemName);
+                        data.setArtCode(itemId + "," + getItemBatchSelectionDataQty().getBatchNo());
+                        data.setBatchId(getItemBatchSelectionDataQty().getBatchNo());
+                        data.setArtprice(String.valueOf(getItemProice()));
+                        data.setContainer("");
+                        data.setQty(Integer.parseInt(getQtyCount().toString()));
+
+                        for (OCRToDigitalMedicineResponse proQtyIncorg : SessionManager.INSTANCE.getDataList()) {
+                            if (proQtyIncorg.getArtCode().equals(data.getArtCode())) {
+                                data.setQty(proQtyIncorg.getQty() + Integer.parseInt(getQtyCount().toString()));
+                            }
+                        }
+                        data.setMedicineType(medicineType);
+                        dummyDataList.add(data);
+
+                        if (null != SessionManager.INSTANCE.getDataList()) {
+                            if (SessionManager.INSTANCE.getDataList().size() > 0) {
+                                List<OCRToDigitalMedicineResponse> tempCartItemList = new ArrayList<>();
+                                tempCartItemList = SessionManager.INSTANCE.getDataList();
+                                for (OCRToDigitalMedicineResponse listItem : tempCartItemList) {
+                                    boolean isItemEqual = false;
+                                    for (OCRToDigitalMedicineResponse duplecateItem : dummyDataList) {
+                                        if (duplecateItem.getArtCode().equals(listItem.getArtCode())) {
+                                            isItemEqual = true;
+                                        }
+                                    }
+                                    if (!isItemEqual)
+                                        dummyDataList.add(listItem);
+                                }
+                            }
+                        }
+                        SessionManager.INSTANCE.setDataList(dummyDataList);
+                        Intent intent = new Intent("OrderhistoryCardReciver");
+                        intent.putExtra("message", "OrderNow");
+                        intent.putExtra("MedininesNames", new Gson().toJson(dummyDataList));
+                        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                        dismiss();
+
+                    } else {
+                        OCRToDigitalMedicineResponse data1 = new OCRToDigitalMedicineResponse();
+
+                        data1.setArtName(TextUtils.isEmpty(itemName) ? "-" : itemName);
+                        data1.setArtCode(itemId + "," + getItemBatchSelectionDataQty().getBatchNo());
+                        data1.setBatchId(getItemBatchSelectionDataQty().getBatchNo());
+                        data1.setArtprice(String.valueOf(getItemProice()));
+                        data1.setContainer("");
+                        data1.setQty((int) Float.parseFloat(getItemBatchSelectionDataQty().getQOH().toString()));
+                        balanceQty = Float.parseFloat(getQtyCount()) - Float.parseFloat(String.valueOf(data1.getQty()));
+                        data1.setMedicineType(medicineType);
+                        getItemBatchSelectionDataQty().setBatchQtySelected(true);
+                        dummyDataList.add(data1);
+
+
+                        if (null != SessionManager.INSTANCE.getDataList()) {
+                            if (SessionManager.INSTANCE.getDataList().size() > 0) {
+                                List<OCRToDigitalMedicineResponse> tempCartItemList = new ArrayList<>();
+                                tempCartItemList = SessionManager.INSTANCE.getDataList();
+                                for (OCRToDigitalMedicineResponse listItem : tempCartItemList) {
+                                    boolean isItemEqual = false;
+                                    for (OCRToDigitalMedicineResponse duplecateItem : dummyDataList) {
+                                        if (duplecateItem.getArtCode().equals(listItem.getArtCode())) {
+                                            isItemEqual = true;
+                                        }
+                                    }
+                                    if (!isItemEqual)
+                                        dummyDataList.add(listItem);
+                                }
+                            }
+                        }
+
+                        for (int i = 0; i < getBatchAvilableData().getBatchList().size(); i++) {
+                            if (balanceQty != 0) {
+                                if (Float.parseFloat(getBatchAvilableData().getBatchList().get(i).getQOH()) >= balanceQty && !getBatchAvilableData().getBatchList().get(i).isBatchQtySelected()) {
+                                    OCRToDigitalMedicineResponse data2 = new OCRToDigitalMedicineResponse();
+
+                                    data2.setArtName(TextUtils.isEmpty(itemName) ? "-" : itemName);
+                                    data2.setArtCode(itemId + "," + getBatchAvilableData().getBatchList().get(i).getBatchNo());
+                                    data2.setBatchId(getBatchAvilableData().getBatchList().get(i).getBatchNo());
+                                    data2.setArtprice(String.valueOf(getItemProice()));
+                                    data2.setContainer("");
+
+                                    if (balanceQty >= Float.parseFloat(getBatchAvilableData().getBatchList().get(i).getQOH())) {
+                                        data2.setQty((int) Float.parseFloat(getBatchAvilableData().getBatchList().get(i).getQOH().toString()));
+                                    } else {
+                                        data2.setQty((int) balanceQty);
+                                        balanceQty = 0;
+                                    }
+                                    balanceQty = balanceQty - Float.parseFloat(String.valueOf(data2.getQty()));
+                                    data2.setMedicineType(medicineType);
+                                    dummyDataList.add(data2);
+
+
+                                    if (null != SessionManager.INSTANCE.getDataList()) {
+                                        if (SessionManager.INSTANCE.getDataList().size() > 0) {
+                                            List<OCRToDigitalMedicineResponse> tempCartItemList = new ArrayList<>();
+                                            tempCartItemList = SessionManager.INSTANCE.getDataList();
+                                            for (OCRToDigitalMedicineResponse listItem : tempCartItemList) {
+                                                boolean isItemEqual = false;
+                                                for (OCRToDigitalMedicineResponse duplecateItem : dummyDataList) {
+                                                    if (duplecateItem.getArtCode().equals(listItem.getArtCode())) {
+                                                        isItemEqual = true;
+                                                    }
+                                                }
+                                                if (!isItemEqual)
+                                                    dummyDataList.add(listItem);
+                                            }
+                                        }
+                                    }
+                                    break;
+                                } else {
+                                    if (!getBatchAvilableData().getBatchList().get(i).isBatchQtySelected() && balanceQty != 0) {
+                                        OCRToDigitalMedicineResponse data3 = new OCRToDigitalMedicineResponse();
+                                        data3.setArtName(TextUtils.isEmpty(itemName) ? "-" : itemName);
+                                        data3.setArtCode(itemId + "," + getBatchAvilableData().getBatchList().get(i).getBatchNo());
+                                        data3.setBatchId(getBatchAvilableData().getBatchList().get(i).getBatchNo());
+                                        data3.setArtprice(String.valueOf(getItemProice()));
+                                        data3.setContainer("");
+                                        if (balanceQty >= Float.parseFloat(getBatchAvilableData().getBatchList().get(i).getQOH())) {
+                                            data3.setQty((int) Float.parseFloat(getBatchAvilableData().getBatchList().get(i).getQOH().toString()));
+                                        } else {
+                                            data3.setQty((int) balanceQty);
+                                            balanceQty = 0;
+                                        }
+                                        balanceQty = balanceQty - Float.parseFloat(String.valueOf(data3.getQty()));
+                                        data3.setMedicineType(medicineType);
+                                        dummyDataList.add(data3);
+
+
+                                        if (null != SessionManager.INSTANCE.getDataList()) {
+                                            if (SessionManager.INSTANCE.getDataList().size() > 0) {
+                                                List<OCRToDigitalMedicineResponse> tempCartItemList = new ArrayList<>();
+                                                tempCartItemList = SessionManager.INSTANCE.getDataList();
+                                                for (OCRToDigitalMedicineResponse listItem : tempCartItemList) {
+                                                    boolean isItemEqual = false;
+                                                    for (OCRToDigitalMedicineResponse duplecateItem : dummyDataList) {
+                                                        if (duplecateItem.getArtCode().equals(listItem.getArtCode())) {
+                                                            isItemEqual = true;
+                                                        }
+                                                    }
+                                                    if (!isItemEqual)
+                                                        dummyDataList.add(listItem);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        SessionManager.INSTANCE.setDataList(dummyDataList);
+                        Intent intent = new Intent("OrderhistoryCardReciver");
+                        intent.putExtra("message", "OrderNow");
+                        intent.putExtra("MedininesNames", new Gson().toJson(dummyDataList));
+                        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                        dismiss();
+                    }
+                } else {
+                    Toast.makeText(context, "Selected quantity is not available in batch", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(context, "Please enter product quantity", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(context, "Product Out of Stock", Toast.LENGTH_SHORT).show();
+            dismiss();
         }
     }
 

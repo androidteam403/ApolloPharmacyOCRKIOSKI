@@ -175,6 +175,9 @@ public class MyProfileActivity extends AppCompatActivity implements MyCartListen
 
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
                 new IntentFilter("cardReceiver"));
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiverNew, new IntentFilter("OrderhistoryCardReciver"));
+        Constants.getInstance().setConnectivityListener(this);
     }
 
     /* view components*/
@@ -598,9 +601,27 @@ public class MyProfileActivity extends AppCompatActivity implements MyCartListen
     public void onPause() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiverAddmore);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiverNew);
         super.onPause();
         Constants.getInstance().setConnectivityListener(null);
     }
+
+    private BroadcastReceiver mMessageReceiverNew = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String message = intent.getStringExtra("message");
+            if (message.equalsIgnoreCase("OrderNow")) {
+                if (null != SessionManager.INSTANCE.getDataList()) {
+                    if (SessionManager.INSTANCE.getDataList().size() > 0) {
+                        cartCount(SessionManager.INSTANCE.getDataList().size());
+                        dataList = SessionManager.INSTANCE.getDataList();
+                    }
+                }
+                Utils.showSnackbar(MyProfileActivity.this, constraintLayout, getApplicationContext().getResources().getString(R.string.label_item_added_cart));
+                cartCount(dataList.size());
+            }
+        }
+    };
 
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override

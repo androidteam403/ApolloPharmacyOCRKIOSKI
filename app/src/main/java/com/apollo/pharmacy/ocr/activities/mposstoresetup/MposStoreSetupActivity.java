@@ -133,6 +133,14 @@ public class MposStoreSetupActivity extends BaseActivity implements GoogleApiCli
             mposStoreSetupActivityBinding.baseUrl.setText(SessionManager.INSTANCE.getEposUrl());
         }
 
+        if (SessionManager.INSTANCE.getStoreId() != null && !SessionManager.INSTANCE.getStoreId().isEmpty()) {
+            StoreListResponseModel.StoreListObj item = new StoreListResponseModel.StoreListObj();
+            item.setStoreId(SessionManager.INSTANCE.getStoreId());
+            item.setStoreName(SessionManager.INSTANCE.getUseraddress().getName());
+            item.setAddress(SessionManager.INSTANCE.getUseraddress().getAddress1());
+            mposStoreSetupActivityBinding.setStoreinfo(item);
+        }
+
         setUpGClient();
     }
 

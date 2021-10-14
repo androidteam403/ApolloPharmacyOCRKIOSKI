@@ -32,6 +32,7 @@ public class OCRToDigitalMedicineResponse implements Serializable {
     private String mou;
     private String medicineType;
     private boolean outOfStock;
+    private String batchId;
 
     public OCRToDigitalMedicineResponse() {
 
@@ -46,6 +47,14 @@ public class OCRToDigitalMedicineResponse implements Serializable {
 
     public boolean isOutOfStock() {
         return outOfStock;
+    }
+
+    public String getBatchId() {
+        return batchId;
+    }
+
+    public void setBatchId(String batchId) {
+        this.batchId = batchId;
     }
 
     public void setOutOfStock(boolean outOfStock) {
