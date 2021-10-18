@@ -462,7 +462,7 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
                         data.setArtName(TextUtils.isEmpty(itemName) ? "-" : itemName);
                         data.setArtCode(itemId + "," + getItemBatchSelectionDataQty().getBatchNo());
                         data.setBatchId(getItemBatchSelectionDataQty().getBatchNo());
-                        data.setArtprice(String.valueOf(getItemProice()));
+                        data.setArtprice(String.valueOf(getItemBatchSelectionDataQty().getPrice()));
                         data.setContainer("");
                         data.setQty(Integer.parseInt(getQtyCount().toString()));
 
@@ -503,7 +503,7 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
                         data1.setArtName(TextUtils.isEmpty(itemName) ? "-" : itemName);
                         data1.setArtCode(itemId + "," + getItemBatchSelectionDataQty().getBatchNo());
                         data1.setBatchId(getItemBatchSelectionDataQty().getBatchNo());
-                        data1.setArtprice(String.valueOf(getItemProice()));
+                        data1.setArtprice(String.valueOf(getItemBatchSelectionDataQty().getPrice()));
                         data1.setContainer("");
                         data1.setQty((int) Float.parseFloat(getItemBatchSelectionDataQty().getQOH().toString()));
                         balanceQty = Float.parseFloat(getQtyCount()) - Float.parseFloat(String.valueOf(data1.getQty()));
@@ -537,7 +537,7 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
                                     data2.setArtName(TextUtils.isEmpty(itemName) ? "-" : itemName);
                                     data2.setArtCode(itemId + "," + getBatchAvilableData().getBatchList().get(i).getBatchNo());
                                     data2.setBatchId(getBatchAvilableData().getBatchList().get(i).getBatchNo());
-                                    data2.setArtprice(String.valueOf(getItemProice()));
+                                    data2.setArtprice(String.valueOf(getBatchAvilableData().getBatchList().get(i).getPrice()));
                                     data2.setContainer("");
 
                                     if (balanceQty >= Float.parseFloat(getBatchAvilableData().getBatchList().get(i).getQOH())) {
@@ -574,7 +574,7 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
                                         data3.setArtName(TextUtils.isEmpty(itemName) ? "-" : itemName);
                                         data3.setArtCode(itemId + "," + getBatchAvilableData().getBatchList().get(i).getBatchNo());
                                         data3.setBatchId(getBatchAvilableData().getBatchList().get(i).getBatchNo());
-                                        data3.setArtprice(String.valueOf(getItemProice()));
+                                        data3.setArtprice(String.valueOf(getBatchAvilableData().getBatchList().get(i).getPrice()));
                                         data3.setContainer("");
                                         if (balanceQty >= Float.parseFloat(getBatchAvilableData().getBatchList().get(i).getQOH())) {
                                             data3.setQty((int) Float.parseFloat(getBatchAvilableData().getBatchList().get(i).getQOH().toString()));
