@@ -3,10 +3,13 @@ package com.apollo.pharmacy.ocr.activities.mposstoresetup;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,6 +17,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -328,8 +333,27 @@ public class MposStoreSetupActivity extends BaseActivity implements GoogleApiCli
 
     @Override
     public void onCancelBtnClick() {
-        selectedStoreId = null;
-        mposStoreSetupActivityBinding.setStoreinfo(selectedStoreId);
+        final Dialog dialog = new Dialog(MposStoreSetupActivity.this);
+        dialog.setContentView(R.layout.dialog_custom_alert);
+        dialog.setCancelable(false);
+        if (dialog.getWindow() != null)
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+        TextView dialogTitleText = dialog.findViewById(R.id.dialog_info);
+        Button okButton = dialog.findViewById(R.id.dialog_ok);
+        Button declineButton = dialog.findViewById(R.id.dialog_cancel);
+        dialogTitleText.setText("Do want to remove site id.");
+        okButton.setText(getResources().getString(R.string.label_yes));
+        declineButton.setText(getResources().getString(R.string.label_cancel_text));
+        okButton.setOnClickListener(v -> {
+            selectedStoreId = null;
+            mposStoreSetupActivityBinding.setStoreinfo(selectedStoreId);
+            dialog.dismiss();
+
+        });
+        declineButton.setOnClickListener(v -> dialog.dismiss());
+
+
     }
 
     @Override

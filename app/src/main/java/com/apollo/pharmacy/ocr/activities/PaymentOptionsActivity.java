@@ -541,6 +541,8 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
                     intent.putExtra("PharmaOrderPlacedData", pharmaOrderId);
                     intent.putExtra("FmcgOrderPlacedData", fmcgOrderId);
                     intent.putExtra("OnlineAmountPaid", onlineAmountPaid);
+                    intent.putExtra("pharma_delivery_type",isPharmadeliveryType);
+                    intent.putExtra("fmcg_delivery_type",isFmcgDeliveryType);
                     startActivity(intent);
                     overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
                 }
