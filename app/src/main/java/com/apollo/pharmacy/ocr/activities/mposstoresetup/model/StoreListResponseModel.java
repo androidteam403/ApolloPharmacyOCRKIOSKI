@@ -49,6 +49,25 @@ public class StoreListResponseModel {
         @SerializedName("DataAreaId")
         private String dataAreaId;
 
+        public void setStoreId(String storeId) {
+            this.storeId = storeId;
+        }
+
+        public void setStoreName(String storeName) {
+            this.storeName = storeName;
+        }
+
+        public void setAddress(String address) {
+            this.address = address;
+        }
+
+        public void setContactNumber(String contactNumber) {
+            this.contactNumber = contactNumber;
+        }
+
+        public void setCity(String city) {
+            this.city = city;
+        }
 
         public String getStoreId() {
             return storeId;

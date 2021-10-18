@@ -99,6 +99,9 @@ public class HomeActivity extends BaseActivity implements ConnectivityReceiver.C
 
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
                 new IntentFilter("cardReceiver"));
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiverNew, new IntentFilter("OrderhistoryCardReciver"));
+        Constants.getInstance().setConnectivityListener(this);
     }
 
     //TextView crash;
@@ -194,6 +197,10 @@ public class HomeActivity extends BaseActivity implements ConnectivityReceiver.C
         dashboardApolloIcon.setClickable(false);
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
                 new IntentFilter("cardReceiver"));
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiverNew, new IntentFilter("OrderhistoryCardReciver"));
+        Constants.getInstance().setConnectivityListener(this);
+
         mySearchLayout.setOnClickListener(v -> {
             mySearchLayout.setBackgroundResource(R.color.selected_menu_color);
             dashboardSearchIcon.setImageResource(R.drawable.dashboard_search_hover);
@@ -600,6 +607,8 @@ public class HomeActivity extends BaseActivity implements ConnectivityReceiver.C
         Utils.showSnackbar(HomeActivity.this, constraintLayout, message);
     }
 
+    List<OCRToDigitalMedicineResponse> dummyDataList = new ArrayList<>();
+    private float balanceQty;
 
     @Override
     public void onSuccessSearchItemApi(ItemSearchResponse itemSearchResponse) {
@@ -619,57 +628,55 @@ public class HomeActivity extends BaseActivity implements ConnectivityReceiver.C
 
 
             itemBatchSelectionDilaog.setUnitIncreaseListener(view3 -> {
-                if (itemBatchSelectionDilaog.getItemBatchSelectionDataQty() != null && Integer.parseInt(itemBatchSelectionDilaog.getItemBatchSelectionDataQty().getQOH()) >= (medicine.getQty() + 1)) {
-                    medicine.setQty(medicine.getQty() + 1);
+                if (itemBatchSelectionDilaog.getQtyCount() != null && !itemBatchSelectionDilaog.getQtyCount().isEmpty()) {
+                    if (itemBatchSelectionDilaog.getQtyCount() != null && !itemBatchSelectionDilaog.getQtyCount().isEmpty()) {
+                        medicine.setQty(Integer.parseInt(itemBatchSelectionDilaog.getQtyCount()) + 1);
+                    } else {
+                        medicine.setQty(medicine.getQty() + 1);
+                    }
                     itemBatchSelectionDilaog.setQtyCount("" + medicine.getQty());
                 } else {
-                    Toast.makeText(HomeActivity.this, "Selected quantity is not available in batch", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(HomeActivity.this, "Please enter product quantity", Toast.LENGTH_SHORT).show();
                 }
             });
             itemBatchSelectionDilaog.setUnitDecreaseListener(view4 -> {
-                if (medicine.getQty() > 1) {
-                    medicine.setQty(medicine.getQty() - 1);
-                    itemBatchSelectionDilaog.setQtyCount("" + medicine.getQty());
+                if (itemBatchSelectionDilaog.getQtyCount() != null && !itemBatchSelectionDilaog.getQtyCount().isEmpty()) {
+                    if (itemBatchSelectionDilaog.getQtyCount() != null && !itemBatchSelectionDilaog.getQtyCount().isEmpty()) {
+                        medicine.setQty(Integer.parseInt(itemBatchSelectionDilaog.getQtyCount()));
+                    }
+                    if (medicine.getQty() > 1) {
+                        medicine.setQty(medicine.getQty() - 1);
+                        itemBatchSelectionDilaog.setQtyCount("" + medicine.getQty());
+                    }
                 }
             });
             itemBatchSelectionDilaog.setPositiveListener(view2 -> {
                 activityHomeBinding.transColorId.setVisibility(View.GONE);
 
-                Intent intent = new Intent("cardReceiver");
-                intent.putExtra("message", "Addtocart");
-                intent.putExtra("product_sku", medicine.getSku());
-                intent.putExtra("product_name", medicine.getDescription());
-                intent.putExtra("product_quantyty", itemBatchSelectionDilaog.getQtyCount().toString());
-                intent.putExtra("product_price", String.valueOf(itemBatchSelectionDilaog.getItemProice()));//String.valueOf(medicine.getPrice())
-                // intent.putExtra("product_container", product_container);
-                intent.putExtra("medicineType", medicine.getMedicineType());
-                intent.putExtra("product_mou", String.valueOf(medicine.getMou()));
-//                intent.putExtra("product_position", String.valueOf(0));
-                LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+                itemBatchSelectionDilaog.globalBatchListHandlings(medicine.getDescription(), medicine.getSku(),
+                        balanceQty, dummyDataList, HomeActivity.this, medicine.getMedicineType());
 
-//                OCRToDigitalMedicineResponse ocrToDigitalMedicineResponse = new OCRToDigitalMedicineResponse();
-//                ocrToDigitalMedicineResponse.setArtCode(medicine.getSku());
-//                ocrToDigitalMedicineResponse.setArtName(medicine.getName());
-//                ocrToDigitalMedicineResponse.setQty(Integer.parseInt(itemBatchSelectionDilaog.getQtyCount().toString()));
-//                ocrToDigitalMedicineResponse.setArtprice(String.valueOf(itemBatchSelectionDilaog.getItemProice()));
-//                ocrToDigitalMedicineResponse.setMedicineType(medicine.getMedicineType());
-//                ocrToDigitalMedicineResponse.setMou(String.valueOf(medicine.getMou()));
-//                if (null != SessionManager.INSTANCE.getDataList()) {
-//                    this.dataList = SessionManager.INSTANCE.getDataList();
-//                    dataList.add(ocrToDigitalMedicineResponse);
-//                    SessionManager.INSTANCE.setDataList(dataList);
+//                if (itemBatchSelectionDilaog.getQtyCount() != null && !itemBatchSelectionDilaog.getQtyCount().isEmpty()) {
+//                    if (itemBatchSelectionDilaog.getItemBatchSelectionDataQty() != null && Float.parseFloat(itemBatchSelectionDilaog.getItemBatchSelectionDataQty().getQOH()) >= Float.parseFloat(itemBatchSelectionDilaog.getQtyCount())) {
+//                        Intent intent = new Intent("cardReceiver");
+//                        intent.putExtra("message", "Addtocart");
+//                        intent.putExtra("product_sku", medicine.getSku());
+//                        intent.putExtra("product_name", medicine.getDescription());
+//                        intent.putExtra("product_quantyty", itemBatchSelectionDilaog.getQtyCount().toString());
+//                        intent.putExtra("product_price", String.valueOf(itemBatchSelectionDilaog.getItemProice()));//String.valueOf(medicine.getPrice())
+//                        // intent.putExtra("product_container", product_container);
+//                        intent.putExtra("medicineType", medicine.getMedicineType());
+//                        intent.putExtra("product_mou", String.valueOf(medicine.getMou()));
+////                intent.putExtra("product_position", String.valueOf(0));
+//                        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+//                        isDialogShow = false;
+//                        itemBatchSelectionDilaog.dismiss();
+//                    } else {
+//                        Toast.makeText(HomeActivity.this, "Selected quantity is not available in batch", Toast.LENGTH_SHORT).show();
+//                    }
 //                } else {
-//                    dataList.add(ocrToDigitalMedicineResponse);
-//                    SessionManager.INSTANCE.setDataList(dataList);
+//                    Toast.makeText(HomeActivity.this, "Please enter product quantity", Toast.LENGTH_SHORT).show();
 //                }
-
-                isDialogShow = false;
-                itemBatchSelectionDilaog.dismiss();
-//                Intent intent1 = new Intent(HomeActivity.this, MyCartActivity.class);
-//                intent1.putExtra("activityname", "AddMoreActivity");
-//                startActivity(intent1);
-//                finish();
-//                overridePendingTransition(R.animator.trans_right_in, R.animator.trans_right_out);
             });
             itemBatchSelectionDilaog.setNegativeListener(v -> {
                 activityHomeBinding.transColorId.setVisibility(View.GONE);
@@ -704,6 +711,23 @@ public class HomeActivity extends BaseActivity implements ConnectivityReceiver.C
             welcomeTxt.setText(getApplicationContext().getResources().getString(R.string.label_welcome) + " " + getApplicationContext().getResources().getString(R.string.label_guest));
         }
     }
+
+    private BroadcastReceiver mMessageReceiverNew = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String message = intent.getStringExtra("message");
+            if (message.equalsIgnoreCase("OrderNow")) {
+                if (null != SessionManager.INSTANCE.getDataList()) {
+                    if (SessionManager.INSTANCE.getDataList().size() > 0) {
+//                        cartCount(SessionManager.INSTANCE.getDataList().size());
+                        dataList = SessionManager.INSTANCE.getDataList();
+                    }
+                }
+                Utils.showSnackbar(HomeActivity.this, constraintLayout, getApplicationContext().getResources().getString(R.string.label_item_added_cart));
+//                cartCount(dataList.size());
+            }
+        }
+    };
 
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
@@ -775,6 +799,8 @@ public class HomeActivity extends BaseActivity implements ConnectivityReceiver.C
     @Override
     protected void onPause() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiverNew);
+
         super.onPause();
     }
 

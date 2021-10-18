@@ -6,7 +6,7 @@
     </data>
 
     <RelativeLayout
-
+        android:id="@+id/constraint_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/transperent_black_color">
@@ -162,9 +162,9 @@
                                 android:textStyle="bold" />
 
                             <LinearLayout
-                                android:orientation="horizontal"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content">
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
 
                                 <Button
                                     android:id="@+id/unitDecrease"
@@ -187,15 +187,15 @@
                                         android:id="@+id/unitCount"
                                         android:layout_width="@dimen/fifty_dp"
                                         android:layout_height="@dimen/forty_dp"
-                                        android:gravity="center"
-                                        android:text="1"
-                                        android:layout_margin="@dimen/five_dp"
                                         android:layout_gravity="center_vertical"
+                                        android:layout_margin="@dimen/five_dp"
                                         android:background="@drawable/edittext_square_bg"
+                                        android:gravity="center"
+                                        android:importantForAutofill="no"
+                                        android:text="1"
                                         android:textColor="@color/black"
                                         android:textSize="18sp"
-                                        android:textStyle="bold"
-                                        android:importantForAutofill="no" />
+                                        android:textStyle="bold" />
 
                                     <!--<TextView-->
                                     <!--android:id="@+id/unit"-->

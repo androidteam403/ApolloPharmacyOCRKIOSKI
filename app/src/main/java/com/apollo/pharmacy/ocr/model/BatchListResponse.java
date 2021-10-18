@@ -87,8 +87,7 @@ public class BatchListResponse implements Serializable {
         this.userID = userID;
     }
 
-    public class Batch implements Serializable
-    {
+    public class Batch implements Serializable {
 
         @SerializedName("BatchNo")
         @Expose
@@ -148,6 +147,16 @@ public class BatchListResponse implements Serializable {
         @Expose
         private Double totalTax;
         private final static long serialVersionUID = -2078008818526940221L;
+
+        private boolean isBatchQtySelected;
+
+        public boolean isBatchQtySelected() {
+            return isBatchQtySelected;
+        }
+
+        public void setBatchQtySelected(boolean batchQtySelected) {
+            isBatchQtySelected = batchQtySelected;
+        }
 
         public String getBatchNo() {
             return batchNo;
