@@ -50,7 +50,7 @@ public class UpCellAdapter extends RecyclerView.Adapter<UpCellAdapter.ViewHolder
 
             itemBatchSelectionDilaog.setUnitIncreaseListener(view1 -> {
 
-                if (itemBatchSelectionDilaog.getItemBatchSelectionDataQty() != null && Integer.parseInt(itemBatchSelectionDilaog.getItemBatchSelectionDataQty().getQOH()) >= (upselling.getQty() + 1)) {
+                if (itemBatchSelectionDilaog.getItemBatchSelectionDataQty() != null && Float.parseFloat(itemBatchSelectionDilaog.getItemBatchSelectionDataQty().getQOH()) >= Float.parseFloat(upselling.getQty().toString()) + 1) {
                     upselling.setQty(upselling.getQty() + 1);
                     itemBatchSelectionDilaog.setQtyCount("" + upselling.getQty());
                 } else {

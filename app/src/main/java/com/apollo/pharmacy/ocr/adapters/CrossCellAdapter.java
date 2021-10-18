@@ -56,8 +56,7 @@ public class CrossCellAdapter extends RecyclerView.Adapter<CrossCellAdapter.View
             crossselling.setQty(1);
             itemBatchSelectionDilaog.setUnitIncreaseListener(view1 -> {
 
-
-                if (itemBatchSelectionDilaog.getItemBatchSelectionDataQty() != null && Integer.parseInt(itemBatchSelectionDilaog.getItemBatchSelectionDataQty().getQOH()) >= (crossselling.getQty()+1)) {
+                if (itemBatchSelectionDilaog.getItemBatchSelectionDataQty() != null && Float.parseFloat(itemBatchSelectionDilaog.getItemBatchSelectionDataQty().getQOH()) >= Float.parseFloat(crossselling.getQty().toString())+1) {
                     crossselling.setQty(crossselling.getQty() + 1);
                     itemBatchSelectionDilaog.setQtyCount("" + crossselling.getQty());
                 } else {
