@@ -75,6 +75,8 @@
                                 android:contentDescription="@string/app_name"
                                 android:src="@drawable/lang_page_apollo_logo"
                                 android:visibility="visible" />
+
+
                         </LinearLayout>
 
                         <pl.droidsonroids.gif.GifImageView
