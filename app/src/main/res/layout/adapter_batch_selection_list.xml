@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/batch_selection_data"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_marginTop="@dimen/five_dp"
+            android:padding="@dimen/ten_dp">
+
+            <ImageView
+                android:id="@+id/tick_upi"
+                android:layout_width="@dimen/twenty_dp"
+                android:layout_height="@dimen/twenty_dp"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/round_tick_bg"
+                android:backgroundTint="@color/grey"
+                android:padding="@dimen/two_dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/five_dp"
+                android:text="Mfg:" />
+
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/five_dp"
+                android:text="12 Mar 2021"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/fifteen_dp"
+                android:text="Cost:" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/five_dp"
+                android:text="\u20B9 "
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="@dimen/fifteen_dp"
+                android:text="119.75"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+</layout>
