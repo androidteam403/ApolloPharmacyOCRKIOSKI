@@ -34,7 +34,7 @@
                 android:id="@+id/sub_sub_parent_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginEnd="@dimen/forty_dp"
+                android:layout_marginEnd="@dimen/sixty_five_dp"
                 android:orientation="vertical">
 
                 <RelativeLayout
@@ -158,7 +158,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:background="@color/white"
-                                    android:hint="Search your product here like : crocine"
+                                    android:hint="Search your product here like : Crocin"
                                     android:imeOptions="flagNoExtractUi"
                                     android:importantForAutofill="no"
                                     android:inputType="text"
@@ -644,7 +644,7 @@
                                 android:id="@+id/cross_selling_recycle_new"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:background="@color/text_dark_blue_color"
+                                android:background="@color/offers_list_bg"
                                 android:visibility="gone" />
 
                             <ListView

@@ -37,7 +37,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/six_hundred_fifty_five_dp"
-                        android:layout_marginEnd="@dimen/thirty_dp"
+                        android:layout_marginEnd="@dimen/sixty_dp"
                         android:orientation="vertical">
 
                         <RelativeLayout
@@ -433,7 +433,7 @@
                                             android:id="@+id/cross_selling_recycle_new"
                                             android:layout_width="match_parent"
                                             android:layout_height="match_parent"
-                                            android:background="@color/text_dark_blue_color"
+                                            android:background="@color/offers_list_bg"
                                             android:visibility="visible">
 
                                         </androidx.recyclerview.widget.RecyclerView>
@@ -443,6 +443,7 @@
                                             android:id="@+id/up_selling_trendingrecycleerview_new"
                                             android:layout_width="match_parent"
                                             android:layout_height="match_parent"
+                                            android:background="@color/offers_list_bg"
                                             android:visibility="gone" />
 
                                         <RelativeLayout

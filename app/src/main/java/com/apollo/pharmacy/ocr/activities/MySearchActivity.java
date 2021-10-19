@@ -279,7 +279,7 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
                     search_suggestion_listview.setVisibility(View.VISIBLE);
                     offersRecycle.setVisibility(View.GONE);
                     itemCountLayout.setVisibility(View.GONE);
-                    clearSearchText.setVisibility(View.GONE);
+                    clearSearchText.setVisibility(View.VISIBLE);
                     subCategoryCount.setText("");
                     if (search_auto_complete_text) {
                         Searchsuggestionrequest request = new Searchsuggestionrequest();

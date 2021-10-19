@@ -342,7 +342,7 @@ public class MposStoreSetupActivity extends BaseActivity implements GoogleApiCli
         TextView dialogTitleText = dialog.findViewById(R.id.dialog_info);
         Button okButton = dialog.findViewById(R.id.dialog_ok);
         Button declineButton = dialog.findViewById(R.id.dialog_cancel);
-        dialogTitleText.setText("Do want to remove site id.");
+        dialogTitleText.setText("Do you want to remove site id?");
         okButton.setText(getResources().getString(R.string.label_yes));
         declineButton.setText(getResources().getString(R.string.label_cancel_text));
         okButton.setOnClickListener(v -> {
@@ -391,11 +391,12 @@ public class MposStoreSetupActivity extends BaseActivity implements GoogleApiCli
                         mposStoreSetupActivityBinding.storeLongitude.getText().toString(), mposStoreSetupActivityBinding.macid.getText().toString(),
                         mposStoreSetupActivityBinding.storeId.getText().toString(), mposStoreSetupActivityBinding.terminalIdText.getText().toString(), "admin");
             });
-
             if (storeIdNumber != null)
                 SessionManager.INSTANCE.setStoreId(storeIdNumber);
             else
-                SessionManager.INSTANCE.setStoreId(mposStoreSetupActivityBinding.storeId.getText().toString());            SessionManager.INSTANCE.setTerminalId(mposStoreSetupActivityBinding.terminalIdText.getText().toString());
+                SessionManager.INSTANCE.setStoreId(mposStoreSetupActivityBinding.storeId.getText().toString());
+
+            SessionManager.INSTANCE.setTerminalId(mposStoreSetupActivityBinding.terminalIdText.getText().toString());
             SessionManager.INSTANCE.setEposUrl(mposStoreSetupActivityBinding.baseUrl.getText().toString());
             SessionManager.INSTANCE.setAccessDialogHandler("Dismiss");
         }
