@@ -172,6 +172,7 @@
                                     android:layout_alignParentEnd="true"
                                     android:contentDescription="@string/app_name"
                                     android:padding="@dimen/ten_dp"
+                                    android:visibility="gone"
                                     android:src="@drawable/close_icon" />
 
                                 <LinearLayout
@@ -643,7 +644,7 @@
                                 android:id="@+id/cross_selling_recycle_new"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:background="@color/orders_search_layout_blue_bg"
+                                android:background="@color/text_dark_blue_color"
                                 android:visibility="gone" />
 
                             <ListView

@@ -366,10 +366,10 @@ public class MposStoreSetupActivity extends BaseActivity implements GoogleApiCli
 
     }
 
-    @Override
-    public void insertAdminLoginDetails() {
-
-    }
+//    @Override
+//    public void insertAdminLoginDetails() {
+//
+//    }
 
     @Override
     public void checkConfingApi() {
@@ -392,8 +392,10 @@ public class MposStoreSetupActivity extends BaseActivity implements GoogleApiCli
                         mposStoreSetupActivityBinding.storeId.getText().toString(), mposStoreSetupActivityBinding.terminalIdText.getText().toString(), "admin");
             });
 
-            SessionManager.INSTANCE.setStoreId(storeIdNumber);
-            SessionManager.INSTANCE.setTerminalId(mposStoreSetupActivityBinding.terminalIdText.getText().toString());
+            if (storeIdNumber != null)
+                SessionManager.INSTANCE.setStoreId(storeIdNumber);
+            else
+                SessionManager.INSTANCE.setStoreId(mposStoreSetupActivityBinding.storeId.getText().toString());            SessionManager.INSTANCE.setTerminalId(mposStoreSetupActivityBinding.terminalIdText.getText().toString());
             SessionManager.INSTANCE.setEposUrl(mposStoreSetupActivityBinding.baseUrl.getText().toString());
             SessionManager.INSTANCE.setAccessDialogHandler("Dismiss");
         }

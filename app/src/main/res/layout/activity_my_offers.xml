@@ -432,7 +432,7 @@
                                             android:id="@+id/cross_selling_recycle_new"
                                             android:layout_width="match_parent"
                                             android:layout_height="match_parent"
-                                            android:background="@color/orders_search_layout_blue_bg"
+                                            android:background="@color/text_dark_blue_color"
                                             android:visibility="visible">
 
                                         </androidx.recyclerview.widget.RecyclerView>
@@ -441,6 +441,7 @@
                                         <androidx.recyclerview.widget.RecyclerView
                                             android:id="@+id/up_selling_trendingrecycleerview_new"
                                             android:layout_width="match_parent"
+                                            android:background="@color/text_dark_blue_color"
                                             android:layout_height="match_parent"
                                             android:visibility="gone" />
 

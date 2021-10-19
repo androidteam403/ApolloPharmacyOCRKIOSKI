@@ -18,7 +18,7 @@ public interface StoreSetupMvpView {
 
     void getStoreList();
 
-    void insertAdminLoginDetails();
+//    void insertAdminLoginDetails();
 
     void checkConfingApi();
 

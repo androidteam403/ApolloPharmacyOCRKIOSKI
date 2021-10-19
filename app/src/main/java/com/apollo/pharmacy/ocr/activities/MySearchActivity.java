@@ -1104,7 +1104,7 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
             crosssellingList = productList.getCrossselling();
             offersRecycle.setVisibility(View.VISIBLE);
             MyOfersAdapterNew crossCellAdapter = new MyOfersAdapterNew(MySearchActivity.this, this, crosssellingList, this);
-            offersRecycle.setLayoutManager(new GridLayoutManager(this, 7));
+            offersRecycle.setLayoutManager(new GridLayoutManager(this, 6));
             offersRecycle.setAdapter(crossCellAdapter);
         }
         Utils.dismissDialog();
