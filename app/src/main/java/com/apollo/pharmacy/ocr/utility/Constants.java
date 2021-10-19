@@ -2,10 +2,17 @@ package com.apollo.pharmacy.ocr.utility;
 
 import android.app.Application;
 import android.content.Context;
+import android.os.Handler;
 import android.os.StrictMode;
 
 import com.apollo.pharmacy.ocr.receiver.ConnectivityReceiver;
 import com.apollo.pharmacy.ocr.receiver.MedTrailConnectivityReceiver;
+import com.apollo.pharmacy.ocr.zebrasdk.helper.Barcode;
+import com.apollo.pharmacy.ocr.zebrasdk.helper.ScannerAppEngine;
+import com.zebra.scannercontrol.DCSScannerInfo;
+import com.zebra.scannercontrol.SDKHandler;
+
+import java.util.ArrayList;
 
 public class Constants extends Application {
 
@@ -19,6 +26,9 @@ public class Constants extends Application {
     public static String GetDeviceDetails = "http://lms.apollopharmacy.org:8033/MOBILEAPP/Apollo/Common/GetDeviceDetails";
     public static String CheckServiceAvailability = "http://lms.apollopharmacy.org:8033/MOBILEAPP/Apollo/Common/";
     public static String UPLOAD_IMAGE_URL = "http://pharmacydesk.apollopharmacy.org:83/Apollo/Uploadpresc";
+
+    public static String GET_STORE_LIST = "http://lms.apollopharmacy.org:8033/APK/apollompos/Self/STORELIST";
+
 
     public static String Add_FCM_Token = "";
     public static String Send_Otp = "";
@@ -60,6 +70,9 @@ public class Constants extends Application {
     public static String Send_Sms_Api = "https://online.apollopharmacy.org/";
     public static String Order_Place_With_Prescription_API = "https://online.apollopharmacy.org/UAT/OrderPlace.svc/";
     public static String Order_Place_With_Prescription_Token = "9f15bdd0fcd5423190c2e877ba02bel";
+
+
+    public static String New_Order_Place_With_Prescription_Token = "9f15bdd0fcd5423190c2e877ba0228APM";
 
     public static final String DIRECTORY_NAME = "USBCamera";
 
@@ -126,15 +139,74 @@ public class Constants extends Application {
 //    public static String Get_Image_link = "https://d27zlipt1pllog.cloudfront.net/pub/media";
 //    public static String Categorylist_Url = "http://lms.apollopharmacy.org:8033/RPA/Apollo/CATEGORYLIST";
 
+
+
+
+    // Zebra sdk
+    //Instance of SDK Handler
+    public static SDKHandler sdkHandler;
+
+    //Handler to handle bluetooth events
+    public static Handler globalMsgHandler;
+
+    //Var to access scanner app engine
+    public static ScannerAppEngine scannerAppEngine;
+
+    // Key names received from the BluetoothChatService Handler
+    public static final String DEVICE_NAME = "device_name";
+    public static final String TOAST = "toast";
+
+    //Settings for notifications
+    public static int MOT_SETTING_OPMODE ;
+    public static boolean MOT_SETTING_SCANNER_DETECTION;
+    public static boolean MOT_SETTING_EVENT_ACTIVE;
+    public static boolean MOT_SETTING_EVENT_AVAILABLE;
+    public static boolean MOT_SETTING_EVENT_BARCODE;
+    public static boolean MOT_SETTING_EVENT_IMAGE;
+    public static boolean MOT_SETTING_EVENT_VIDEO;
+    public static boolean MOT_SETTING_EVENT_BINARY_DATA;
+
+    public static boolean MOT_SETTING_NOTIFICATION_ACTIVE;
+    public static boolean MOT_SETTING_NOTIFICATION_AVAILABLE;
+    public static boolean MOT_SETTING_NOTIFICATION_BARCODE;
+    public static boolean MOT_SETTING_NOTIFICATION_IMAGE;
+    public static boolean MOT_SETTING_NOTIFICATION_VIDEO;
+    public static boolean MOT_SETTING_NOTIFICATION_BINARY_DATA;
+
+    public static volatile int INTENT_ID = 0xFFFF;
+
+    public static int SCANNER_ID_NONE=  -1;
+    public static String currentScannerName ="";
+    public static String currentScannerAddress ="";
+    public static int currentScannerId =SCANNER_ID_NONE;
+    public static boolean currentAutoReconnectionState =true;
+    public static boolean isAnyScannerConnected = false; //True, if currently connected to any scanner
+    public static int currentConnectedScannerID = -1; //Track scannerId of currently connected Scanner
+    public static boolean isFirmwareUpdateInProgress = false;
+    public static boolean intentionallyDisconnected = false;
+    public static boolean virtualTetherHostActivated = false;
+    public static boolean virtualTetherEventOccurred = false;
+    //Scanners (both available and active)
+    public static ArrayList<DCSScannerInfo> mScannerInfoList=new ArrayList<DCSScannerInfo>();
+    public static ArrayList<ScannerAppEngine.IScannerAppEngineDevListDelegate> mDevListDelegates=new ArrayList<ScannerAppEngine.IScannerAppEngineDevListDelegate>();
+    //Barcode data
+    public static ArrayList<Barcode> barcodeData=new ArrayList<Barcode>();
+    public static DCSScannerInfo currentConnectedScanner;
+    public static DCSScannerInfo lastConnectedScanner;
+
+
+    public static int minScreenWidth = 360;
     public Constants() {
 
     }
+
 
     @Override
     public void onCreate() {
         super.onCreate();
         applicationContext = this;
         mInstance = this;
+        sdkHandler = new SDKHandler(this);
         SessionManager.INSTANCE.initSharedPref(this);
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
