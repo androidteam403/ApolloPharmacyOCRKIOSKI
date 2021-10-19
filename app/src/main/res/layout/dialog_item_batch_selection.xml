@@ -166,6 +166,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/five_dp"
+                                android:gravity="center_vertical"
                                 android:orientation="horizontal">
 
                                 <ImageView
@@ -226,7 +227,6 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="@dimen/fifteen_dp"
-                                    android:layout_marginBottom="@dimen/fifteen_dp"
                                     android:background="@drawable/plain_background_rectangle_border"
                                     android:backgroundTint="@color/nutrition_color"
                                     android:paddingStart="@dimen/ten_dp"

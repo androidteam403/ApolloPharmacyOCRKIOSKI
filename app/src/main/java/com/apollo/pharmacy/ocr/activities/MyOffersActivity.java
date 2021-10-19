@@ -196,8 +196,8 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
                     Utils.showSnackbar(MyOffersActivity.this, constraintLayout, getApplicationContext().getResources().getString(R.string.label_internet_error_text));
                 }
                 offerLayout.setBackgroundColor(getResources().getColor(R.color.colorWhite));
-                offerTxt.setTextColor(getResources().getColor(R.color.text_dark_blue_color));
-                trendingLayout.setBackgroundColor(getResources().getColor(R.color.text_dark_blue_color));
+                offerTxt.setTextColor(getResources().getColor(R.color.offers_list_bg));
+                trendingLayout.setBackgroundColor(getResources().getColor(R.color.offers_list_bg));
                 trendingTxt.setTextColor(getResources().getColor(R.color.colorWhite));
                 fcItemCountLayout.setVisibility(View.VISIBLE);
                 fcItemCountTxt.setText("0");
@@ -213,10 +213,10 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
                 } else {
                     Utils.showSnackbar(MyOffersActivity.this, constraintLayout, getApplicationContext().getResources().getString(R.string.label_internet_error_text));
                 }
-                offerLayout.setBackgroundColor(getResources().getColor(R.color.text_dark_blue_color));
+                offerLayout.setBackgroundColor(getResources().getColor(R.color.offers_list_bg));
                 offerTxt.setTextColor(getResources().getColor(R.color.colorWhite));
                 trendingLayout.setBackgroundColor(getResources().getColor(R.color.colorWhite));
-                trendingTxt.setTextColor(getResources().getColor(R.color.text_dark_blue_color));
+                trendingTxt.setTextColor(getResources().getColor(R.color.offers_list_bg));
                 fcItemCountLayout.setVisibility(View.GONE);
                 fcItemCountTxt.setText("0");
                 pharmaItemCountLayout.setVisibility(View.VISIBLE);
@@ -255,10 +255,10 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiverNew, new IntentFilter("OrderhistoryCardReciver"));
         Constants.getInstance().setConnectivityListener(this);
 
-        activityMyOffersBinding.crossSellingOfferLay.setBackgroundColor(getResources().getColor(R.color.text_dark_blue_color));
+        activityMyOffersBinding.crossSellingOfferLay.setBackgroundColor(getResources().getColor(R.color.offers_list_bg));
         activityMyOffersBinding.crossSellingOfferName.setTextColor(getResources().getColor(R.color.white));
         activityMyOffersBinding.upSellingTrendingLayout.setBackgroundColor(getResources().getColor(R.color.white));
-        activityMyOffersBinding.upSellingTrendingName.setTextColor(getResources().getColor(R.color.text_dark_blue_color));
+        activityMyOffersBinding.upSellingTrendingName.setTextColor(getResources().getColor(R.color.offers_list_bg));
         if (crosssellingList != null && crosssellingList.size() > 0) {
             activityMyOffersBinding.crossSellingCountLayout.setVisibility(View.VISIBLE);
             activityMyOffersBinding.crossSellingCountTxt.setText(String.valueOf(crosssellingList.size()));
@@ -427,10 +427,10 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
 //            } else {
 //                Utils.showSnackbar(MyOffersActivity.this, constraintLayout, getApplicationContext().getResources().getString(R.string.label_internet_error_text));
 //            }
-            activityMyOffersBinding.crossSellingOfferLay.setBackgroundColor(getResources().getColor(R.color.text_dark_blue_color));
+            activityMyOffersBinding.crossSellingOfferLay.setBackgroundColor(getResources().getColor(R.color.offers_list_bg));
             activityMyOffersBinding.crossSellingOfferName.setTextColor(getResources().getColor(R.color.colorWhite));
             activityMyOffersBinding.upSellingTrendingLayout.setBackgroundColor(getResources().getColor(R.color.white));
-            activityMyOffersBinding.upSellingTrendingName.setTextColor(getResources().getColor(R.color.text_dark_blue_color));
+            activityMyOffersBinding.upSellingTrendingName.setTextColor(getResources().getColor(R.color.offers_list_bg));
             if (crosssellingList != null && crosssellingList.size() > 0) {
 
                 activityMyOffersBinding.crossSellingCountLayout.setVisibility(View.VISIBLE);
@@ -468,8 +468,8 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
 //                Utils.showSnackbar(MyOffersActivity.this, constraintLayout, getApplicationContext().getResources().getString(R.string.label_internet_error_text));
 //            }
             activityMyOffersBinding.crossSellingOfferLay.setBackgroundColor(getResources().getColor(R.color.white));
-            activityMyOffersBinding.crossSellingOfferName.setTextColor(getResources().getColor(R.color.text_dark_blue_color));
-            activityMyOffersBinding.upSellingTrendingLayout.setBackgroundColor(getResources().getColor(R.color.text_dark_blue_color));
+            activityMyOffersBinding.crossSellingOfferName.setTextColor(getResources().getColor(R.color.offers_list_bg));
+            activityMyOffersBinding.upSellingTrendingLayout.setBackgroundColor(getResources().getColor(R.color.offers_list_bg));
             activityMyOffersBinding.upSellingTrendingName.setTextColor(getResources().getColor(R.color.colorWhite));
             if (crosssellingList != null && crosssellingList.size() > 0) {
                 activityMyOffersBinding.crossSellingCountLayout.setVisibility(View.VISIBLE);
@@ -506,10 +506,10 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
             activityMyOffersBinding.crossSellingRecycleNew.setLayoutManager(new GridLayoutManager(this, 6));
             activityMyOffersBinding.crossSellingRecycleNew.setAdapter(crossCellAdapter);
 
-            activityMyOffersBinding.crossSellingOfferLay.setBackgroundColor(getResources().getColor(R.color.text_dark_blue_color));
+            activityMyOffersBinding.crossSellingOfferLay.setBackgroundColor(getResources().getColor(R.color.offers_list_bg));
             activityMyOffersBinding.crossSellingOfferName.setTextColor(getResources().getColor(R.color.colorWhite));
             activityMyOffersBinding.upSellingTrendingLayout.setBackgroundColor(getResources().getColor(R.color.colorWhite));
-            activityMyOffersBinding.upSellingTrendingName.setTextColor(getResources().getColor(R.color.text_dark_blue_color));
+            activityMyOffersBinding.upSellingTrendingName.setTextColor(getResources().getColor(R.color.offers_list_bg));
             activityMyOffersBinding.crossSellingCountLayout.setVisibility(View.VISIBLE);
             activityMyOffersBinding.crossSellingCountTxt.setText(String.valueOf(crosssellingList.size()));
             activityMyOffersBinding.nodataFound.setVisibility(View.GONE);

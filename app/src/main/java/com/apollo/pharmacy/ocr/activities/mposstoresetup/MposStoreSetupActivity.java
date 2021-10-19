@@ -366,10 +366,10 @@ public class MposStoreSetupActivity extends BaseActivity implements GoogleApiCli
 
     }
 
-    @Override
-    public void insertAdminLoginDetails() {
-
-    }
+//    @Override
+//    public void insertAdminLoginDetails() {
+//
+//    }
 
     @Override
     public void checkConfingApi() {
