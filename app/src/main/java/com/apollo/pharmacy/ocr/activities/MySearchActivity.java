@@ -44,6 +44,7 @@ import com.apollo.pharmacy.ocr.R;
 import com.apollo.pharmacy.ocr.activities.barcodescanner.BarcodeScannerActivity;
 import com.apollo.pharmacy.ocr.adapters.CategoryGridItemAdapter;
 import com.apollo.pharmacy.ocr.adapters.MedicineSearchAdapter;
+import com.apollo.pharmacy.ocr.adapters.MyOfersAdapterNew;
 import com.apollo.pharmacy.ocr.adapters.ProductsCustomAdapter;
 import com.apollo.pharmacy.ocr.adapters.SubCategoryListAdapter;
 import com.apollo.pharmacy.ocr.controller.MyOffersController;
@@ -152,6 +153,7 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
     private ProgressBar pDialog;
     TextView transColorId;
     private boolean isDialogShow = false;
+    private RecyclerView offersRecycle;
 
 
     @Override
@@ -163,6 +165,7 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
 
         searchProducts = findViewById(R.id.search_product_text);
         pDialog = findViewById(R.id.pdialog);
+        offersRecycle = findViewById(R.id.cross_selling_recycle_new);
         item = new ArrayList<>();
         dataList = new ArrayList<>();
         searchAutoComplete = findViewById(R.id.search_autocomplete);
@@ -191,6 +194,8 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
         doneProductsLayout.setVisibility(View.GONE);
         mySearchController = new MySearchController(this, this);
         myOffersController = new MyOffersController(this);
+
+        myOffersController.upcellCrosscellList("", MySearchActivity.this);
 
         Spinner categorySpinner = (Spinner) findViewById(R.id.category_spinner);
         categorySpinner.setOnItemSelectedListener(this);
@@ -272,7 +277,9 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
 //                    searchProductsApiCall(s.toString());
                     search_listview.setVisibility(View.GONE);
                     search_suggestion_listview.setVisibility(View.VISIBLE);
+                    offersRecycle.setVisibility(View.GONE);
                     itemCountLayout.setVisibility(View.GONE);
+                    clearSearchText.setVisibility(View.GONE);
                     subCategoryCount.setText("");
                     if (search_auto_complete_text) {
                         Searchsuggestionrequest request = new Searchsuggestionrequest();
@@ -297,6 +304,7 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
             searchProducts.setText(null);
             if (item != null && item.size() > 0) {
                 item.clear();
+                clearSearchText.setVisibility(View.GONE);
             }
         });
 
@@ -1088,9 +1096,18 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
         myAdapter.notifyDataSetChanged();
     }
 
-    @Override
-    public void onSuccessSearchUpcellCroscellApi(UpCellCrossCellResponse body) {
+    List<UpCellCrossCellResponse.Crossselling> crosssellingList = new ArrayList<>();
 
+    @Override
+    public void onSuccessSearchUpcellCroscellApi(UpCellCrossCellResponse productList) {
+        if (productList != null && productList.getCrossselling() != null && productList.getCrossselling().size() > 0) {
+            crosssellingList = productList.getCrossselling();
+            offersRecycle.setVisibility(View.VISIBLE);
+            MyOfersAdapterNew crossCellAdapter = new MyOfersAdapterNew(MySearchActivity.this, this, crosssellingList, this);
+            offersRecycle.setLayoutManager(new GridLayoutManager(this, 7));
+            offersRecycle.setAdapter(crossCellAdapter);
+        }
+        Utils.dismissDialog();
     }
 
     @Override

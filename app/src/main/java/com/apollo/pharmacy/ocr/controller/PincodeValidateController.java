@@ -49,6 +49,7 @@ public class PincodeValidateController {
 
             @Override
             public void onFailure(@NotNull Call<List<PincodeValidateResponse>> call, @NotNull Throwable t) {
+                pincodeValidateListener.onFailurePincode(null);
                 Utils.dismissDialog();
             }
         });

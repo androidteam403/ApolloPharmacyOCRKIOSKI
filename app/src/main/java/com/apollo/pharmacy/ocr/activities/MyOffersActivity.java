@@ -256,7 +256,7 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiverNew, new IntentFilter("OrderhistoryCardReciver"));
         Constants.getInstance().setConnectivityListener(this);
 
-        activityMyOffersBinding.crossSellingOfferLay.setBackgroundColor(getResources().getColor(R.color.colorWhite));
+        activityMyOffersBinding.crossSellingOfferLay.setBackgroundColor(getResources().getColor(R.color.track_order_bg));
         activityMyOffersBinding.crossSellingOfferName.setTextColor(getResources().getColor(R.color.text_dark_blue_color));
         activityMyOffersBinding.upSellingTrendingLayout.setBackgroundColor(getResources().getColor(R.color.text_dark_blue_color));
         activityMyOffersBinding.upSellingTrendingName.setTextColor(getResources().getColor(R.color.colorWhite));
@@ -428,7 +428,7 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
 //            } else {
 //                Utils.showSnackbar(MyOffersActivity.this, constraintLayout, getApplicationContext().getResources().getString(R.string.label_internet_error_text));
 //            }
-            activityMyOffersBinding.crossSellingOfferLay.setBackgroundColor(getResources().getColor(R.color.colorWhite));
+            activityMyOffersBinding.crossSellingOfferLay.setBackgroundColor(getResources().getColor(R.color.track_order_bg));
             activityMyOffersBinding.crossSellingOfferName.setTextColor(getResources().getColor(R.color.text_dark_blue_color));
             activityMyOffersBinding.upSellingTrendingLayout.setBackgroundColor(getResources().getColor(R.color.text_dark_blue_color));
             activityMyOffersBinding.upSellingTrendingName.setTextColor(getResources().getColor(R.color.colorWhite));
@@ -470,7 +470,7 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
 //            }
             activityMyOffersBinding.crossSellingOfferLay.setBackgroundColor(getResources().getColor(R.color.text_dark_blue_color));
             activityMyOffersBinding.crossSellingOfferName.setTextColor(getResources().getColor(R.color.colorWhite));
-            activityMyOffersBinding.upSellingTrendingLayout.setBackgroundColor(getResources().getColor(R.color.colorWhite));
+            activityMyOffersBinding.upSellingTrendingLayout.setBackgroundColor(getResources().getColor(R.color.track_order_bg));
             activityMyOffersBinding.upSellingTrendingName.setTextColor(getResources().getColor(R.color.text_dark_blue_color));
             if(crosssellingList!=null&&crosssellingList.size()>0) {
                 activityMyOffersBinding.crossSellingCountLayout.setVisibility(View.VISIBLE);
@@ -507,7 +507,7 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
             activityMyOffersBinding.crossSellingRecycleNew.setLayoutManager(new GridLayoutManager(this, 7));
             activityMyOffersBinding.crossSellingRecycleNew.setAdapter(crossCellAdapter);
 
-            activityMyOffersBinding.crossSellingOfferLay.setBackgroundColor(getResources().getColor(R.color.colorWhite));
+            activityMyOffersBinding.crossSellingOfferLay.setBackgroundColor(getResources().getColor(R.color.track_order_bg));
             activityMyOffersBinding.crossSellingOfferName.setTextColor(getResources().getColor(R.color.text_dark_blue_color));
             activityMyOffersBinding.upSellingTrendingLayout.setBackgroundColor(getResources().getColor(R.color.text_dark_blue_color));
             activityMyOffersBinding.upSellingTrendingName.setTextColor(getResources().getColor(R.color.colorWhite));

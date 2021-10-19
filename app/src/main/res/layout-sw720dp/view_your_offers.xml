@@ -5,8 +5,9 @@
         android:id="@+id/products_grid_view_item_container"
         android:layout_width="@dimen/one_hundred_fifty_dp"
         android:layout_height="@dimen/one_hundred_fifty_dp"
-        android:layout_marginBottom="@dimen/one_dp"
+        android:layout_marginBottom="@dimen/five_dp"
         android:background="@color/colorWhite"
+        android:layout_marginEnd="@dimen/five_dp"
         android:orientation="vertical">
 
         <FrameLayout
@@ -151,7 +152,7 @@
                             android:layout_marginEnd="@dimen/five_dp"
                             android:text="@string/label_add_to_cart"
                             android:textColor="@color/colorBlack"
-                            android:textSize="@dimen/ten_sp" />
+                            android:textSize="@dimen/fourteen_sp" />
                     </LinearLayout>
 
 

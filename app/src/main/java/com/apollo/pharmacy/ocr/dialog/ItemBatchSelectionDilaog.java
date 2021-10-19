@@ -363,7 +363,7 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
 
     @Override
     public void setSuccessBatchList(BatchListResponse batchListResponse) {
-        if(batchListResponse!=null&&batchListResponse.getBatchList()!=null&&batchListResponse.getBatchList().size()>0) {
+        if (batchListResponse != null && batchListResponse.getBatchList() != null && batchListResponse.getBatchList().size() > 0) {
             this.batchListResponse = batchListResponse;
 
             for (int i = 0; i < batchListResponse.getBatchList().size(); i++) {
@@ -455,7 +455,7 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
 
     public void globalBatchListHandlings(String itemName, String itemId, float balanceQtying, List<OCRToDigitalMedicineResponse> dummyDataListing, Context context, String medicineType) {
         if (getBatchAvilableData() != null && getBatchAvilableData().getBatchList() != null && getBatchAvilableData().getBatchList().size() > 0) {
-            if (getQtyCount() != null && !getQtyCount().isEmpty()) {
+            if (getQtyCount() != null && !getQtyCount().isEmpty() && Integer.parseInt(getQtyCount()) > 0) {
                 if (getTotalBatchQty() >= Float.parseFloat(getQtyCount())) {
                     if (Float.parseFloat(getItemBatchSelectionDataQty().getQOH()) >= Float.parseFloat(getQtyCount())) {
                         OCRToDigitalMedicineResponse data = new OCRToDigitalMedicineResponse();

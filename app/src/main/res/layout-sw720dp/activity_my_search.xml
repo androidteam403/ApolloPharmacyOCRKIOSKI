@@ -32,8 +32,9 @@
 
             <LinearLayout
                 android:id="@+id/sub_sub_parent_layout"
-                android:layout_width="@dimen/eight_hundred_eighty_five_dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="@dimen/forty_dp"
                 android:orientation="vertical">
 
                 <RelativeLayout
@@ -52,47 +53,49 @@
                         android:text="@string/label_search_your_products"
                         android:textColor="@color/colorWhite"
                         android:textSize="@dimen/thirty_five_sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:visibility="gone" />
+
                     <ImageView
                         android:id="@+id/check_out_btn"
-                        android:layout_toRightOf="@id/search"
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/thirty_dp"
-                        android:layout_marginLeft="@dimen/forty_dp"
+                        android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
+                        android:layout_marginRight="@dimen/forty_dp"
                         android:contentDescription="@string/app_name"
                         android:src="@drawable/checkout_cart" />
 
-<!--                    <LinearLayout-->
-<!--                        android:id="@+id/check_out_btn"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_marginLeft="@dimen/forty_dp"-->
-<!--                        android:layout_toRightOf="@id/search"-->
-<!--                        android:background="@color/nutrition_color"-->
-<!--                        android:gravity="center"-->
-<!--                        android:orientation="horizontal">-->
+                    <!--                    <LinearLayout-->
+                    <!--                        android:id="@+id/check_out_btn"-->
+                    <!--                        android:layout_width="wrap_content"-->
+                    <!--                        android:layout_height="wrap_content"-->
+                    <!--                        android:layout_marginLeft="@dimen/forty_dp"-->
+                    <!--                        android:layout_toRightOf="@id/search"-->
+                    <!--                        android:background="@color/nutrition_color"-->
+                    <!--                        android:gravity="center"-->
+                    <!--                        android:orientation="horizontal">-->
 
-<!--                        <TextView-->
-<!--                            android:layout_width="101dp"-->
-<!--                            android:layout_height="30dp"-->
-<!--                            android:layout_gravity="center"-->
-<!--                            android:gravity="center"-->
-<!--                            android:padding="@dimen/ten_dp"-->
-<!--                            android:text="@string/label_check_out"-->
-<!--                            android:textAllCaps="true"-->
-<!--                            android:textColor="@color/colorWhite"-->
-<!--                            android:textSize="@dimen/eighteen_sp"-->
-<!--                            android:textStyle="bold" />-->
-<!--                    </LinearLayout>-->
+                    <!--                        <TextView-->
+                    <!--                            android:layout_width="101dp"-->
+                    <!--                            android:layout_height="30dp"-->
+                    <!--                            android:layout_gravity="center"-->
+                    <!--                            android:gravity="center"-->
+                    <!--                            android:padding="@dimen/ten_dp"-->
+                    <!--                            android:text="@string/label_check_out"-->
+                    <!--                            android:textAllCaps="true"-->
+                    <!--                            android:textColor="@color/colorWhite"-->
+                    <!--                            android:textSize="@dimen/eighteen_sp"-->
+                    <!--                            android:textStyle="bold" />-->
+                    <!--                    </LinearLayout>-->
 
                     <RelativeLayout
                         android:id="@+id/scan_products"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        android:visibility="gone"
-                        android:layout_alignParentEnd="true">
+                        android:visibility="gone">
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -155,7 +158,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:background="@color/white"
-                                    android:hint="Search Product"
+                                    android:hint="Search your product here like : crocine"
                                     android:imeOptions="flagNoExtractUi"
                                     android:importantForAutofill="no"
                                     android:inputType="text"
@@ -635,6 +638,13 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:background="@color/orders_search_layout_blue_bg" />
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/cross_selling_recycle_new"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@color/orders_search_layout_blue_bg"
+                                android:visibility="gone" />
 
                             <ListView
                                 android:id="@+id/search_suggestion_listview"

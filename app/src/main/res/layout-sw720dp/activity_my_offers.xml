@@ -51,7 +51,8 @@
                                 android:layout_centerVertical="true"
                                 android:text="@string/label_my_offers"
                                 android:textColor="@color/colorWhite"
-                                android:textSize="@dimen/twenty_sp"
+                                android:textSize="@dimen/thirty_five_sp"
+                                android:layout_centerInParent="true"
                                 android:textStyle="bold" />
 
                             <ImageView
