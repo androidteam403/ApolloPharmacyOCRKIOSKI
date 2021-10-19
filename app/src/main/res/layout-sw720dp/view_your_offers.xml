@@ -5,9 +5,9 @@
         android:id="@+id/products_grid_view_item_container"
         android:layout_width="@dimen/one_hundred_fifty_dp"
         android:layout_height="@dimen/one_hundred_fifty_dp"
-        android:layout_marginBottom="@dimen/five_dp"
+        android:layout_marginTop="@dimen/five_dp"
+        android:layout_marginEnd="@dimen/ten_dp"
         android:background="@color/colorWhite"
-        android:layout_marginEnd="@dimen/five_dp"
         android:orientation="vertical">
 
         <FrameLayout
@@ -15,9 +15,9 @@
             android:layout_height="match_parent">
 
             <LinearLayout
-                android:layout_gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -72,37 +72,36 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:visibility="gone"
                         android:id="@+id/itemOfferPriceLayout"
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/twenty_five_dp"
                         android:layout_gravity="center"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:visibility="gone">
 
                         <TextView
                             android:id="@+id/textview_product_cost"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="@dimen/two_dp"
-                            android:textStyle="bold"
                             android:text="@string/rupee"
-                            android:visibility="gone"
                             android:textColor="@color/colorBlack"
-                            android:textSize="@dimen/twelve_sp" />
+                            android:textSize="@dimen/twelve_sp"
+                            android:textStyle="bold"
+                            android:visibility="gone" />
 
                         <TextView
-                            android:visibility="gone"
                             android:id="@+id/textview_product_offercost"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textStyle="bold"
                             android:text="1,800.00"
                             android:textColor="@color/colorBlack"
-                            android:textSize="@dimen/twelve_sp" />
+                            android:textSize="@dimen/twelve_sp"
+                            android:textStyle="bold"
+                            android:visibility="gone" />
                     </LinearLayout>
 
                     <TextView
-                        android:visibility="gone"
                         android:id="@+id/save_textview"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -112,7 +111,8 @@
                         android:paddingTop="@dimen/five_dp"
                         android:paddingBottom="@dimen/two_dp"
                         android:textColor="@color/dialog_red_color"
-                        android:textSize="@dimen/twelve_sp" />
+                        android:textSize="@dimen/twelve_sp"
+                        android:visibility="gone" />
                 </LinearLayout>
 
                 <LinearLayout

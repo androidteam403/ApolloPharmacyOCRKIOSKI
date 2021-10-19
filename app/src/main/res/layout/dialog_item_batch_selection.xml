@@ -151,6 +151,7 @@
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/fifteen_dp"
                             android:orientation="vertical">
 
                             <TextView
@@ -164,6 +165,7 @@
                             <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/five_dp"
                                 android:orientation="horizontal">
 
                                 <Button
@@ -218,25 +220,26 @@
                                     android:layout_alignParentRight="true"
                                     android:background="@drawable/inc_button"
                                     android:gravity="center" />
+                                <TextView
+                                    android:id="@+id/dialogButtonOK"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="@dimen/fifteen_dp"
+                                    android:layout_marginBottom="@dimen/fifteen_dp"
+                                    android:background="@drawable/plain_background_rectangle_border"
+                                    android:backgroundTint="@color/nutrition_color"
+                                    android:paddingStart="@dimen/ten_dp"
+                                    android:paddingTop="@dimen/five_dp"
+                                    android:paddingEnd="@dimen/ten_dp"
+                                    android:paddingBottom="@dimen/five_dp"
+                                    android:text="Add to cart"
+                                    android:textColor="@color/white"
+                                    android:textSize="@dimen/fourteen_sp"
+                                    android:textStyle="bold" />
+
                             </LinearLayout>
 
 
-                            <TextView
-                                android:id="@+id/dialogButtonOK"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/fifteen_dp"
-                                android:layout_marginBottom="@dimen/fifteen_dp"
-                                android:background="@drawable/plain_background_rectangle_border"
-                                android:backgroundTint="@color/nutrition_color"
-                                android:paddingStart="@dimen/ten_dp"
-                                android:paddingTop="@dimen/five_dp"
-                                android:paddingEnd="@dimen/ten_dp"
-                                android:paddingBottom="@dimen/five_dp"
-                                android:text="Add to cart"
-                                android:textColor="@color/white"
-                                android:textSize="@dimen/fourteen_sp"
-                                android:textStyle="bold" />
                         </LinearLayout>
 
                         <RelativeLayout

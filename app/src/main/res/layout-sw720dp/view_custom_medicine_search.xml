@@ -191,8 +191,8 @@
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                        android:layout_width="@dimen/forty_five_dp"
+                        android:layout_height="@dimen/forty_five_dp"
                         android:layout_gravity="center"
                         android:src="@drawable/inc_button" />
 
@@ -203,6 +203,7 @@
                         android:background="@color/white"
                         android:gravity="center_vertical"
                         android:text="Add to cart"
+                        android:textSize="@dimen/eighteen_sp"
                         android:textColor="@color/screenbackground" />
                 </LinearLayout>
             </LinearLayout>

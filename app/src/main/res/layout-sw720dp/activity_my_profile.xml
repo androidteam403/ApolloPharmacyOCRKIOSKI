@@ -286,7 +286,7 @@
                                         android:layout_marginBottom="@dimen/eight_dp"
                                         android:text="@string/label_your_offers"
                                         android:textColor="@color/colorWhite"
-                                        android:textSize="@dimen/fifteen_sp"
+                                        android:textSize="@dimen/thirty_sp"
                                         android:textStyle="bold" />
                                 </RelativeLayout>
 
