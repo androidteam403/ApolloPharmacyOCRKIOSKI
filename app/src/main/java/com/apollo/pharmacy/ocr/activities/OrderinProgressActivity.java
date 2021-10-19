@@ -26,6 +26,8 @@ public class OrderinProgressActivity extends AppCompatActivity implements Orderi
     private String fmcgOrderId;
     private String pharmaOrderId;
     private boolean onlineAmountPaid;
+    private boolean isPharmadeliveryType;
+    private boolean isFmcgDeliveryType;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,6 +43,8 @@ public class OrderinProgressActivity extends AppCompatActivity implements Orderi
             fmcgOrderId = (String) getIntent().getStringExtra("FmcgOrderPlacedData");
             pharmaOrderId = (String) getIntent().getStringExtra("PharmaOrderPlacedData");
             onlineAmountPaid = (boolean) getIntent().getBooleanExtra("OnlineAmountPaid", false);
+            isPharmadeliveryType = (boolean) getIntent().getBooleanExtra("pharma_delivery_type", false);
+            isFmcgDeliveryType = (boolean) getIntent().getBooleanExtra("fmcg_delivery_type", false);
         }
         orderinProgressBinding.fmcgRequestId.setText(fmcgOrderId);
         orderinProgressBinding.pharmaRequestId.setText(pharmaOrderId);
@@ -87,6 +91,8 @@ public class OrderinProgressActivity extends AppCompatActivity implements Orderi
             orderinProgresssuiModel.setFmcgPharma(isPharma && isFmcg);
             orderinProgresssuiModel.setFmcg(isFmcg);
             orderinProgresssuiModel.setPharma(isPharma);
+            orderinProgresssuiModel.setPharmaHomeDelivery(isPharmadeliveryType);
+            orderinProgresssuiModel.setFmcgHomeDelivery(isFmcgDeliveryType);
             orderinProgressBinding.setModel(orderinProgresssuiModel);
             if (!isPharma && isFmcg) {
                 orderinProgressBinding.orderisinProgressText.setText("Your order is Completed");

@@ -12,8 +12,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Toast;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.databinding.DataBindingUtil;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -43,12 +43,14 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
     private Dialog dialog;
     private DialogItemBatchSelectionBinding dialogItemBatchSelectionBinding;
     private boolean negativeExist = false;
-
+    private ConstraintLayout constraintLayout;
+    private Context context;
 
     public ItemBatchSelectionDilaog(Product product, Context context, int position, List<OCRToDigitalMedicineResponse> datalist, CartCountListener cartCountListener) {
         dialog = new Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
         dialogItemBatchSelectionBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.dialog_item_batch_selection, null, false);
         dialog.setContentView(dialogItemBatchSelectionBinding.getRoot());
+        this.context = context;
         if (dialog.getWindow() != null)
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.setCancelable(false);
@@ -230,6 +232,7 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
         dialog = new Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
         dialogItemBatchSelectionBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.dialog_item_batch_selection, null, false);
         dialog.setContentView(dialogItemBatchSelectionBinding.getRoot());
+        this.context = context;
         if (dialog.getWindow() != null)
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.setCancelable(false);
@@ -393,7 +396,8 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
             } else {
                 Utils.dismissDialog();
                 dialog.dismiss();
-                Toast.makeText(getContext(), "Product Out Of Stock", Toast.LENGTH_LONG).show();
+                View view = dialog.getWindow().getDecorView();
+                Utils.showSnackbarDialog(context, view, "Product Out Of Stock");
                 dialogItemBatchSelectionBinding.loadingPanel.setVisibility(View.GONE);
             }
         }
@@ -616,13 +620,16 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
                         dismiss();
                     }
                 } else {
-                    Toast.makeText(context, "Selected quantity is not available in batch", Toast.LENGTH_SHORT).show();
+                    View view = dialog.getWindow().getDecorView();
+                    Utils.showSnackbarDialog(context, view, "Selected quantity is not available in batch");
                 }
             } else {
-                Toast.makeText(context, "Please enter product quantity", Toast.LENGTH_SHORT).show();
+                View view = dialog.getWindow().getDecorView();
+                Utils.showSnackbarDialog(context, view, "Please enter product quantity");
             }
         } else {
-            Toast.makeText(context, "Product Out of Stock", Toast.LENGTH_SHORT).show();
+            View view = dialog.getWindow().getDecorView();
+            Utils.showSnackbarDialog(context, view, "Product Out of Stock");
             dismiss();
         }
     }

@@ -8,7 +8,7 @@
         <LinearLayout
             android:id="@+id/batch_selection_data"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="35dp"
             android:layout_marginTop="@dimen/five_dp"
             android:padding="@dimen/ten_dp">
 
