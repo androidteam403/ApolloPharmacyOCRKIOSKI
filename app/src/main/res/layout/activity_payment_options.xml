@@ -466,6 +466,7 @@
                                 </RelativeLayout>
 
                                 <RelativeLayout
+                                    android:visibility="gone"
                                     android:id="@+id/recieve_payment_sms"
                                     android:layout_width="200dp"
                                     android:layout_height="wrap_content"
