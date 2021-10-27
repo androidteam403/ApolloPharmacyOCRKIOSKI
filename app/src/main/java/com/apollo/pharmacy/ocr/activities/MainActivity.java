@@ -99,29 +99,29 @@ public class MainActivity extends BaseActivity implements ConnectivityReceiver.C
         SessionManager.INSTANCE.setDataList(dataList);
         SessionManager.INSTANCE.setDeletedDataList(dataList);
 
-        if (SessionManager.INSTANCE.getAccessKey() != null && SessionManager.INSTANCE.getAccessKey().equals("AP@11@2021")) {
-            if (SessionManager.INSTANCE.getStoreId() != null && !SessionManager.INSTANCE.getStoreId().isEmpty()
-                    && SessionManager.INSTANCE.getTerminalId() != null && !SessionManager.INSTANCE.getTerminalId().isEmpty() &&
-                    SessionManager.INSTANCE.getEposUrl() != null && !SessionManager.INSTANCE.getEposUrl().isEmpty()) {
-//                Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
-            } else {
-                Intent intent = new Intent(MainActivity.this, MposStoreSetupActivity.class);
-                startActivity(intent);
-                overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
-            }
-        } else {
-            AccesskeyDialog accesskeyDialog = new AccesskeyDialog(MainActivity.this);
-            accesskeyDialog.onClickSubmit(v1 -> {
-                accesskeyDialog.listener();
-                if (accesskeyDialog.validate()) {
-                    Intent intent = new Intent(MainActivity.this, MposStoreSetupActivity.class);
-                    startActivity(intent);
-                    overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
-                    accesskeyDialog.dismiss();
-                }
-            });
-            accesskeyDialog.show();
-        }
+//        if (SessionManager.INSTANCE.getAccessKey() != null && SessionManager.INSTANCE.getAccessKey().equals("AP@11@2021")) {
+//            if (SessionManager.INSTANCE.getStoreId() != null && !SessionManager.INSTANCE.getStoreId().isEmpty()
+//                    && SessionManager.INSTANCE.getTerminalId() != null && !SessionManager.INSTANCE.getTerminalId().isEmpty() &&
+//                    SessionManager.INSTANCE.getEposUrl() != null && !SessionManager.INSTANCE.getEposUrl().isEmpty()) {
+////                Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
+//            } else {
+//                Intent intent = new Intent(MainActivity.this, MposStoreSetupActivity.class);
+//                startActivity(intent);
+//                overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
+//            }
+//        } else {
+//            AccesskeyDialog accesskeyDialog = new AccesskeyDialog(MainActivity.this);
+//            accesskeyDialog.onClickSubmit(v1 -> {
+//                accesskeyDialog.listener();
+//                if (accesskeyDialog.validate()) {
+//                    Intent intent = new Intent(MainActivity.this, MposStoreSetupActivity.class);
+//                    startActivity(intent);
+//                    overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
+//                    accesskeyDialog.dismiss();
+//                }
+//            });
+//            accesskeyDialog.show();
+//        }
 
 
         initMarque();
@@ -210,9 +210,20 @@ public class MainActivity extends BaseActivity implements ConnectivityReceiver.C
                 startActivity(intent);
                 overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
             } else {
-                Intent intent = new Intent(MainActivity.this, MposStoreSetupActivity.class);
-                startActivity(intent);
-                overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
+                AccesskeyDialog accesskeyDialog = new AccesskeyDialog(MainActivity.this);
+                accesskeyDialog.onClickSubmit(v1 -> {
+                    accesskeyDialog.listener();
+                    if (accesskeyDialog.validate()) {
+                        Intent intent = new Intent(MainActivity.this, MposStoreSetupActivity.class);
+                        startActivity(intent);
+                        overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
+                        accesskeyDialog.dismiss();
+                    }
+                });
+                accesskeyDialog.show();
+//                Intent intent = new Intent(MainActivity.this, MposStoreSetupActivity.class);
+//                startActivity(intent);
+//                overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
             }
         });
 
@@ -243,13 +254,18 @@ public class MainActivity extends BaseActivity implements ConnectivityReceiver.C
 //            }
 //        }.start();
 
-        settings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, MposStoreSetupActivity.class);
-                startActivity(intent);
-                overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
-            }
+        settings.setOnClickListener(view -> {
+            AccesskeyDialog accesskeyDialog = new AccesskeyDialog(MainActivity.this);
+            accesskeyDialog.onClickSubmit(v1 -> {
+                accesskeyDialog.listener();
+                if (accesskeyDialog.validate()) {
+                    Intent intent = new Intent(MainActivity.this, MposStoreSetupActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
+                    accesskeyDialog.dismiss();
+                }
+            });
+            accesskeyDialog.show();
         });
 
     }
