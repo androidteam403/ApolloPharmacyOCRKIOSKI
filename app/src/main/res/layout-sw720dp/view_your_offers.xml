@@ -15,7 +15,7 @@
             android:layout_height="match_parent"
             card_view:cardBackgroundColor="@android:color/white"
             card_view:cardCornerRadius="@dimen/five_dp"
-            card_view:cardElevation="@dimen/two_dp"
+            card_view:cardElevation="@dimen/five_dp"
             card_view:cardUseCompatPadding="true">
 
             <FrameLayout

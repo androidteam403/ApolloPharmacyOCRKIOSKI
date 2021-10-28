@@ -43,6 +43,8 @@ public class MposBatchListController {
             public void onResponse(@NotNull Call<BatchListResponse> call, @NotNull Response<BatchListResponse> response) {
                 if (response.body() != null) {
                     mposBatchListListener.setSuccessBatchList(response.body());
+                } else {
+                    Utils.dismissDialog();
                 }
             }
 

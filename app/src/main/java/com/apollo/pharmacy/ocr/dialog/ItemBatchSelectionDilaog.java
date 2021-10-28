@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,6 +32,7 @@ import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
 import com.apollo.pharmacy.ocr.model.Product;
 import com.apollo.pharmacy.ocr.utility.SessionManager;
 import com.apollo.pharmacy.ocr.utility.Utils;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -400,6 +402,18 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
                 Utils.showSnackbarDialog(context, view, "Product Out Of Stock");
                 dialogItemBatchSelectionBinding.loadingPanel.setVisibility(View.GONE);
             }
+        } else {
+            View view = dialog.getWindow().getDecorView();
+            Utils.showSnackbarDialog(context, view, "Item not available in batch list");
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Utils.dismissDialog();
+                    dialog.dismiss();
+                    dialogItemBatchSelectionBinding.loadingPanel.setVisibility(View.GONE);
+                }
+            }, 1500);
         }
     }
 

@@ -78,7 +78,7 @@ public class AccesskeyDialog {
 
     public void listener() {
         if (validate()) {
-            SessionManager.INSTANCE.setAccessKey(accesskeyBinding.accesskeyTextinput.getText().toString().trim());
+//            SessionManager.INSTANCE.setAccessKey(accesskeyBinding.accesskeyTextinput.getText().toString().trim());
             Toast.makeText(context, "You Submitted", Toast.LENGTH_SHORT).show();
         }
     }
