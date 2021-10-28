@@ -227,7 +227,7 @@ public interface ApiInterface {
     @POST("https://online.apollopharmacy.org/REC/api/upcrossapiselling")
     Call<UpCellCrossCellResponse> GET_UPCELL_CROSSCELL_OFEERS(@Body UpCellCrossCellRequest upCellCrossCellRequest);
 
-    @POST("http://20.197.57.170/rest//V1/pincode/getstatecountry")
+    @POST("https://apollorehab.in/rest/V1/pincode/getstatecountry")
     Call<List<PincodeValidateResponse>> doPincodeValidateApi(@Header("authorization") String token, @Body Object pincodeValidateRequest);
 
 
