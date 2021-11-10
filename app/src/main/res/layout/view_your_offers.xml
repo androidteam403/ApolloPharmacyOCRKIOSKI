@@ -3,9 +3,10 @@
 
     <LinearLayout
         android:id="@+id/products_grid_view_item_container"
-        android:layout_width="@dimen/one_hundred_fifty_dp"
+        android:layout_width="@dimen/one_hundred_sixty_dp"
         android:layout_height="@dimen/one_hundred_fifty_dp"
         android:layout_marginStart="@dimen/ten_dp"
+        android:background="@null"
         android:layout_marginTop="@dimen/ten_dp"
         android:orientation="vertical">
 
@@ -13,8 +14,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             card_view:cardBackgroundColor="@android:color/white"
-            card_view:cardCornerRadius="@dimen/two_dp"
-            card_view:cardElevation="@dimen/two_dp"
+            card_view:cardCornerRadius="@dimen/five_dp"
+            card_view:cardElevation="@dimen/five_dp"
             card_view:cardUseCompatPadding="true">
 
             <FrameLayout

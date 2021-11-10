@@ -376,7 +376,13 @@ public class MyOrdersActivity extends AppCompatActivity implements ConnectivityR
     public void onOrderHistorySuccess(List<OrderHistoryResponse> response) {
         orderdetials_list = new ArrayList<OrderHistoryResponse>();
         if (response.size() > 0) {
-            orderdetials_list.addAll(response);
+            for (int i = 0; i < response.size(); i++) {
+                orderdetials_list.add(response.get(i));
+                if (i == 4)
+                    break;
+                ;
+            }
+//            orderdetials_list.addAll(response);
             Collections.reverse(orderdetials_list);
             orderdetails_adaptor = new MyOrdersAdapter(this, orderdetials_list, this);
             orderListRecyclerView.setAdapter(orderdetails_adaptor);

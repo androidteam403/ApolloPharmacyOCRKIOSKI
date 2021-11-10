@@ -1,7 +1,6 @@
 package com.apollo.pharmacy.ocr.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,19 +10,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.apollo.pharmacy.ocr.R;
 import com.apollo.pharmacy.ocr.interfaces.MyOrdersListener;
-import com.apollo.pharmacy.ocr.model.Item;
 import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
 import com.apollo.pharmacy.ocr.model.OrderHistoryResponse;
-import com.apollo.pharmacy.ocr.model.StatusHistory;
-import com.apollo.pharmacy.ocr.utility.SessionManager;
 import com.apollo.pharmacy.ocr.utility.Utils;
-import com.google.gson.Gson;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -55,10 +49,10 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.MyView
         holder.orderid_textview.setText(item.getOrdno());
         holder.deliverytype_textview.setText(item.getPayMode());
         holder.totalitem_count_textview.setText("( " + item.getItems().size() + " items )");
-        List<StatusHistory> statusdata = item.getStatusHistory();
+        List<OrderHistoryResponse.StatusHistory> statusdata = item.getStatusHistory();
         String orderdate;
         if (statusdata != null && statusdata.size() > 0) {
-            for (StatusHistory data : statusdata) {
+            for (OrderHistoryResponse.StatusHistory data : statusdata) {
                 if (data.getStatus().equalsIgnoreCase("Order Placed")) {
                     orderdate = data.getDateTime();
                     holder.orderdate_textview.setText(orderdate);
@@ -83,19 +77,19 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.MyView
         holder.address_textview.setText(address);
 
 
-        if (!item.getStatusHistory().get(0).getDateTime().equalsIgnoreCase("-")) {
+        if (item.getStatus().equalsIgnoreCase("1")) {
             holder.Status_textview.setText(item.getStatusHistory().get(0).getStatus());
         }
-        if (!item.getStatusHistory().get(1).getDateTime().equalsIgnoreCase("-")) {
+        if (item.getStatus().equalsIgnoreCase("2")) {
             holder.Status_textview.setText(item.getStatusHistory().get(1).getStatus());
         }
-        if (!item.getStatusHistory().get(2).getDateTime().equalsIgnoreCase("-")) {
+        if (item.getStatus().equalsIgnoreCase("3")) {
             holder.Status_textview.setText(item.getStatusHistory().get(2).getStatus());
         }
-        if (!item.getStatusHistory().get(3).getDateTime().equalsIgnoreCase("-")) {
+        if (item.getStatus().equalsIgnoreCase("4")) {
             holder.Status_textview.setText(item.getStatusHistory().get(3).getStatus());
         }
-        if (!item.getStatusHistory().get(4).getDateTime().equalsIgnoreCase("-")) {
+        if (item.getStatus().equalsIgnoreCase("5")) {
             holder.Status_textview.setText(item.getStatusHistory().get(4).getStatus());
         }
 
@@ -115,9 +109,9 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.MyView
             holder.order_track_layout.setVisibility(View.GONE);
             holder.view_details_layout.setVisibility(View.VISIBLE);
         } else {
-            holder.order_delivered_layout.setVisibility(View.GONE);
-            holder.order_track_layout.setVisibility(View.VISIBLE);
-            holder.view_details_layout.setVisibility(View.GONE);
+            holder.order_delivered_layout.setVisibility(View.VISIBLE);
+            holder.order_track_layout.setVisibility(View.GONE);
+            holder.view_details_layout.setVisibility(View.VISIBLE);
         }
 
         if (!item.getStatus().equalsIgnoreCase("Order Delivered Successfully.")) {
@@ -199,11 +193,11 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.MyView
             e.printStackTrace();
         }
 
-        List<Item> medicine_list = item.getItems();
+        List<OrderHistoryResponse.Item> medicine_list = item.getItems();
         if (null != medicine_list && medicine_list.size() > 0) {
             float Total_amount = 0;
-            for (Item listItem : medicine_list) {
-                Total_amount = Total_amount + (listItem.getMrp() * listItem.getQty());
+            for (OrderHistoryResponse.Item listItem : medicine_list) {
+                Total_amount = (float) (Total_amount + (listItem.getMrp() * listItem.getQty()));
             }
             holder.totalamount_textview.setText(string + String.format("%.2f", Total_amount));
         } else {
@@ -221,9 +215,9 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.MyView
 
         holder.re_order_layout.setOnClickListener(v -> {
 
-            List<Item> itemList = item.getItems();
+            List<OrderHistoryResponse.Item> itemList = item.getItems();
             dataList = new ArrayList<>();
-            for (Item medicine : itemList) {
+            for (OrderHistoryResponse.Item medicine : itemList) {
                 OCRToDigitalMedicineResponse data = new OCRToDigitalMedicineResponse();
                 data.setArtName(TextUtils.isEmpty(medicine.getArtName()) ? "-" : medicine.getArtName());
                 data.setArtCode(medicine.getArtCode());
@@ -268,9 +262,9 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.MyView
             holder.medicine_layout.setVisibility(View.VISIBLE);
             holder.view_details_layout.setVisibility(View.GONE);
             holder.less_details_layout.setVisibility(View.VISIBLE);
-            List<Item> itemList = item.getItems();
+            List<OrderHistoryResponse.Item> itemList = item.getItems();
             dataList = new ArrayList<>();
-            for (Item medicine : itemList) {
+            for (OrderHistoryResponse.Item medicine : itemList) {
                 OCRToDigitalMedicineResponse data = new OCRToDigitalMedicineResponse();
                 data.setArtName(TextUtils.isEmpty(medicine.getArtName()) ? "-" : medicine.getArtName());
                 data.setArtCode("");

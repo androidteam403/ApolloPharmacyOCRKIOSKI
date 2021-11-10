@@ -19,6 +19,7 @@ import com.apollo.pharmacy.ocr.model.BatchListResponse;
 import com.apollo.pharmacy.ocr.model.ItemSearchResponse;
 import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ReOrderDilaog implements ReOrderListener {
@@ -68,39 +69,101 @@ public class ReOrderDilaog implements ReOrderListener {
 
     private int flag = 0;
 
+    private List<OCRToDigitalMedicineResponse> dummyDataList = new ArrayList<>();
+    float overallBatchQuantity;
+
+    int requiredBalanceQty;
+
     @Override
-    public void setSuccessBatchList(BatchListResponse batchListResponse, int position) {
+    public void setSuccessBatchList(BatchListResponse batchListResponse, int position, ItemSearchResponse.Item iteSearchData) {
         if (batchListResponse != null && batchListResponse.getBatchList() != null && batchListResponse.getBatchList().size() > 0) {
+            for (int i = 0; i < batchListResponse.getBatchList().size(); i++) {
+                overallBatchQuantity += Float.parseFloat(batchListResponse.getBatchList().get(i).getQOH());
+            }
+            flag = 0;
             for (int i = 0; i < batchListResponse.getBatchList().size(); i++) {
                 if (Float.parseFloat(batchListResponse.getBatchList().get(i).getQOH()) >= Float.parseFloat(String.valueOf(dataList.get(position).getQty()))) {
                     flag = 1;
-                    dataList.get(position).setArtprice(String.valueOf(batchListResponse.getBatchList().get(i).getMrp()));
+//                    dataList.get(position).setArtprice(String.valueOf(batchListResponse.getBatchList().get(i).getMrp()));
+
+                    OCRToDigitalMedicineResponse data = new OCRToDigitalMedicineResponse();
+                    data.setArtName(iteSearchData.getDescription());
+                    data.setArtCode(iteSearchData.getArtCode() + "," + batchListResponse.getBatchList().get(i).getBatchNo());
+                    data.setBatchId(batchListResponse.getBatchList().get(i).getBatchNo());
+                    data.setArtprice(String.valueOf(batchListResponse.getBatchList().get(i).getMrp()));
+                    data.setContainer("");
+                    data.setQty(dataList.get(position).getQty());
+                    data.setMedicineType(iteSearchData.getCategory());
+                    dummyDataList.add(data);
+                    break;
+                } else if (overallBatchQuantity >= dataList.get(position).getQty()) {
+                    if (dataList.get(position).getQty() > 0) {
+                        OCRToDigitalMedicineResponse data = new OCRToDigitalMedicineResponse();
+                        data.setArtName(iteSearchData.getDescription());
+                        data.setArtCode(iteSearchData.getArtCode() + "," + batchListResponse.getBatchList().get(i).getBatchNo());
+                        data.setBatchId(batchListResponse.getBatchList().get(i).getBatchNo());
+                        data.setArtprice(String.valueOf(batchListResponse.getBatchList().get(i).getMrp()));
+                        data.setContainer("");
+                        data.setQty((int) Float.parseFloat(batchListResponse.getBatchList().get(i).getQOH()));
+                        requiredBalanceQty = dataList.get(position).getQty() - 1;
+                        dataList.get(position).setQty(requiredBalanceQty);
+                        data.setMedicineType(iteSearchData.getCategory());
+                        dummyDataList.add(data);
+                    }
                 }
             }
             if (flag == 0) {
+//                dataList.get(position).setOutOfStock(true);
+
+                OCRToDigitalMedicineResponse data = new OCRToDigitalMedicineResponse();
+                data.setArtName(iteSearchData.getDescription());
+                data.setArtCode(iteSearchData.getArtCode() + "," + batchListResponse.getBatchList().get(position).getBatchNo());
+                data.setBatchId(batchListResponse.getBatchList().get(position).getBatchNo());
+                data.setArtprice(String.valueOf(batchListResponse.getBatchList().get(position).getMrp()));
+                data.setContainer("");
+                data.setQty((int) Float.parseFloat(batchListResponse.getBatchList().get(position).getQOH()));
                 dataList.get(position).setOutOfStock(true);
+                data.setMedicineType(iteSearchData.getCategory());
+                requiredBalanceQty = dataList.get(position).getQty() - 1;
+                dataList.get(position).setQty(requiredBalanceQty);
+                dummyDataList.add(data);
+
+
             }
         } else {
 //            Toast.makeText(getContext(), "Product Out Of Stock", Toast.LENGTH_LONG).show();
+//            dataList.get(position).setOutOfStock(true);
+
+            OCRToDigitalMedicineResponse data = new OCRToDigitalMedicineResponse();
+            data.setArtName(iteSearchData.getDescription());
+            data.setArtCode(iteSearchData.getArtCode() + "," + batchListResponse.getBatchList().get(position).getBatchNo());
+            data.setBatchId(batchListResponse.getBatchList().get(position).getBatchNo());
+            data.setArtprice(String.valueOf(batchListResponse.getBatchList().get(position).getMrp()));
+            data.setContainer("");
+            data.setQty((int) Float.parseFloat(batchListResponse.getBatchList().get(position).getQOH()));
             dataList.get(position).setOutOfStock(true);
+            data.setMedicineType(iteSearchData.getCategory());
+            requiredBalanceQty = dataList.get(position).getQty() - 1;
+            dataList.get(position).setQty(requiredBalanceQty);
+            dummyDataList.add(data);
         }
 
-        if (dataList.size() - 1 == position) {
+//        if (dataList.size() - 1 == position) {
             alertDialogBoxBinding.medicinesRecyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-            trackInfoAdaptor = new ReorderAdapter(context, dataList);
+            trackInfoAdaptor = new ReorderAdapter(context, dummyDataList);
             alertDialogBoxBinding.loadingPanel.setVisibility(View.GONE);
             alertDialogBoxBinding.medicinesRecyclerView.setAdapter(trackInfoAdaptor);
-        }
+//        }
     }
 
     public List<OCRToDigitalMedicineResponse> dataListLatest() {
-        for (int i = 0; i < dataList.size(); i++) {
-            if (dataList.get(i).isOutOfStock()) {
-                dataList.remove(dataList.get(i));
+        for (int i = 0; i < dummyDataList.size(); i++) {
+            if (dummyDataList.get(i).isOutOfStock()) {
+                dummyDataList.remove(dummyDataList.get(i));
                 i--;
             }
         }
-        return dataList;
+        return dummyDataList;
     }
 
     @Override
