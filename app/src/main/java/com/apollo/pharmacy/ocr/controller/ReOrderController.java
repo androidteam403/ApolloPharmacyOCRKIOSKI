@@ -51,10 +51,10 @@ public class ReOrderController {
                     ItemSearchResponse itemSearchResponse = response.body();
                     assert itemSearchResponse != null;
                     reOrderListener.onSuccessSearchItemApi(itemSearchResponse, position);
-                    if (itemSearchResponse!=null&&itemSearchResponse.getItemList().size()>0) {
-                        getBatchList(itemSearchResponse.getItemList().get(0).getArtCode(), position);
-                    }else {
-                        getBatchList("", position);
+                    if (itemSearchResponse != null && itemSearchResponse.getItemList().size() > 0) {
+                        getBatchList(itemSearchResponse.getItemList().get(0).getArtCode(), position,itemSearchResponse.getItemList().get(0));
+                    } else {
+                        getBatchList("", position, itemSearchResponse.getItemList().get(0));
                     }
                 }
             }
@@ -66,7 +66,7 @@ public class ReOrderController {
         });
     }
 
-    public void getBatchList(String artcode, int position) {
+    public void getBatchList(String artcode, int position, ItemSearchResponse.Item itemSerachData) {
 //        Utils.showDialog(activity, "Loading…");
         ApiInterface api = ApiClient.getApiServiceMposBaseUrl(SessionManager.INSTANCE.getEposUrl());
         BatchListRequest batchListRequest = new BatchListRequest();
@@ -83,7 +83,7 @@ public class ReOrderController {
             @Override
             public void onResponse(@NotNull Call<BatchListResponse> call, @NotNull Response<BatchListResponse> response) {
                 if (response.body() != null) {
-                    reOrderListener.setSuccessBatchList(response.body(), position);
+                    reOrderListener.setSuccessBatchList(response.body(), position,itemSerachData);
                 }
             }
 

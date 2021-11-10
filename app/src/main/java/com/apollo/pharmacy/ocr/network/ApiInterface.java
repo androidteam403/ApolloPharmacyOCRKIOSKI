@@ -130,9 +130,10 @@ public interface ApiInterface {
     @PUT("userInfo/deleteAddress/{id}")
     Call<Meta> deleteAddress(@Path("id") Integer id);
 
-    @GET("https://jsonblob.com/api/jsonBlob/887622755529539584")
+    @POST("https://online.apollopharmacy.org/UATTAT/Apollo/GetHistory")
+//https://jsonblob.com/api/jsonBlob/887622755529539584
 //webresources/OrderHistory/getHistory
-    Call<List<OrderHistoryResponse>> getOrderHistory();//@Body OrderHistoryRequest request
+    Call<List<OrderHistoryResponse>> getOrderHistory(@Header("Authentication") String token,@Body OrderHistoryRequest request);
 
     @GET("Customer/GetByMobile?")
     @Headers({"APIKey: 2B577C3C4C144160A5FD4885F7BA53A4", "AccessToken: 03F80DDA69A84382A8AC0E108270972F"})
@@ -201,27 +202,33 @@ public interface ApiInterface {
     @POST("http://20.197.57.170//rest/V1/searchapi")
     Call<List<ProductSrearchResponse>> productSearch(@Header("authorization") String token, @Body Object productSearchRequest);
 
-    @POST("SalesTransactionService.svc/GetItemDetails")//http://online.apollopharmacy.org:51/EPOS/
+    @POST("SalesTransactionService.svc/GetItemDetails")
+//http://online.apollopharmacy.org:51/EPOS/
 //ba8af54b-fa62-11eb-978a-d72b0c462c48
     Call<ItemSearchResponse> getSearchItemApiCall(@Body ItemSearchRequest itemSearchRequest);
-    @POST("SalesTransactionService.svc/GetItemDetails")//http://online.apollopharmacy.org:51/EPOS/
+
+    @POST("SalesTransactionService.svc/GetItemDetails")
+//http://online.apollopharmacy.org:51/EPOS/
 //ba8af54b-fa62-11eb-978a-d72b0c462c48
     Call<List<ItemSearchResponse.Item>> getSearchItemApiCalls(@Body ItemSearchRequest itemSearchRequest);
 
     @GET("apollompos/Self/STORELIST")
     Call<StoreListResponseModel> GET_STORES_LIST();
 
-    @POST("SalesTransactionService.svc/GetBatchDetails")//http://online.apollopharmacy.org:51/EPOS/
+    @POST("SalesTransactionService.svc/GetBatchDetails")
+//http://online.apollopharmacy.org:51/EPOS/
 //6009921b-fa66-11eb-978a-85578f7c5b29
     Call<BatchListResponse> GET_BATCH_LIST(@Body BatchListRequest batchListRequest);
 
     @POST("http://lms.apollopharmacy.org:8033/APK/apollompos/Self/Registration")
     Call<DeviceRegistrationResponse> deviceRegistration(@Body DeviceRegistrationRequest deviceRegistrationRequest);
 
-    @POST("WalletService.svc/GetQRCodePaymentDetails")//http://online.apollopharmacy.org:51/EPOS/
+    @POST("WalletService.svc/GetQRCodePaymentDetails")
+//http://online.apollopharmacy.org:51/EPOS/
     Call<PhonePayQrCodeResponse> GET_PhonePay_Qr_Code(@Body PhonePayQrCodeRequest phonePayQrCodeRequest);
 
-    @POST("WalletService.svc/GetQRCodePaymentDetails")//http://online.apollopharmacy.org:51/EPOS/
+    @POST("WalletService.svc/GetQRCodePaymentDetails")
+//http://online.apollopharmacy.org:51/EPOS/
     Call<PhonePayQrCodeResponse> GET_PhonePay_Qr_payment_Success(@Body PhonePayQrCodeRequest phonePayQrCodeRequest);
 
     @POST("https://online.apollopharmacy.org/REC/api/upcrossapiselling")
