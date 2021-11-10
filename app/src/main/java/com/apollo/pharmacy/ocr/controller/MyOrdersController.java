@@ -23,17 +23,17 @@ import retrofit2.Response;
 public class MyOrdersController {
     MyOrdersListener myOrdersListener;
 
-    public MyOrdersController(MyOrdersListener myOrdersListener){
-        this.myOrdersListener= myOrdersListener;
+    public MyOrdersController(MyOrdersListener myOrdersListener) {
+        this.myOrdersListener = myOrdersListener;
     }
 
     public void getOrderHistory(Context context) {
         OrderHistoryRequest request = new OrderHistoryRequest();
         SessionManager.INSTANCE.getMobilenumber();
-        request.setMobNo(SessionManager.INSTANCE.getMobilenumber());
+        request.setMobNo("9959939659");//SessionManager.INSTANCE.getMobilenumber()
         ApiInterface apiInterface = ApiClient.getApiService(Constants.Get_Order_History_For_User);
         Utils.showDialog(context, context.getResources().getString(R.string.label_fetching_order_history));
-        Call<List<OrderHistoryResponse>> call = apiInterface.getOrderHistory(request);
+        Call<List<OrderHistoryResponse>> call = apiInterface.getOrderHistory("YXV0aF91c2VyOnN1cGVyc2VjcmV0X3Rhd", request);
         call.enqueue(new CallbackWithRetry<List<OrderHistoryResponse>>(call) {
             @Override
             public void onResponse(@NonNull Call<List<OrderHistoryResponse>> call, @NonNull Response<List<OrderHistoryResponse>> response) {
