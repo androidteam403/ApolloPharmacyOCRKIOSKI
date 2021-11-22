@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraint_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -49,7 +50,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerVertical="true"
-                                android:text="@string/label_my_offers"
+                                android:text="Offers"
                                 android:textColor="@color/colorWhite"
                                 android:textSize="@dimen/twelve_sp"
                                 android:textStyle="bold" />
@@ -275,7 +276,7 @@
                             </LinearLayout>
                         </androidx.cardview.widget.CardView>
 
-                        <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                        <androidx.cardview.widget.CardView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/five_dp"
@@ -284,10 +285,32 @@
                             card_view:cardElevation="@dimen/eight_dp"
                             card_view:cardUseCompatPadding="true">
 
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@color/orders_search_layout_blue_bg">
+
+                                <ScrollView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent">
+
+                                    <ImageView
+                                        android:id="@+id/offers_pdf_image"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:adjustViewBounds="true"
+                                        android:contentDescription="@string/app_name"
+                                        android:scaleType="fitStart"
+                                        android:src="@drawable/kisok_offers" />
+                                </ScrollView>
+
+                            </RelativeLayout>
+
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:orientation="vertical">
+                                android:orientation="vertical"
+                                android:visibility="gone">
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
@@ -441,15 +464,15 @@
                                         <androidx.recyclerview.widget.RecyclerView
                                             android:id="@+id/up_selling_trendingrecycleerview_new"
                                             android:layout_width="match_parent"
-                                            android:background="@color/text_dark_blue_color"
                                             android:layout_height="match_parent"
+                                            android:background="@color/text_dark_blue_color"
                                             android:visibility="gone" />
 
                                         <RelativeLayout
-                                            android:visibility="gone"
                                             android:id="@+id/nodata_found"
                                             android:layout_width="match_parent"
-                                            android:layout_height="match_parent">
+                                            android:layout_height="match_parent"
+                                            android:visibility="gone">
 
                                             <TextView
                                                 android:layout_width="wrap_content"

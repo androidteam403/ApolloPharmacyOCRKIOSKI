@@ -94,4 +94,15 @@
     <declare-styleable name="ExpandableTextView">
         <attr name="trimLength" format="integer"/>
     </declare-styleable>
+    <style name="fadeinandoutcustomDialog" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowAnimationStyle">@style/fadeinandoutDialogAnimation</item>
+    </style>
+
+    <style name="fadeinandoutDialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/anim_frag_fade_in</item>
+        <item name="android:windowExitAnimation">@anim/anim_frag_fade_out</item>
+    </style>
 </resources>

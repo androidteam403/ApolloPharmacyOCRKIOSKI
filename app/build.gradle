@@ -125,5 +125,9 @@ dependencies {
     //Dropdown Spinner
     implementation 'net.alhazmy13.MediaPicker:libary:2.4.4'
     //
+//epson scanner sdk
+    implementation project(path: ':epsonscansdk-release')
+
+    implementation 'com.github.barteksc:android-pdf-viewer:2.8.2'
 
 }

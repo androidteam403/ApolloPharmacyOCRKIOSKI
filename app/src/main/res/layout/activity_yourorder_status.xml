@@ -76,10 +76,10 @@
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/order_no"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
-                            android:text="AP3638272"
                             android:textColor="@color/black"
                             android:textSize="@dimen/sixteen_sp"
                             android:textStyle="bold" />
@@ -109,6 +109,7 @@
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/user_name_phone_number"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
@@ -151,6 +152,7 @@
                             android:src="@drawable/free_home_delivery" />
 
                         <TextView
+                            android:id="@+id/delivery_type_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/image"
@@ -180,9 +182,36 @@
                         android:background="@drawable/track_ask_apollo_bg">
 
                         <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:text="@string/label_scan_qr_code_for_app"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="@dimen/ten_sp"
+                                android:textStyle="bold" />
+
+                            <ImageView
+                                android:layout_width="@dimen/fifty_dp"
+                                android:layout_height="@dimen/fifty_dp"
+                                android:layout_gravity="center"
+                                android:layout_marginTop="@dimen/two_dp"
+                                android:contentDescription="@string/app_name"
+                                android:gravity="center"
+                                android:src="@drawable/ask_app_qr_code" />
+                        </LinearLayout>
+
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:orientation="horizontal"
+                            android:visibility="gone"
                             android:weightSum="1">
 
                             <View
@@ -371,13 +400,13 @@
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:background="@drawable/blackstroke_yellowsolid_curves_bg"
+                        android:onClick="@{()-> callback.onClickContinueShopping()}"
                         android:paddingStart="@dimen/fifteen_dp"
                         android:paddingTop="@dimen/ten_dp"
                         android:paddingEnd="@dimen/fifteen_dp"
                         android:paddingBottom="@dimen/ten_dp"
                         android:text="Continue Shopping"
                         android:textColor="@color/BLACK"
-                        android:onClick="@{()-> callback.onClickContinueShopping()}"
                         android:textSize="@dimen/eighteen_sp"
                         android:textStyle="bold" />
                 </RelativeLayout>

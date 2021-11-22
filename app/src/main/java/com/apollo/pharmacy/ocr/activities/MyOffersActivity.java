@@ -6,12 +6,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.TranslateAnimation;
+import android.webkit.WebChromeClient;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -36,6 +44,7 @@ import com.apollo.pharmacy.ocr.databinding.ActivityMyOffersBinding;
 import com.apollo.pharmacy.ocr.interfaces.CartCountListener;
 import com.apollo.pharmacy.ocr.interfaces.MyOffersListener;
 import com.apollo.pharmacy.ocr.model.GetProductListResponse;
+import com.apollo.pharmacy.ocr.model.Image;
 import com.apollo.pharmacy.ocr.model.ItemSearchResponse;
 import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
 import com.apollo.pharmacy.ocr.model.Product;
@@ -52,6 +61,11 @@ import com.apollo.pharmacy.ocr.utility.SessionManager;
 import com.apollo.pharmacy.ocr.utility.Utils;
 import com.google.gson.Gson;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -59,6 +73,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import static com.apollo.pharmacy.ocr.utility.Constants.Promotions;
 import static com.apollo.pharmacy.ocr.utility.Constants.TrendingNow;
@@ -92,6 +108,8 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
     private LinearLayout offerLayout, trendingLayout;
     private TextView offerTxt, trendingTxt;
     private ActivityMyOffersBinding activityMyOffersBinding;
+    private ImageView mPdfView;
+    String googleDocs = "https://docs.google.com/viewer?url=";
 
     @Override
     public void onNetworkConnectionChanged(boolean isConnected) {
@@ -120,6 +138,23 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
         super.onCreate(savedInstanceState);
         activityMyOffersBinding = DataBindingUtil.setContentView(this, R.layout.activity_my_offers);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+        mPdfView = (ImageView) findViewById(R.id.offers_pdf_image);
+//        WebSettings webSettings = mPdfView.getSettings();
+//        webSettings.setJavaScriptEnabled(true);
+//        webSettings.setLoadWithOverviewMode(true);
+//        webSettings.setUseWideViewPort(true);
+//        initWebView();
+//        String pdf_url = "https://d1xsr68o6znzvt.cloudfront.net/Product_360/product_360/kisok_offers_1.pdf";
+//        String pdf = "https://docs.google.com/viewer?url=https://d1xsr68o6znzvt.cloudfront.net/Product_360/product_360/kisok_offers_1.pdf";
+//
+//        mPdfView.loadUrl(pdf);
+
+
+//        mPdfView.getSettings().setJavaScriptEnabled(true);
+//        mPdfView.loadUrl("https://d1xsr68o6znzvt.cloudfront.net/Product_360/product_360/kisok_offers_1.pdf");
+//        new RetrivePDFfromUrl().execute("https://d1xsr68o6znzvt.cloudfront.net/Product_360/product_360/kisok_offers_1.pdf");
+
 
         initLeftMenu();
 
@@ -1116,4 +1151,89 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
         startActivity(intent1);
         overridePendingTransition(R.animator.trans_right_in, R.animator.trans_right_out);
     }
+
+    class RetrivePDFfromUrl extends AsyncTask<String, Void, InputStream> {
+        @Override
+        protected InputStream doInBackground(String... strings) {
+            // we are using inputstream
+            // for getting out PDF.
+            InputStream inputStream = null;
+            try {
+                URL url = new URL(strings[0]);
+                // below is the step where we are
+                // creating our connection.
+                HttpURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
+                if (urlConnection.getResponseCode() == 200) {
+                    // response is success.
+                    // we are getting input stream from url
+                    // and storing it in our variable.
+                    inputStream = new BufferedInputStream(urlConnection.getInputStream());
+                }
+
+            } catch (IOException e) {
+                // this is the method
+                // to handle errors.
+                e.printStackTrace();
+                return null;
+            }
+            return inputStream;
+        }
+
+        @Override
+        protected void onPostExecute(InputStream inputStream) {
+            // after the execution of our async
+            // task we are loading our pdf in our pdf view.
+//            mPdfView.fromStream(inputStream).load();
+        }
+
+    }
+
+//    private void initWebView() {
+//        mPdfView.setWebChromeClient(new MyWebChromeClient(getBaseContext()));
+//        mPdfView.setWebViewClient(new WebViewClient() {
+//            @Override
+//            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+//                super.onPageStarted(view, url, favicon);
+//                Utils.showDialog(MyOffersActivity.this, "Please Wait");
+//            }
+//
+//            @Override
+//            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+////                if (url.endsWith(".pdf")) {
+////                    String pdfUrl = googleDocs + url;
+////                    mPdfView.loadUrl(pdfUrl);
+////                } else {
+////                mPdfView.loadUrl(url);
+////                }
+////                return true;
+//            }
+//
+//            @Override
+//            public void onPageFinished(WebView view, String url) {
+//                super.onPageFinished(view, url);
+//                Utils.dismissDialog();
+//            }
+//
+//            @Override
+//            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+//                super.onReceivedError(view, request, error);
+//                Utils.dismissDialog();
+//            }
+//        });
+////        mPdfView.clearCache(true);
+////        mPdfView.clearHistory();
+////        mPdfView.getSettings().setJavaScriptEnabled(true);
+////        mPdfView.getSettings().setLoadWithOverviewMode(true);
+////        mPdfView.getSettings().setUseWideViewPort(true);
+//
+//    }
+
+//    private class MyWebChromeClient extends WebChromeClient {
+//        Context context;
+//
+//        public MyWebChromeClient(Context context) {
+//            super();
+//            this.context = context;
+//        }
+//    }
 }
