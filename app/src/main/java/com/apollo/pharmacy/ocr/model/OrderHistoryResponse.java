@@ -3,6 +3,7 @@ package com.apollo.pharmacy.ocr.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.sql.Time;
 import java.util.List;
 
 public class OrderHistoryResponse {
@@ -137,6 +138,7 @@ public class OrderHistoryResponse {
         @SerializedName("DateTime")
         @Expose
         private String dateTime;
+        private Time time;
 
         public String getStatus() {
             return status;
@@ -152,6 +154,14 @@ public class OrderHistoryResponse {
 
         public void setDateTime(String dateTime) {
             this.dateTime = dateTime;
+        }
+
+        public Time getTime() {
+            return time;
+        }
+
+        public void setTime(Time time) {
+            this.time = time;
         }
     }
 

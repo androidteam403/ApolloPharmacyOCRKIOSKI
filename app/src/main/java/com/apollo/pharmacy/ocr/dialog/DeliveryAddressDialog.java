@@ -190,7 +190,7 @@ public class DeliveryAddressDialog implements PincodeValidateListener {
 //            deliveryAddressDialog.state.requestFocus();
 //            return false;
         } else if (deliveryAddressDialog.zipCode.getText().toString().length() < 6) {
-            deliveryAddressDialog.zipCode.setError("Pin Code should not empty");
+            deliveryAddressDialog.zipCode.setError("Enter valid pincode");
             deliveryAddressDialog.zipCode.requestFocus();
             return false;
         }

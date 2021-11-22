@@ -43,7 +43,6 @@ import com.apollo.pharmacy.ocr.utility.Utils;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -378,12 +377,24 @@ public class MyOrdersActivity extends AppCompatActivity implements ConnectivityR
         if (response.size() > 0) {
             for (int i = 0; i < response.size(); i++) {
                 orderdetials_list.add(response.get(i));
-                if (i == 4)
-                    break;
-                ;
+//                if (i == 4)
+//                    break;
+//                ;
             }
 //            orderdetials_list.addAll(response);
-            Collections.reverse(orderdetials_list);
+//            Collections.reverse(orderdetials_list);
+//for(int i=0; i<orderdetials_list.size(); i++){
+//    if (orderdetials_list.get(i).getStatusHistory().get(i).getStatus().equalsIgnoreCase(""))
+//}
+//
+//            Collections.sort(orderdetials_list, new Comparator<OrderHistoryResponse>() {
+//                public Date compare(OrderHistoryResponse o1, OrderHistoryResponse o2) {
+//                    return o1.getStatusHistory().get(0).getDateTime().compareTo(o2.getStatusHistory().get(0).getDateTime());
+//                }
+//            });
+
+
+
             orderdetails_adaptor = new MyOrdersAdapter(this, orderdetials_list, this);
             orderListRecyclerView.setAdapter(orderdetails_adaptor);
             orderdetails_adaptor.notifyDataSetChanged();

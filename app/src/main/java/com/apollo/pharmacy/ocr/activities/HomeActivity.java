@@ -32,6 +32,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.apollo.pharmacy.ocr.R;
 import com.apollo.pharmacy.ocr.activities.barcodegenerationforconnect.BarcodeGenerationtoConnectActivity;
+import com.apollo.pharmacy.ocr.activities.epsonscan.EpsonScanActivity;
 import com.apollo.pharmacy.ocr.activities.insertprescriptionnew.InsertPrescriptionActivityNew;
 import com.apollo.pharmacy.ocr.controller.HomeActivityController;
 import com.apollo.pharmacy.ocr.databinding.ActivityHomeBinding;
@@ -384,8 +385,7 @@ public class HomeActivity extends BaseActivity implements ConnectivityReceiver.C
             //new code
 
             Utils.dismissDialog();
-            finish();
-            Intent intent = new Intent(this, InsertPrescriptionActivityNew.class);
+            Intent intent = new Intent(this, EpsonScanActivity.class);
             startActivity(intent);
             overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
 
@@ -520,10 +520,10 @@ public class HomeActivity extends BaseActivity implements ConnectivityReceiver.C
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        startActivity(new Intent(HomeActivity.this, UserLoginActivity.class));
-        finish();
-        overridePendingTransition(R.animator.trans_right_in, R.animator.trans_right_out);
+//        super.onBackPressed();
+//        startActivity(new Intent(HomeActivity.this, UserLoginActivity.class));
+//        finish();
+//        overridePendingTransition(R.animator.trans_right_in, R.animator.trans_right_out);
     }
 
     public void cartCountData(int count) {

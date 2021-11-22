@@ -30,7 +30,7 @@ public class MyOrdersController {
     public void getOrderHistory(Context context) {
         OrderHistoryRequest request = new OrderHistoryRequest();
         SessionManager.INSTANCE.getMobilenumber();
-        request.setMobNo("9959939659");//SessionManager.INSTANCE.getMobilenumber()
+        request.setMobNo(SessionManager.INSTANCE.getMobilenumber());//SessionManager.INSTANCE.getMobilenumber()
         ApiInterface apiInterface = ApiClient.getApiService(Constants.Get_Order_History_For_User);
         Utils.showDialog(context, context.getResources().getString(R.string.label_fetching_order_history));
         Call<List<OrderHistoryResponse>> call = apiInterface.getOrderHistory("YXV0aF91c2VyOnN1cGVyc2VjcmV0X3Rhd", request);

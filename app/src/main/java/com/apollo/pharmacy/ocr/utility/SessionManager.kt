@@ -400,4 +400,21 @@ object SessionManager {
     fun getAccessDialogHandler(): String {
         return pref.getString(ApplicationConstant.ACESS_DIALOG_HANDEL, "")
     }
+
+    fun setImagePath(imagePathList: List<String>) {
+        editor.putString(ApplicationConstant.IMAGEPATHLIST, Gson().toJson(imagePathList))
+        editor.apply()
+    }
+
+    var lists: List<String> = emptyList()
+    fun getImagePathList(): List<String> {
+        val json = pref.getString(ApplicationConstant.IMAGEPATHLIST, null)
+        val type = object : TypeToken<List<String>>() {
+
+        }.type
+        if (Gson().fromJson<List<String>>(json, type) != null)
+            return Gson().fromJson<List<String>>(json, type)
+        else
+            return lists
+    }
 }

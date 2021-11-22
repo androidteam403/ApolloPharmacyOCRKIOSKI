@@ -1,27 +1,41 @@
 package com.apollo.pharmacy.ocr.activities.insertprescriptionnew;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.apollo.pharmacy.ocr.R;
+import com.apollo.pharmacy.ocr.activities.epsonscan.EpsonScanActivity;
+import com.apollo.pharmacy.ocr.activities.insertprescriptionnew.adapter.PrescriptionListAdapter;
+import com.apollo.pharmacy.ocr.activities.insertprescriptionnew.adapter.PrescriptionViewPagerAdapter;
 import com.apollo.pharmacy.ocr.activities.yourorderstatus.YourOrderStatusActivity;
 import com.apollo.pharmacy.ocr.databinding.ActivityNewInsertPrescriptionBinding;
+import com.apollo.pharmacy.ocr.databinding.DialogPrescriptionFullviewBinding;
 import com.apollo.pharmacy.ocr.dialog.ChooseDeliveryType;
 import com.apollo.pharmacy.ocr.model.PlaceOrderReqModel;
+import com.apollo.pharmacy.ocr.model.PlaceOrderResModel;
+import com.apollo.pharmacy.ocr.model.StateCodes;
+import com.apollo.pharmacy.ocr.model.UserAddress;
 import com.apollo.pharmacy.ocr.utility.ImageManager;
+import com.apollo.pharmacy.ocr.utility.SessionManager;
 import com.apollo.pharmacy.ocr.utility.Utils;
 
 import net.alhazmy13.mediapicker.Image.ImagePicker;
@@ -31,10 +45,14 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InsertPrescriptionActivityNew extends AppCompatActivity implements InsertPrescriptionActivityNewListener {
+public class InsertPrescriptionActivityNew extends AppCompatActivity implements InsertPrescriptionActivityNewListener, ChooseDeliveryType.ChooseDeliveryTypeListener {
     private ActivityNewInsertPrescriptionBinding activityNewInsertPrescriptionBinding;
-//    private ScaleGestureDetector mScaleGestureDetector;
+    //    private ScaleGestureDetector mScaleGestureDetector;
 //    private float mScaleFactor = 1.0f;
+    private PrescriptionViewPagerAdapter prescriptionViewPagerAdapter;
+    private PrescriptionListAdapter prescriptionListAdapter;
+    private List<String> imagePathList;
+    private String deliveryTypeName = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +61,25 @@ public class InsertPrescriptionActivityNew extends AppCompatActivity implements 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         activityNewInsertPrescriptionBinding.setCallback(this);
 //        mScaleGestureDetector = new ScaleGestureDetector(this, new ScaleListener());
-        Bitmap bImage = BitmapFactory.decodeResource(this.getResources(), R.drawable.apollo_prescription);
-        activityNewInsertPrescriptionBinding.prescriptionFullviewImg.setImageBitmap(bImage);
+
+
+        String filePath = null;
+        if (getIntent() != null) {
+            filePath = (String) getIntent().getStringExtra("filePath");
+        }
+        if (SessionManager.INSTANCE.getImagePathList() != null && SessionManager.INSTANCE.getImagePathList().size() > 0) {
+            this.imagePathList = SessionManager.INSTANCE.getImagePathList();
+            imagePathList.add(filePath);
+            SessionManager.INSTANCE.setImagePath(imagePathList);
+        } else {
+            imagePathList = new ArrayList<>();
+            imagePathList.add(filePath);
+            SessionManager.INSTANCE.setImagePath(imagePathList);
+        }
+        prescriptionListAdapter = new PrescriptionListAdapter(this, imagePathList, this);
+        RecyclerView.LayoutManager mLayoutManager2 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        activityNewInsertPrescriptionBinding.prescriptionListRecyclerview.setLayoutManager(mLayoutManager2);
+        activityNewInsertPrescriptionBinding.prescriptionListRecyclerview.setAdapter(prescriptionListAdapter);
 //        activityNewInsertPrescriptionBinding.prescriptionFullviewImg.setMaxZoom(4f);
         listeners();
     }
@@ -68,26 +103,6 @@ public class InsertPrescriptionActivityNew extends AppCompatActivity implements 
                 activityNewInsertPrescriptionBinding.scannedLay.setVisibility(View.GONE);
             }
         });
-        activityNewInsertPrescriptionBinding.confirmButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ChooseDeliveryType chooseDeliveryType = new ChooseDeliveryType(InsertPrescriptionActivityNew.this);
-
-                chooseDeliveryType.setPositiveListener(view1 -> {
-                    activityNewInsertPrescriptionBinding.transColorId.setVisibility(View.GONE);
-                    Toast.makeText(InsertPrescriptionActivityNew.this, "Delivery Type Selected", Toast.LENGTH_SHORT).show();
-                    chooseDeliveryType.dismiss();
-                    Intent intent = new Intent(InsertPrescriptionActivityNew.this, YourOrderStatusActivity.class);
-                    startActivity(intent);
-                });
-                chooseDeliveryType.setNegativeListener(v -> {
-                    activityNewInsertPrescriptionBinding.transColorId.setVisibility(View.GONE);
-                    chooseDeliveryType.dismiss();
-                });
-                chooseDeliveryType.show();
-            }
-        });
-
         activityNewInsertPrescriptionBinding.gallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -164,6 +179,8 @@ public class InsertPrescriptionActivityNew extends AppCompatActivity implements 
     public void onClickPrescription() {
         activityNewInsertPrescriptionBinding.closeFullviewPrescription.setVisibility(View.VISIBLE);
         activityNewInsertPrescriptionBinding.scannedLay.setVisibility(View.GONE);
+        activityNewInsertPrescriptionBinding.gallery.setVisibility(View.GONE);
+        activityNewInsertPrescriptionBinding.uploadPrescription.setVisibility(View.GONE);
 //        activityNewInsertPrescriptionBinding.prescriptionFullviewLayout.setVisibility(View.VISIBLE);
         activityNewInsertPrescriptionBinding.prescriptionFullviewImg.setVisibility(View.VISIBLE);
         activityNewInsertPrescriptionBinding.zoominZoomoutLayout.setVisibility(View.VISIBLE);
@@ -173,6 +190,8 @@ public class InsertPrescriptionActivityNew extends AppCompatActivity implements 
     public void onCloseFullviewPrescription() {
         activityNewInsertPrescriptionBinding.scannedLay.setVisibility(View.VISIBLE);
         activityNewInsertPrescriptionBinding.closeFullviewPrescription.setVisibility(View.GONE);
+        activityNewInsertPrescriptionBinding.gallery.setVisibility(View.VISIBLE);
+        activityNewInsertPrescriptionBinding.uploadPrescription.setVisibility(View.VISIBLE);
 //        activityNewInsertPrescriptionBinding.prescriptionFullviewLayout.setVisibility(View.GONE);
         activityNewInsertPrescriptionBinding.prescriptionFullviewImg.setVisibility(View.GONE);
         activityNewInsertPrescriptionBinding.zoominZoomoutLayout.setVisibility(View.GONE);
@@ -187,6 +206,106 @@ public class InsertPrescriptionActivityNew extends AppCompatActivity implements 
     @Override
     public void onClickZoomOut() {
 //        activityNewInsertPrescriptionBinding.prescriptionFullviewImg.zoomOut();
+    }
+
+    @Override
+    public void onClickScanAnotherPrescription() {
+        Intent intent = new Intent(this, EpsonScanActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
+        finish();
+    }
+
+    @Override
+    public void onClickPrescription(String prescriptionPath) {
+        Dialog prescriptionZoomDialog = new Dialog(this, R.style.fadeinandoutcustomDialog);
+        DialogPrescriptionFullviewBinding prescriptionFullviewBinding = DataBindingUtil.inflate(LayoutInflater.from(this), R.layout.dialog_prescription__fullview, null, false);
+        prescriptionZoomDialog.setContentView(prescriptionFullviewBinding.getRoot());
+        File imgFile = new File(prescriptionPath + "/1.jpg");
+        if (imgFile.exists()) {
+            Uri uri = Uri.fromFile(imgFile);
+            prescriptionFullviewBinding.prescriptionFullviewImg.setImageURI(uri);
+        }
+        prescriptionFullviewBinding.dismissPrescriptionFullview.setOnClickListener(v -> prescriptionZoomDialog.dismiss());
+        prescriptionZoomDialog.show();
+    }
+
+    @Override
+    public void onClickItemDelete(int position) {
+        Dialog dialog = new Dialog(InsertPrescriptionActivityNew.this);
+        dialog.setContentView(R.layout.dialog_custom_alert);
+        if (dialog.getWindow() != null)
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+        TextView dialogTitleText = dialog.findViewById(R.id.dialog_info);
+        Button okButton = dialog.findViewById(R.id.dialog_ok);
+        Button declineButton = dialog.findViewById(R.id.dialog_cancel);
+        dialogTitleText.setText("Are you sure want to delete?");
+        okButton.setText(getResources().getString(R.string.label_ok));
+        declineButton.setText(getResources().getString(R.string.label_cancel_text));
+        okButton.setOnClickListener(v1 -> {
+            dialog.dismiss();
+            if (SessionManager.INSTANCE.getImagePathList() != null && SessionManager.INSTANCE.getImagePathList().size() > 0) {
+                this.imagePathList = SessionManager.INSTANCE.getImagePathList();
+                imagePathList.remove(position);
+                SessionManager.INSTANCE.setImagePath(imagePathList);
+                if (imagePathList.size() > 0) {
+                    prescriptionListAdapter = new PrescriptionListAdapter(this, imagePathList, this);
+                    RecyclerView.LayoutManager mLayoutManager2 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+                    activityNewInsertPrescriptionBinding.prescriptionListRecyclerview.setLayoutManager(mLayoutManager2);
+                    activityNewInsertPrescriptionBinding.prescriptionListRecyclerview.setAdapter(prescriptionListAdapter);
+                } else {
+                    finish();
+                }
+            }
+        });
+        declineButton.setOnClickListener(v12 -> dialog.dismiss());
+    }
+
+    @Override
+    public void onClickBackPressed() {
+        onBackPressed();
+    }
+
+    ChooseDeliveryType chooseDeliveryType;
+
+    @Override
+    public void onClickContinue() {
+        if (SessionManager.INSTANCE.getImagePathList() != null && SessionManager.INSTANCE.getImagePathList().size() > 0) {
+            chooseDeliveryType = new ChooseDeliveryType(InsertPrescriptionActivityNew.this);
+            chooseDeliveryType.setmListener(this);
+//            chooseDeliveryType.setPositiveListener(view1 -> {
+//
+////            Intent intent = new Intent(InsertPrescriptionActivityNew.this, YourOrderStatusActivity.class);
+////            startActivity(intent);
+//            });
+            chooseDeliveryType.setNegativeListener(v -> {
+                activityNewInsertPrescriptionBinding.transColorId.setVisibility(View.GONE);
+                chooseDeliveryType.dismiss();
+            });
+            chooseDeliveryType.show();
+        } else {
+            Utils.showSnackbarDialog(this, findViewById(android.R.id.content), "No Prescriction");
+        }
+    }
+
+    @Override
+    public void onSuccessPlaceOrder(PlaceOrderResModel model) {
+        if (model != null) {
+            String orderNo = model.getOrdersResult().getOrderNo();
+            Utils.showSnackbarDialog(this, findViewById(android.R.id.content), "Placed order");
+            Intent intent = new Intent(InsertPrescriptionActivityNew.this, YourOrderStatusActivity.class);
+            intent.putExtra("orderNo", orderNo);
+            intent.putExtra("deliveryTypeName", deliveryTypeName);
+            startActivity(intent);
+            List<String> imagePathList = new ArrayList<>();
+            SessionManager.INSTANCE.setImagePath(imagePathList);
+        }
+    }
+
+    @Override
+    public void onFailureService(String message) {
+        Utils.showSnackbarDialog(this, findViewById(android.R.id.content), message);
     }
 
     private List<String> mPaths = new ArrayList<>();
@@ -215,13 +334,13 @@ public class InsertPrescriptionActivityNew extends AppCompatActivity implements 
 
     }
 
-
     ArrayList<PlaceOrderReqModel.PrescUrlEntity> prescEntityArray = new ArrayList<>();
 
     private void handleUploadImageService() {
+        this.mPaths = SessionManager.INSTANCE.getImagePathList();
         try {
             for (int i = 0; i < mPaths.size(); i++) {
-                final InputStream imageStream = InsertPrescriptionActivityNew.this.getContentResolver().openInputStream(Uri.fromFile(new File(mPaths.get(i))));
+                final InputStream imageStream = InsertPrescriptionActivityNew.this.getContentResolver().openInputStream(Uri.fromFile(new File(mPaths.get(i) + "/1.jpg")));
                 final int imageLength = imageStream.available();
                 final Handler handler = new Handler();
                 int finalI = i;
@@ -233,7 +352,7 @@ public class InsertPrescriptionActivityNew extends AppCompatActivity implements 
                             prescEntity.setUrl(imageName);
                             prescEntityArray.add(prescEntity);
                             if (mPaths.size() == prescEntityArray.size()) {
-//                                doPlaceOrder();
+                                doPlaceOrder();
                             }
                         });
                     } catch (Exception ex) {
@@ -254,5 +373,103 @@ public class InsertPrescriptionActivityNew extends AppCompatActivity implements 
         } else {
             Toast.makeText(this, getApplicationContext().getResources().getString(R.string.label_something_went_wrong), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Dialog dialog = new Dialog(InsertPrescriptionActivityNew.this);
+        dialog.setContentView(R.layout.dialog_custom_alert);
+        if (dialog.getWindow() != null)
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+        TextView dialogTitleText = dialog.findViewById(R.id.dialog_info);
+        Button okButton = dialog.findViewById(R.id.dialog_ok);
+        Button declineButton = dialog.findViewById(R.id.dialog_cancel);
+        dialogTitleText.setText("Are you sure want to leave current page?");
+        okButton.setText(getResources().getString(R.string.label_ok));
+        declineButton.setText(getResources().getString(R.string.label_cancel_text));
+        okButton.setOnClickListener(v1 -> {
+            dialog.dismiss();
+            List<String> imagePathList = new ArrayList<>();
+            SessionManager.INSTANCE.setImagePath(imagePathList);
+            super.onBackPressed();
+        });
+        declineButton.setOnClickListener(v12 -> dialog.dismiss());
+    }
+
+    private void doPlaceOrder() {
+        String userSelectedAdd = "";
+        String selectedStateCode = "";
+        UserAddress userAddress = SessionManager.INSTANCE.getUseraddress();
+        if (null != userAddress.getAddress1() && userAddress.getAddress1().length() > 0) {
+            String address = userAddress.getAddress1().toUpperCase() + ", " + userAddress.getCity().toUpperCase() + ", " + userAddress.getState().toUpperCase();
+            address = address.replace("null", "");
+            userSelectedAdd = address;
+        } else {
+            if (null != userAddress.getCity() && null != userAddress.getState()) {
+                String address = userAddress.getCity().toUpperCase() + ", " + userAddress.getState().toUpperCase();
+                address = address.replace("null", "");
+                userSelectedAdd = address;
+            }
+        }
+
+        String stateName = Utils.removeAllDigit(userAddress.getState().trim());
+        for (StateCodes codes : Utils.getStoreListFromAssets(InsertPrescriptionActivityNew.this)) {
+            String codestate_name = codes.getName().trim();
+            if (codestate_name.equalsIgnoreCase(stateName)) {
+                selectedStateCode = codes.getCode();
+            }
+        }
+
+        PlaceOrderReqModel placeOrderReqModel = new PlaceOrderReqModel();
+        PlaceOrderReqModel.TpdetailsEntity tpDetailsEntity = new PlaceOrderReqModel.TpdetailsEntity();
+        tpDetailsEntity.setOrderId(Utils.getTransactionGeneratedId());
+        tpDetailsEntity.setShopId("16001");
+        tpDetailsEntity.setShippingMethod(deliveryTypeName);
+        tpDetailsEntity.setPaymentMethod("COD");
+        tpDetailsEntity.setVendorName(SessionManager.INSTANCE.getKioskSetupResponse().getKIOSK_ID());
+        PlaceOrderReqModel.CustomerDetailsEntity customerDetailsEntity = new PlaceOrderReqModel.CustomerDetailsEntity();
+        customerDetailsEntity.setMobileNo(SessionManager.INSTANCE.getMobilenumber());
+        customerDetailsEntity.setComm_addr(userSelectedAdd);
+        customerDetailsEntity.setDel_addr(userSelectedAdd);
+        customerDetailsEntity.setFirstName(userAddress.getName());
+        customerDetailsEntity.setLastName(userAddress.getName());
+        customerDetailsEntity.setUHID("");
+        customerDetailsEntity.setCity(stateName);
+        customerDetailsEntity.setPostCode(userAddress.getPincode());
+        customerDetailsEntity.setMailId("");
+        customerDetailsEntity.setAge(25);
+        customerDetailsEntity.setCardNo("");
+        customerDetailsEntity.setPatientName(userAddress.getName());
+        tpDetailsEntity.setCustomerDetails(customerDetailsEntity);
+
+        PlaceOrderReqModel.PaymentDetailsEntity paymentDetailsEntity = new PlaceOrderReqModel.PaymentDetailsEntity();
+        paymentDetailsEntity.setTotalAmount("0");
+        paymentDetailsEntity.setPaymentSource("COD");
+        paymentDetailsEntity.setPaymentStatus("");
+        paymentDetailsEntity.setPaymentOrderId("");
+        tpDetailsEntity.setPaymentDetails(paymentDetailsEntity);
+
+        ArrayList<PlaceOrderReqModel.ItemDetailsEntity> itemDetailsArr = new ArrayList<>();
+        tpDetailsEntity.setItemDetails(itemDetailsArr);
+        tpDetailsEntity.setDotorName("Apollo");
+        tpDetailsEntity.setStateCode(selectedStateCode);
+        tpDetailsEntity.setTAT("");
+        tpDetailsEntity.setUserId(SessionManager.INSTANCE.getKioskSetupResponse().getKIOSK_ID());
+        tpDetailsEntity.setOrderType("Pharma");
+        tpDetailsEntity.setCouponCode("MED10");
+        tpDetailsEntity.setOrderDate(Utils.getOrderedID());
+        tpDetailsEntity.setRequestType("NONCART");
+        tpDetailsEntity.setPrescUrl(prescEntityArray);
+        placeOrderReqModel.setTpdetails(tpDetailsEntity);
+        new InsertPrescriptionActivityNewController(this, this).handleOrderPlaceService(this, placeOrderReqModel);
+    }
+
+    @Override
+    public void onClickOkPositive(String deliveryTypeName, String address) {
+        this.deliveryTypeName = deliveryTypeName;
+        activityNewInsertPrescriptionBinding.transColorId.setVisibility(View.GONE);
+        chooseDeliveryType.dismiss();
+        handleUploadImageService();
     }
 }

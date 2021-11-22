@@ -2,9 +2,9 @@ package com.apollo.pharmacy.ocr.zebrasdk.helper;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-// naveen
+
 /**
- * Created by qvfr34 on 9/19/2014.
+ * Created by naveen.m on 9/19/2021.
  */
 public class Barcode implements Parcelable {
     byte[] barcodeData;
