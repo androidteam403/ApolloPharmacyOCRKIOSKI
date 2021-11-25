@@ -107,7 +107,7 @@ import static com.apollo.pharmacy.ocr.utility.Constants.getContext;
 
 public class MySearchActivity extends BaseActivity implements SubCategoryListener, MySearchCallback, MyOffersListener, CartCountListener,
         ConnectivityReceiver.ConnectivityReceiverListener, KeyboardFragment.OnClickKeyboard, AdapterView.OnItemSelectedListener, CategoryGridItemAdapter.CheckOutData,
-        MedicineSearchAdapter.AddToCartCallBackData, ScannerAppEngine.IScannerAppEngineDevEventsDelegate {
+        MedicineSearchAdapter.AddToCartCallBackData, ScannerAppEngine.IScannerAppEngineDevEventsDelegate, ItemBatchSelectionDilaog.ItemBatchListDialogListener {
 
     Context context;
     List<OCRToDigitalMedicineResponse> dataList = new ArrayList<>();
@@ -1617,6 +1617,8 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
     public void onSuccessBarcodeItemApi(ItemSearchResponse itemSearchResponse) {
         if (itemSearchResponse.getItemList() != null && itemSearchResponse.getItemList().size() > 0) {
             ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(MySearchActivity.this, itemSearchResponse.getItemList().get(0).getArtCode());
+            itemBatchSelectionDilaog.setItemBatchListDialogListener(this);
+
             ProductSearch medicine = new ProductSearch();
 
             medicine.setName(itemSearchResponse.getItemList().get(0).getGenericName());
@@ -1747,5 +1749,10 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
     @Override
     public void scannerVideoEvent(byte[] videoData) {
 
+    }
+
+    @Override
+    public void onDismissDialog() {
+        isDialogShow = false;
     }
 }

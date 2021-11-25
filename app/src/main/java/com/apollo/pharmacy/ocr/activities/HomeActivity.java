@@ -33,7 +33,6 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.apollo.pharmacy.ocr.R;
 import com.apollo.pharmacy.ocr.activities.barcodegenerationforconnect.BarcodeGenerationtoConnectActivity;
 import com.apollo.pharmacy.ocr.activities.epsonscan.EpsonScanActivity;
-import com.apollo.pharmacy.ocr.activities.insertprescriptionnew.InsertPrescriptionActivityNew;
 import com.apollo.pharmacy.ocr.controller.HomeActivityController;
 import com.apollo.pharmacy.ocr.databinding.ActivityHomeBinding;
 import com.apollo.pharmacy.ocr.dialog.ItemBatchSelectionDilaog;
@@ -59,7 +58,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeActivity extends BaseActivity implements ConnectivityReceiver.ConnectivityReceiverListener, HomeListener, ScannerAppEngine.IScannerAppEngineDevEventsDelegate {
+public class HomeActivity extends BaseActivity implements ConnectivityReceiver.ConnectivityReceiverListener, HomeListener, ScannerAppEngine.IScannerAppEngineDevEventsDelegate, ItemBatchSelectionDilaog.ItemBatchListDialogListener {
 
     private TextView myCartCount, welcomeTxt;
     private boolean isUploadPrescription = false;
@@ -614,6 +613,7 @@ public class HomeActivity extends BaseActivity implements ConnectivityReceiver.C
     public void onSuccessSearchItemApi(ItemSearchResponse itemSearchResponse) {
         if (itemSearchResponse.getItemList() != null && itemSearchResponse.getItemList().size() > 0) {
             ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(HomeActivity.this, itemSearchResponse.getItemList().get(0).getArtCode());
+            itemBatchSelectionDilaog.setItemBatchListDialogListener(this);
             ProductSearch medicine = new ProductSearch();
             medicine.setName(itemSearchResponse.getItemList().get(0).getGenericName());
             itemBatchSelectionDilaog.setTitle(itemSearchResponse.getItemList().get(0).getDescription());
@@ -913,5 +913,10 @@ public class HomeActivity extends BaseActivity implements ConnectivityReceiver.C
         } else {
             scannerStatus.setImageDrawable(getResources().getDrawable(R.drawable.cross_icon));
         }
+    }
+
+    @Override
+    public void onDismissDialog() {
+        isDialogShow = false;
     }
 }

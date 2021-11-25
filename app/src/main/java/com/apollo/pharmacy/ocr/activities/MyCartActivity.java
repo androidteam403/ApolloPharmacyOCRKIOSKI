@@ -87,7 +87,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class MyCartActivity extends BaseActivity implements OnItemClickListener, CartCountListener, MyCartListener,
+public class MyCartActivity extends BaseActivity implements OnItemClickListener, CartCountListener, MyCartListener, ItemBatchSelectionDilaog.ItemBatchListDialogListener,
         ConnectivityReceiver.ConnectivityReceiverListener, CheckPrescriptionListener, UploadBgImageListener, ScannerAppEngine.IScannerAppEngineDevEventsDelegate {
 
     private ImageView checkOutImage;
@@ -1591,6 +1591,7 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
         if (serviceType == 0) {
             if (itemSearchResponse.getItemList() != null && itemSearchResponse.getItemList().size() > 0) {
                 ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(MyCartActivity.this, itemSearchResponse.getItemList().get(0).getArtCode());
+                itemBatchSelectionDilaog.setItemBatchListDialogListener(this);
                 ProductSearch medicine = new ProductSearch();
 
                 medicine.setName(itemSearchResponse.getItemList().get(0).getGenericName());
@@ -1632,7 +1633,6 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
 
                     itemBatchSelectionDilaog.globalBatchListHandlings(medicine.getDescription(), medicine.getSku(),
                             balanceQty, dummyDataList, MyCartActivity.this, medicine.getMedicineType());
-                    isDialogShow = false;
 
 
 ////                activityHomeBinding.transColorId.setVisibility(View.GONE);
@@ -2127,4 +2127,8 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
 
     }
 
+    @Override
+    public void onDismissDialog() {
+        isDialogShow = false;
+    }
 }
