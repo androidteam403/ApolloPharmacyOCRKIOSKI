@@ -32,7 +32,6 @@ import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
 import com.apollo.pharmacy.ocr.model.Product;
 import com.apollo.pharmacy.ocr.utility.SessionManager;
 import com.apollo.pharmacy.ocr.utility.Utils;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -329,6 +328,7 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
         dialog.dismiss();
     }
 
+
     public void setTitle(String title) {
         dialogItemBatchSelectionBinding.title.setText(title);
     }
@@ -513,6 +513,9 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
                         intent.putExtra("message", "OrderNow");
                         intent.putExtra("MedininesNames", new Gson().toJson(dummyDataList));
                         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                        if (itemBatchListDialogListener != null) {
+                            itemBatchListDialogListener.onDismissDialog();
+                        }
                         dismiss();
 
                     } else {
@@ -631,6 +634,9 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
                         intent.putExtra("message", "OrderNow");
                         intent.putExtra("MedininesNames", new Gson().toJson(dummyDataList));
                         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                        if (itemBatchListDialogListener != null) {
+                            itemBatchListDialogListener.onDismissDialog();
+                        }
                         dismiss();
                     }
                 } else {
@@ -644,9 +650,20 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
         } else {
             View view = dialog.getWindow().getDecorView();
             Utils.showSnackbarDialog(context, view, "Product Out of Stock");
+            if (itemBatchListDialogListener != null) {
+                itemBatchListDialogListener.onDismissDialog();
+            }
             dismiss();
         }
     }
 
+    private ItemBatchListDialogListener itemBatchListDialogListener;
 
+    public void setItemBatchListDialogListener(ItemBatchListDialogListener itemBatchListDialogListener) {
+        this.itemBatchListDialogListener = itemBatchListDialogListener;
+    }
+
+    public interface ItemBatchListDialogListener {
+        void onDismissDialog();
+    }
 }
