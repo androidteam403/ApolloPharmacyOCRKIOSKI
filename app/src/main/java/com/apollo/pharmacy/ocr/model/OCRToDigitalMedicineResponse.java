@@ -34,6 +34,16 @@ public class OCRToDigitalMedicineResponse implements Serializable {
     private boolean outOfStock;
     private String batchId;
 
+    private boolean expandStatus;
+
+    public boolean isExpandStatus() {
+        return expandStatus;
+    }
+
+    public void setExpandStatus(boolean expandStatus) {
+        this.expandStatus = expandStatus;
+    }
+
     public OCRToDigitalMedicineResponse() {
 
     }

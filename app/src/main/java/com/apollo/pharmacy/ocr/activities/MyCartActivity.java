@@ -96,6 +96,11 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
     private ArrayList<Product> outOfStockArrayList, inStockArrayList, outOfStockArrayList1, inStockArrayList1;
     private ArrayList<Product> product_list_array, product_list_array1;
     private List<OCRToDigitalMedicineResponse> dataList;
+
+    private List<OCRToDigitalMedicineResponse> dataComparingList = new ArrayList<>();
+    private List<OCRToDigitalMedicineResponse> expandholdedDataList = new ArrayList<>();
+
+
     private List<OCRToDigitalMedicineResponse> deletedataList;
     private Boolean existelemnt;
     private List<String> SpecialOfferList;
@@ -256,7 +261,7 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
         total_itemcount_textview.setText(String.valueOf(dataList.size()));
         cartCount(dataList.size());
 
-        myCartController.searchItemProducts(itemId, 0);
+        myCartController.searchItemProducts(itemId, 0, ocrToDigitalMedicineResponse.getQty());
 
 //        if (dataList.size() > 0) {
 //            float grandTotalVal = 0;
@@ -375,6 +380,9 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                             }
                             SessionManager.INSTANCE.setDataList(dataList);
                             cartCount(dataList.size());
+
+                            groupingDuplicates();
+
                             cartListAdapter.notifyDataSetChanged();
                             curationViewLayout.setVisibility(View.GONE);
                             if (countdown_timer != null) {
@@ -450,6 +458,9 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                             cartItemCountLayout.setVisibility(View.GONE);
                             checkOutImage.setImageResource(R.drawable.checkout_cart_unselect);
                         }
+
+                        groupingDuplicates();
+
                         cartListAdapter.notifyDataSetChanged();
                     }
                     curationViewLayout.setVisibility(View.GONE);
@@ -485,6 +496,9 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                         cartItemCountLayout.setVisibility(View.GONE);
                         checkOutImage.setImageResource(R.drawable.checkout_cart_unselect);
                     }
+
+                    groupingDuplicates();
+
                     cartListAdapter.notifyDataSetChanged();
                     curationViewLayout.setVisibility(View.GONE);
                 }
@@ -519,6 +533,9 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                     String rupeeSymbol = "\u20B9";
                     grandTotalPrice.setText(rupeeSymbol + "" + String.format("%.2f", grandTotalVal));
                     grandTotalPriceValue = grandTotalPrice.getText().toString();
+
+                    groupingDuplicates();
+
                     cartListAdapter.notifyDataSetChanged();
                 }
                 if (SessionManager.INSTANCE.getDeletedDataList().size() > 0) {
@@ -1090,7 +1107,7 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
 
         cartItemRecyclerView = findViewById(R.id.cartRecyclerView);
         dataList = new ArrayList<>();
-        cartListAdapter = new MyCartListAdapter(dataList, this);
+        cartListAdapter = new MyCartListAdapter(MyCartActivity.this, dataComparingList, this, expandholdedDataList);
         cartItemRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         cartItemRecyclerView.setAdapter(cartListAdapter);
         cartListAdapter.notifyDataSetChanged();
@@ -1099,6 +1116,20 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
             if (SessionManager.INSTANCE.getDataList().size() > 0) {
                 dataList.clear();
                 dataList.addAll(SessionManager.INSTANCE.getDataList());
+
+//                dataComparingList.addAll(SessionManager.INSTANCE.getDataList());
+//                for (int i = 0; i < dataComparingList.size(); i++) {
+//                    for (int j = 0; j < dataComparingList.size(); j++) {
+//                        if (i != j && dataComparingList.get(i).getArtName().equals(dataComparingList.get(j).getArtName())) {
+//                            expandholdedDataList.add(dataComparingList.get(j));
+//                            dataComparingList.remove(j);
+//                            j--;
+//                        }
+//                    }
+//                }
+
+                groupingDuplicates();
+
                 cartListAdapter.notifyDataSetChanged();
                 float totalMrpPrice = 0;
                 for (int i = 0; i < dataList.size(); i++) {
@@ -1216,6 +1247,22 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
 //                overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
 //            }
 //        });
+    }
+
+    private void groupingDuplicates() {
+        dataComparingList.clear();
+        expandholdedDataList.clear();
+
+        dataComparingList.addAll(SessionManager.INSTANCE.getDataList());
+        for (int i = 0; i < dataComparingList.size(); i++) {
+            for (int j = 0; j < dataComparingList.size(); j++) {
+                if (i != j && dataComparingList.get(i).getArtName().equals(dataComparingList.get(j).getArtName())) {
+                    expandholdedDataList.add(dataComparingList.get(j));
+                    dataComparingList.remove(j);
+                    j--;
+                }
+            }
+        }
     }
 
     private void startcountertimer() {
@@ -1391,6 +1438,9 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
             String rupeeSymbol = "\u20B9";
             grandTotalPrice.setText(rupeeSymbol + "" + String.format("%.2f", grandTotalVal));
             grandTotalPriceValue = grandTotalPrice.getText().toString();
+
+            groupingDuplicates();
+
             cartListAdapter.notifyDataSetChanged();
         }
     }
@@ -1516,6 +1566,9 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
             String rupeeSymbol = "\u20B9";
             grandTotalPrice.setText(rupeeSymbol + "" + String.format("%.2f", grandTotalVal));
             grandTotalPriceValue = grandTotalPrice.getText().toString();
+
+            groupingDuplicates();
+
             cartListAdapter.notifyDataSetChanged();
             cartCount(dataList.size());
         }
@@ -1551,7 +1604,7 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
             crossselling.add(body.getCrossselling().get(1));
             crossselling.add(body.getCrossselling().get(2));
             for (UpCellCrossCellResponse.Crossselling crossSellingList : crossselling) {
-                myCartController.searchItemProducts(crossSellingList.getItemid(), 1);
+                myCartController.searchItemProducts(crossSellingList.getItemid(), 1, 0);
             }
         } else {
             noDataFound.setVisibility(View.VISIBLE);
@@ -1562,7 +1615,7 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
             upselling.add(body.getUpselling().get(1));
             upselling.add(body.getUpselling().get(2));
             for (UpCellCrossCellResponse.Upselling upSelling : upselling) {
-                myCartController.searchItemProducts(upSelling.getItemid(), 2);
+                myCartController.searchItemProducts(upSelling.getItemid(), 2, 0);
             }
         } else {
             noDataFound.setVisibility(View.VISIBLE);
@@ -1587,7 +1640,7 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
     private float balanceQty;
 
     @Override
-    public void onSuccessBarcodeItemApi(ItemSearchResponse itemSearchResponse, int serviceType) {
+    public void onSuccessBarcodeItemApi(ItemSearchResponse itemSearchResponse, int serviceType, int qty) {
         if (serviceType == 0) {
             if (itemSearchResponse.getItemList() != null && itemSearchResponse.getItemList().size() > 0) {
                 ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(MyCartActivity.this, itemSearchResponse.getItemList().get(0).getArtCode());
@@ -1605,6 +1658,9 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                 medicine.setIsPrescriptionRequired(0);
                 medicine.setPrice(itemSearchResponse.getItemList().get(0).getMrp());
 
+                if (qty != 0) {
+                    itemBatchSelectionDilaog.setQtyCount(String.valueOf(qty));
+                }
 
                 itemBatchSelectionDilaog.setUnitIncreaseListener(view3 -> {
                     if (itemBatchSelectionDilaog.getQtyCount() != null && !itemBatchSelectionDilaog.getQtyCount().isEmpty()) {
@@ -1751,14 +1807,20 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                 Utils.showSnackbar(MyCartActivity.this, constraint_Layout, getApplicationContext().getResources().getString(R.string.label_item_added_cart));
                 cartCount(dataList.size());
 
-                cartListAdapter = new MyCartListAdapter(dataList, MyCartActivity.this);
+                groupingDuplicates();
+
+                cartListAdapter = new MyCartListAdapter(MyCartActivity.this, dataComparingList, MyCartActivity.this, expandholdedDataList);
                 cartItemRecyclerView.setLayoutManager(new LinearLayoutManager(MyCartActivity.this));
                 cartItemRecyclerView.setAdapter(cartListAdapter);
                 cartListAdapter.notifyDataSetChanged();
             }
             if (dataList != null && dataList.size() > 0)
-                if (cartListAdapter != null)
+                if (cartListAdapter != null) {
+
+                    groupingDuplicates();
+
                     cartListAdapter.notifyDataSetChanged();
+                }
         }
     };
 
@@ -1836,14 +1898,20 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                 Utils.showSnackbar(MyCartActivity.this, constraint_Layout, getApplicationContext().getResources().getString(R.string.label_item_added_cart));
                 cartCount(dataList.size());
 
-                cartListAdapter = new MyCartListAdapter(dataList, MyCartActivity.this);
+                groupingDuplicates();
+
+                cartListAdapter = new MyCartListAdapter(MyCartActivity.this, dataComparingList, MyCartActivity.this, expandholdedDataList);
                 cartItemRecyclerView.setLayoutManager(new LinearLayoutManager(MyCartActivity.this));
                 cartItemRecyclerView.setAdapter(cartListAdapter);
                 cartListAdapter.notifyDataSetChanged();
             }
             if (dataList != null && dataList.size() > 0)
-                if (cartListAdapter != null)
+                if (cartListAdapter != null) {
+
+                    groupingDuplicates();
+
                     cartListAdapter.notifyDataSetChanged();
+                }
 //            if (null != SessionManager.INSTANCE.getDataList() && SessionManager.INSTANCE.getDataList().size() > 0)
 //                checkOutNewBtn.setVisibility(View.VISIBLE);
 //            else
@@ -1871,8 +1939,10 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
         }
     }
 
+    int pos;
+
     @Override
-    public void onClickDelete(int position) {
+    public void onClickDelete(int position, OCRToDigitalMedicineResponse item) {
         final Dialog dialog = new Dialog(MyCartActivity.this);
         dialog.setContentView(R.layout.dialog_custom_alert);
         dialog.setCancelable(false);
@@ -1887,16 +1957,31 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
         declineButton.setText(getResources().getString(R.string.label_cancel_text));
         okButton.setOnClickListener(v -> {
             OCRToDigitalMedicineResponse loadobject = new OCRToDigitalMedicineResponse();
-            loadobject.setArtCode(dataList.get(position).getArtCode());
-            loadobject.setArtName(dataList.get(position).getArtName());
-            loadobject.setQty(dataList.get(position).getQty());
-            loadobject.setMedicineType(dataList.get(position).getMedicineType());
-            loadobject.setContainer(dataList.get(position).getContainer());
-            loadobject.setArtprice(dataList.get(position).getArtprice());
-            deletedataList.add(loadobject);
-            SessionManager.INSTANCE.setDeletedDataList(deletedataList);
 
-            dataList.remove(position);
+            for (int i = 0; i < dataList.size(); i++) {
+                if (dataList.get(i).getArtCode().equalsIgnoreCase(item.getArtCode())) {
+                    pos = i;
+                    loadobject.setArtCode(dataList.get(i).getArtCode());
+                    loadobject.setArtName(dataList.get(i).getArtName());
+                    loadobject.setQty(dataList.get(i).getQty());
+                    loadobject.setMedicineType(dataList.get(i).getMedicineType());
+                    loadobject.setContainer(dataList.get(i).getContainer());
+                    loadobject.setArtprice(dataList.get(i).getArtprice());
+                    deletedataList.add(loadobject);
+                    SessionManager.INSTANCE.setDeletedDataList(deletedataList);
+                }
+            }
+
+//            loadobject.setArtCode(dataList.get(position).getArtCode());
+//            loadobject.setArtName(dataList.get(position).getArtName());
+//            loadobject.setQty(dataList.get(position).getQty());
+//            loadobject.setMedicineType(dataList.get(position).getMedicineType());
+//            loadobject.setContainer(dataList.get(position).getContainer());
+//            loadobject.setArtprice(dataList.get(position).getArtprice());
+//            deletedataList.add(loadobject);
+//            SessionManager.INSTANCE.setDeletedDataList(deletedataList);
+
+            dataList.remove(pos);
             String rupeeSymbol = "\u20B9";
             SessionManager.INSTANCE.setDataList(dataList);
             cartCount(dataList.size());
@@ -1911,7 +1996,10 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
             } else {
                 grandTotalPrice.setText(rupeeSymbol + "00.00");
             }
-            cartListAdapter = new MyCartListAdapter(dataList, this);
+
+            groupingDuplicates();
+
+            cartListAdapter = new MyCartListAdapter(MyCartActivity.this, dataComparingList, this, expandholdedDataList);
             cartItemRecyclerView.setLayoutManager(new LinearLayoutManager(this));
             cartItemRecyclerView.setAdapter(cartListAdapter);
             cartListAdapter.notifyDataSetChanged();
@@ -2092,7 +2180,7 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                 if (barcode_code != null) {
 //            Toast.makeText(this, barcode_code, Toast.LENGTH_LONG).show();
                     Utils.showDialog(this, "Plaese wait...");
-                    myCartController.searchItemProducts(barcode_code, 0);
+                    myCartController.searchItemProducts(barcode_code, 0, 0);
                 } else {
                     Toast.makeText(this, "Scan Cancelled", Toast.LENGTH_LONG).show();
                 }

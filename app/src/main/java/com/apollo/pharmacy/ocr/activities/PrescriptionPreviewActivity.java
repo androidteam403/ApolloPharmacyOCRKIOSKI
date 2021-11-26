@@ -378,7 +378,7 @@ public class PrescriptionPreviewActivity extends AppCompatActivity implements Pr
     }
 
     @Override
-    public void onSuccessBarcodeItemApi(ItemSearchResponse itemSearchResponse, int serviceType) {
+    public void onSuccessBarcodeItemApi(ItemSearchResponse itemSearchResponse, int serviceType, int qty) {
 
     }
 

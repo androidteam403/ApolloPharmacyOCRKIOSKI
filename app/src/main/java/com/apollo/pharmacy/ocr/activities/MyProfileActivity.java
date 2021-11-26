@@ -542,7 +542,7 @@ public class MyProfileActivity extends AppCompatActivity implements MyCartListen
     }
 
     @Override
-    public void onSuccessBarcodeItemApi(ItemSearchResponse itemSearchResponse, int serviceType) {
+    public void onSuccessBarcodeItemApi(ItemSearchResponse itemSearchResponse, int serviceType, int qty) {
 
     }
 

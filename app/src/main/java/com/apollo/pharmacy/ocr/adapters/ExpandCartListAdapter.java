@@ -10,25 +10,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.apollo.pharmacy.ocr.R;
 import com.apollo.pharmacy.ocr.interfaces.OnItemClickListener;
 import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class MyCartListAdapter extends RecyclerView.Adapter<MyCartListAdapter.ViewHolder> {
-    private List<OCRToDigitalMedicineResponse> cartMedicineList = new ArrayList<>();
+public class ExpandCartListAdapter extends RecyclerView.Adapter<ExpandCartListAdapter.ViewHolder> {
+    private List<OCRToDigitalMedicineResponse> cartMedicineList;
     private final OnItemClickListener listener;
     List<OCRToDigitalMedicineResponse> expandList;
-    ExpandCartListAdapter expandCartListAdapter;
     private Context context;
 
-    public MyCartListAdapter(Context context, List<OCRToDigitalMedicineResponse> cartMedicineList, OnItemClickListener listener, List<OCRToDigitalMedicineResponse> expandList) {
+
+    public ExpandCartListAdapter(Context context, List<OCRToDigitalMedicineResponse> cartMedicineList, OnItemClickListener listener, List<OCRToDigitalMedicineResponse> expandList) {
         this.context = context;
         this.cartMedicineList = cartMedicineList;
         this.listener = listener;
@@ -37,16 +35,15 @@ public class MyCartListAdapter extends RecyclerView.Adapter<MyCartListAdapter.Vi
 
     @NonNull
     @Override
-    public MyCartListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_my_cart_list, parent, false);
-        return new MyCartListAdapter.ViewHolder(itemView);
+    public ExpandCartListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_expand_cart_view, parent, false);
+        return new ExpandCartListAdapter.ViewHolder(itemView);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView snoTxt, productNameTxt, offerPriceTxt, productQty, totalPriceTxt, mrppricetextview;
         ImageView decButton, incButton;
-        ImageView deleteButton, expandView;
-        RecyclerView expandResyclerView;
+        ImageView deleteButton;
 
         public ViewHolder(View view) {
             super(view);
@@ -59,18 +56,16 @@ public class MyCartListAdapter extends RecyclerView.Adapter<MyCartListAdapter.Vi
             totalPriceTxt = view.findViewById(R.id.total_price_txt);
             mrppricetextview = view.findViewById(R.id.mrppricetextview);
             deleteButton = view.findViewById(R.id.delete_item_button);
-            expandView = view.findViewById(R.id.expand_view);
-            expandResyclerView = view.findViewById(R.id.expand_recycle);
         }
     }
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(@NonNull MyCartListAdapter.ViewHolder holder, int position) {
-        if (cartMedicineList.size() > 0) {
-            OCRToDigitalMedicineResponse item = cartMedicineList.get(position);
+    public void onBindViewHolder(@NonNull ExpandCartListAdapter.ViewHolder holder, int position) {
+        if (expandList.size() > 0) {
+            OCRToDigitalMedicineResponse item = expandList.get(position);
             holder.snoTxt.setText(String.valueOf(position + 1));
-            if (cartMedicineList.get(position).getArtName().length() > 0) {
+            if (expandList.get(position).getArtName().length() > 0) {
                 holder.productNameTxt.setText(item.getArtName());
             }
             holder.productQty.setText(String.valueOf(item.getQty()));
@@ -99,31 +94,7 @@ public class MyCartListAdapter extends RecyclerView.Adapter<MyCartListAdapter.Vi
             }
             holder.deleteButton.setOnClickListener(v -> {
                 if (listener != null) {
-                    listener.onClickDelete(position,item);
-                }
-            });
-
-            holder.expandView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (!cartMedicineList.get(position).isExpandStatus()) {
-                        cartMedicineList.get(position).setExpandStatus(true);
-
-                        List<OCRToDigitalMedicineResponse> expandListDummy = new ArrayList<>();
-                        for (int i = 0; i < expandList.size(); i++) {
-                            if (cartMedicineList.get(position).getArtName().equalsIgnoreCase(expandList.get(i).getArtName())) {
-                                expandListDummy.add(expandList.get(i));
-                            }
-                        }
-                        holder.expandResyclerView.setVisibility(View.VISIBLE);
-                        expandCartListAdapter = new ExpandCartListAdapter(context, cartMedicineList, listener, expandListDummy);
-                        holder.expandResyclerView.setLayoutManager(new LinearLayoutManager(context));
-                        holder.expandResyclerView.setAdapter(expandCartListAdapter);
-                        expandCartListAdapter.notifyDataSetChanged();
-                    } else {
-                        cartMedicineList.get(position).setExpandStatus(false);
-                        holder.expandResyclerView.setVisibility(View.GONE);
-                    }
+                    listener.onClickDelete(position, item);
                 }
             });
         }
@@ -131,6 +102,6 @@ public class MyCartListAdapter extends RecyclerView.Adapter<MyCartListAdapter.Vi
 
     @Override
     public int getItemCount() {
-        return cartMedicineList.size();
+        return expandList.size();
     }
 }
