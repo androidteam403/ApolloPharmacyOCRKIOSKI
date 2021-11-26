@@ -19,6 +19,16 @@ public class Item {
     @Expose
     private float mrp;
 
+    private String batchId;
+
+    public String getBatchId() {
+        return batchId;
+    }
+
+    public void setBatchId(String batchId) {
+        this.batchId = batchId;
+    }
+
     public void setMrp(float mrp1) {
         this.mrp = mrp1;
     }
