@@ -136,12 +136,14 @@ public class MyCartListAdapter extends RecyclerView.Adapter<MyCartListAdapter.Vi
                                 expandListDummy.add(expandList.get(i));
                             }
                         }
+                        holder.expandView.setRotation(180);
                         holder.expandResyclerView.setVisibility(View.VISIBLE);
                         expandCartListAdapter = new ExpandCartListAdapter(context, cartMedicineList, listener, expandListDummy);
                         holder.expandResyclerView.setLayoutManager(new LinearLayoutManager(context));
                         holder.expandResyclerView.setAdapter(expandCartListAdapter);
                         expandCartListAdapter.notifyDataSetChanged();
                     } else {
+                        holder.expandView.setRotation(0);
                         cartMedicineList.get(position).setExpandStatus(false);
                         holder.expandResyclerView.setVisibility(View.GONE);
                     }
