@@ -79,6 +79,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.zebra.scannercontrol.FirmwareUpdateEvent;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -375,7 +376,11 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                                     }
                                 }
                                 String rupeeSymbol = "\u20B9";
-                                grandTotalPrice.setText(rupeeSymbol + "" + String.format("%.2f", grandTotalVal));
+
+                                DecimalFormat formatter = new DecimalFormat("#,###.00");
+                                String pharmaformatted = formatter.format(grandTotalVal);
+
+                                grandTotalPrice.setText(rupeeSymbol + "" + pharmaformatted);
                                 grandTotalPriceValue = grandTotalPrice.getText().toString();
                             }
                             SessionManager.INSTANCE.setDataList(dataList);
@@ -452,7 +457,11 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                                 }
                             }
                             String rupeeSymbol = "\u20B9";
-                            grandTotalPrice.setText(rupeeSymbol + "" + String.format("%.2f", grandTotalVal));
+
+                            DecimalFormat formatter = new DecimalFormat("#,###.00");
+                            String pharmaformatted = formatter.format(grandTotalVal);
+
+                            grandTotalPrice.setText(rupeeSymbol + "" + pharmaformatted);
                             grandTotalPriceValue = grandTotalPrice.getText().toString();
                         } else {
                             cartItemCountLayout.setVisibility(View.GONE);
@@ -490,7 +499,10 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                             }
                         }
                         String rupeeSymbol = "\u20B9";
-                        grandTotalPrice.setText(rupeeSymbol + "" + String.format("%.2f", grandTotalVal));
+                        DecimalFormat formatter = new DecimalFormat("#,###.00");
+                        String pharmaformatted = formatter.format(grandTotalVal);
+
+                        grandTotalPrice.setText(rupeeSymbol + "" + pharmaformatted);
                         grandTotalPriceValue = grandTotalPrice.getText().toString();
                     } else {
                         cartItemCountLayout.setVisibility(View.GONE);
@@ -531,7 +543,11 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                         }
                     }
                     String rupeeSymbol = "\u20B9";
-                    grandTotalPrice.setText(rupeeSymbol + "" + String.format("%.2f", grandTotalVal));
+
+                    DecimalFormat formatter = new DecimalFormat("#,###.00");
+                    String pharmaformatted = formatter.format(grandTotalVal);
+
+                    grandTotalPrice.setText(rupeeSymbol + "" + pharmaformatted);
                     grandTotalPriceValue = grandTotalPrice.getText().toString();
 
                     groupingDuplicates();
@@ -903,7 +919,11 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         String rupeeSymbol = "\u20B9";
-        grandTotalPrice.setText(rupeeSymbol + "00.00");
+
+        DecimalFormat formatter = new DecimalFormat("#,###.00");
+        String pharmaformatted = formatter.format(00.00);
+
+        grandTotalPrice.setText(rupeeSymbol + pharmaformatted);
 
         if (ConnectivityReceiver.isConnected()) {
             findViewById(R.id.networkErrorLayout).setVisibility(View.GONE);
@@ -956,7 +976,10 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                                 grandTotalVal = grandTotalVal + totalPrice;
                             }
                         }
-                        grandTotalPrice.setText(rupeeSymbol + "" + String.format("%.2f", grandTotalVal));
+                        DecimalFormat formatter1 = new DecimalFormat("#,###.00");
+                        String pharmaformatted1 = formatter1.format(grandTotalVal);
+
+                        grandTotalPrice.setText(rupeeSymbol + "" + pharmaformatted1);
                         grandTotalPriceValue = grandTotalPrice.getText().toString();
                     }
                 } else {
@@ -985,7 +1008,11 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                                 }
                             }
                         }
-                        grandTotalPrice.setText(rupeeSymbol + "" + String.format("%.2f", grandTotalVal));
+
+                        DecimalFormat formatter1 = new DecimalFormat("#,###.00");
+                        String pharmaformatted1 = formatter1.format(grandTotalVal);
+
+                        grandTotalPrice.setText(rupeeSymbol + "" + pharmaformatted1);
                         grandTotalPriceValue = grandTotalPrice.getText().toString();
                     }
                     if (countdown_timer != null) {
@@ -1137,7 +1164,11 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                         totalMrpPrice = Float.parseFloat(dataList.get(i).getArtprice()) * dataList.get(i).getQty() + totalMrpPrice;
                     }
                 }
-                grandTotalPrice.setText(rupeeSymbol + "" + String.format("%.2f", totalMrpPrice));
+
+                DecimalFormat formatter1 = new DecimalFormat("#,###.00");
+                String pharmaformatted1 = formatter1.format(totalMrpPrice);
+
+                grandTotalPrice.setText(rupeeSymbol + "" + pharmaformatted1);
                 cartCount(dataList.size());
             }
         }
@@ -1436,7 +1467,11 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                 }
             }
             String rupeeSymbol = "\u20B9";
-            grandTotalPrice.setText(rupeeSymbol + "" + String.format("%.2f", grandTotalVal));
+
+            DecimalFormat formatter = new DecimalFormat("#,###.00");
+            String pharmaformatted = formatter.format(grandTotalVal);
+
+            grandTotalPrice.setText(rupeeSymbol + "" + pharmaformatted);
             grandTotalPriceValue = grandTotalPrice.getText().toString();
 
             groupingDuplicates();
@@ -1564,7 +1599,11 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                 }
             }
             String rupeeSymbol = "\u20B9";
-            grandTotalPrice.setText(rupeeSymbol + "" + String.format("%.2f", grandTotalVal));
+
+            DecimalFormat formatter = new DecimalFormat("#,###.00");
+            String pharmaformatted = formatter.format(grandTotalVal);
+
+            grandTotalPrice.setText(rupeeSymbol + "" + pharmaformatted);
             grandTotalPriceValue = grandTotalPrice.getText().toString();
 
             groupingDuplicates();
@@ -1802,7 +1841,11 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                     }
                 }
                 String rupeeSymbol = "\u20B9";
-                grandTotalPrice.setText(rupeeSymbol + "" + String.format("%.2f", grandTotalVal));
+
+                DecimalFormat formatter = new DecimalFormat("#,###.00");
+                String pharmaformatted = formatter.format(grandTotalVal);
+
+                grandTotalPrice.setText(rupeeSymbol + "" + pharmaformatted);
 
                 Utils.showSnackbar(MyCartActivity.this, constraint_Layout, getApplicationContext().getResources().getString(R.string.label_item_added_cart));
                 cartCount(dataList.size());
@@ -1893,7 +1936,11 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                     }
                 }
                 String rupeeSymbol = "\u20B9";
-                grandTotalPrice.setText(rupeeSymbol + "" + String.format("%.2f", grandTotalVal));
+
+                DecimalFormat formatter = new DecimalFormat("#,###.00");
+                String pharmaformatted = formatter.format(grandTotalVal);
+
+                grandTotalPrice.setText(rupeeSymbol + "" + pharmaformatted);
 
                 Utils.showSnackbar(MyCartActivity.this, constraint_Layout, getApplicationContext().getResources().getString(R.string.label_item_added_cart));
                 cartCount(dataList.size());
@@ -1992,7 +2039,11 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                         totalMrpPrice = Float.parseFloat(dataList.get(i).getArtprice()) * dataList.get(i).getQty() + totalMrpPrice;
                     }
                 }
-                grandTotalPrice.setText(rupeeSymbol + "" + String.format("%.2f", totalMrpPrice));
+
+                DecimalFormat formatter = new DecimalFormat("#,###.00");
+                String pharmaformatted = formatter.format(totalMrpPrice);
+
+                grandTotalPrice.setText(rupeeSymbol + "" + pharmaformatted);
             } else {
                 grandTotalPrice.setText(rupeeSymbol + "00.00");
             }
@@ -2038,7 +2089,11 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                 totalMrpPrice = Float.parseFloat(dataList.get(i).getArtprice()) * dataList.get(i).getQty() + totalMrpPrice;
             }
         }
-        grandTotalPrice.setText(rupeeSymbol + "" + String.format("%.2f", totalMrpPrice));
+
+        DecimalFormat formatter = new DecimalFormat("#,###.00");
+        String pharmaformatted = formatter.format(totalMrpPrice);
+
+        grandTotalPrice.setText(rupeeSymbol + "" + pharmaformatted);
         grandTotalPriceValue = grandTotalPrice.getText().toString();
 
         SessionManager.INSTANCE.setDataList(dataList);
