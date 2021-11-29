@@ -27,6 +27,7 @@ public class MyCartListAdapter extends RecyclerView.Adapter<MyCartListAdapter.Vi
     List<OCRToDigitalMedicineResponse> expandList;
     ExpandCartListAdapter expandCartListAdapter;
     private Context context;
+    private boolean expandHandlingBool;
 
     public MyCartListAdapter(Context context, List<OCRToDigitalMedicineResponse> cartMedicineList, OnItemClickListener listener, List<OCRToDigitalMedicineResponse> expandList) {
         this.context = context;
@@ -69,18 +70,23 @@ public class MyCartListAdapter extends RecyclerView.Adapter<MyCartListAdapter.Vi
     public void onBindViewHolder(@NonNull MyCartListAdapter.ViewHolder holder, int position) {
         if (cartMedicineList.size() > 0) {
             OCRToDigitalMedicineResponse item = cartMedicineList.get(position);
+            expandHandlingBool = false;
 
             if (expandList.size() > 0) {
                 holder.expandView.setVisibility(View.VISIBLE);
             } else {
-                holder.expandView.setVisibility(View.GONE);
+                holder.expandView.setVisibility(View.INVISIBLE);
             }
             for (int i = 0; i < expandList.size(); i++) {
                 if (expandList != null && expandList.size() > 0 && cartMedicineList.get(position).getArtName().equalsIgnoreCase(expandList.get(i).getArtName())) {
-                    holder.expandView.setVisibility(View.VISIBLE);
-                } else {
-                    holder.expandView.setVisibility(View.GONE);
+                    expandHandlingBool = true;
                 }
+            }
+
+            if (expandHandlingBool) {
+                holder.expandView.setVisibility(View.INVISIBLE);
+            } else {
+                holder.expandView.setVisibility(View.GONE);
             }
 
 
