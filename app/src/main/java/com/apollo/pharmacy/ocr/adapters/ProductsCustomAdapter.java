@@ -29,11 +29,13 @@ public class ProductsCustomAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private List<OCRToDigitalMedicineResponse> datalist;
     private CartCountListener cartCountListener;
     private View itemView;
+    CategoryGridItemAdapter.CheckOutData checkOutData;
 
-    public ProductsCustomAdapter(Context context, ArrayList<Product> products, CartCountListener cartCountListener) {
+    public ProductsCustomAdapter(Context context, ArrayList<Product> products, CartCountListener cartCountListener, CategoryGridItemAdapter.CheckOutData checkOutData) {
         this.context = context;
         this.products = products;
         this.cartCountListener = cartCountListener;
+        this.checkOutData=checkOutData;
         datalist = new ArrayList<>();
         if (null != SessionManager.INSTANCE.getDataList()) {
             datalist = SessionManager.INSTANCE.getDataList();
@@ -66,7 +68,7 @@ public class ProductsCustomAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             ViewMode viewMode = ViewMode.values()[getItemViewType(position)];
             Product product = products.get(position);
             if (viewMode == ViewMode.GRID) {
-                ((CategoryGridItemAdapter) holder).setup(context, product, position, datalist, cartCountListener);
+                ((CategoryGridItemAdapter) holder).setup(context, product, position, datalist, cartCountListener,checkOutData);
             }
         }
     }

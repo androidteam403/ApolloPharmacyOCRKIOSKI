@@ -1,6 +1,7 @@
 package com.apollo.pharmacy.ocr.adapters;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.apollo.pharmacy.ocr.R;
@@ -22,10 +24,16 @@ import java.util.Locale;
 public class MyCartListAdapter extends RecyclerView.Adapter<MyCartListAdapter.ViewHolder> {
     private List<OCRToDigitalMedicineResponse> cartMedicineList = new ArrayList<>();
     private final OnItemClickListener listener;
+    List<OCRToDigitalMedicineResponse> expandList;
+    ExpandCartListAdapter expandCartListAdapter;
+    private Context context;
+    private boolean expandHandlingBool;
 
-    public MyCartListAdapter(List<OCRToDigitalMedicineResponse> cartMedicineList, OnItemClickListener listener) {
+    public MyCartListAdapter(Context context, List<OCRToDigitalMedicineResponse> cartMedicineList, OnItemClickListener listener, List<OCRToDigitalMedicineResponse> expandList) {
+        this.context = context;
         this.cartMedicineList = cartMedicineList;
         this.listener = listener;
+        this.expandList = expandList;
     }
 
     @NonNull
@@ -38,7 +46,8 @@ public class MyCartListAdapter extends RecyclerView.Adapter<MyCartListAdapter.Vi
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView snoTxt, productNameTxt, offerPriceTxt, productQty, totalPriceTxt, mrppricetextview;
         ImageView decButton, incButton;
-        ImageView deleteButton;
+        ImageView deleteButton, expandView;
+        RecyclerView expandResyclerView;
 
         public ViewHolder(View view) {
             super(view);
@@ -51,6 +60,8 @@ public class MyCartListAdapter extends RecyclerView.Adapter<MyCartListAdapter.Vi
             totalPriceTxt = view.findViewById(R.id.total_price_txt);
             mrppricetextview = view.findViewById(R.id.mrppricetextview);
             deleteButton = view.findViewById(R.id.delete_item_button);
+            expandView = view.findViewById(R.id.expand_view);
+            expandResyclerView = view.findViewById(R.id.expand_recycle);
         }
     }
 
@@ -59,11 +70,31 @@ public class MyCartListAdapter extends RecyclerView.Adapter<MyCartListAdapter.Vi
     public void onBindViewHolder(@NonNull MyCartListAdapter.ViewHolder holder, int position) {
         if (cartMedicineList.size() > 0) {
             OCRToDigitalMedicineResponse item = cartMedicineList.get(position);
+            expandHandlingBool = false;
+
+            if (expandList.size() > 0) {
+                holder.expandView.setVisibility(View.VISIBLE);
+            } else {
+                holder.expandView.setVisibility(View.INVISIBLE);
+            }
+            for (int i = 0; i < expandList.size(); i++) {
+                if (expandList != null && expandList.size() > 0 && cartMedicineList.get(position).getArtName().equalsIgnoreCase(expandList.get(i).getArtName())) {
+                    expandHandlingBool = true;
+                }
+            }
+
+            if (expandHandlingBool) {
+                holder.expandView.setVisibility(View.INVISIBLE);
+            } else {
+                holder.expandView.setVisibility(View.GONE);
+            }
+
+
             holder.snoTxt.setText(String.valueOf(position + 1));
             if (cartMedicineList.get(position).getArtName().length() > 0) {
                 holder.productNameTxt.setText(item.getArtName());
-                holder.productQty.setText(String.valueOf(item.getQty()));
             }
+            holder.productQty.setText(String.valueOf(item.getQty()));
             String rupeeSymbol = "\u20B9";
             if (!TextUtils.isEmpty(item.getArtprice())) {
                 holder.offerPriceTxt.setText(rupeeSymbol + String.format(Locale.ENGLISH, "%.2f", Float.parseFloat(item.getArtprice())));
@@ -89,7 +120,31 @@ public class MyCartListAdapter extends RecyclerView.Adapter<MyCartListAdapter.Vi
             }
             holder.deleteButton.setOnClickListener(v -> {
                 if (listener != null) {
-                    listener.onClickDelete(position);
+                    listener.onClickDelete(position, item);
+                }
+            });
+
+            holder.expandView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (!cartMedicineList.get(position).isExpandStatus()) {
+                        cartMedicineList.get(position).setExpandStatus(true);
+
+                        List<OCRToDigitalMedicineResponse> expandListDummy = new ArrayList<>();
+                        for (int i = 0; i < expandList.size(); i++) {
+                            if (cartMedicineList.get(position).getArtName().equalsIgnoreCase(expandList.get(i).getArtName())) {
+                                expandListDummy.add(expandList.get(i));
+                            }
+                        }
+                        holder.expandResyclerView.setVisibility(View.VISIBLE);
+                        expandCartListAdapter = new ExpandCartListAdapter(context, cartMedicineList, listener, expandListDummy);
+                        holder.expandResyclerView.setLayoutManager(new LinearLayoutManager(context));
+                        holder.expandResyclerView.setAdapter(expandCartListAdapter);
+                        expandCartListAdapter.notifyDataSetChanged();
+                    } else {
+                        cartMedicineList.get(position).setExpandStatus(false);
+                        holder.expandResyclerView.setVisibility(View.GONE);
+                    }
                 }
             });
         }
