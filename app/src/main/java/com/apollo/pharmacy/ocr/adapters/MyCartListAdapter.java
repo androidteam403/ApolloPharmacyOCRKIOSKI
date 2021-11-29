@@ -84,9 +84,9 @@ public class MyCartListAdapter extends RecyclerView.Adapter<MyCartListAdapter.Vi
             }
 
             if (expandHandlingBool) {
-                holder.expandView.setVisibility(View.INVISIBLE);
+                holder.expandView.setVisibility(View.VISIBLE);
             } else {
-                holder.expandView.setVisibility(View.GONE);
+                holder.expandView.setVisibility(View.INVISIBLE);
             }
 
 
