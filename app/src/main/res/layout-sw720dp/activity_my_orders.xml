@@ -72,23 +72,21 @@
                                     android:id="@+id/refresh_button"
                                     android:layout_width="150dp"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginTop="@dimen/thirty_dp"
-                                    android:text="Refresh"
-                                    android:textSize="@dimen/fifteen_dp"
                                     android:layout_marginLeft="100dp"
-                                    android:textAllCaps="false"
+                                    android:layout_marginTop="@dimen/thirty_dp"
                                     android:background="@drawable/scan_btn_bg"
-                                    >
-                                </Button>
+                                    android:text="Refresh"
+                                    android:textAllCaps="false"
+                                    android:textSize="@dimen/fifteen_dp"></Button>
                             </LinearLayout>
 
-                                <androidx.recyclerview.widget.RecyclerView
-                                    android:id="@+id/myOrdersRecyclerView"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:layout_marginTop="@dimen/fifteen_dp"
-                                    android:layout_marginEnd="@dimen/ten_dp"
-                                    android:nestedScrollingEnabled="true" />
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/myOrdersRecyclerView"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginTop="@dimen/fifteen_dp"
+                                android:layout_marginEnd="@dimen/ten_dp"
+                                android:nestedScrollingEnabled="true" />
 
 
                         </LinearLayout>
