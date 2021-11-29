@@ -69,6 +69,21 @@ public class MyCartListAdapter extends RecyclerView.Adapter<MyCartListAdapter.Vi
     public void onBindViewHolder(@NonNull MyCartListAdapter.ViewHolder holder, int position) {
         if (cartMedicineList.size() > 0) {
             OCRToDigitalMedicineResponse item = cartMedicineList.get(position);
+
+            if (expandList.size() > 0) {
+                holder.expandView.setVisibility(View.VISIBLE);
+            } else {
+                holder.expandView.setVisibility(View.GONE);
+            }
+            for (int i = 0; i < expandList.size(); i++) {
+                if (expandList != null && expandList.size() > 0 && cartMedicineList.get(position).getArtName().equalsIgnoreCase(expandList.get(i).getArtName())) {
+                    holder.expandView.setVisibility(View.VISIBLE);
+                } else {
+                    holder.expandView.setVisibility(View.GONE);
+                }
+            }
+
+
             holder.snoTxt.setText(String.valueOf(position + 1));
             if (cartMedicineList.get(position).getArtName().length() > 0) {
                 holder.productNameTxt.setText(item.getArtName());
@@ -99,7 +114,7 @@ public class MyCartListAdapter extends RecyclerView.Adapter<MyCartListAdapter.Vi
             }
             holder.deleteButton.setOnClickListener(v -> {
                 if (listener != null) {
-                    listener.onClickDelete(position,item);
+                    listener.onClickDelete(position, item);
                 }
             });
 
