@@ -27,7 +27,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_weight="0.34"
+            android:layout_weight="0.37"
             android:gravity="center_vertical"
             android:lines="2"
             android:maxLines="2"
@@ -37,7 +37,7 @@
         <ImageView
             android:id="@+id/expand_view"
             android:layout_width="0dp"
-            android:layout_weight="0.06"
+            android:layout_weight="0.03"
             android:layout_height="match_parent"
             android:src="@drawable/simple_v_dropdown"
             android:tint="@color/colorPrimary"/>
