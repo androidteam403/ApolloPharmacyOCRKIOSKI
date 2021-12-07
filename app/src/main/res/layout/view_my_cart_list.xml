@@ -37,10 +37,10 @@
         <ImageView
             android:id="@+id/expand_view"
             android:layout_width="0dp"
-            android:layout_weight="0.025"
             android:layout_height="match_parent"
+            android:layout_weight="0.025"
             android:src="@drawable/simple_v_dropdown"
-            android:tint="@color/colorPrimary"/>
+            android:tint="@color/colorPrimary" />
 
         <TextView
             android:id="@+id/offer_price_txt"
@@ -118,7 +118,8 @@
                 android:paddingStart="@dimen/ten_dp"
                 android:paddingEnd="@dimen/ten_dp"
                 android:src="@drawable/delete_cart_item"
-                android:tint="@color/unselected_red_color" />
+                android:tint="@color/unselected_red_color"
+                android:visibility="gone" />
         </LinearLayout>
     </LinearLayout>
 

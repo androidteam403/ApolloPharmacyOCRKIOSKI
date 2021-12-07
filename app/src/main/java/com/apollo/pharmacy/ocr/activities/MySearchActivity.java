@@ -1461,7 +1461,21 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
     public void cartCount(int count) {
         if (count != 0) {
             myCartCount.setVisibility(View.VISIBLE);
-            myCartCount.setText(String.valueOf(count));
+
+            List<OCRToDigitalMedicineResponse> countUniques = new ArrayList<>();
+            countUniques.addAll(SessionManager.INSTANCE.getDataList());
+
+            for (int i = 0; i < countUniques.size(); i++) {
+                for (int j = 0; j < countUniques.size(); j++) {
+                    if (i != j && countUniques.get(i).getArtName().equals(countUniques.get(j).getArtName())) {
+                        countUniques.remove(j);
+                        j--;
+                    }
+                }
+            }
+
+//            myCartCount.setText(String.valueOf(count));
+            myCartCount.setText(String.valueOf(countUniques.size()));
 //            itemsCount.setVisibility(View.VISIBLE);
 //            plusIcon.setVisibility(View.VISIBLE);
 //            checkOutImage.setVisibility(View.VISIBLE);

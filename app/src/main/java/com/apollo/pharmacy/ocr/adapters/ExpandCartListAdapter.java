@@ -16,6 +16,7 @@ import com.apollo.pharmacy.ocr.R;
 import com.apollo.pharmacy.ocr.interfaces.OnItemClickListener;
 import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
 
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Locale;
 
@@ -87,7 +88,11 @@ public class ExpandCartListAdapter extends RecyclerView.Adapter<ExpandCartListAd
             });
             if (!TextUtils.isEmpty(item.getArtprice())) {
                 Float total_price = Float.parseFloat(item.getArtprice()) * item.getQty();
-                holder.totalPriceTxt.setText(rupeeSymbol + String.format(Locale.ENGLISH, "%.2f", total_price));
+
+                DecimalFormat formatter = new DecimalFormat("#,###.00");
+                String pharmaformatted = formatter.format(total_price);
+
+                holder.totalPriceTxt.setText(rupeeSymbol + pharmaformatted);
             } else {
                 Float total_price = Float.parseFloat("00") * item.getQty();
                 holder.totalPriceTxt.setText(rupeeSymbol + String.format(Locale.ENGLISH, "%.2f", total_price));
