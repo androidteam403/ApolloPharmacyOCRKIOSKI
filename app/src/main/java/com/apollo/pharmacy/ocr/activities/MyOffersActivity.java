@@ -5,8 +5,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
@@ -19,24 +21,30 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.databinding.DataBindingUtil;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.apollo.pharmacy.ocr.R;
+import com.apollo.pharmacy.ocr.adapters.CategoryGridItemAdapter;
 import com.apollo.pharmacy.ocr.adapters.MedicineSearchAdapter;
+import com.apollo.pharmacy.ocr.adapters.MyOfersAdapterNew;
 import com.apollo.pharmacy.ocr.adapters.MyOffersAdapter;
+import com.apollo.pharmacy.ocr.adapters.MyoffersAdapterTrending;
 import com.apollo.pharmacy.ocr.controller.MyOffersController;
-import com.apollo.pharmacy.ocr.enums.ViewMode;
+import com.apollo.pharmacy.ocr.databinding.ActivityMyOffersBinding;
 import com.apollo.pharmacy.ocr.interfaces.CartCountListener;
 import com.apollo.pharmacy.ocr.interfaces.MyOffersListener;
 import com.apollo.pharmacy.ocr.model.GetProductListResponse;
+import com.apollo.pharmacy.ocr.model.ItemSearchResponse;
 import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
 import com.apollo.pharmacy.ocr.model.Product;
 import com.apollo.pharmacy.ocr.model.ProductSearch;
 import com.apollo.pharmacy.ocr.model.ScannedData;
 import com.apollo.pharmacy.ocr.model.ScannedMedicine;
 import com.apollo.pharmacy.ocr.model.Suggestion_Product;
+import com.apollo.pharmacy.ocr.model.UpCellCrossCellResponse;
 import com.apollo.pharmacy.ocr.receiver.ConnectivityReceiver;
 import com.apollo.pharmacy.ocr.utility.ApplicationConstant;
 import com.apollo.pharmacy.ocr.utility.Constants;
@@ -45,6 +53,11 @@ import com.apollo.pharmacy.ocr.utility.SessionManager;
 import com.apollo.pharmacy.ocr.utility.Utils;
 import com.google.gson.Gson;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -53,11 +66,13 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.net.ssl.HttpsURLConnection;
+
 import static com.apollo.pharmacy.ocr.utility.Constants.Promotions;
 import static com.apollo.pharmacy.ocr.utility.Constants.TrendingNow;
 
 public class MyOffersActivity extends AppCompatActivity implements MyOffersListener, CartCountListener,
-        ConnectivityReceiver.ConnectivityReceiverListener {
+        ConnectivityReceiver.ConnectivityReceiverListener, CategoryGridItemAdapter.CheckOutData {
 
     public MyOffersController myOffersController;
     public ArrayList<ProductSearch> searchResult1;
@@ -82,6 +97,11 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
     private TextView fcItemCountTxt, pharmaItemCountTxt;
     private LinearLayout fcItemCountLayout, pharmaItemCountLayout;
     private ConstraintLayout constraintLayout;
+    private LinearLayout offerLayout, trendingLayout;
+    private TextView offerTxt, trendingTxt;
+    private ActivityMyOffersBinding activityMyOffersBinding;
+    private ImageView mPdfView;
+    String googleDocs = "https://docs.google.com/viewer?url=";
 
     @Override
     public void onNetworkConnectionChanged(boolean isConnected) {
@@ -108,8 +128,25 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_offers);
+        activityMyOffersBinding = DataBindingUtil.setContentView(this, R.layout.activity_my_offers);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+        mPdfView = (ImageView) findViewById(R.id.offers_pdf_image);
+//        WebSettings webSettings = mPdfView.getSettings();
+//        webSettings.setJavaScriptEnabled(true);
+//        webSettings.setLoadWithOverviewMode(true);
+//        webSettings.setUseWideViewPort(true);
+//        initWebView();
+//        String pdf_url = "https://d1xsr68o6znzvt.cloudfront.net/Product_360/product_360/kisok_offers_1.pdf";
+//        String pdf = "https://docs.google.com/viewer?url=https://d1xsr68o6znzvt.cloudfront.net/Product_360/product_360/kisok_offers_1.pdf";
+//
+//        mPdfView.loadUrl(pdf);
+
+
+//        mPdfView.getSettings().setJavaScriptEnabled(true);
+//        mPdfView.loadUrl("https://d1xsr68o6znzvt.cloudfront.net/Product_360/product_360/kisok_offers_1.pdf");
+//        new RetrivePDFfromUrl().execute("https://d1xsr68o6znzvt.cloudfront.net/Product_360/product_360/kisok_offers_1.pdf");
+
 
         initLeftMenu();
 
@@ -162,10 +199,11 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
         });
 
         myOffersController = new MyOffersController(this);
-        LinearLayout offerLayout = findViewById(R.id.offer_layout);
-        LinearLayout trendingLayout = findViewById(R.id.trending_layout);
-        TextView offerTxt = findViewById(R.id.offer_name);
-        TextView trendingTxt = findViewById(R.id.trending_name);
+        myOffersController.upcellCrosscellList("7353910637", MyOffersActivity.this);
+        offerLayout = findViewById(R.id.offer_layout);
+        trendingLayout = findViewById(R.id.trending_layout);
+        offerTxt = findViewById(R.id.offer_name);
+        trendingTxt = findViewById(R.id.trending_name);
 
         promotionsRecyclerView = (RecyclerView) findViewById(R.id.recyclerViewOffers);
         promotionsRecyclerView.setLayoutManager(new GridLayoutManager(this, 7));
@@ -185,8 +223,8 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
                     Utils.showSnackbar(MyOffersActivity.this, constraintLayout, getApplicationContext().getResources().getString(R.string.label_internet_error_text));
                 }
                 offerLayout.setBackgroundColor(getResources().getColor(R.color.colorWhite));
-                offerTxt.setTextColor(getResources().getColor(R.color.text_dark_blue_color));
-                trendingLayout.setBackgroundColor(getResources().getColor(R.color.text_dark_blue_color));
+                offerTxt.setTextColor(getResources().getColor(R.color.offers_list_bg));
+                trendingLayout.setBackgroundColor(getResources().getColor(R.color.offers_list_bg));
                 trendingTxt.setTextColor(getResources().getColor(R.color.colorWhite));
                 fcItemCountLayout.setVisibility(View.VISIBLE);
                 fcItemCountTxt.setText("0");
@@ -202,10 +240,10 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
                 } else {
                     Utils.showSnackbar(MyOffersActivity.this, constraintLayout, getApplicationContext().getResources().getString(R.string.label_internet_error_text));
                 }
-                offerLayout.setBackgroundColor(getResources().getColor(R.color.text_dark_blue_color));
+                offerLayout.setBackgroundColor(getResources().getColor(R.color.offers_list_bg));
                 offerTxt.setTextColor(getResources().getColor(R.color.colorWhite));
                 trendingLayout.setBackgroundColor(getResources().getColor(R.color.colorWhite));
-                trendingTxt.setTextColor(getResources().getColor(R.color.text_dark_blue_color));
+                trendingTxt.setTextColor(getResources().getColor(R.color.offers_list_bg));
                 fcItemCountLayout.setVisibility(View.GONE);
                 fcItemCountTxt.setText("0");
                 pharmaItemCountLayout.setVisibility(View.VISIBLE);
@@ -213,47 +251,6 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
             }
         }
 
-        offerLayout.setOnClickListener(v -> {
-            product_list_array.clear();
-            product_list_array1.clear();
-            trendingNowRecyclerView.setVisibility(View.GONE);
-            promotionsRecyclerView.setVisibility(View.VISIBLE);
-            myOffersText = "SpecialOffers";
-            if (NetworkUtils.isNetworkConnected(MyOffersActivity.this)) {
-                myOffersController.getProductList("SpecialOffers", this, this, Promotions);
-            } else {
-                Utils.showSnackbar(MyOffersActivity.this, constraintLayout, getApplicationContext().getResources().getString(R.string.label_internet_error_text));
-            }
-            offerLayout.setBackgroundColor(getResources().getColor(R.color.colorWhite));
-            offerTxt.setTextColor(getResources().getColor(R.color.text_dark_blue_color));
-            trendingLayout.setBackgroundColor(getResources().getColor(R.color.text_dark_blue_color));
-            trendingTxt.setTextColor(getResources().getColor(R.color.colorWhite));
-            fcItemCountLayout.setVisibility(View.VISIBLE);
-            fcItemCountTxt.setText("0");
-            pharmaItemCountLayout.setVisibility(View.GONE);
-            pharmaItemCountTxt.setText("0");
-        });
-
-        trendingLayout.setOnClickListener(v -> {
-            product_list_array.clear();
-            product_list_array1.clear();
-            promotionsRecyclerView.setVisibility(View.GONE);
-            trendingNowRecyclerView.setVisibility(View.VISIBLE);
-            myOffersText = "TrendingNow";
-            if (NetworkUtils.isNetworkConnected(MyOffersActivity.this)) {
-                myOffersController.getProductList("TrendingNow", this, this, TrendingNow);
-            } else {
-                Utils.showSnackbar(MyOffersActivity.this, constraintLayout, getApplicationContext().getResources().getString(R.string.label_internet_error_text));
-            }
-            offerLayout.setBackgroundColor(getResources().getColor(R.color.text_dark_blue_color));
-            offerTxt.setTextColor(getResources().getColor(R.color.colorWhite));
-            trendingLayout.setBackgroundColor(getResources().getColor(R.color.colorWhite));
-            trendingTxt.setTextColor(getResources().getColor(R.color.text_dark_blue_color));
-            fcItemCountLayout.setVisibility(View.GONE);
-            fcItemCountTxt.setText("0");
-            pharmaItemCountLayout.setVisibility(View.VISIBLE);
-            pharmaItemCountTxt.setText("0");
-        });
 
         ImageView customerCareImg = findViewById(R.id.customer_care_icon);
         LinearLayout customerHelpLayout = findViewById(R.id.customer_help_layout);
@@ -278,6 +275,32 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
 
         SessionManager.INSTANCE.setCurrentPage(ApplicationConstant.ACTIVITY_ADDMORE);
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiverAddmore, new IntentFilter("MedicineReciverAddMore"));
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
+                new IntentFilter("cardReceiver"));
+        Constants.getInstance().setConnectivityListener(this);
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiverNew, new IntentFilter("OrderhistoryCardReciver"));
+        Constants.getInstance().setConnectivityListener(this);
+
+        activityMyOffersBinding.crossSellingOfferLay.setBackgroundColor(getResources().getColor(R.color.offers_list_bg));
+        activityMyOffersBinding.crossSellingOfferName.setTextColor(getResources().getColor(R.color.white));
+        activityMyOffersBinding.upSellingTrendingLayout.setBackgroundColor(getResources().getColor(R.color.white));
+        activityMyOffersBinding.upSellingTrendingName.setTextColor(getResources().getColor(R.color.offers_list_bg));
+        if (crosssellingList != null && crosssellingList.size() > 0) {
+            activityMyOffersBinding.crossSellingCountLayout.setVisibility(View.VISIBLE);
+            activityMyOffersBinding.crossSellingCountTxt.setText(String.valueOf(crosssellingList.size()));
+        }
+        if (upsellingList != null && upsellingList.size() > 0) {
+            activityMyOffersBinding.upSellingItemCountLayout.setVisibility(View.VISIBLE);
+            activityMyOffersBinding.upSellingItemCountTxt.setText(String.valueOf(upsellingList.size()));
+        } else {
+            activityMyOffersBinding.upSellingItemCountLayout.setVisibility(View.GONE);
+            activityMyOffersBinding.upSellingItemCountTxt.setText("0");
+        }
+        activityMyOffersBinding.nodataFound.setVisibility(View.GONE);
+
+
+        listeners();
     }
 
     @Override
@@ -409,6 +432,164 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
     }
 
     @Override
+    public void onSuccessSearchItemApi(ItemSearchResponse itemSearchResponse) {
+
+    }
+
+    public void listeners() {
+        activityMyOffersBinding.crossSellingOfferLay.setOnClickListener(v -> {
+            product_list_array.clear();
+            product_list_array1.clear();
+            activityMyOffersBinding.upSellingTrendingrecycleerviewNew.setVisibility(View.GONE);
+            activityMyOffersBinding.crossSellingRecycleNew.setVisibility(View.VISIBLE);
+            myOffersText = "SpecialOffers";
+
+            MyOfersAdapterNew crossCellAdapter = new MyOfersAdapterNew(MyOffersActivity.this, this, crosssellingList, this);
+            activityMyOffersBinding.crossSellingRecycleNew.setLayoutManager(new GridLayoutManager(this, 6));
+            activityMyOffersBinding.crossSellingRecycleNew.setAdapter(crossCellAdapter);
+
+//            if (NetworkUtils.isNetworkConnected(MyOffersActivity.this)) {
+////                myOffersController.getProductList("SpecialOffers", this, this, Promotions);
+//                myOffersController.upcellCrosscellList("7353910637", getApplicationContext());
+//            } else {
+//                Utils.showSnackbar(MyOffersActivity.this, constraintLayout, getApplicationContext().getResources().getString(R.string.label_internet_error_text));
+//            }
+            activityMyOffersBinding.crossSellingOfferLay.setBackgroundColor(getResources().getColor(R.color.offers_list_bg));
+            activityMyOffersBinding.crossSellingOfferName.setTextColor(getResources().getColor(R.color.colorWhite));
+            activityMyOffersBinding.upSellingTrendingLayout.setBackgroundColor(getResources().getColor(R.color.white));
+            activityMyOffersBinding.upSellingTrendingName.setTextColor(getResources().getColor(R.color.offers_list_bg));
+            if (crosssellingList != null && crosssellingList.size() > 0) {
+
+                activityMyOffersBinding.crossSellingCountLayout.setVisibility(View.VISIBLE);
+                activityMyOffersBinding.crossSellingCountTxt.setText(String.valueOf(crosssellingList.size()));
+            }
+            if (upsellingList != null && upsellingList.size() > 0) {
+                activityMyOffersBinding.upSellingItemCountLayout.setVisibility(View.VISIBLE);
+                activityMyOffersBinding.upSellingItemCountTxt.setText(String.valueOf(upsellingList.size()));
+            } else {
+                activityMyOffersBinding.upSellingItemCountLayout.setVisibility(View.GONE);
+                activityMyOffersBinding.upSellingItemCountTxt.setText("0");
+            }
+            activityMyOffersBinding.nodataFound.setVisibility(View.GONE);
+            if (crosssellingList.size() < 1) {
+                activityMyOffersBinding.nodataFound.setVisibility(View.VISIBLE);
+            }
+        });
+
+        activityMyOffersBinding.upSellingTrendingLayout.setOnClickListener(v -> {
+            product_list_array.clear();
+            product_list_array1.clear();
+            activityMyOffersBinding.crossSellingRecycleNew.setVisibility(View.GONE);
+            activityMyOffersBinding.upSellingTrendingrecycleerviewNew.setVisibility(View.VISIBLE);
+            myOffersText = "TrendingNow";
+
+            MyoffersAdapterTrending trending = new MyoffersAdapterTrending(MyOffersActivity.this, this, upsellingList, this);
+            activityMyOffersBinding.upSellingTrendingrecycleerviewNew.setLayoutManager(new GridLayoutManager(this, 6));
+            activityMyOffersBinding.upSellingTrendingrecycleerviewNew.setAdapter(trending);
+
+//            if (NetworkUtils.isNetworkConnected(MyOffersActivity.this)) {
+////                myOffersController.getProductList("TrendingNow", this, this, TrendingNow);
+//                myOffersController.upcellCrosscellList("7353910637", getApplicationContext());
+//
+//            } else {
+//                Utils.showSnackbar(MyOffersActivity.this, constraintLayout, getApplicationContext().getResources().getString(R.string.label_internet_error_text));
+//            }
+            activityMyOffersBinding.crossSellingOfferLay.setBackgroundColor(getResources().getColor(R.color.white));
+            activityMyOffersBinding.crossSellingOfferName.setTextColor(getResources().getColor(R.color.offers_list_bg));
+            activityMyOffersBinding.upSellingTrendingLayout.setBackgroundColor(getResources().getColor(R.color.offers_list_bg));
+            activityMyOffersBinding.upSellingTrendingName.setTextColor(getResources().getColor(R.color.colorWhite));
+            if (crosssellingList != null && crosssellingList.size() > 0) {
+                activityMyOffersBinding.crossSellingCountLayout.setVisibility(View.VISIBLE);
+                activityMyOffersBinding.crossSellingCountTxt.setText(String.valueOf(crosssellingList.size()));
+            } else {
+                activityMyOffersBinding.crossSellingCountLayout.setVisibility(View.GONE);
+                activityMyOffersBinding.crossSellingCountTxt.setText("0");
+            }
+            if (upsellingList != null && upsellingList.size() > 0) {
+                activityMyOffersBinding.upSellingItemCountLayout.setVisibility(View.VISIBLE);
+                activityMyOffersBinding.upSellingItemCountTxt.setText(String.valueOf(upsellingList.size()));
+            }
+            activityMyOffersBinding.nodataFound.setVisibility(View.GONE);
+            if (upsellingList.size() < 1) {
+                activityMyOffersBinding.nodataFound.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    List<UpCellCrossCellResponse.Crossselling> crosssellingList = new ArrayList<>();
+
+    List<UpCellCrossCellResponse.Upselling> upsellingList = new ArrayList<>();
+
+    @Override
+    public void onSuccessSearchUpcellCroscellApi(UpCellCrossCellResponse productList) {
+        if (productList != null && productList.getCrossselling() != null && productList.getCrossselling().size() > 0) {
+            crosssellingList = productList.getCrossselling();
+
+            activityMyOffersBinding.upSellingTrendingrecycleerviewNew.setVisibility(View.GONE);
+            activityMyOffersBinding.crossSellingRecycleNew.setVisibility(View.VISIBLE);
+            myOffersText = "SpecialOffers";
+
+            MyOfersAdapterNew crossCellAdapter = new MyOfersAdapterNew(MyOffersActivity.this, this, crosssellingList, this);
+            activityMyOffersBinding.crossSellingRecycleNew.setLayoutManager(new GridLayoutManager(this, 6));
+            activityMyOffersBinding.crossSellingRecycleNew.setAdapter(crossCellAdapter);
+
+            activityMyOffersBinding.crossSellingOfferLay.setBackgroundColor(getResources().getColor(R.color.offers_list_bg));
+            activityMyOffersBinding.crossSellingOfferName.setTextColor(getResources().getColor(R.color.colorWhite));
+            activityMyOffersBinding.upSellingTrendingLayout.setBackgroundColor(getResources().getColor(R.color.colorWhite));
+            activityMyOffersBinding.upSellingTrendingName.setTextColor(getResources().getColor(R.color.offers_list_bg));
+            activityMyOffersBinding.crossSellingCountLayout.setVisibility(View.VISIBLE);
+            activityMyOffersBinding.crossSellingCountTxt.setText(String.valueOf(crosssellingList.size()));
+            activityMyOffersBinding.nodataFound.setVisibility(View.GONE);
+        } else {
+            activityMyOffersBinding.crossSellingRecycleNew.setVisibility(View.GONE);
+            activityMyOffersBinding.nodataFound.setVisibility(View.VISIBLE);
+        }
+        if (productList != null && productList.getUpselling() != null && productList.getUpselling().size() > 0) {
+            upsellingList = productList.getUpselling();
+            activityMyOffersBinding.nodataFound.setVisibility(View.GONE);
+        } else {
+            activityMyOffersBinding.crossSellingRecycleNew.setVisibility(View.GONE);
+            activityMyOffersBinding.nodataFound.setVisibility(View.VISIBLE);
+        }
+
+        if (upsellingList != null && upsellingList.size() > 0) {
+            activityMyOffersBinding.upSellingItemCountLayout.setVisibility(View.VISIBLE);
+            activityMyOffersBinding.upSellingItemCountTxt.setText(String.valueOf(upsellingList.size()));
+        } else {
+            activityMyOffersBinding.upSellingItemCountLayout.setVisibility(View.GONE);
+            activityMyOffersBinding.upSellingItemCountTxt.setText("0");
+        }
+
+        Utils.dismissDialog();
+    }
+
+    private int screeSize() {
+        int screenSize = getResources().getConfiguration().screenLayout &
+                Configuration.SCREENLAYOUT_SIZE_MASK;
+        String toastMsg;
+
+        if (screenSize == 4) {
+            return 4;
+        } else if (screenSize == Configuration.SCREENLAYOUT_SIZE_LARGE) {
+            toastMsg = "Large screen";
+            return 4;
+        } else if (screenSize == Configuration.SCREENLAYOUT_SIZE_NORMAL) {
+            toastMsg = "Normal screen";
+            return 3;
+        } else if (screenSize == Configuration.SCREENLAYOUT_SIZE_SMALL) {
+            toastMsg = "Small screen";
+            return 3;
+        } else {
+            return 4;
+        }
+    }
+
+    @Override
+    public void onSearchFailureUpcellCroscell(String message) {
+
+    }
+
+    @Override
     public void onSearchFailure(String error) {
         Utils.showCustomAlertDialog(MyOffersActivity.this, error, false, getApplicationContext().getResources().getString(R.string.label_ok), "");
     }
@@ -419,125 +600,126 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
 
     @Override
     public void onSuccessProductList(HashMap<String, GetProductListResponse> productList) {
-        product_list_array.clear();
-        product_list_array1.clear();
-        if (null != myOffersController.getSpecialOffersCategoryList() && myOffersController.getSpecialOffersCategoryList().size() > 0) {
-            for (String s : myOffersController.getSpecialOffersCategoryList()) {
-                if (myOffersText.equalsIgnoreCase("SpecialOffers")) {
-                    if (productList.get(s) != null) {
-                        totalPage = (productList.get(s).getProductCount() / 20);
-                        if (productList.get(s).getProductCount() % 3 != 0) {
-                            totalPage++;
-                        }
-                        ArrayList<Product> products = (ArrayList<Product>) productList.get(s).getProducts();
-                        for (Product d : products) {
-                            Product load_obj = new Product();
-                            load_obj.setName(d.getName());
-                            load_obj.setSku(d.getSku());
-                            load_obj.setPrice(d.getPrice());
-                            load_obj.setImage(d.getImage());
-                            load_obj.setSpecialPrice(d.getSpecialPrice());
-                            load_obj.setProduct_pricetype("offer");
-                            load_obj.setIsInStock(d.getIsInStock());
-                            load_obj.setMou(d.getMou());
-                            load_obj.setId(d.getId());
-                            if (d.getIsInStock() == 1) {
-                                stockin_array.add(load_obj);
-                            } else {
-                                outofstock_array.add(load_obj);
-                            }
-                        }
-                        product_list_array.addAll(stockin_array);
-                        if (null != product_list_array && product_list_array.size() > 0) {
-                            total_itemcount_textview.setVisibility(View.GONE);
-                            total_itemcount_textview.setText(product_list_array.size() + " " + getApplicationContext().getResources().getString(R.string.label_items));
-                            fcItemCountTxt.setText(String.valueOf(product_list_array.size()));
-                        } else {
-                            total_itemcount_textview.setVisibility(View.GONE);
-                            total_itemcount_textview.setText("0" + " " + getApplicationContext().getResources().getString(R.string.label_items));
-                            fcItemCountTxt.setText("0");
-                        }
-                        if (totalPage > currentPage) {
-                            product_list_array.remove(0);
-                        }
-                        promotionList = new MyOffersAdapter(this, product_list_array, product_list_array, this);
-                        promotionList.setViewMode(ViewMode.GRID);
-                        trendingNowRecyclerView.setVisibility(View.GONE);
-                        promotionsRecyclerView.setAdapter(promotionList);
-                        promotionsRecyclerView.setVisibility(View.VISIBLE);
-                        promotionList.notifyDataSetChanged();
-                        promotionList.setLoadMoreListener(() -> promotionsRecyclerView.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                currentPage++;
-                                if (totalPage >= currentPage) {
-                                    loadMoreOffers();
-                                }
-                            }
-                        }));
-                    }
-                } else {
-                    if (productList.get(s) != null) {
-                        if (productList.get(s).getProductCount() > 0) {
-                            totalPage1 = (productList.get(s).getProductCount() / 20);
-                            if (productList.get(s).getProductCount() % 3 != 0) {
-                                totalPage1++;
-                            }
-                            ArrayList<Product> products = (ArrayList<Product>) productList.get(s).getProducts();
-                            for (Product d : products) {
-                                Product load_obj = new Product();
-                                load_obj.setName(d.getName());
-                                load_obj.setSku(d.getSku());
-                                load_obj.setPrice(d.getPrice());
-                                load_obj.setImage(d.getImage());
-                                load_obj.setSpecialPrice(d.getSpecialPrice());
-                                load_obj.setProduct_pricetype("trendingnow");
-                                load_obj.setIsInStock(d.getIsInStock());
-                                load_obj.setMou(d.getMou());
-                                load_obj.setId(d.getId());
-                                if (d.getIsInStock() == 1) {
-                                    stockin_array1.add(load_obj);
-                                } else {
-                                    outofstock_array1.add(load_obj);
-                                }
-                            }
-                            product_list_array1.addAll(stockin_array1);
-                            if (null != product_list_array1 && product_list_array1.size() > 0) {
-                                total_itemcount_textview.setVisibility(View.GONE);
-                                total_itemcount_textview.setText(product_list_array1.size() + " " + getApplicationContext().getResources().getString(R.string.label_items));
-                                pharmaItemCountTxt.setText(String.valueOf(product_list_array1.size()));
-                            } else {
-                                total_itemcount_textview.setVisibility(View.GONE);
-                                total_itemcount_textview.setText("0" + " " + getApplicationContext().getResources().getString(R.string.label_items));
-                                pharmaItemCountTxt.setText("0");
-                            }
-                            if (totalPage1 > currentPage1) {
-                                product_list_array1.remove(0);
-                            }
-                            trendingNowList = new MyOffersAdapter(this, product_list_array1, product_list_array1, this);
-                            trendingNowList.setViewMode(ViewMode.GRID);
-                            promotionsRecyclerView.setVisibility(View.GONE);
-                            trendingNowRecyclerView.setAdapter(trendingNowList);
-                            trendingNowRecyclerView.setVisibility(View.VISIBLE);
-                            trendingNowList.notifyDataSetChanged();
-                            trendingNowList.setLoadMoreListener(() -> trendingNowRecyclerView.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    currentPage1++;
-                                    if (totalPage1 >= currentPage1) {
-                                        loadMore_tendingnow();
-                                    }
-                                }
-                            }));
-                        }
-                    }
-                }
-            }
-        }
+//        product_list_array.clear();
+//        product_list_array1.clear();
+//        if (null != myOffersController.getSpecialOffersCategoryList() && myOffersController.getSpecialOffersCategoryList().size() > 0) {
+//            for (String s : myOffersController.getSpecialOffersCategoryList()) {
+//                if (myOffersText.equalsIgnoreCase("SpecialOffers")) {
+//                    if (productList.get(s) != null) {
+//                        totalPage = (productList.get(s).getProductCount() / 20);
+//                        if (productList.get(s).getProductCount() % 3 != 0) {
+//                            totalPage++;
+//                        }
+//                        ArrayList<Product> products = (ArrayList<Product>) productList.get(s).getProducts();
+//                        for (Product d : products) {
+//                            Product load_obj = new Product();
+//                            load_obj.setName(d.getName());
+//                            load_obj.setSku(d.getSku());
+//                            load_obj.setPrice(d.getPrice());
+//                            load_obj.setImage(d.getImage());
+//                            load_obj.setSpecialPrice(d.getSpecialPrice());
+//                            load_obj.setProduct_pricetype("offer");
+//                            load_obj.setIsInStock(d.getIsInStock());
+//                            load_obj.setMou(d.getMou());
+//                            load_obj.setId(d.getId());
+//                            if (d.getIsInStock() == 1) {
+//                                stockin_array.add(load_obj);
+//                            } else {
+//                                outofstock_array.add(load_obj);
+//                            }
+//                        }
+//                        product_list_array.addAll(stockin_array);
+//                        if (null != product_list_array && product_list_array.size() > 0) {
+//                            total_itemcount_textview.setVisibility(View.GONE);
+//                            total_itemcount_textview.setText(product_list_array.size() + " " + getApplicationContext().getResources().getString(R.string.label_items));
+//                            fcItemCountTxt.setText(String.valueOf(product_list_array.size()));
+//                        } else {
+//                            total_itemcount_textview.setVisibility(View.GONE);
+//                            total_itemcount_textview.setText("0" + " " + getApplicationContext().getResources().getString(R.string.label_items));
+//                            fcItemCountTxt.setText("0");
+//                        }
+//                        if (totalPage > currentPage) {
+//                            product_list_array.remove(0);
+//                        }
+//                        promotionList = new MyOffersAdapter(this, product_list_array, product_list_array, this);
+//                        promotionList.setViewMode(ViewMode.GRID);
+//                        trendingNowRecyclerView.setVisibility(View.GONE);
+////                        promotionsRecyclerView.setAdapter(promotionList);
+//                        promotionsRecyclerView.setVisibility(View.VISIBLE);
+//                        promotionList.notifyDataSetChanged();
+//                        promotionList.setLoadMoreListener(() -> promotionsRecyclerView.post(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                currentPage++;
+//                                if (totalPage >= currentPage) {
+//                                    loadMoreOffers();
+//                                }
+//                            }
+//                        }));
+//                    }
+//                } else {
+//                    if (productList.get(s) != null) {
+//                        if (productList.get(s).getProductCount() > 0) {
+//                            totalPage1 = (productList.get(s).getProductCount() / 20);
+//                            if (productList.get(s).getProductCount() % 3 != 0) {
+//                                totalPage1++;
+//                            }
+//                            ArrayList<Product> products = (ArrayList<Product>) productList.get(s).getProducts();
+//                            for (Product d : products) {
+//                                Product load_obj = new Product();
+//                                load_obj.setName(d.getName());
+//                                load_obj.setSku(d.getSku());
+//                                load_obj.setPrice(d.getPrice());
+//                                load_obj.setImage(d.getImage());
+//                                load_obj.setSpecialPrice(d.getSpecialPrice());
+//                                load_obj.setProduct_pricetype("trendingnow");
+//                                load_obj.setIsInStock(d.getIsInStock());
+//                                load_obj.setMou(d.getMou());
+//                                load_obj.setId(d.getId());
+//                                if (d.getIsInStock() == 1) {
+//                                    stockin_array1.add(load_obj);
+//                                } else {
+//                                    outofstock_array1.add(load_obj);
+//                                }
+//                            }
+//                            product_list_array1.addAll(stockin_array1);
+//                            if (null != product_list_array1 && product_list_array1.size() > 0) {
+//                                total_itemcount_textview.setVisibility(View.GONE);
+//                                total_itemcount_textview.setText(product_list_array1.size() + " " + getApplicationContext().getResources().getString(R.string.label_items));
+//                                pharmaItemCountTxt.setText(String.valueOf(product_list_array1.size()));
+//                            } else {
+//                                total_itemcount_textview.setVisibility(View.GONE);
+//                                total_itemcount_textview.setText("0" + " " + getApplicationContext().getResources().getString(R.string.label_items));
+//                                pharmaItemCountTxt.setText("0");
+//                            }
+//                            if (totalPage1 > currentPage1) {
+//                                product_list_array1.remove(0);
+//                            }
+//                            trendingNowList = new MyOffersAdapter(this, product_list_array1, product_list_array1, this);
+//                            trendingNowList.setViewMode(ViewMode.GRID);
+//                            promotionsRecyclerView.setVisibility(View.GONE);
+////                            trendingNowRecyclerView.setAdapter(trendingNowList);
+//                            trendingNowRecyclerView.setVisibility(View.VISIBLE);
+//                            trendingNowList.notifyDataSetChanged();
+//                            trendingNowList.setLoadMoreListener(() -> trendingNowRecyclerView.post(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    currentPage1++;
+//                                    if (totalPage1 >= currentPage1) {
+//                                        loadMore_tendingnow();
+//                                    }
+//                                }
+//                            }));
+//                        }
+//                    }
+//                }
+//            }
+//        }
     }
 
     @Override
-    public void onSuccessProductListMainCategory(HashMap<String, GetProductListResponse> productList) {
+    public void onSuccessProductListMainCategory
+            (HashMap<String, GetProductListResponse> productList) {
     }
 
     @Override
@@ -757,11 +939,25 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
     @Override
     public void cartCount(int count) {
         if (count != 0) {
+
+            List<OCRToDigitalMedicineResponse> countUniques = new ArrayList<>();
+            countUniques.addAll(SessionManager.INSTANCE.getDataList());
+
+            for (int i = 0; i < countUniques.size(); i++) {
+                for (int j = 0; j < countUniques.size(); j++) {
+                    if (i != j && countUniques.get(i).getArtName().equals(countUniques.get(j).getArtName())) {
+                        countUniques.remove(j);
+                        j--;
+                    }
+                }
+            }
+
             myCartCount.setVisibility(View.VISIBLE);
-            myCartCount.setText(String.valueOf(count));
-            itemsCount.setVisibility(View.VISIBLE);
-            plusIcon.setVisibility(View.VISIBLE);
-            checkOutImage.setVisibility(View.VISIBLE);
+//            myCartCount.setText(String.valueOf(count));
+            myCartCount.setText(String.valueOf(countUniques.size()));
+//            itemsCount.setVisibility(View.VISIBLE);
+//            plusIcon.setVisibility(View.VISIBLE);
+//            checkOutImage.setVisibility(View.VISIBLE);
             checkOutImage.setImageResource(R.drawable.checkout_cart);
             itemsCount.setText(count + " " + getApplicationContext().getResources().getString(R.string.label_items) + " " + getApplicationContext().getResources().getString(R.string.label_added));
         } else {
@@ -775,8 +971,16 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
     }
 
     @Override
+    public void showSnackBAr() {
+
+    }
+
+    @Override
     public void onPause() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiverAddmore);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiverNew);
+
         super.onPause();
         Constants.getInstance().setConnectivityListener(null);
     }
@@ -789,6 +993,95 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
                 ScannedData fcmMedicine = new Gson().fromJson(intent.getStringExtra("MedininesNames"), ScannedData.class);
                 medConvertDialog(fcmMedicine);
             }
+        }
+    };
+
+
+    private BroadcastReceiver mMessageReceiverNew = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String message = intent.getStringExtra("message");
+            if (message.equalsIgnoreCase("OrderNow")) {
+                if (null != SessionManager.INSTANCE.getDataList()) {
+                    if (SessionManager.INSTANCE.getDataList().size() > 0) {
+                        cartCount(SessionManager.INSTANCE.getDataList().size());
+                        dataList = SessionManager.INSTANCE.getDataList();
+                    }
+                }
+                Utils.showSnackbar(MyOffersActivity.this, constraintLayout, getApplicationContext().getResources().getString(R.string.label_item_added_cart));
+                cartCount(dataList.size());
+            }
+        }
+    };
+
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String message = intent.getStringExtra("message");
+            if (message.equalsIgnoreCase("Addtocart")) {
+                if (null != SessionManager.INSTANCE.getDataList()) {
+                    if (SessionManager.INSTANCE.getDataList().size() > 0) {
+                        cartCount(SessionManager.INSTANCE.getDataList().size());
+                        dataList = SessionManager.INSTANCE.getDataList();
+                    }
+                }
+                boolean product_avilable = false;
+                if (null != dataList) {
+                    int count = 0;
+                    for (OCRToDigitalMedicineResponse data : dataList) {
+                        if (data.getArtCode() != null) {
+                            if (data.getArtCode().equalsIgnoreCase(intent.getStringExtra("product_sku"))) {
+                                product_avilable = true;
+                                int qty = data.getQty();
+                                qty = qty + 1;
+                                dataList.remove(count);
+                                OCRToDigitalMedicineResponse object1 = new OCRToDigitalMedicineResponse();
+                                object1.setArtName(intent.getStringExtra("product_name"));
+                                object1.setArtCode(intent.getStringExtra("product_sku"));
+                                object1.setMedicineType(intent.getStringExtra("medicineType"));
+                                object1.setQty(Integer.parseInt(intent.getStringExtra("product_quantyty")));
+                                if (null != intent.getStringExtra("product_price")) {
+                                    object1.setArtprice(intent.getStringExtra("product_price"));
+                                } else {
+                                    object1.setArtprice(String.valueOf(intent.getStringExtra("product_price")));
+                                }
+                                object1.setMou(String.valueOf(intent.getStringExtra("product_mou")));
+//                                object1.setQty(qty);
+                                object1.setContainer("Strip");
+                                dataList.add(object1);
+                                SessionManager.INSTANCE.setDataList(dataList);
+                                break;
+                            } else {
+                                product_avilable = false;
+                            }
+                        }
+                        count = count + 1;
+                    }
+                    if (!product_avilable) {
+                        OCRToDigitalMedicineResponse object1 = new OCRToDigitalMedicineResponse();
+                        object1.setArtName(intent.getStringExtra("product_name"));
+                        object1.setArtCode(intent.getStringExtra("product_sku"));
+                        object1.setMedicineType(intent.getStringExtra("medicineType"));
+                        object1.setQty(Integer.parseInt(intent.getStringExtra("product_quantyty")));
+                        if (null != intent.getStringExtra("product_price")) {
+                            object1.setArtprice(intent.getStringExtra("product_price"));
+                        } else {
+                            object1.setArtprice(String.valueOf(intent.getStringExtra("product_price")));
+                        }
+                        object1.setMou(String.valueOf(intent.getStringExtra("product_mou")));
+//                        object1.setQty(1);
+                        object1.setContainer("Strip");
+                        dataList.add(object1);
+                        SessionManager.INSTANCE.setDataList(dataList);
+                    }
+                }
+                Utils.showSnackbar(MyOffersActivity.this, constraintLayout, getApplicationContext().getResources().getString(R.string.label_item_added_cart));
+                cartCount(dataList.size());
+            }
+//            if (null != SessionManager.INSTANCE.getDataList())
+//                checkOutNewBtn.setVisibility(View.VISIBLE);
+//            else
+//                checkOutNewBtn.setVisibility(View.GONE);
         }
     };
 
@@ -841,7 +1134,8 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
         declineButton.setOnClickListener(v -> dialog.dismiss());
     }
 
-    public List<OCRToDigitalMedicineResponse> removeDuplicate(List<OCRToDigitalMedicineResponse> dataList) {
+    public List<OCRToDigitalMedicineResponse> removeDuplicate
+            (List<OCRToDigitalMedicineResponse> dataList) {
         Set<OCRToDigitalMedicineResponse> s = new TreeSet<OCRToDigitalMedicineResponse>(new Comparator<OCRToDigitalMedicineResponse>() {
             @Override
             public int compare(OCRToDigitalMedicineResponse o1, OCRToDigitalMedicineResponse o2) {
@@ -854,4 +1148,98 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
         s.addAll(dataList);
         return new ArrayList<>(s);
     }
+
+    @Override
+    public void checkoutData() {
+        finish();
+        Intent intent1 = new Intent(MyOffersActivity.this, MyCartActivity.class);
+        intent1.putExtra("activityname", "AddMoreActivity");
+        startActivity(intent1);
+        overridePendingTransition(R.animator.trans_right_in, R.animator.trans_right_out);
+    }
+
+    class RetrivePDFfromUrl extends AsyncTask<String, Void, InputStream> {
+        @Override
+        protected InputStream doInBackground(String... strings) {
+            // we are using inputstream
+            // for getting out PDF.
+            InputStream inputStream = null;
+            try {
+                URL url = new URL(strings[0]);
+                // below is the step where we are
+                // creating our connection.
+                HttpURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
+                if (urlConnection.getResponseCode() == 200) {
+                    // response is success.
+                    // we are getting input stream from url
+                    // and storing it in our variable.
+                    inputStream = new BufferedInputStream(urlConnection.getInputStream());
+                }
+
+            } catch (IOException e) {
+                // this is the method
+                // to handle errors.
+                e.printStackTrace();
+                return null;
+            }
+            return inputStream;
+        }
+
+        @Override
+        protected void onPostExecute(InputStream inputStream) {
+            // after the execution of our async
+            // task we are loading our pdf in our pdf view.
+//            mPdfView.fromStream(inputStream).load();
+        }
+
+    }
+
+//    private void initWebView() {
+//        mPdfView.setWebChromeClient(new MyWebChromeClient(getBaseContext()));
+//        mPdfView.setWebViewClient(new WebViewClient() {
+//            @Override
+//            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+//                super.onPageStarted(view, url, favicon);
+//                Utils.showDialog(MyOffersActivity.this, "Please Wait");
+//            }
+//
+//            @Override
+//            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+////                if (url.endsWith(".pdf")) {
+////                    String pdfUrl = googleDocs + url;
+////                    mPdfView.loadUrl(pdfUrl);
+////                } else {
+////                mPdfView.loadUrl(url);
+////                }
+////                return true;
+//            }
+//
+//            @Override
+//            public void onPageFinished(WebView view, String url) {
+//                super.onPageFinished(view, url);
+//                Utils.dismissDialog();
+//            }
+//
+//            @Override
+//            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+//                super.onReceivedError(view, request, error);
+//                Utils.dismissDialog();
+//            }
+//        });
+////        mPdfView.clearCache(true);
+////        mPdfView.clearHistory();
+////        mPdfView.getSettings().setJavaScriptEnabled(true);
+////        mPdfView.getSettings().setLoadWithOverviewMode(true);
+////        mPdfView.getSettings().setUseWideViewPort(true);
+//
+//    }
+
+//    private class MyWebChromeClient extends WebChromeClient {
+//        Context context;
+//
+//        public MyWebChromeClient(Context context) {
+//            super();
+//            this.context = context;
+//        }
+//    }
 }
