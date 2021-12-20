@@ -46,6 +46,16 @@ public class OCRToDigitalMedicineResponse implements Serializable {
 
     private float labelAveragePrice;
 
+    private float labelMaxPrice;
+
+    public float getLabelMaxPrice() {
+        return labelMaxPrice;
+    }
+
+    public void setLabelMaxPrice(float labelMaxPrice) {
+        this.labelMaxPrice = labelMaxPrice;
+    }
+
     public float getLabelAveragePrice() {
         return labelAveragePrice;
     }

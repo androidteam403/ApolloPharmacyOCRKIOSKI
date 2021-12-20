@@ -1326,15 +1326,26 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                 }
             }
         }
-
+        float max=0;
         for (int i = 0; i < labelDataList.size(); i++) {
             int labelAvgQty = 0;
+            boolean maxOnce = false;
             float labelAveragePrice = 0;
             float labelPrice = 0;
             String labelName = "";
             int repeatCount = 0;
             for (int j = 0; j < expandListDummy.size(); j++) {
                 if (labelDataList.get(i).getArtName().equalsIgnoreCase(expandListDummy.get(j).getArtName())) {
+                    if (!maxOnce) {
+                        max = Float.parseFloat(expandListDummy.get(j).getArtprice());
+                        maxOnce = true;
+                    }
+
+                    // loop to find maximum from ArrayList
+                    if (Float.parseFloat(expandListDummy.get(j).getArtprice()) > max) {
+                        max = Float.parseFloat(expandListDummy.get(j).getArtprice());
+                    }
+
                     labelPrice = labelPrice + Float.parseFloat(expandListDummy.get(j).getArtprice());
                     labelAvgQty = labelAvgQty + expandListDummy.get(j).getQty();
                     repeatCount = repeatCount + 1;
@@ -1343,6 +1354,7 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
             }
 
             OCRToDigitalMedicineResponse labelResponse = new OCRToDigitalMedicineResponse();
+            labelResponse.setLabelMaxPrice(max);
             labelResponse.setLabelPrice(labelPrice);
             labelAveragePrice = labelResponse.getLabelPrice() / (float) repeatCount;
             labelResponse.setLabelAveragePrice(labelAveragePrice);
@@ -1354,6 +1366,7 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
 
         for (int i = 0; i < duplicatelabelDataList.size(); i++) {
             OCRToDigitalMedicineResponse labelResponse = new OCRToDigitalMedicineResponse();
+            labelResponse.setLabelMaxPrice(duplicatelabelDataList.get(i).getLabelMaxPrice());
             labelResponse.setArtName(duplicatelabelDataList.get(i).getLabelName());
             labelResponse.setArtprice(String.valueOf(duplicatelabelDataList.get(i).getLabelAveragePrice()));
             labelResponse.setQty(duplicatelabelDataList.get(i).getLabelAvgQty());
