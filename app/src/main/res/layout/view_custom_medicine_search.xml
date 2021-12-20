@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginLeft="50dp"
-    android:background="@color/orders_search_layout_bg"
-    android:layout_marginRight="50dp">
+    android:layout_marginRight="50dp"
+    android:background="@color/orders_search_layout_bg">
 
-    <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="30dp"
@@ -41,18 +42,19 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:weightSum="5">
+                android:weightSum="3.5">
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.8"
+                    android:layout_weight="1.5"
+                    android:gravity="start|center_vertical"
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/medName"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_10dp"
                         android:gravity="center_vertical|center_horizontal"
                         android:text="Asin kaif"
@@ -61,6 +63,19 @@
                         android:textSize="14dp" />
 
                     <TextView
+                        android:id="@+id/description"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margin_10dp"
+                        android:layout_marginTop="@dimen/five_dp"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:text="Asin kaif"
+                        android:textAlignment="viewStart"
+                        android:textColor="@android:color/black"
+                        android:textSize="14dp" />
+
+                    <TextView
+
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_10dp"
@@ -74,7 +89,8 @@
                 <LinearLayout
                     android:layout_width="09dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_weight="0.5"
+                    android:visibility="invisible"
                     android:gravity="center">
 
                     <TextView
@@ -103,7 +119,8 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.6"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:visibility="gone">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -162,44 +179,32 @@
                     android:gravity="center"
                     android:text="100"
                     android:textAlignment="center"
-
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:visibility="gone" />
 
                 <LinearLayout
+                    android:id="@+id/search_Addtocart"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1.2"
-                    android:gravity="center">
+                    android:layout_gravity="center"
+                    android:layout_weight="1.5"
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
-                    <FrameLayout
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/inc_button" />
+
+                    <TextView
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="center"
-                            android:orientation="horizontal">
-
-
-                            <ImageView
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:layout_gravity="center"
-                                android:src="@drawable/inc_button"
-
-                                />
-
-                            <Button
-                                android:id="@+id/search_Addtocart"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:background="@null"
-                                android:text="Add to cart"
-                                android:textAlignment="viewStart"
-                                android:textColor="@color/screenbackground" />
-                        </LinearLayout>
-                    </FrameLayout>
+                        android:layout_height="match_parent"
+                        android:text="Add to cart"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center_vertical"
+                        android:background="@color/white"
+                        android:textColor="@color/screenbackground" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
