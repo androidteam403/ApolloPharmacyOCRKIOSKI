@@ -250,21 +250,24 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
         }
     }
 
+    private boolean onItemAddAgainClick;
+
     @Override
     public void onDeleteItemClicked(OCRToDigitalMedicineResponse ocrToDigitalMedicineResponse, int position) {
         cartDeleteItemDialog.dismiss();
-        deletedataList.remove(position);
+//        deletedataList.remove(position);
         String s1 = ocrToDigitalMedicineResponse.getArtCode();
         String[] words = s1.split(",");
         String itemId = words[0];
-//        dataList.add(ocrToDigitalMedicineResponse);
-//        SessionManager.INSTANCE.setDataList(dataList);
-        SessionManager.INSTANCE.setDeletedDataList(deletedataList);
-        cartUniqueCount();
-        total_itemcount_textview.setText(String.valueOf(countUniques.size()));
-        cartCount(dataList.size());
-
-        myCartController.searchItemProducts(itemId, 0, ocrToDigitalMedicineResponse.getQty());
+        String batchItemId = words[1];
+        SessionManager.INSTANCE.setBatchId(batchItemId);
+        SessionManager.INSTANCE.getBatchId();
+//        SessionManager.INSTANCE.setDeletedDataList(deletedataList);
+//        cartUniqueCount();
+//        total_itemcount_textview.setText(String.valueOf(countUniques.size()));
+//        cartCount(dataList.size());
+        onItemAddAgainClick = true;
+        myCartController.searchItemProducts(itemId, 0, ocrToDigitalMedicineResponse.getQty(), position);
 
 //        if (dataList.size() > 0) {
 //            float grandTotalVal = 0;
@@ -280,17 +283,17 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
 //            cartListAdapter.notifyDataSetChanged();
 //            checkOutImage.setImageResource(R.drawable.checkout_cart);
 //        }
-        if (SessionManager.INSTANCE.getDeletedDataList().size() > 0) {
-            addAgainLayout.setVisibility(View.VISIBLE);
-            removedItemsCount.setText(String.valueOf(SessionManager.INSTANCE.getDeletedDataList().size()));
-        } else {
-            addAgainLayout.setVisibility(View.GONE);
-        }
-        if (SessionManager.INSTANCE.getCurationStatus()) {
-            curationProcessLayout.setVisibility(View.VISIBLE);
-        } else {
-            curationProcessLayout.setVisibility(View.GONE);
-        }
+//        if (SessionManager.INSTANCE.getDeletedDataList().size() > 0) {
+//            addAgainLayout.setVisibility(View.VISIBLE);
+//            removedItemsCount.setText(String.valueOf(SessionManager.INSTANCE.getDeletedDataList().size()));
+//        } else {
+//            addAgainLayout.setVisibility(View.GONE);
+//        }
+//        if (SessionManager.INSTANCE.getCurationStatus()) {
+//            curationProcessLayout.setVisibility(View.VISIBLE);
+//        } else {
+//            curationProcessLayout.setVisibility(View.GONE);
+//        }
     }
 
     @Override
@@ -1326,7 +1329,7 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                 }
             }
         }
-        float max=0;
+        float max = 0;
         for (int i = 0; i < labelDataList.size(); i++) {
             int labelAvgQty = 0;
             boolean maxOnce = false;
@@ -1742,7 +1745,7 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
             crossselling.add(body.getCrossselling().get(1));
             crossselling.add(body.getCrossselling().get(2));
             for (UpCellCrossCellResponse.Crossselling crossSellingList : crossselling) {
-                myCartController.searchItemProducts(crossSellingList.getItemid(), 1, 0);
+                myCartController.searchItemProducts(crossSellingList.getItemid(), 1, 0, 0);
             }
         } else {
             noDataFound.setVisibility(View.VISIBLE);
@@ -1753,7 +1756,7 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
             upselling.add(body.getUpselling().get(1));
             upselling.add(body.getUpselling().get(2));
             for (UpCellCrossCellResponse.Upselling upSelling : upselling) {
-                myCartController.searchItemProducts(upSelling.getItemid(), 2, 0);
+                myCartController.searchItemProducts(upSelling.getItemid(), 2, 0, 0);
             }
         } else {
             noDataFound.setVisibility(View.VISIBLE);
@@ -1778,7 +1781,7 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
     private float balanceQty;
 
     @Override
-    public void onSuccessBarcodeItemApi(ItemSearchResponse itemSearchResponse, int serviceType, int qty) {
+    public void onSuccessBarcodeItemApi(ItemSearchResponse itemSearchResponse, int serviceType, int qty, int position) {
         if (serviceType == 0) {
             if (itemSearchResponse.getItemList() != null && itemSearchResponse.getItemList().size() > 0) {
                 ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(MyCartActivity.this, itemSearchResponse.getItemList().get(0).getArtCode());
@@ -1828,6 +1831,27 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                     itemBatchSelectionDilaog.globalBatchListHandlings(medicine.getDescription(), medicine.getSku(),
                             balanceQty, dummyDataList, MyCartActivity.this, medicine.getMedicineType());
 
+                    SessionManager.INSTANCE.setBatchId("");
+                    if (onItemAddAgainClick) {
+                        deletedataList.remove(position);
+                        SessionManager.INSTANCE.setDeletedDataList(deletedataList);
+                        cartUniqueCount();
+                        total_itemcount_textview.setText(String.valueOf(countUniques.size()));
+                        cartCount(dataList.size());
+                        onItemAddAgainClick = false;
+
+                        if (SessionManager.INSTANCE.getDeletedDataList().size() > 0) {
+                            addAgainLayout.setVisibility(View.VISIBLE);
+                            removedItemsCount.setText(String.valueOf(SessionManager.INSTANCE.getDeletedDataList().size()));
+                        } else {
+                            addAgainLayout.setVisibility(View.GONE);
+                        }
+                        if (SessionManager.INSTANCE.getCurationStatus()) {
+                            curationProcessLayout.setVisibility(View.VISIBLE);
+                        } else {
+                            curationProcessLayout.setVisibility(View.GONE);
+                        }
+                    }
 
 ////                activityHomeBinding.transColorId.setVisibility(View.GONE);
 //                    Intent intent = new Intent("cardReceiver");
@@ -1868,12 +1892,14 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                 itemBatchSelectionDilaog.setNegativeListener(v -> {
 //                activityHomeBinding.transColorId.setVisibility(View.GONE);
                     isDialogShow = false;
+                    SessionManager.INSTANCE.setBatchId("");
                     itemBatchSelectionDilaog.dismiss();
                 });
                 isDialogShow = true;
                 itemBatchSelectionDilaog.show();
             } else {
                 Utils.showSnackbar(MyCartActivity.this, constraint_Layout, "No Item found");
+                SessionManager.INSTANCE.setBatchId("");
             }
             Utils.dismissDialog();
         } else if (serviceType == 1) {
@@ -2334,7 +2360,7 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                 if (barcode_code != null) {
 //            Toast.makeText(this, barcode_code, Toast.LENGTH_LONG).show();
                     Utils.showDialog(this, "Plaese wait...");
-                    myCartController.searchItemProducts(barcode_code, 0, 0);
+                    myCartController.searchItemProducts(barcode_code, 0, 0, 0);
                 } else {
                     Toast.makeText(this, "Scan Cancelled", Toast.LENGTH_LONG).show();
                 }

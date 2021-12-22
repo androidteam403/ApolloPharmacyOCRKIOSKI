@@ -417,4 +417,13 @@ object SessionManager {
         else
             return lists
     }
+
+    fun setBatchId(batchId: String) {
+        editor.putString(ApplicationConstant.BATCH_ID, batchId)
+        editor.apply();
+    }
+
+    fun getBatchId(): String {
+        return pref.getString(ApplicationConstant.BATCH_ID, String());
+    }
 }

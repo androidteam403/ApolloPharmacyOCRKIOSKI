@@ -706,7 +706,7 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
     private void hideKeyBoard() {
         if (keyboardFrag != null) {
             medic_keyboard.setVisibility(View.GONE);
-            getSupportFragmentManager().beginTransaction().remove(getSupportFragmentManager().findFragmentByTag("KEYBOARD")).commit();
+//            getSupportFragmentManager().beginTransaction().remove(getSupportFragmentManager().findFragmentByTag("KEYBOARD")).commit();
         }
     }
 

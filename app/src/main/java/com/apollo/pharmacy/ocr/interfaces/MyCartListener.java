@@ -29,7 +29,7 @@ public interface MyCartListener {
 
     void onSearchFailure(String message);
 
-    void onSuccessBarcodeItemApi(ItemSearchResponse itemSearchResponse, int serviceType, int qty);
+    void onSuccessBarcodeItemApi(ItemSearchResponse itemSearchResponse, int serviceType, int qty, int position);
 
     void onFailureBarcodeItemApi(String message);
 

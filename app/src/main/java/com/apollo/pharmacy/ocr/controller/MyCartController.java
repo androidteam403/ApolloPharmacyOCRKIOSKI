@@ -195,7 +195,7 @@ public class MyCartController {
         });
     }
 
-    public void searchItemProducts(String item, int serviceType, int qty) {
+    public void searchItemProducts(String item, int serviceType, int qty, int position) {
         ApiInterface apiInterface = ApiClient.getApiServiceMposBaseUrl(SessionManager.INSTANCE.getEposUrl());
         ItemSearchRequest itemSearchRequest = new ItemSearchRequest();
         itemSearchRequest.setCorpCode("0");
@@ -216,7 +216,7 @@ public class MyCartController {
                     assert itemSearchResponse != null;
                     if (itemSearchResponse.getItemList() != null && itemSearchResponse.getItemList().size() > 0)
                         itemSearchResponse.getItemList().get(0).setMedicineType(itemSearchResponse.getItemList().get(0).getCategory());
-                    myCartListener.onSuccessBarcodeItemApi(itemSearchResponse, serviceType,qty);
+                    myCartListener.onSuccessBarcodeItemApi(itemSearchResponse, serviceType,qty,position);
                 }
             }
 

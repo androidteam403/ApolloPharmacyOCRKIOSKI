@@ -376,10 +376,21 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
             }
 
             if (batchListResponse != null && batchListResponse.getBatchList() != null && batchListResponse.getBatchList().size() > 0) {
-                dialogItemBatchSelectionBinding.date.setText(batchListResponse.getBatchList().get(0).getExpDate());
-                dialogItemBatchSelectionBinding.price.setText(String.valueOf(batchListResponse.getBatchList().get(0).getPrice()));
-                this.itemPrice = batchListResponse.getBatchList().get(0).getPrice();
-                this.itemBatchSelectionDataQtyCompare = batchListResponse.getBatchList().get(0);
+                if (SessionManager.INSTANCE.getBatchId() != null && !SessionManager.INSTANCE.getBatchId().isEmpty()) {
+                    for (int i = 0; i < batchListResponse.getBatchList().size(); i++) {
+                        if (batchListResponse.getBatchList().get(i).getBatchNo().equals(SessionManager.INSTANCE.getBatchId())) {
+                            dialogItemBatchSelectionBinding.date.setText(batchListResponse.getBatchList().get(i).getExpDate());
+                            dialogItemBatchSelectionBinding.price.setText(String.valueOf(batchListResponse.getBatchList().get(i).getPrice()));
+                            this.itemPrice = batchListResponse.getBatchList().get(i).getPrice();
+                            this.itemBatchSelectionDataQtyCompare = batchListResponse.getBatchList().get(i);
+                        }
+                    }
+                } else {
+                    dialogItemBatchSelectionBinding.date.setText(batchListResponse.getBatchList().get(0).getExpDate());
+                    dialogItemBatchSelectionBinding.price.setText(String.valueOf(batchListResponse.getBatchList().get(0).getPrice()));
+                    this.itemPrice = batchListResponse.getBatchList().get(0).getPrice();
+                    this.itemBatchSelectionDataQtyCompare = batchListResponse.getBatchList().get(0);
+                }
                 dialogItemBatchSelectionBinding.loadingPanel.setVisibility(View.GONE);
                 dialogItemBatchSelectionBinding.batchSelectionData.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -470,6 +481,9 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
 
     List<OCRToDigitalMedicineResponse> dummyDataList = new ArrayList<>();
     private float balanceQty;
+    boolean checkduplicate1 = false;
+    boolean checkduplicate2 = false;
+    boolean checkduplicate3 = false;
 
     public void globalBatchListHandlings(String itemName, String itemId, float balanceQtying, List<OCRToDigitalMedicineResponse> dummyDataListing, Context context, String medicineType) {
         if (getBatchAvilableData() != null && getBatchAvilableData().getBatchList() != null && getBatchAvilableData().getBatchList().size() > 0) {
@@ -530,8 +544,24 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
                         balanceQty = Float.parseFloat(getQtyCount()) - Float.parseFloat(String.valueOf(data1.getQty()));
                         data1.setMedicineType(medicineType);
                         getItemBatchSelectionDataQty().setBatchQtySelected(true);
-                        dummyDataList.add(data1);
 
+                        for (OCRToDigitalMedicineResponse proQtyIncorg : SessionManager.INSTANCE.getDataList()) {
+                            if (proQtyIncorg.getArtCode().equals(data1.getArtCode())) {
+                                data1.setQty(proQtyIncorg.getQty() + Integer.parseInt(String.valueOf(data1.getQty())));
+                            }
+                        }
+                        if (dummyDataList!=null&&dummyDataList.size()>0) {
+                            for (int k = 0; k < dummyDataList.size(); k++) {
+                                if (dummyDataList.get(k).getArtCode().equalsIgnoreCase(data1.getArtCode())) {
+                                    checkduplicate1 = true;
+                                    dummyDataList.get(k).setQty(data1.getQty());
+                                    dummyDataList.set(k, dummyDataList.get(k));
+                                }
+                            }
+                        }
+                        if (!checkduplicate1) {
+                            dummyDataList.add(data1);
+                        }
 
                         if (null != SessionManager.INSTANCE.getDataList()) {
                             if (SessionManager.INSTANCE.getDataList().size() > 0) {
@@ -569,7 +599,24 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
                                     }
                                     balanceQty = balanceQty - Float.parseFloat(String.valueOf(data2.getQty()));
                                     data2.setMedicineType(medicineType);
-                                    dummyDataList.add(data2);
+
+                                    for (OCRToDigitalMedicineResponse proQtyIncorg : SessionManager.INSTANCE.getDataList()) {
+                                        if (proQtyIncorg.getArtCode().equals(data2.getArtCode())) {
+                                            data2.setQty(proQtyIncorg.getQty() + Integer.parseInt(String.valueOf(data2.getQty())));
+                                        }
+                                    }
+                                    if (dummyDataList!=null&&dummyDataList.size()>0) {
+                                        for (int k = 0; k < dummyDataList.size(); k++) {
+                                            if (dummyDataList.get(k).getArtCode().equalsIgnoreCase(data2.getArtCode())) {
+                                                checkduplicate2 = true;
+                                                dummyDataList.get(k).setQty(data2.getQty());
+                                                dummyDataList.set(k, dummyDataList.get(k));
+                                            }
+                                        }
+                                    }
+                                    if (!checkduplicate2) {
+                                        dummyDataList.add(data2);
+                                    }
 
 
                                     if (null != SessionManager.INSTANCE.getDataList()) {
@@ -605,7 +652,24 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
                                         }
                                         balanceQty = balanceQty - Float.parseFloat(String.valueOf(data3.getQty()));
                                         data3.setMedicineType(medicineType);
-                                        dummyDataList.add(data3);
+
+                                        for (OCRToDigitalMedicineResponse proQtyIncorg : SessionManager.INSTANCE.getDataList()) {
+                                            if (proQtyIncorg.getArtCode().equals(data3.getArtCode())) {
+                                                data3.setQty(proQtyIncorg.getQty() + Integer.parseInt(String.valueOf(data3.getQty())));
+                                            }
+                                        }
+                                        if (dummyDataList!=null&&dummyDataList.size()>0) {
+                                            for (int k = 0; k < dummyDataList.size(); k++) {
+                                                if (dummyDataList.get(k).getArtCode().equalsIgnoreCase(data3.getArtCode())) {
+                                                    checkduplicate3 = true;
+                                                    dummyDataList.get(k).setQty(data3.getQty());
+                                                    dummyDataList.set(k, dummyDataList.get(k));
+                                                }
+                                            }
+                                        }
+                                        if (!checkduplicate3) {
+                                            dummyDataList.add(data3);
+                                        }
 
 
                                         if (null != SessionManager.INSTANCE.getDataList()) {
