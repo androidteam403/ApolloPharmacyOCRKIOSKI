@@ -91,7 +91,7 @@ class UserLoginActivity : AppCompatActivity(), UserLoginListener, ConnectivityRe
 
         utils = Utils()
         userLoginController = UserLoginController()
-
+        SessionManager.setBatchId("");
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
