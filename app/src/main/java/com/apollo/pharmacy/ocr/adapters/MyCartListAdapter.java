@@ -17,6 +17,7 @@ import com.apollo.pharmacy.ocr.R;
 import com.apollo.pharmacy.ocr.interfaces.OnItemClickListener;
 import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -97,7 +98,8 @@ public class MyCartListAdapter extends RecyclerView.Adapter<MyCartListAdapter.Vi
             holder.productQty.setText(String.valueOf(item.getQty()));
             String rupeeSymbol = "\u20B9";
             if (!TextUtils.isEmpty(item.getArtprice())) {
-                holder.offerPriceTxt.setText(rupeeSymbol + String.format(Locale.ENGLISH, "%.2f", Float.parseFloat(item.getArtprice())));
+//                holder.offerPriceTxt.setText(rupeeSymbol + String.format(Locale.ENGLISH, "%.2f", Float.parseFloat(item.getArtprice())));
+                holder.offerPriceTxt.setText(rupeeSymbol + String.format(Locale.ENGLISH, "%.2f", Float.parseFloat(String.valueOf(item.getLabelMaxPrice()))));
             } else {
                 holder.offerPriceTxt.setText(rupeeSymbol + String.format(Locale.ENGLISH, "%.2f", Float.parseFloat("00")));
             }
@@ -113,7 +115,12 @@ public class MyCartListAdapter extends RecyclerView.Adapter<MyCartListAdapter.Vi
             });
             if (!TextUtils.isEmpty(item.getArtprice())) {
                 Float total_price = Float.parseFloat(item.getArtprice()) * item.getQty();
-                holder.totalPriceTxt.setText(rupeeSymbol + String.format(Locale.ENGLISH, "%.2f", total_price));
+
+                DecimalFormat formatter = new DecimalFormat("#,###.00");
+                String pharmaformatted = formatter.format(total_price);
+
+
+                holder.totalPriceTxt.setText(rupeeSymbol + pharmaformatted);
             } else {
                 Float total_price = Float.parseFloat("00") * item.getQty();
                 holder.totalPriceTxt.setText(rupeeSymbol + String.format(Locale.ENGLISH, "%.2f", total_price));

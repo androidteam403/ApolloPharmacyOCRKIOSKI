@@ -100,6 +100,7 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
 
     private List<OCRToDigitalMedicineResponse> dataComparingList = new ArrayList<>();
     private List<OCRToDigitalMedicineResponse> expandholdedDataList = new ArrayList<>();
+    private List<OCRToDigitalMedicineResponse> labelDataList = new ArrayList<>();
 
 
     private List<OCRToDigitalMedicineResponse> deletedataList;
@@ -249,20 +250,24 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
         }
     }
 
+    private boolean onItemAddAgainClick;
+
     @Override
     public void onDeleteItemClicked(OCRToDigitalMedicineResponse ocrToDigitalMedicineResponse, int position) {
         cartDeleteItemDialog.dismiss();
-        deletedataList.remove(position);
+//        deletedataList.remove(position);
         String s1 = ocrToDigitalMedicineResponse.getArtCode();
         String[] words = s1.split(",");
         String itemId = words[0];
-//        dataList.add(ocrToDigitalMedicineResponse);
-//        SessionManager.INSTANCE.setDataList(dataList);
-        SessionManager.INSTANCE.setDeletedDataList(deletedataList);
-        total_itemcount_textview.setText(String.valueOf(dataList.size()));
-        cartCount(dataList.size());
-
-        myCartController.searchItemProducts(itemId, 0, ocrToDigitalMedicineResponse.getQty());
+        String batchItemId = words[1];
+        SessionManager.INSTANCE.setBatchId(batchItemId);
+        SessionManager.INSTANCE.getBatchId();
+//        SessionManager.INSTANCE.setDeletedDataList(deletedataList);
+//        cartUniqueCount();
+//        total_itemcount_textview.setText(String.valueOf(countUniques.size()));
+//        cartCount(dataList.size());
+        onItemAddAgainClick = true;
+        myCartController.searchItemProducts(itemId, 0, ocrToDigitalMedicineResponse.getQty(), position);
 
 //        if (dataList.size() > 0) {
 //            float grandTotalVal = 0;
@@ -278,17 +283,17 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
 //            cartListAdapter.notifyDataSetChanged();
 //            checkOutImage.setImageResource(R.drawable.checkout_cart);
 //        }
-        if (SessionManager.INSTANCE.getDeletedDataList().size() > 0) {
-            addAgainLayout.setVisibility(View.VISIBLE);
-            removedItemsCount.setText(String.valueOf(SessionManager.INSTANCE.getDeletedDataList().size()));
-        } else {
-            addAgainLayout.setVisibility(View.GONE);
-        }
-        if (SessionManager.INSTANCE.getCurationStatus()) {
-            curationProcessLayout.setVisibility(View.VISIBLE);
-        } else {
-            curationProcessLayout.setVisibility(View.GONE);
-        }
+//        if (SessionManager.INSTANCE.getDeletedDataList().size() > 0) {
+//            addAgainLayout.setVisibility(View.VISIBLE);
+//            removedItemsCount.setText(String.valueOf(SessionManager.INSTANCE.getDeletedDataList().size()));
+//        } else {
+//            addAgainLayout.setVisibility(View.GONE);
+//        }
+//        if (SessionManager.INSTANCE.getCurationStatus()) {
+//            curationProcessLayout.setVisibility(View.VISIBLE);
+//        } else {
+//            curationProcessLayout.setVisibility(View.GONE);
+//        }
     }
 
     @Override
@@ -361,7 +366,8 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                             SessionManager.INSTANCE.setScannedPrescriptionItems(scannedList);
                             if (null != dataList && dataList.size() > 0) {
                                 cartItemCountLayout.setVisibility(View.VISIBLE);
-                                total_itemcount_textview.setText(String.valueOf(dataList.size()));
+                                cartUniqueCount();
+                                total_itemcount_textview.setText(String.valueOf(countUniques.size()));
                                 checkOutImage.setImageResource(R.drawable.checkout_cart);
                             } else {
                                 cartItemCountLayout.setVisibility(View.GONE);
@@ -447,7 +453,8 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                         SessionManager.INSTANCE.setDataList(dataList);
                         if (dataList.size() > 0) {
                             cartItemCountLayout.setVisibility(View.VISIBLE);
-                            total_itemcount_textview.setText(String.valueOf(dataList.size()));
+                            cartUniqueCount();
+                            total_itemcount_textview.setText(String.valueOf(countUniques.size()));
                             checkOutImage.setImageResource(R.drawable.checkout_cart);
                             float grandTotalVal = 0;
                             for (int i = 0; i < dataList.size(); i++) {
@@ -489,7 +496,8 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                     SessionManager.INSTANCE.setDataList(dataList);
                     if (null != dataList && dataList.size() > 0) {
                         cartItemCountLayout.setVisibility(View.VISIBLE);
-                        total_itemcount_textview.setText(String.valueOf(dataList.size()));
+                        cartUniqueCount();
+                        total_itemcount_textview.setText(String.valueOf(countUniques.size()));
                         checkOutImage.setImageResource(R.drawable.checkout_cart);
                         float grandTotalVal = 0;
                         for (int i = 0; i < dataList.size(); i++) {
@@ -964,7 +972,8 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                 }
                 if (null != dataList && dataList.size() > 0) {
                     cartItemCountLayout.setVisibility(View.VISIBLE);
-                    total_itemcount_textview.setText(String.valueOf(dataList.size()));
+                    cartUniqueCount();
+                    total_itemcount_textview.setText(String.valueOf(countUniques.size()));
                     checkOutImage.setImageResource(R.drawable.checkout_cart);
                     curationViewLayout.setVisibility(View.GONE);
                     curationProcessText.setVisibility(View.GONE);
@@ -990,7 +999,8 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                 dataList = SessionManager.INSTANCE.getDataList();
                 if (null != dataList && dataList.size() > 0) {
                     cartItemCountLayout.setVisibility(View.VISIBLE);
-                    total_itemcount_textview.setText(String.valueOf(dataList.size()));
+                    cartUniqueCount();
+                    total_itemcount_textview.setText(String.valueOf(countUniques.size()));
                     checkOutImage.setImageResource(R.drawable.checkout_cart);
                     curationViewLayout.setVisibility(View.GONE);
                     if (SessionManager.INSTANCE.getCurationStatus()) {
@@ -1026,7 +1036,8 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                 dataList = SessionManager.INSTANCE.getDataList();
                 if (null != dataList && dataList.size() > 0) {
                     cartItemCountLayout.setVisibility(View.VISIBLE);
-                    total_itemcount_textview.setText(String.valueOf(dataList.size()));
+                    cartUniqueCount();
+                    total_itemcount_textview.setText(String.valueOf(countUniques.size()));
                     checkOutImage.setImageResource(R.drawable.checkout_cart);
                     curationViewLayout.setVisibility(View.GONE);
                     if (SessionManager.INSTANCE.getCurationStatus()) {
@@ -1280,20 +1291,91 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
 //        });
     }
 
+    private List<OCRToDigitalMedicineResponse> duplicatelabelDataList = new ArrayList<>();
+
     private void groupingDuplicates() {
+
         dataComparingList.clear();
         expandholdedDataList.clear();
+        labelDataList.clear();
+        duplicatelabelDataList.clear();
 
         dataComparingList.addAll(SessionManager.INSTANCE.getDataList());
         for (int i = 0; i < dataComparingList.size(); i++) {
             for (int j = 0; j < dataComparingList.size(); j++) {
-                if (i != j && dataComparingList.get(i).getArtName().equals(dataComparingList.get(j).getArtName())) {
+                if (dataComparingList.get(i).getArtName().equals(dataComparingList.get(j).getArtName())) {
                     expandholdedDataList.add(dataComparingList.get(j));
+                    labelDataList.add(dataComparingList.get(j));
                     dataComparingList.remove(j);
                     j--;
                 }
             }
         }
+
+        for (int i = 0; i < labelDataList.size(); i++) {
+            for (int j = 0; j < labelDataList.size(); j++) {
+                if (i != j && labelDataList.get(i).getArtName().equals(labelDataList.get(j).getArtName())) {
+                    labelDataList.remove(j);
+                    j--;
+                }
+            }
+        }
+
+        List<OCRToDigitalMedicineResponse> expandListDummy = new ArrayList<>();
+        for (int i = 0; i < labelDataList.size(); i++) {
+            for (int j = 0; j < expandholdedDataList.size(); j++) {
+                if (labelDataList.get(i).getArtName().equalsIgnoreCase(expandholdedDataList.get(j).getArtName())) {
+                    expandListDummy.add(expandholdedDataList.get(j));
+                }
+            }
+        }
+        float max = 0;
+        for (int i = 0; i < labelDataList.size(); i++) {
+            int labelAvgQty = 0;
+            boolean maxOnce = false;
+            float labelAveragePrice = 0;
+            float labelPrice = 0;
+            String labelName = "";
+            int repeatCount = 0;
+            for (int j = 0; j < expandListDummy.size(); j++) {
+                if (labelDataList.get(i).getArtName().equalsIgnoreCase(expandListDummy.get(j).getArtName())) {
+                    if (!maxOnce) {
+                        max = Float.parseFloat(expandListDummy.get(j).getArtprice());
+                        maxOnce = true;
+                    }
+
+                    // loop to find maximum from ArrayList
+                    if (Float.parseFloat(expandListDummy.get(j).getArtprice()) > max) {
+                        max = Float.parseFloat(expandListDummy.get(j).getArtprice());
+                    }
+
+                    labelPrice = labelPrice + Float.parseFloat(expandListDummy.get(j).getArtprice());
+                    labelAvgQty = labelAvgQty + expandListDummy.get(j).getQty();
+                    repeatCount = repeatCount + 1;
+                    labelName = expandListDummy.get(j).getArtName();
+                }
+            }
+
+            OCRToDigitalMedicineResponse labelResponse = new OCRToDigitalMedicineResponse();
+            labelResponse.setLabelMaxPrice(max);
+            labelResponse.setLabelPrice(labelPrice);
+            labelAveragePrice = labelResponse.getLabelPrice() / (float) repeatCount;
+            labelResponse.setLabelAveragePrice(labelAveragePrice);
+            labelResponse.setLabelAvgQty(labelAvgQty);
+            labelResponse.setDuplicateCount(repeatCount);
+            labelResponse.setLabelName(labelName);
+            duplicatelabelDataList.add(labelResponse);
+        }
+
+        for (int i = 0; i < duplicatelabelDataList.size(); i++) {
+            OCRToDigitalMedicineResponse labelResponse = new OCRToDigitalMedicineResponse();
+            labelResponse.setLabelMaxPrice(duplicatelabelDataList.get(i).getLabelMaxPrice());
+            labelResponse.setArtName(duplicatelabelDataList.get(i).getLabelName());
+            labelResponse.setArtprice(String.valueOf(duplicatelabelDataList.get(i).getLabelAveragePrice()));
+            labelResponse.setQty(duplicatelabelDataList.get(i).getLabelAvgQty());
+            dataComparingList.add(labelResponse);
+        }
+
     }
 
     private void startcountertimer() {
@@ -1441,7 +1523,8 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
         }
         if (null != dataList && dataList.size() > 0) {
             cartItemCountLayout.setVisibility(View.VISIBLE);
-            total_itemcount_textview.setText(String.valueOf(dataList.size()));
+            cartUniqueCount();
+            total_itemcount_textview.setText(String.valueOf(countUniques.size()));
             checkOutImage.setImageResource(R.drawable.checkout_cart);
             curationViewLayout.setVisibility(View.GONE);
             if (SessionManager.INSTANCE.getCurationStatus()) {
@@ -1517,15 +1600,34 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
 
     }
 
+    List<OCRToDigitalMedicineResponse> countUniques;
+
+    private void cartUniqueCount() {
+        countUniques = new ArrayList<>();
+        countUniques.addAll(dataList);
+
+        for (int i = 0; i < countUniques.size(); i++) {
+            for (int j = 0; j < countUniques.size(); j++) {
+                if (i != j && countUniques.get(i).getArtName().equals(countUniques.get(j).getArtName())) {
+                    countUniques.remove(j);
+                    j--;
+                }
+            }
+        }
+    }
+
     @Override
     public void cartCount(int count) {
         if (null == myCartCount)
             return;
         if (count != 0) {
+            cartUniqueCount();
             myCartCount.setVisibility(View.VISIBLE);
-            myCartCount.setText(String.valueOf(count));
+//            myCartCount.setText(String.valueOf(count));
+            myCartCount.setText(String.valueOf(countUniques.size()));
             cartItemCountLayout.setVisibility(View.VISIBLE);
-            total_itemcount_textview.setText(String.valueOf(dataList.size()));
+            cartUniqueCount();
+            total_itemcount_textview.setText(String.valueOf(countUniques.size()));
             checkOutImage.setImageResource(R.drawable.checkout_cart);
         } else {
             myCartCount.setVisibility(View.GONE);
@@ -1643,7 +1745,7 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
             crossselling.add(body.getCrossselling().get(1));
             crossselling.add(body.getCrossselling().get(2));
             for (UpCellCrossCellResponse.Crossselling crossSellingList : crossselling) {
-                myCartController.searchItemProducts(crossSellingList.getItemid(), 1, 0);
+                myCartController.searchItemProducts(crossSellingList.getItemid(), 1, 0, 0);
             }
         } else {
             noDataFound.setVisibility(View.VISIBLE);
@@ -1654,7 +1756,7 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
             upselling.add(body.getUpselling().get(1));
             upselling.add(body.getUpselling().get(2));
             for (UpCellCrossCellResponse.Upselling upSelling : upselling) {
-                myCartController.searchItemProducts(upSelling.getItemid(), 2, 0);
+                myCartController.searchItemProducts(upSelling.getItemid(), 2, 0, 0);
             }
         } else {
             noDataFound.setVisibility(View.VISIBLE);
@@ -1679,7 +1781,7 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
     private float balanceQty;
 
     @Override
-    public void onSuccessBarcodeItemApi(ItemSearchResponse itemSearchResponse, int serviceType, int qty) {
+    public void onSuccessBarcodeItemApi(ItemSearchResponse itemSearchResponse, int serviceType, int qty, int position) {
         if (serviceType == 0) {
             if (itemSearchResponse.getItemList() != null && itemSearchResponse.getItemList().size() > 0) {
                 ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(MyCartActivity.this, itemSearchResponse.getItemList().get(0).getArtCode());
@@ -1729,6 +1831,27 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                     itemBatchSelectionDilaog.globalBatchListHandlings(medicine.getDescription(), medicine.getSku(),
                             balanceQty, dummyDataList, MyCartActivity.this, medicine.getMedicineType());
 
+                    SessionManager.INSTANCE.setBatchId("");
+                    if (onItemAddAgainClick) {
+                        deletedataList.remove(position);
+                        SessionManager.INSTANCE.setDeletedDataList(deletedataList);
+                        cartUniqueCount();
+                        total_itemcount_textview.setText(String.valueOf(countUniques.size()));
+                        cartCount(dataList.size());
+                        onItemAddAgainClick = false;
+
+                        if (SessionManager.INSTANCE.getDeletedDataList().size() > 0) {
+                            addAgainLayout.setVisibility(View.VISIBLE);
+                            removedItemsCount.setText(String.valueOf(SessionManager.INSTANCE.getDeletedDataList().size()));
+                        } else {
+                            addAgainLayout.setVisibility(View.GONE);
+                        }
+                        if (SessionManager.INSTANCE.getCurationStatus()) {
+                            curationProcessLayout.setVisibility(View.VISIBLE);
+                        } else {
+                            curationProcessLayout.setVisibility(View.GONE);
+                        }
+                    }
 
 ////                activityHomeBinding.transColorId.setVisibility(View.GONE);
 //                    Intent intent = new Intent("cardReceiver");
@@ -1769,12 +1892,14 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                 itemBatchSelectionDilaog.setNegativeListener(v -> {
 //                activityHomeBinding.transColorId.setVisibility(View.GONE);
                     isDialogShow = false;
+                    SessionManager.INSTANCE.setBatchId("");
                     itemBatchSelectionDilaog.dismiss();
                 });
                 isDialogShow = true;
                 itemBatchSelectionDilaog.show();
             } else {
                 Utils.showSnackbar(MyCartActivity.this, constraint_Layout, "No Item found");
+                SessionManager.INSTANCE.setBatchId("");
             }
             Utils.dismissDialog();
         } else if (serviceType == 1) {
@@ -2235,7 +2360,7 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                 if (barcode_code != null) {
 //            Toast.makeText(this, barcode_code, Toast.LENGTH_LONG).show();
                     Utils.showDialog(this, "Plaese wait...");
-                    myCartController.searchItemProducts(barcode_code, 0, 0);
+                    myCartController.searchItemProducts(barcode_code, 0, 0, 0);
                 } else {
                     Toast.makeText(this, "Scan Cancelled", Toast.LENGTH_LONG).show();
                 }

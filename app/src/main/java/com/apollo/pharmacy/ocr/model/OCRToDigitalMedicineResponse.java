@@ -36,6 +36,66 @@ public class OCRToDigitalMedicineResponse implements Serializable {
 
     private boolean expandStatus;
 
+    private int labelAvgQty;
+
+    private int duplicateCount;
+
+    private float labelPrice;
+
+    private String labelName;
+
+    private float labelAveragePrice;
+
+    private float labelMaxPrice;
+
+    public float getLabelMaxPrice() {
+        return labelMaxPrice;
+    }
+
+    public void setLabelMaxPrice(float labelMaxPrice) {
+        this.labelMaxPrice = labelMaxPrice;
+    }
+
+    public float getLabelAveragePrice() {
+        return labelAveragePrice;
+    }
+
+    public void setLabelAveragePrice(float labelAveragePrice) {
+        this.labelAveragePrice = labelAveragePrice;
+    }
+
+    public String getLabelName() {
+        return labelName;
+    }
+
+    public void setLabelName(String labelName) {
+        this.labelName = labelName;
+    }
+
+    public int getLabelAvgQty() {
+        return labelAvgQty;
+    }
+
+    public void setLabelAvgQty(int labelAvgQty) {
+        this.labelAvgQty = labelAvgQty;
+    }
+
+    public int getDuplicateCount() {
+        return duplicateCount;
+    }
+
+    public void setDuplicateCount(int duplicateCount) {
+        this.duplicateCount = duplicateCount;
+    }
+
+    public float getLabelPrice() {
+        return labelPrice;
+    }
+
+    public void setLabelPrice(float labelPrice) {
+        this.labelPrice = labelPrice;
+    }
+
     public boolean isExpandStatus() {
         return expandStatus;
     }

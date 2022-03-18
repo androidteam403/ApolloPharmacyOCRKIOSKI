@@ -62,4 +62,8 @@ object ApplicationConstant {
 
     val ACESS_DIALOG_HANDEL = "ACESS_DIALOG_HANDEL"
 
+    val BATCH_ID = "BATCH_ID"
+
+
+
 }

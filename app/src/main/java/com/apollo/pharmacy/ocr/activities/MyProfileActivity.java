@@ -542,7 +542,7 @@ public class MyProfileActivity extends AppCompatActivity implements MyCartListen
     }
 
     @Override
-    public void onSuccessBarcodeItemApi(ItemSearchResponse itemSearchResponse, int serviceType, int qty) {
+    public void onSuccessBarcodeItemApi(ItemSearchResponse itemSearchResponse, int serviceType, int qty, int position) {
 
     }
 
@@ -584,8 +584,23 @@ public class MyProfileActivity extends AppCompatActivity implements MyCartListen
 
     public void cartCount(int count) {
         if (count != 0) {
+
+            List<OCRToDigitalMedicineResponse> countUniques = new ArrayList<>();
+            countUniques.addAll(SessionManager.INSTANCE.getDataList());
+
+            for (int i = 0; i < countUniques.size(); i++) {
+                for (int j = 0; j < countUniques.size(); j++) {
+                    if (i != j && countUniques.get(i).getArtName().equals(countUniques.get(j).getArtName())) {
+                        countUniques.remove(j);
+                        j--;
+                    }
+                }
+            }
+
+
             myCartCount.setVisibility(View.VISIBLE);
-            myCartCount.setText(String.valueOf(count));
+//            myCartCount.setText(String.valueOf(count));
+            myCartCount.setText(String.valueOf(countUniques.size()));
         } else {
             myCartCount.setVisibility(View.GONE);
             myCartCount.setText("0");

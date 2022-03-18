@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
@@ -14,12 +13,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.TranslateAnimation;
-import android.webkit.WebChromeClient;
-import android.webkit.WebResourceError;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -44,7 +37,6 @@ import com.apollo.pharmacy.ocr.databinding.ActivityMyOffersBinding;
 import com.apollo.pharmacy.ocr.interfaces.CartCountListener;
 import com.apollo.pharmacy.ocr.interfaces.MyOffersListener;
 import com.apollo.pharmacy.ocr.model.GetProductListResponse;
-import com.apollo.pharmacy.ocr.model.Image;
 import com.apollo.pharmacy.ocr.model.ItemSearchResponse;
 import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
 import com.apollo.pharmacy.ocr.model.Product;
@@ -947,8 +939,22 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
     @Override
     public void cartCount(int count) {
         if (count != 0) {
+
+            List<OCRToDigitalMedicineResponse> countUniques = new ArrayList<>();
+            countUniques.addAll(SessionManager.INSTANCE.getDataList());
+
+            for (int i = 0; i < countUniques.size(); i++) {
+                for (int j = 0; j < countUniques.size(); j++) {
+                    if (i != j && countUniques.get(i).getArtName().equals(countUniques.get(j).getArtName())) {
+                        countUniques.remove(j);
+                        j--;
+                    }
+                }
+            }
+
             myCartCount.setVisibility(View.VISIBLE);
-            myCartCount.setText(String.valueOf(count));
+//            myCartCount.setText(String.valueOf(count));
+            myCartCount.setText(String.valueOf(countUniques.size()));
 //            itemsCount.setVisibility(View.VISIBLE);
 //            plusIcon.setVisibility(View.VISIBLE);
 //            checkOutImage.setVisibility(View.VISIBLE);

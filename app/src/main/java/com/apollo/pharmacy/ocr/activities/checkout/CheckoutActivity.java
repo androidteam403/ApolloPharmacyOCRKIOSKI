@@ -17,6 +17,7 @@ import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
 import com.apollo.pharmacy.ocr.utility.SessionManager;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CheckoutActivity extends AppCompatActivity implements CheckoutListener {
@@ -50,6 +51,20 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
         if (dataList != null && dataList.size() > 0) {
 //            dataList = (List<OCRToDigitalMedicineResponse>) getIntent().getSerializableExtra("dataList");
             if (dataList != null && dataList.size() > 0) {
+
+                List<OCRToDigitalMedicineResponse> countUniques = new ArrayList<>();
+                countUniques.addAll(dataList);
+
+                for (int i = 0; i < countUniques.size(); i++) {
+                    for (int j = 0; j < countUniques.size(); j++) {
+                        if (i != j && countUniques.get(i).getArtName().equals(countUniques.get(j).getArtName())) {
+                            countUniques.remove(j);
+                            j--;
+                        }
+                    }
+                }
+
+
                 int pharmaMedicineCount = 0;
                 int fmcgMedicineCount = 0;
                 double pharmaTotal = 0.0;
@@ -60,15 +75,34 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
                     if (data.getMedicineType() != null) {
                         if (data.getMedicineType().equals("PHARMA")) {
                             isPharma = true;
-                            pharmaMedicineCount++;
+//                            pharmaMedicineCount++;
                             pharmaTotal = pharmaTotal + (Double.parseDouble(data.getArtprice()) * data.getQty());
                         } else {
                             isFmcg = true;
-                            fmcgMedicineCount++;
+//                            fmcgMedicineCount++;
                             fmcgTotal = fmcgTotal + (Double.parseDouble(data.getArtprice()) * data.getQty());
                         }
                     }
                 }
+
+
+                for (int i = 0; i < dataList.size(); i++) {
+                    for (int j = 0; j < countUniques.size(); j++) {
+                        if (dataList.get(i).getArtName().equalsIgnoreCase(countUniques.get(j).getArtName())) {
+                            if (countUniques.get(j).getMedicineType().equals("FMCG")){
+                                fmcgMedicineCount++;
+                                countUniques.remove(j);
+                                j--;
+                            }else {
+                                pharmaMedicineCount++;
+                                countUniques.remove(j);
+                                j--;
+                            }
+                        }
+                    }
+                }
+
+
                 fmcgToatalPass = fmcgTotal;
                 CheckoutuiModel checkoutuiModel = new CheckoutuiModel();
                 checkoutuiModel.setPharmaCount(String.valueOf(pharmaMedicineCount));

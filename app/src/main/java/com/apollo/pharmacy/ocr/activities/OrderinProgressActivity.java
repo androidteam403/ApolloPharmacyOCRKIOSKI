@@ -57,6 +57,19 @@ public class OrderinProgressActivity extends AppCompatActivity implements Orderi
         if (null != SessionManager.INSTANCE.getDataList())
             this.dataList = SessionManager.INSTANCE.getDataList();
         if (dataList != null && dataList.size() > 0) {
+
+            List<OCRToDigitalMedicineResponse> countUniques = new ArrayList<>();
+            countUniques.addAll(dataList);
+
+            for (int i = 0; i < countUniques.size(); i++) {
+                for (int j = 0; j < countUniques.size(); j++) {
+                    if (i != j && countUniques.get(i).getArtName().equals(countUniques.get(j).getArtName())) {
+                        countUniques.remove(j);
+                        j--;
+                    }
+                }
+            }
+
             int pharmaMedicineCount = 0;
             int fmcgMedicineCount = 0;
             double pharmaTotal = 0.0;
@@ -67,15 +80,32 @@ public class OrderinProgressActivity extends AppCompatActivity implements Orderi
                 if (data.getMedicineType() != null) {
                     if (data.getMedicineType().equals("PHARMA")) {
                         isPharma = true;
-                        pharmaMedicineCount++;
+//                        pharmaMedicineCount++;
                         pharmaTotal = pharmaTotal + (Double.parseDouble(data.getArtprice()) * data.getQty());
                     } else {
                         isFmcg = true;
-                        fmcgMedicineCount++;
+//                        fmcgMedicineCount++;
                         fmcgTotal = fmcgTotal + (Double.parseDouble(data.getArtprice()) * data.getQty());
                     }
                 }
             }
+
+            for (int i = 0; i < dataList.size(); i++) {
+                for (int j = 0; j < countUniques.size(); j++) {
+                    if (dataList.get(i).getArtName().equalsIgnoreCase(countUniques.get(j).getArtName())) {
+                        if (countUniques.get(j).getMedicineType().equals("FMCG")){
+                            fmcgMedicineCount++;
+                            countUniques.remove(j);
+                            j--;
+                        }else {
+                            pharmaMedicineCount++;
+                            countUniques.remove(j);
+                            j--;
+                        }
+                    }
+                }
+            }
+
 //            fmcgToatalPass = fmcgTotal;
             orderinProgresssuiModel.setPharmaCount(String.valueOf(pharmaMedicineCount));
             orderinProgresssuiModel.setFmcgCount(String.valueOf(fmcgMedicineCount));
