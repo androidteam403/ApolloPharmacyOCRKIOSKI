@@ -1,6 +1,7 @@
 package com.apollo.pharmacy.ocr.interfaces;
 
 import com.apollo.pharmacy.ocr.model.Categorylist_Response;
+import com.apollo.pharmacy.ocr.model.ItemSearchResponse;
 import com.apollo.pharmacy.ocr.model.PortFolioModel;
 
 public interface HomeListener {
@@ -10,4 +11,8 @@ public interface HomeListener {
     void categoryListSuccessRes(Categorylist_Response response);
 
     void onFailureService(String message);
+
+    void onSuccessSearchItemApi(ItemSearchResponse itemSearchResponse);
+
+    void onSearchFailure(String message);
 }

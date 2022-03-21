@@ -30,6 +30,79 @@ public class OCRToDigitalMedicineResponse implements Serializable {
     @Expose
     @SerializedName("mou")
     private String mou;
+    private String medicineType;
+    private boolean outOfStock;
+    private String batchId;
+
+    private boolean expandStatus;
+
+    private int labelAvgQty;
+
+    private int duplicateCount;
+
+    private float labelPrice;
+
+    private String labelName;
+
+    private float labelAveragePrice;
+
+    private float labelMaxPrice;
+
+    public float getLabelMaxPrice() {
+        return labelMaxPrice;
+    }
+
+    public void setLabelMaxPrice(float labelMaxPrice) {
+        this.labelMaxPrice = labelMaxPrice;
+    }
+
+    public float getLabelAveragePrice() {
+        return labelAveragePrice;
+    }
+
+    public void setLabelAveragePrice(float labelAveragePrice) {
+        this.labelAveragePrice = labelAveragePrice;
+    }
+
+    public String getLabelName() {
+        return labelName;
+    }
+
+    public void setLabelName(String labelName) {
+        this.labelName = labelName;
+    }
+
+    public int getLabelAvgQty() {
+        return labelAvgQty;
+    }
+
+    public void setLabelAvgQty(int labelAvgQty) {
+        this.labelAvgQty = labelAvgQty;
+    }
+
+    public int getDuplicateCount() {
+        return duplicateCount;
+    }
+
+    public void setDuplicateCount(int duplicateCount) {
+        this.duplicateCount = duplicateCount;
+    }
+
+    public float getLabelPrice() {
+        return labelPrice;
+    }
+
+    public void setLabelPrice(float labelPrice) {
+        this.labelPrice = labelPrice;
+    }
+
+    public boolean isExpandStatus() {
+        return expandStatus;
+    }
+
+    public void setExpandStatus(boolean expandStatus) {
+        this.expandStatus = expandStatus;
+    }
 
     public OCRToDigitalMedicineResponse() {
 
@@ -40,6 +113,30 @@ public class OCRToDigitalMedicineResponse implements Serializable {
         artName = source.readString();
         container = source.readString();
         qty = source.readInt();
+    }
+
+    public boolean isOutOfStock() {
+        return outOfStock;
+    }
+
+    public String getBatchId() {
+        return batchId;
+    }
+
+    public void setBatchId(String batchId) {
+        this.batchId = batchId;
+    }
+
+    public void setOutOfStock(boolean outOfStock) {
+        this.outOfStock = outOfStock;
+    }
+
+    public String getMedicineType() {
+        return medicineType;
+    }
+
+    public void setMedicineType(String medicineType) {
+        this.medicineType = medicineType;
     }
 
     public String getArtprice() {

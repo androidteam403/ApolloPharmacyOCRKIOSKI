@@ -6,7 +6,7 @@
         android:right="@dimen/five_dp"
         android:top="@dimen/five_dp" />
 
-    <solid android:color="@color/ask_apollo_divider_color" />
+    <solid android:color="@color/very_light" />
     <stroke
         android:width="@dimen/one_dp"
         android:color="@color/box_border_color" />

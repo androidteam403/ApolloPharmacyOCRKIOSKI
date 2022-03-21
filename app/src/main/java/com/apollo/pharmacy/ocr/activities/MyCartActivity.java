@@ -13,6 +13,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,22 +26,27 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.apollo.pharmacy.ocr.R;
+import com.apollo.pharmacy.ocr.activities.checkout.CheckoutActivity;
+import com.apollo.pharmacy.ocr.adapters.CrossCellAdapter;
 import com.apollo.pharmacy.ocr.adapters.MyCartListAdapter;
 import com.apollo.pharmacy.ocr.adapters.PromotionsAdapter;
 import com.apollo.pharmacy.ocr.adapters.TrendingNowAdapter;
+import com.apollo.pharmacy.ocr.adapters.UpCellAdapter;
 import com.apollo.pharmacy.ocr.controller.MyCartController;
 import com.apollo.pharmacy.ocr.controller.UploadBgImageController;
 import com.apollo.pharmacy.ocr.dialog.CartDeletedItemsDialog;
+import com.apollo.pharmacy.ocr.dialog.ItemBatchSelectionDilaog;
 import com.apollo.pharmacy.ocr.dialog.ScannedPrescriptionViewDialog;
 import com.apollo.pharmacy.ocr.enums.ViewMode;
 import com.apollo.pharmacy.ocr.interfaces.CartCountListener;
@@ -50,10 +56,13 @@ import com.apollo.pharmacy.ocr.interfaces.OnItemClickListener;
 import com.apollo.pharmacy.ocr.interfaces.UploadBgImageListener;
 import com.apollo.pharmacy.ocr.model.GetImageRes;
 import com.apollo.pharmacy.ocr.model.GetProductListResponse;
+import com.apollo.pharmacy.ocr.model.ItemSearchResponse;
 import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
 import com.apollo.pharmacy.ocr.model.Product;
+import com.apollo.pharmacy.ocr.model.ProductSearch;
 import com.apollo.pharmacy.ocr.model.ScannedData;
 import com.apollo.pharmacy.ocr.model.ScannedMedicine;
+import com.apollo.pharmacy.ocr.model.UpCellCrossCellResponse;
 import com.apollo.pharmacy.ocr.model.UserAddress;
 import com.apollo.pharmacy.ocr.receiver.ConnectivityReceiver;
 import com.apollo.pharmacy.ocr.utility.Constants;
@@ -61,11 +70,16 @@ import com.apollo.pharmacy.ocr.utility.NetworkUtils;
 import com.apollo.pharmacy.ocr.utility.Session;
 import com.apollo.pharmacy.ocr.utility.SessionManager;
 import com.apollo.pharmacy.ocr.utility.Utils;
+import com.apollo.pharmacy.ocr.zebrasdk.BaseActivity;
+import com.apollo.pharmacy.ocr.zebrasdk.helper.ScannerAppEngine;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
+import com.zebra.scannercontrol.FirmwareUpdateEvent;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -74,8 +88,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class MyCartActivity extends AppCompatActivity implements OnItemClickListener, CartCountListener, MyCartListener,
-        ConnectivityReceiver.ConnectivityReceiverListener, CheckPrescriptionListener, UploadBgImageListener {
+public class MyCartActivity extends BaseActivity implements OnItemClickListener, CartCountListener, MyCartListener, ItemBatchSelectionDilaog.ItemBatchListDialogListener,
+        ConnectivityReceiver.ConnectivityReceiverListener, CheckPrescriptionListener, UploadBgImageListener, ScannerAppEngine.IScannerAppEngineDevEventsDelegate {
 
     private ImageView checkOutImage;
     private PromotionsAdapter promotionadaptor;
@@ -83,6 +97,12 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
     private ArrayList<Product> outOfStockArrayList, inStockArrayList, outOfStockArrayList1, inStockArrayList1;
     private ArrayList<Product> product_list_array, product_list_array1;
     private List<OCRToDigitalMedicineResponse> dataList;
+
+    private List<OCRToDigitalMedicineResponse> dataComparingList = new ArrayList<>();
+    private List<OCRToDigitalMedicineResponse> expandholdedDataList = new ArrayList<>();
+    private List<OCRToDigitalMedicineResponse> labelDataList = new ArrayList<>();
+
+
     private List<OCRToDigitalMedicineResponse> deletedataList;
     private Boolean existelemnt;
     private List<String> SpecialOfferList;
@@ -124,6 +144,9 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
     private static final String TAG = MyCartActivity.class.getSimpleName();
     private TextView timerHeaderText, timerChildText;
     private long minVal = 0, secVal = 0;
+    RecyclerView crossCell_recycle, upcell_recycle;
+    TextView noDataFound, noDataFoundCrosssel, noDataFoundUpsel;
+    private boolean isDialogShow = false;
 
     @Override
     public void onSuccessProductList(HashMap<String, GetProductListResponse> productList) {
@@ -227,40 +250,50 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
         }
     }
 
+    private boolean onItemAddAgainClick;
+
     @Override
     public void onDeleteItemClicked(OCRToDigitalMedicineResponse ocrToDigitalMedicineResponse, int position) {
         cartDeleteItemDialog.dismiss();
-        deletedataList.remove(position);
-        dataList.add(ocrToDigitalMedicineResponse);
-        SessionManager.INSTANCE.setDataList(dataList);
-        SessionManager.INSTANCE.setDeletedDataList(deletedataList);
-        total_itemcount_textview.setText(String.valueOf(dataList.size()));
-        cartCount(dataList.size());
-        if (dataList.size() > 0) {
-            float grandTotalVal = 0;
-            for (int i = 0; i < dataList.size(); i++) {
-                if (!TextUtils.isEmpty(dataList.get(i).getArtprice())) {
-                    float totalPrice = Float.parseFloat(dataList.get(i).getArtprice()) * dataList.get(i).getQty();
-                    grandTotalVal = grandTotalVal + totalPrice;
-                }
-            }
-            String rupeeSymbol = "\u20B9";
-            grandTotalPrice.setText(rupeeSymbol + "" + String.format("%.2f", grandTotalVal));
-            grandTotalPriceValue = grandTotalPrice.getText().toString();
-            cartListAdapter.notifyDataSetChanged();
-            checkOutImage.setImageResource(R.drawable.checkout_cart);
-        }
-        if (SessionManager.INSTANCE.getDeletedDataList().size() > 0) {
-            addAgainLayout.setVisibility(View.VISIBLE);
-            removedItemsCount.setText(String.valueOf(SessionManager.INSTANCE.getDeletedDataList().size()));
-        } else {
-            addAgainLayout.setVisibility(View.GONE);
-        }
-        if (SessionManager.INSTANCE.getCurationStatus()) {
-            curationProcessLayout.setVisibility(View.VISIBLE);
-        } else {
-            curationProcessLayout.setVisibility(View.GONE);
-        }
+//        deletedataList.remove(position);
+        String s1 = ocrToDigitalMedicineResponse.getArtCode();
+        String[] words = s1.split(",");
+        String itemId = words[0];
+        String batchItemId = words[1];
+        SessionManager.INSTANCE.setBatchId(batchItemId);
+        SessionManager.INSTANCE.getBatchId();
+//        SessionManager.INSTANCE.setDeletedDataList(deletedataList);
+//        cartUniqueCount();
+//        total_itemcount_textview.setText(String.valueOf(countUniques.size()));
+//        cartCount(dataList.size());
+        onItemAddAgainClick = true;
+        myCartController.searchItemProducts(itemId, 0, ocrToDigitalMedicineResponse.getQty(), position);
+
+//        if (dataList.size() > 0) {
+//            float grandTotalVal = 0;
+//            for (int i = 0; i < dataList.size(); i++) {
+//                if (!TextUtils.isEmpty(dataList.get(i).getArtprice())) {
+//                    float totalPrice = Float.parseFloat(dataList.get(i).getArtprice()) * dataList.get(i).getQty();
+//                    grandTotalVal = grandTotalVal + totalPrice;
+//                }
+//            }
+//            String rupeeSymbol = "\u20B9";
+//            grandTotalPrice.setText(rupeeSymbol + "" + String.format("%.2f", grandTotalVal));
+//            grandTotalPriceValue = grandTotalPrice.getText().toString();
+//            cartListAdapter.notifyDataSetChanged();
+//            checkOutImage.setImageResource(R.drawable.checkout_cart);
+//        }
+//        if (SessionManager.INSTANCE.getDeletedDataList().size() > 0) {
+//            addAgainLayout.setVisibility(View.VISIBLE);
+//            removedItemsCount.setText(String.valueOf(SessionManager.INSTANCE.getDeletedDataList().size()));
+//        } else {
+//            addAgainLayout.setVisibility(View.GONE);
+//        }
+//        if (SessionManager.INSTANCE.getCurationStatus()) {
+//            curationProcessLayout.setVisibility(View.VISIBLE);
+//        } else {
+//            curationProcessLayout.setVisibility(View.GONE);
+//        }
     }
 
     @Override
@@ -275,6 +308,8 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
     @Override
     public void onPause() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceivers);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiverNew);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiverCheckOut);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mPrescriptionMessageReceiver);
         super.onPause();
@@ -331,7 +366,8 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
                             SessionManager.INSTANCE.setScannedPrescriptionItems(scannedList);
                             if (null != dataList && dataList.size() > 0) {
                                 cartItemCountLayout.setVisibility(View.VISIBLE);
-                                total_itemcount_textview.setText(String.valueOf(dataList.size()));
+                                cartUniqueCount();
+                                total_itemcount_textview.setText(String.valueOf(countUniques.size()));
                                 checkOutImage.setImageResource(R.drawable.checkout_cart);
                             } else {
                                 cartItemCountLayout.setVisibility(View.GONE);
@@ -346,11 +382,18 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
                                     }
                                 }
                                 String rupeeSymbol = "\u20B9";
-                                grandTotalPrice.setText(rupeeSymbol + "" + String.format("%.2f", grandTotalVal));
+
+                                DecimalFormat formatter = new DecimalFormat("#,###.00");
+                                String pharmaformatted = formatter.format(grandTotalVal);
+
+                                grandTotalPrice.setText(rupeeSymbol + "" + pharmaformatted);
                                 grandTotalPriceValue = grandTotalPrice.getText().toString();
                             }
                             SessionManager.INSTANCE.setDataList(dataList);
                             cartCount(dataList.size());
+
+                            groupingDuplicates();
+
                             cartListAdapter.notifyDataSetChanged();
                             curationViewLayout.setVisibility(View.GONE);
                             if (countdown_timer != null) {
@@ -374,7 +417,7 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
         public void onReceive(Context context, Intent intent) {
             String message = intent.getStringExtra("message");
             if (message.equalsIgnoreCase("ImageName")) {
-               //SessionManager.INSTANCE.setDynamicOrderId(intent.getStringExtra("imageId"));
+                //SessionManager.INSTANCE.setDynamicOrderId(intent.getStringExtra("imageId"));
                 myCartController.handleImageService(intent.getStringExtra("data"));
             }
         }
@@ -410,7 +453,8 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
                         SessionManager.INSTANCE.setDataList(dataList);
                         if (dataList.size() > 0) {
                             cartItemCountLayout.setVisibility(View.VISIBLE);
-                            total_itemcount_textview.setText(String.valueOf(dataList.size()));
+                            cartUniqueCount();
+                            total_itemcount_textview.setText(String.valueOf(countUniques.size()));
                             checkOutImage.setImageResource(R.drawable.checkout_cart);
                             float grandTotalVal = 0;
                             for (int i = 0; i < dataList.size(); i++) {
@@ -420,12 +464,19 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
                                 }
                             }
                             String rupeeSymbol = "\u20B9";
-                            grandTotalPrice.setText(rupeeSymbol + "" + String.format("%.2f", grandTotalVal));
+
+                            DecimalFormat formatter = new DecimalFormat("#,###.00");
+                            String pharmaformatted = formatter.format(grandTotalVal);
+
+                            grandTotalPrice.setText(rupeeSymbol + "" + pharmaformatted);
                             grandTotalPriceValue = grandTotalPrice.getText().toString();
                         } else {
                             cartItemCountLayout.setVisibility(View.GONE);
                             checkOutImage.setImageResource(R.drawable.checkout_cart_unselect);
                         }
+
+                        groupingDuplicates();
+
                         cartListAdapter.notifyDataSetChanged();
                     }
                     curationViewLayout.setVisibility(View.GONE);
@@ -445,7 +496,8 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
                     SessionManager.INSTANCE.setDataList(dataList);
                     if (null != dataList && dataList.size() > 0) {
                         cartItemCountLayout.setVisibility(View.VISIBLE);
-                        total_itemcount_textview.setText(String.valueOf(dataList.size()));
+                        cartUniqueCount();
+                        total_itemcount_textview.setText(String.valueOf(countUniques.size()));
                         checkOutImage.setImageResource(R.drawable.checkout_cart);
                         float grandTotalVal = 0;
                         for (int i = 0; i < dataList.size(); i++) {
@@ -455,12 +507,18 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
                             }
                         }
                         String rupeeSymbol = "\u20B9";
-                        grandTotalPrice.setText(rupeeSymbol + "" + String.format("%.2f", grandTotalVal));
+                        DecimalFormat formatter = new DecimalFormat("#,###.00");
+                        String pharmaformatted = formatter.format(grandTotalVal);
+
+                        grandTotalPrice.setText(rupeeSymbol + "" + pharmaformatted);
                         grandTotalPriceValue = grandTotalPrice.getText().toString();
                     } else {
                         cartItemCountLayout.setVisibility(View.GONE);
                         checkOutImage.setImageResource(R.drawable.checkout_cart_unselect);
                     }
+
+                    groupingDuplicates();
+
                     cartListAdapter.notifyDataSetChanged();
                     curationViewLayout.setVisibility(View.GONE);
                 }
@@ -493,8 +551,15 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
                         }
                     }
                     String rupeeSymbol = "\u20B9";
-                    grandTotalPrice.setText(rupeeSymbol + "" + String.format("%.2f", grandTotalVal));
+
+                    DecimalFormat formatter = new DecimalFormat("#,###.00");
+                    String pharmaformatted = formatter.format(grandTotalVal);
+
+                    grandTotalPrice.setText(rupeeSymbol + "" + pharmaformatted);
                     grandTotalPriceValue = grandTotalPrice.getText().toString();
+
+                    groupingDuplicates();
+
                     cartListAdapter.notifyDataSetChanged();
                 }
                 if (SessionManager.INSTANCE.getDeletedDataList().size() > 0) {
@@ -520,6 +585,7 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
     @Override
     public void onResume() {
         super.onResume();
+        addDevEventsDelegate(this);
         MyCartActivity.this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -737,10 +803,12 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
         });
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_cart);
+        addDevEventsDelegate(this);
 
         dataList = new ArrayList<>();
         deletedataList = new ArrayList<>();
@@ -754,6 +822,7 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
         TextView helpText = findViewById(R.id.help_text);
         helpText.setText(getResources().getString(R.string.faq));
         faqLayout.setOnClickListener(view -> startActivity(new Intent(MyCartActivity.this, FAQActivity.class)));
+
 
         ImageView customerCareImg = findViewById(R.id.customer_care_icon);
         LinearLayout customerHelpLayout = findViewById(R.id.customer_help_layout);
@@ -858,7 +927,11 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         String rupeeSymbol = "\u20B9";
-        grandTotalPrice.setText(rupeeSymbol + "00.00");
+
+        DecimalFormat formatter = new DecimalFormat("#,###.00");
+        String pharmaformatted = formatter.format(00.00);
+
+        grandTotalPrice.setText(rupeeSymbol + pharmaformatted);
 
         if (ConnectivityReceiver.isConnected()) {
             findViewById(R.id.networkErrorLayout).setVisibility(View.GONE);
@@ -867,6 +940,12 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
         }
 
         myCartController = new MyCartController(this);
+        myCartController.upcellCrosscellList("7353910637", MyCartActivity.this);
+        upcell_recycle = findViewById(R.id.up_cell_data_recycle);
+        crossCell_recycle = findViewById(R.id.cross_cell_data_recycle);
+        noDataFound = findViewById(R.id.no_data);
+        noDataFoundCrosssel = findViewById(R.id.no_data_found_crosssell);
+        noDataFoundUpsel = findViewById(R.id.no_data_found_upsell);
         RecyclerView promotionproductrecycleerview = findViewById(R.id.promotionsRecyclerView);
         promotionproductrecycleerview.setLayoutManager(new GridLayoutManager(MyCartActivity.this, 3));
         RecyclerView trendingnowproductrecycleerview = findViewById(R.id.trendingnowproductrecycleerview);
@@ -893,7 +972,8 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
                 }
                 if (null != dataList && dataList.size() > 0) {
                     cartItemCountLayout.setVisibility(View.VISIBLE);
-                    total_itemcount_textview.setText(String.valueOf(dataList.size()));
+                    cartUniqueCount();
+                    total_itemcount_textview.setText(String.valueOf(countUniques.size()));
                     checkOutImage.setImageResource(R.drawable.checkout_cart);
                     curationViewLayout.setVisibility(View.GONE);
                     curationProcessText.setVisibility(View.GONE);
@@ -905,7 +985,10 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
                                 grandTotalVal = grandTotalVal + totalPrice;
                             }
                         }
-                        grandTotalPrice.setText(rupeeSymbol + "" + String.format("%.2f", grandTotalVal));
+                        DecimalFormat formatter1 = new DecimalFormat("#,###.00");
+                        String pharmaformatted1 = formatter1.format(grandTotalVal);
+
+                        grandTotalPrice.setText(rupeeSymbol + "" + pharmaformatted1);
                         grandTotalPriceValue = grandTotalPrice.getText().toString();
                     }
                 } else {
@@ -916,7 +999,8 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
                 dataList = SessionManager.INSTANCE.getDataList();
                 if (null != dataList && dataList.size() > 0) {
                     cartItemCountLayout.setVisibility(View.VISIBLE);
-                    total_itemcount_textview.setText(String.valueOf(dataList.size()));
+                    cartUniqueCount();
+                    total_itemcount_textview.setText(String.valueOf(countUniques.size()));
                     checkOutImage.setImageResource(R.drawable.checkout_cart);
                     curationViewLayout.setVisibility(View.GONE);
                     if (SessionManager.INSTANCE.getCurationStatus()) {
@@ -934,7 +1018,11 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
                                 }
                             }
                         }
-                        grandTotalPrice.setText(rupeeSymbol + "" + String.format("%.2f", grandTotalVal));
+
+                        DecimalFormat formatter1 = new DecimalFormat("#,###.00");
+                        String pharmaformatted1 = formatter1.format(grandTotalVal);
+
+                        grandTotalPrice.setText(rupeeSymbol + "" + pharmaformatted1);
                         grandTotalPriceValue = grandTotalPrice.getText().toString();
                     }
                     if (countdown_timer != null) {
@@ -948,7 +1036,8 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
                 dataList = SessionManager.INSTANCE.getDataList();
                 if (null != dataList && dataList.size() > 0) {
                     cartItemCountLayout.setVisibility(View.VISIBLE);
-                    total_itemcount_textview.setText(String.valueOf(dataList.size()));
+                    cartUniqueCount();
+                    total_itemcount_textview.setText(String.valueOf(countUniques.size()));
                     checkOutImage.setImageResource(R.drawable.checkout_cart);
                     curationViewLayout.setVisibility(View.GONE);
                     if (SessionManager.INSTANCE.getCurationStatus()) {
@@ -983,40 +1072,50 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
         }
 
         checkOutImage.setOnClickListener(arg0 -> {
-            if (curationViewLayout.getVisibility() == View.GONE) {
-                if (dataList.size() > 0) {
-                    if (curationFlag) {
-                        if (curationDoneFlag) {
-                            checkDeliveryOption();
-                        } else {
-                            final Dialog dialog = new Dialog(MyCartActivity.this);
-                            dialog.setContentView(R.layout.view_curation_alert_dialog);
-                            if (dialog.getWindow() != null)
-                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                            dialog.show();
-                            TextView dialogTitleText = dialog.findViewById(R.id.dialog_info);
-                            Button okButton = dialog.findViewById(R.id.dialog_ok);
-                            Button declineButton = dialog.findViewById(R.id.dialog_cancel);
-                            dialogTitleText.setText(getResources().getString(R.string.label_curation_in_progress_text));
-                            okButton.setText(getResources().getString(R.string.label_ok));
-                            declineButton.setText(getResources().getString(R.string.label_cancel_text));
-                            okButton.setOnClickListener(v -> {
-                                dialog.dismiss();
-                                if (countdown_timer != null)
-                                    countdown_timer.cancel();
-                                checkDeliveryOption();
-                            });
-                            declineButton.setOnClickListener(v -> dialog.dismiss());
-                        }
-                    } else {
-                        checkDeliveryOption();
-                    }
-                } else {
-                    Utils.showSnackbar(MyCartActivity.this, constraint_Layout, getApplicationContext().getResources().getString(R.string.label_min_order_item_alert));
-                }
+            if (dataList != null && dataList.size() > 0) {
+//                startActivity(CheckoutActivity.getStartIntent(this, dataList));
+                Intent intent = new Intent(this, CheckoutActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
             } else {
-                Utils.showSnackbar(MyCartActivity.this, constraint_Layout, getApplicationContext().getResources().getString(R.string.label_curation_progress_wait));
+                Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), "No items added to cart", Snackbar.LENGTH_SHORT);
+                snackbar.getView().setBackgroundColor(getResources().getColor(R.color.color_yellow_button));
+                snackbar.show();
             }
+//            if (curationViewLayout.getVisibility() == View.GONE) {
+//                if (dataList.size() > 0) {
+//                    if (curationFlag) {
+//                        if (curationDoneFlag) {
+//                            checkDeliveryOption();
+//                        } else {
+//                            final Dialog dialog = new Dialog(MyCartActivity.this);
+//                            dialog.setContentView(R.layout.view_curation_alert_dialog);
+//                            if (dialog.getWindow() != null)
+//                                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//                            dialog.show();
+//                            TextView dialogTitleText = dialog.findViewById(R.id.dialog_info);
+//                            Button okButton = dialog.findViewById(R.id.dialog_ok);
+//                            Button declineButton = dialog.findViewById(R.id.dialog_cancel);
+//                            dialogTitleText.setText(getResources().getString(R.string.label_curation_in_progress_text));
+//                            okButton.setText(getResources().getString(R.string.label_ok));
+//                            declineButton.setText(getResources().getString(R.string.label_cancel_text));
+//                            okButton.setOnClickListener(v -> {
+//                                dialog.dismiss();
+//                                if (countdown_timer != null)
+//                                    countdown_timer.cancel();
+//                                checkDeliveryOption();
+//                            });
+//                            declineButton.setOnClickListener(v -> dialog.dismiss());
+//                        }
+//                    } else {
+//                        checkDeliveryOption();
+//                    }
+//                } else {
+//                    Utils.showSnackbar(MyCartActivity.this, constraint_Layout, getApplicationContext().getResources().getString(R.string.label_min_order_item_alert));
+//                }
+//            } else {
+//                Utils.showSnackbar(MyCartActivity.this, constraint_Layout, getApplicationContext().getResources().getString(R.string.label_curation_progress_wait));
+//            }
         });
 
         promotionViewAll.setOnClickListener(arg0 -> {
@@ -1046,7 +1145,7 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
 
         cartItemRecyclerView = findViewById(R.id.cartRecyclerView);
         dataList = new ArrayList<>();
-        cartListAdapter = new MyCartListAdapter(dataList, this);
+        cartListAdapter = new MyCartListAdapter(MyCartActivity.this, dataComparingList, this, expandholdedDataList);
         cartItemRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         cartItemRecyclerView.setAdapter(cartListAdapter);
         cartListAdapter.notifyDataSetChanged();
@@ -1055,6 +1154,20 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
             if (SessionManager.INSTANCE.getDataList().size() > 0) {
                 dataList.clear();
                 dataList.addAll(SessionManager.INSTANCE.getDataList());
+
+//                dataComparingList.addAll(SessionManager.INSTANCE.getDataList());
+//                for (int i = 0; i < dataComparingList.size(); i++) {
+//                    for (int j = 0; j < dataComparingList.size(); j++) {
+//                        if (i != j && dataComparingList.get(i).getArtName().equals(dataComparingList.get(j).getArtName())) {
+//                            expandholdedDataList.add(dataComparingList.get(j));
+//                            dataComparingList.remove(j);
+//                            j--;
+//                        }
+//                    }
+//                }
+
+                groupingDuplicates();
+
                 cartListAdapter.notifyDataSetChanged();
                 float totalMrpPrice = 0;
                 for (int i = 0; i < dataList.size(); i++) {
@@ -1062,7 +1175,11 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
                         totalMrpPrice = Float.parseFloat(dataList.get(i).getArtprice()) * dataList.get(i).getQty() + totalMrpPrice;
                     }
                 }
-                grandTotalPrice.setText(rupeeSymbol + "" + String.format("%.2f", totalMrpPrice));
+
+                DecimalFormat formatter1 = new DecimalFormat("#,###.00");
+                String pharmaformatted1 = formatter1.format(totalMrpPrice);
+
+                grandTotalPrice.setText(rupeeSymbol + "" + pharmaformatted1);
                 cartCount(dataList.size());
             }
         }
@@ -1149,6 +1266,10 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiverCheckOut, new IntentFilter("MedicineReciver"));
         LocalBroadcastManager.getInstance(this).registerReceiver(mPrescriptionMessageReceiver, new IntentFilter("PrescriptionReceived"));
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, new IntentFilter("cardReceiverCartItems"));
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceivers, new IntentFilter("cardReceiver"));
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiverNew, new IntentFilter("OrderhistoryCardReciver"));
+        Constants.getInstance().setConnectivityListener(this);
+
         Constants.getInstance().setConnectivityListener(this);
 
         addAgainLayout.setOnClickListener(v -> {
@@ -1160,6 +1281,101 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
                 window.setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT);
             }
         });
+//        checkOutImage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(MyCartActivity.this, PaymentOptionsActivity.class);
+//                startActivity(intent);
+//                overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
+//            }
+//        });
+    }
+
+    private List<OCRToDigitalMedicineResponse> duplicatelabelDataList = new ArrayList<>();
+
+    private void groupingDuplicates() {
+
+        dataComparingList.clear();
+        expandholdedDataList.clear();
+        labelDataList.clear();
+        duplicatelabelDataList.clear();
+
+        dataComparingList.addAll(SessionManager.INSTANCE.getDataList());
+        for (int i = 0; i < dataComparingList.size(); i++) {
+            for (int j = 0; j < dataComparingList.size(); j++) {
+                if (dataComparingList.get(i).getArtName().equals(dataComparingList.get(j).getArtName())) {
+                    expandholdedDataList.add(dataComparingList.get(j));
+                    labelDataList.add(dataComparingList.get(j));
+                    dataComparingList.remove(j);
+                    j--;
+                }
+            }
+        }
+
+        for (int i = 0; i < labelDataList.size(); i++) {
+            for (int j = 0; j < labelDataList.size(); j++) {
+                if (i != j && labelDataList.get(i).getArtName().equals(labelDataList.get(j).getArtName())) {
+                    labelDataList.remove(j);
+                    j--;
+                }
+            }
+        }
+
+        List<OCRToDigitalMedicineResponse> expandListDummy = new ArrayList<>();
+        for (int i = 0; i < labelDataList.size(); i++) {
+            for (int j = 0; j < expandholdedDataList.size(); j++) {
+                if (labelDataList.get(i).getArtName().equalsIgnoreCase(expandholdedDataList.get(j).getArtName())) {
+                    expandListDummy.add(expandholdedDataList.get(j));
+                }
+            }
+        }
+        float max = 0;
+        for (int i = 0; i < labelDataList.size(); i++) {
+            int labelAvgQty = 0;
+            boolean maxOnce = false;
+            float labelAveragePrice = 0;
+            float labelPrice = 0;
+            String labelName = "";
+            int repeatCount = 0;
+            for (int j = 0; j < expandListDummy.size(); j++) {
+                if (labelDataList.get(i).getArtName().equalsIgnoreCase(expandListDummy.get(j).getArtName())) {
+                    if (!maxOnce) {
+                        max = Float.parseFloat(expandListDummy.get(j).getArtprice());
+                        maxOnce = true;
+                    }
+
+                    // loop to find maximum from ArrayList
+                    if (Float.parseFloat(expandListDummy.get(j).getArtprice()) > max) {
+                        max = Float.parseFloat(expandListDummy.get(j).getArtprice());
+                    }
+
+                    labelPrice = labelPrice + Float.parseFloat(expandListDummy.get(j).getArtprice());
+                    labelAvgQty = labelAvgQty + expandListDummy.get(j).getQty();
+                    repeatCount = repeatCount + 1;
+                    labelName = expandListDummy.get(j).getArtName();
+                }
+            }
+
+            OCRToDigitalMedicineResponse labelResponse = new OCRToDigitalMedicineResponse();
+            labelResponse.setLabelMaxPrice(max);
+            labelResponse.setLabelPrice(labelPrice);
+            labelAveragePrice = labelResponse.getLabelPrice() / (float) repeatCount;
+            labelResponse.setLabelAveragePrice(labelAveragePrice);
+            labelResponse.setLabelAvgQty(labelAvgQty);
+            labelResponse.setDuplicateCount(repeatCount);
+            labelResponse.setLabelName(labelName);
+            duplicatelabelDataList.add(labelResponse);
+        }
+
+        for (int i = 0; i < duplicatelabelDataList.size(); i++) {
+            OCRToDigitalMedicineResponse labelResponse = new OCRToDigitalMedicineResponse();
+            labelResponse.setLabelMaxPrice(duplicatelabelDataList.get(i).getLabelMaxPrice());
+            labelResponse.setArtName(duplicatelabelDataList.get(i).getLabelName());
+            labelResponse.setArtprice(String.valueOf(duplicatelabelDataList.get(i).getLabelAveragePrice()));
+            labelResponse.setQty(duplicatelabelDataList.get(i).getLabelAvgQty());
+            dataComparingList.add(labelResponse);
+        }
+
     }
 
     private void startcountertimer() {
@@ -1307,7 +1523,8 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
         }
         if (null != dataList && dataList.size() > 0) {
             cartItemCountLayout.setVisibility(View.VISIBLE);
-            total_itemcount_textview.setText(String.valueOf(dataList.size()));
+            cartUniqueCount();
+            total_itemcount_textview.setText(String.valueOf(countUniques.size()));
             checkOutImage.setImageResource(R.drawable.checkout_cart);
             curationViewLayout.setVisibility(View.GONE);
             if (SessionManager.INSTANCE.getCurationStatus()) {
@@ -1333,8 +1550,15 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
                 }
             }
             String rupeeSymbol = "\u20B9";
-            grandTotalPrice.setText(rupeeSymbol + "" + String.format("%.2f", grandTotalVal));
+
+            DecimalFormat formatter = new DecimalFormat("#,###.00");
+            String pharmaformatted = formatter.format(grandTotalVal);
+
+            grandTotalPrice.setText(rupeeSymbol + "" + pharmaformatted);
             grandTotalPriceValue = grandTotalPrice.getText().toString();
+
+            groupingDuplicates();
+
             cartListAdapter.notifyDataSetChanged();
         }
     }
@@ -1376,15 +1600,34 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
 
     }
 
+    List<OCRToDigitalMedicineResponse> countUniques;
+
+    private void cartUniqueCount() {
+        countUniques = new ArrayList<>();
+        countUniques.addAll(dataList);
+
+        for (int i = 0; i < countUniques.size(); i++) {
+            for (int j = 0; j < countUniques.size(); j++) {
+                if (i != j && countUniques.get(i).getArtName().equals(countUniques.get(j).getArtName())) {
+                    countUniques.remove(j);
+                    j--;
+                }
+            }
+        }
+    }
+
     @Override
     public void cartCount(int count) {
         if (null == myCartCount)
             return;
         if (count != 0) {
+            cartUniqueCount();
             myCartCount.setVisibility(View.VISIBLE);
-            myCartCount.setText(String.valueOf(count));
+//            myCartCount.setText(String.valueOf(count));
+            myCartCount.setText(String.valueOf(countUniques.size()));
             cartItemCountLayout.setVisibility(View.VISIBLE);
-            total_itemcount_textview.setText(String.valueOf(dataList.size()));
+            cartUniqueCount();
+            total_itemcount_textview.setText(String.valueOf(countUniques.size()));
             checkOutImage.setImageResource(R.drawable.checkout_cart);
         } else {
             myCartCount.setVisibility(View.GONE);
@@ -1392,6 +1635,11 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
             cartItemCountLayout.setVisibility(View.GONE);
             checkOutImage.setImageResource(R.drawable.checkout_cart_unselect);
         }
+    }
+
+    @Override
+    public void showSnackBAr() {
+
     }
 
     @Override
@@ -1429,11 +1677,11 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
                 int product_quantyty = data.getQty();
                 String product_container = data.getContainer();
                 String product_price = data.getArtprice();
-
                 OCRToDigitalMedicineResponse loadobject = new OCRToDigitalMedicineResponse();
                 loadobject.setArtCode(product_sku);
                 loadobject.setArtName(product_name);
                 loadobject.setQty(product_quantyty);
+                loadobject.setMedicineType(data.getMedicineType());
                 loadobject.setContainer(product_container);
                 loadobject.setArtprice(product_price);
                 dataList.add(loadobject);
@@ -1453,8 +1701,15 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
                 }
             }
             String rupeeSymbol = "\u20B9";
-            grandTotalPrice.setText(rupeeSymbol + "" + String.format("%.2f", grandTotalVal));
+
+            DecimalFormat formatter = new DecimalFormat("#,###.00");
+            String pharmaformatted = formatter.format(grandTotalVal);
+
+            grandTotalPrice.setText(rupeeSymbol + "" + pharmaformatted);
             grandTotalPriceValue = grandTotalPrice.getText().toString();
+
+            groupingDuplicates();
+
             cartListAdapter.notifyDataSetChanged();
             cartCount(dataList.size());
         }
@@ -1465,6 +1720,380 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
         SessionManager.INSTANCE.setScannedImagePath(res.getImageUrl());
         uploadBgImageController.handleUploadImageService(res.getImageUrl());
         handleScannedImageView();
+    }
+
+//    List<UpCellCrossCellResponse.Crossselling> crosssellingList = new ArrayList<>();
+//    List<UpCellCrossCellResponse.Upselling> upsellingList = new ArrayList<>();
+
+    List<ItemSearchResponse.Item> crosssellingList = new ArrayList<>();
+    List<ItemSearchResponse.Item> upsellingList = new ArrayList<>();
+    boolean addToCarLayHandel;
+    UpCellCrossCellResponse.Crossselling cs;
+    private int crosssellcountforadapter = 0;
+    private int upssellcountforadapter = 0;
+
+    @Override
+    public void onSuccessSearchItemApi(UpCellCrossCellResponse body) {
+        crosssellcountforadapter = 0;
+        upssellcountforadapter = 0;
+        List<UpCellCrossCellResponse.Crossselling> crossselling = null;
+        List<UpCellCrossCellResponse.Upselling> upselling = null;
+        if (body != null && body.getCrossselling() != null && body.getCrossselling().size() > 0) {
+            addToCarLayHandel = false;
+            crossselling = new ArrayList<>();
+            crossselling.add(body.getCrossselling().get(0));
+            crossselling.add(body.getCrossselling().get(1));
+            crossselling.add(body.getCrossselling().get(2));
+            for (UpCellCrossCellResponse.Crossselling crossSellingList : crossselling) {
+                myCartController.searchItemProducts(crossSellingList.getItemid(), 1, 0, 0);
+            }
+        } else {
+            noDataFound.setVisibility(View.VISIBLE);
+        }
+        if (body != null && body.getUpselling() != null && body.getUpselling().size() > 0) {
+            upselling = new ArrayList<>();
+            upselling.add(body.getUpselling().get(0));
+            upselling.add(body.getUpselling().get(1));
+            upselling.add(body.getUpselling().get(2));
+            for (UpCellCrossCellResponse.Upselling upSelling : upselling) {
+                myCartController.searchItemProducts(upSelling.getItemid(), 2, 0, 0);
+            }
+        } else {
+            noDataFound.setVisibility(View.VISIBLE);
+        }
+//        if (crossselling != null && crossselling.size() > 0 || upselling != null && upselling.size() > 0)
+//            upSellCrosssellApiCall(crossselling, upselling);
+
+    }
+
+    @Override
+    public void upSellCrosssellApiCall(List<UpCellCrossCellResponse.Crossselling> crossselling,
+                                       List<UpCellCrossCellResponse.Upselling> upselling) {
+
+    }
+
+    @Override
+    public void onSearchFailure(String message) {
+
+    }
+
+    List<OCRToDigitalMedicineResponse> dummyDataList = new ArrayList<>();
+    private float balanceQty;
+
+    @Override
+    public void onSuccessBarcodeItemApi(ItemSearchResponse itemSearchResponse, int serviceType, int qty, int position) {
+        if (serviceType == 0) {
+            if (itemSearchResponse.getItemList() != null && itemSearchResponse.getItemList().size() > 0) {
+                ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(MyCartActivity.this, itemSearchResponse.getItemList().get(0).getArtCode());
+                itemBatchSelectionDilaog.setItemBatchListDialogListener(this);
+                ProductSearch medicine = new ProductSearch();
+
+                medicine.setName(itemSearchResponse.getItemList().get(0).getGenericName());
+                itemBatchSelectionDilaog.setTitle(itemSearchResponse.getItemList().get(0).getDescription());
+                medicine.setSku(itemSearchResponse.getItemList().get(0).getArtCode());
+                medicine.setQty(1);
+                medicine.setDescription(itemSearchResponse.getItemList().get(0).getDescription());
+                medicine.setCategory(itemSearchResponse.getItemList().get(0).getCategory());
+                medicine.setMedicineType(itemSearchResponse.getItemList().get(0).getCategory());
+                medicine.setIsInStock(itemSearchResponse.getItemList().get(0).getStockqty() != 0 ? 1 : 0);
+                medicine.setIsPrescriptionRequired(0);
+                medicine.setPrice(itemSearchResponse.getItemList().get(0).getMrp());
+
+                if (qty != 0) {
+                    itemBatchSelectionDilaog.setQtyCount(String.valueOf(qty));
+                }
+
+                itemBatchSelectionDilaog.setUnitIncreaseListener(view3 -> {
+                    if (itemBatchSelectionDilaog.getQtyCount() != null && !itemBatchSelectionDilaog.getQtyCount().isEmpty()) {
+                        if (itemBatchSelectionDilaog.getQtyCount() != null && !itemBatchSelectionDilaog.getQtyCount().isEmpty()) {
+                            medicine.setQty(Integer.parseInt(itemBatchSelectionDilaog.getQtyCount()) + 1);
+                        } else {
+                            medicine.setQty(medicine.getQty() + 1);
+                        }
+                        itemBatchSelectionDilaog.setQtyCount("" + medicine.getQty());
+                    } else {
+                        Toast.makeText(MyCartActivity.this, "Please enter product quantity", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                itemBatchSelectionDilaog.setUnitDecreaseListener(view4 -> {
+                    if (itemBatchSelectionDilaog.getQtyCount() != null && !itemBatchSelectionDilaog.getQtyCount().isEmpty()) {
+                        if (itemBatchSelectionDilaog.getQtyCount() != null && !itemBatchSelectionDilaog.getQtyCount().isEmpty()) {
+                            medicine.setQty(Integer.parseInt(itemBatchSelectionDilaog.getQtyCount()));
+                        }
+                        if (medicine.getQty() > 1) {
+                            medicine.setQty(medicine.getQty() - 1);
+                            itemBatchSelectionDilaog.setQtyCount("" + medicine.getQty());
+                        }
+                    }
+                });
+                itemBatchSelectionDilaog.setPositiveListener(view2 -> {
+
+                    itemBatchSelectionDilaog.globalBatchListHandlings(medicine.getDescription(), medicine.getSku(),
+                            balanceQty, dummyDataList, MyCartActivity.this, medicine.getMedicineType());
+
+                    SessionManager.INSTANCE.setBatchId("");
+                    if (onItemAddAgainClick) {
+                        deletedataList.remove(position);
+                        SessionManager.INSTANCE.setDeletedDataList(deletedataList);
+                        cartUniqueCount();
+                        total_itemcount_textview.setText(String.valueOf(countUniques.size()));
+                        cartCount(dataList.size());
+                        onItemAddAgainClick = false;
+
+                        if (SessionManager.INSTANCE.getDeletedDataList().size() > 0) {
+                            addAgainLayout.setVisibility(View.VISIBLE);
+                            removedItemsCount.setText(String.valueOf(SessionManager.INSTANCE.getDeletedDataList().size()));
+                        } else {
+                            addAgainLayout.setVisibility(View.GONE);
+                        }
+                        if (SessionManager.INSTANCE.getCurationStatus()) {
+                            curationProcessLayout.setVisibility(View.VISIBLE);
+                        } else {
+                            curationProcessLayout.setVisibility(View.GONE);
+                        }
+                    }
+
+////                activityHomeBinding.transColorId.setVisibility(View.GONE);
+//                    Intent intent = new Intent("cardReceiver");
+//                    intent.putExtra("message", "Addtocart");
+//                    intent.putExtra("product_sku", medicine.getSku());
+//                    intent.putExtra("product_name", medicine.getDescription());
+//                    intent.putExtra("product_quantyty", itemBatchSelectionDilaog.getQtyCount().toString());
+//                    intent.putExtra("product_price", String.valueOf(itemBatchSelectionDilaog.getItemProice()));//String.valueOf(medicine.getPrice())
+//                    // intent.putExtra("product_container", product_container);
+//                    intent.putExtra("medicineType", medicine.getMedicineType());
+//                    intent.putExtra("product_mou", String.valueOf(medicine.getMou()));
+//                    intent.putExtra("product_position", String.valueOf(0));
+//                    LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+////                OCRToDigitalMedicineResponse ocrToDigitalMedicineResponse = new OCRToDigitalMedicineResponse();
+////                ocrToDigitalMedicineResponse.setArtCode(medicine.getSku());
+////                ocrToDigitalMedicineResponse.setArtName(medicine.getName());
+////                ocrToDigitalMedicineResponse.setQty(Integer.parseInt(itemBatchSelectionDilaog.getQtyCount().toString()));
+////                ocrToDigitalMedicineResponse.setArtprice(String.valueOf(itemBatchSelectionDilaog.getItemProice()));
+////                ocrToDigitalMedicineResponse.setMedicineType(medicine.getMedicineType());
+////                ocrToDigitalMedicineResponse.setMou(String.valueOf(medicine.getMou()));
+////                if (null != SessionManager.INSTANCE.getDataList()) {
+////                    this.dataList = SessionManager.INSTANCE.getDataList();
+////                    dataList.add(ocrToDigitalMedicineResponse);
+////                    SessionManager.INSTANCE.setDataList(dataList);
+////                    SessionManager.INSTANCE.setDataList(dataList);
+////                } else {
+////                    dataList.add(ocrToDigitalMedicineResponse);
+////                    SessionManager.INSTANCE.setDataList(dataList);
+////                }
+//                    isDialogShow = false;
+//                    itemBatchSelectionDilaog.dismiss();
+////                Intent intent1 = new Intent(MySearchActivity.this, MyCartActivity.class);
+////                intent1.putExtra("activityname", "AddMoreActivity");
+////                startActivity(intent1);
+////                finish();
+////                overridePendingTransition(R.animator.trans_right_in, R.animator.trans_right_out);
+                });
+                itemBatchSelectionDilaog.setNegativeListener(v -> {
+//                activityHomeBinding.transColorId.setVisibility(View.GONE);
+                    isDialogShow = false;
+                    SessionManager.INSTANCE.setBatchId("");
+                    itemBatchSelectionDilaog.dismiss();
+                });
+                isDialogShow = true;
+                itemBatchSelectionDilaog.show();
+            } else {
+                Utils.showSnackbar(MyCartActivity.this, constraint_Layout, "No Item found");
+                SessionManager.INSTANCE.setBatchId("");
+            }
+            Utils.dismissDialog();
+        } else if (serviceType == 1) {
+            crosssellcountforadapter++;
+            if (itemSearchResponse.getItemList() != null && itemSearchResponse.getItemList().size() > 0) {
+                crosssellingList.add(itemSearchResponse.getItemList().get(0));
+                if (crosssellcountforadapter == 3) {
+                    if (crosssellingList != null && crosssellingList.size() > 0) {
+                        CrossCellAdapter crossCellAdapter = new CrossCellAdapter(this, crosssellingList, addToCarLayHandel);
+                        RecyclerView.LayoutManager mLayoutManager4 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+                        crossCell_recycle.setLayoutManager(mLayoutManager4);
+                        crossCell_recycle.setItemAnimator(new DefaultItemAnimator());
+                        crossCell_recycle.setAdapter(crossCellAdapter);
+                        noDataFoundCrosssel.setVisibility(View.GONE);
+                    } else {
+                        noDataFoundCrosssel.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+            if (crosssellcountforadapter == 3 && crosssellingList != null && crosssellingList.size() > 0)
+                noDataFoundCrosssel.setVisibility(View.GONE);
+            else
+                noDataFoundCrosssel.setVisibility(View.VISIBLE);
+        } else if (serviceType == 2) {
+            upssellcountforadapter++;
+            if (itemSearchResponse.getItemList() != null && itemSearchResponse.getItemList().size() > 0) {
+                upsellingList.add(itemSearchResponse.getItemList().get(0));
+                if (upssellcountforadapter == 3) {
+                    if (upsellingList != null && upsellingList.size() > 0) {
+                        UpCellAdapter upCellAdapter = new UpCellAdapter(this, upsellingList);
+                        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+                        upcell_recycle.setLayoutManager(mLayoutManager);
+                        upcell_recycle.setItemAnimator(new DefaultItemAnimator());
+                        upcell_recycle.setAdapter(upCellAdapter);
+                        noDataFoundUpsel.setVisibility(View.GONE);
+                    } else {
+                        noDataFoundUpsel.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+            if (upssellcountforadapter == 3 && upsellingList != null && upsellingList.size() > 0)
+                noDataFoundUpsel.setVisibility(View.GONE);
+            else
+                noDataFoundUpsel.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private BroadcastReceiver mMessageReceiverNew = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String message = intent.getStringExtra("message");
+            if (message.equalsIgnoreCase("OrderNow")) {
+                if (null != SessionManager.INSTANCE.getDataList()) {
+                    if (SessionManager.INSTANCE.getDataList().size() > 0) {
+                        cartCount(SessionManager.INSTANCE.getDataList().size());
+                        dataList = SessionManager.INSTANCE.getDataList();
+                    }
+                }
+                float grandTotalVal = 0;
+                for (int i = 0; i < dataList.size(); i++) {
+                    if (!TextUtils.isEmpty(dataList.get(i).getArtprice())) {
+                        Float totalPrice = Float.parseFloat(dataList.get(i).getArtprice()) * dataList.get(i).getQty();
+                        grandTotalVal = grandTotalVal + totalPrice;
+                    }
+                }
+                String rupeeSymbol = "\u20B9";
+
+                DecimalFormat formatter = new DecimalFormat("#,###.00");
+                String pharmaformatted = formatter.format(grandTotalVal);
+
+                grandTotalPrice.setText(rupeeSymbol + "" + pharmaformatted);
+
+                Utils.showSnackbar(MyCartActivity.this, constraint_Layout, getApplicationContext().getResources().getString(R.string.label_item_added_cart));
+                cartCount(dataList.size());
+
+                groupingDuplicates();
+
+                cartListAdapter = new MyCartListAdapter(MyCartActivity.this, dataComparingList, MyCartActivity.this, expandholdedDataList);
+                cartItemRecyclerView.setLayoutManager(new LinearLayoutManager(MyCartActivity.this));
+                cartItemRecyclerView.setAdapter(cartListAdapter);
+                cartListAdapter.notifyDataSetChanged();
+            }
+            if (dataList != null && dataList.size() > 0)
+                if (cartListAdapter != null) {
+
+                    groupingDuplicates();
+
+                    cartListAdapter.notifyDataSetChanged();
+                }
+        }
+    };
+
+    private BroadcastReceiver mMessageReceivers = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String message = intent.getStringExtra("message");
+            if (message.equalsIgnoreCase("Addtocart")) {
+                if (null != SessionManager.INSTANCE.getDataList()) {
+                    if (SessionManager.INSTANCE.getDataList().size() > 0) {
+                        cartCount(SessionManager.INSTANCE.getDataList().size());
+                        dataList = SessionManager.INSTANCE.getDataList();
+                    }
+                }
+                boolean product_avilable = false;
+                if (null != dataList) {
+                    int count = 0;
+                    for (OCRToDigitalMedicineResponse data : dataList) {
+                        if (data.getArtCode() != null) {
+                            if (data.getArtCode().equalsIgnoreCase(intent.getStringExtra("product_sku"))) {
+                                product_avilable = true;
+                                int qty = data.getQty();
+                                qty = qty + 1;
+                                dataList.remove(count);
+                                OCRToDigitalMedicineResponse object1 = new OCRToDigitalMedicineResponse();
+                                object1.setArtName(intent.getStringExtra("product_name"));
+                                object1.setArtCode(intent.getStringExtra("product_sku"));
+                                object1.setMedicineType(intent.getStringExtra("medicineType"));
+                                object1.setQty(Integer.parseInt(intent.getStringExtra("product_quantyty")));
+                                if (null != intent.getStringExtra("product_price")) {
+                                    object1.setArtprice(intent.getStringExtra("product_price"));
+                                } else {
+                                    object1.setArtprice(String.valueOf(intent.getStringExtra("product_price")));
+                                }
+                                object1.setMou(String.valueOf(intent.getStringExtra("product_mou")));
+//                                object1.setQty(qty);
+                                object1.setContainer("Strip");
+                                dataList.add(object1);
+                                SessionManager.INSTANCE.setDataList(dataList);
+                                break;
+                            } else {
+                                product_avilable = false;
+                            }
+                        }
+                        count = count + 1;
+                    }
+                    if (!product_avilable) {
+                        OCRToDigitalMedicineResponse object1 = new OCRToDigitalMedicineResponse();
+                        object1.setArtName(intent.getStringExtra("product_name"));
+                        object1.setArtCode(intent.getStringExtra("product_sku"));
+                        object1.setMedicineType(intent.getStringExtra("medicineType"));
+                        object1.setQty(Integer.parseInt(intent.getStringExtra("product_quantyty")));
+                        if (null != intent.getStringExtra("product_price")) {
+                            object1.setArtprice(intent.getStringExtra("product_price"));
+                        } else {
+                            object1.setArtprice(String.valueOf(intent.getStringExtra("product_price")));
+                        }
+                        object1.setMou(String.valueOf(intent.getStringExtra("product_mou")));
+//                        object1.setQty(1);
+                        object1.setContainer("Strip");
+                        dataList.add(object1);
+                        SessionManager.INSTANCE.setDataList(dataList);
+                    }
+                }
+                float grandTotalVal = 0;
+                for (int i = 0; i < dataList.size(); i++) {
+                    if (!TextUtils.isEmpty(dataList.get(i).getArtprice())) {
+                        Float totalPrice = Float.parseFloat(dataList.get(i).getArtprice()) * dataList.get(i).getQty();
+                        grandTotalVal = grandTotalVal + totalPrice;
+                    }
+                }
+                String rupeeSymbol = "\u20B9";
+
+                DecimalFormat formatter = new DecimalFormat("#,###.00");
+                String pharmaformatted = formatter.format(grandTotalVal);
+
+                grandTotalPrice.setText(rupeeSymbol + "" + pharmaformatted);
+
+                Utils.showSnackbar(MyCartActivity.this, constraint_Layout, getApplicationContext().getResources().getString(R.string.label_item_added_cart));
+                cartCount(dataList.size());
+
+                groupingDuplicates();
+
+                cartListAdapter = new MyCartListAdapter(MyCartActivity.this, dataComparingList, MyCartActivity.this, expandholdedDataList);
+                cartItemRecyclerView.setLayoutManager(new LinearLayoutManager(MyCartActivity.this));
+                cartItemRecyclerView.setAdapter(cartListAdapter);
+                cartListAdapter.notifyDataSetChanged();
+            }
+            if (dataList != null && dataList.size() > 0)
+                if (cartListAdapter != null) {
+
+                    groupingDuplicates();
+
+                    cartListAdapter.notifyDataSetChanged();
+                }
+//            if (null != SessionManager.INSTANCE.getDataList() && SessionManager.INSTANCE.getDataList().size() > 0)
+//                checkOutNewBtn.setVisibility(View.VISIBLE);
+//            else
+//                checkOutNewBtn.setVisibility(View.GONE);
+        }
+    };
+
+    @Override
+    public void onFailureBarcodeItemApi(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -1482,8 +2111,10 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
         }
     }
 
+    int pos;
+
     @Override
-    public void onClickDelete(int position) {
+    public void onClickDelete(int position, OCRToDigitalMedicineResponse item) {
         final Dialog dialog = new Dialog(MyCartActivity.this);
         dialog.setContentView(R.layout.dialog_custom_alert);
         dialog.setCancelable(false);
@@ -1498,15 +2129,31 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
         declineButton.setText(getResources().getString(R.string.label_cancel_text));
         okButton.setOnClickListener(v -> {
             OCRToDigitalMedicineResponse loadobject = new OCRToDigitalMedicineResponse();
-            loadobject.setArtCode(dataList.get(position).getArtCode());
-            loadobject.setArtName(dataList.get(position).getArtName());
-            loadobject.setQty(dataList.get(position).getQty());
-            loadobject.setContainer(dataList.get(position).getContainer());
-            loadobject.setArtprice(dataList.get(position).getArtprice());
-            deletedataList.add(loadobject);
-            SessionManager.INSTANCE.setDeletedDataList(deletedataList);
 
-            dataList.remove(position);
+            for (int i = 0; i < dataList.size(); i++) {
+                if (dataList.get(i).getArtCode().equalsIgnoreCase(item.getArtCode())) {
+                    pos = i;
+                    loadobject.setArtCode(dataList.get(i).getArtCode());
+                    loadobject.setArtName(dataList.get(i).getArtName());
+                    loadobject.setQty(dataList.get(i).getQty());
+                    loadobject.setMedicineType(dataList.get(i).getMedicineType());
+                    loadobject.setContainer(dataList.get(i).getContainer());
+                    loadobject.setArtprice(dataList.get(i).getArtprice());
+                    deletedataList.add(loadobject);
+                    SessionManager.INSTANCE.setDeletedDataList(deletedataList);
+                }
+            }
+
+//            loadobject.setArtCode(dataList.get(position).getArtCode());
+//            loadobject.setArtName(dataList.get(position).getArtName());
+//            loadobject.setQty(dataList.get(position).getQty());
+//            loadobject.setMedicineType(dataList.get(position).getMedicineType());
+//            loadobject.setContainer(dataList.get(position).getContainer());
+//            loadobject.setArtprice(dataList.get(position).getArtprice());
+//            deletedataList.add(loadobject);
+//            SessionManager.INSTANCE.setDeletedDataList(deletedataList);
+
+            dataList.remove(pos);
             String rupeeSymbol = "\u20B9";
             SessionManager.INSTANCE.setDataList(dataList);
             cartCount(dataList.size());
@@ -1517,11 +2164,18 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
                         totalMrpPrice = Float.parseFloat(dataList.get(i).getArtprice()) * dataList.get(i).getQty() + totalMrpPrice;
                     }
                 }
-                grandTotalPrice.setText(rupeeSymbol + "" + String.format("%.2f", totalMrpPrice));
+
+                DecimalFormat formatter = new DecimalFormat("#,###.00");
+                String pharmaformatted = formatter.format(totalMrpPrice);
+
+                grandTotalPrice.setText(rupeeSymbol + "" + pharmaformatted);
             } else {
                 grandTotalPrice.setText(rupeeSymbol + "00.00");
             }
-            cartListAdapter = new MyCartListAdapter(dataList, this);
+
+            groupingDuplicates();
+
+            cartListAdapter = new MyCartListAdapter(MyCartActivity.this, dataComparingList, this, expandholdedDataList);
             cartItemRecyclerView.setLayoutManager(new LinearLayoutManager(this));
             cartItemRecyclerView.setAdapter(cartListAdapter);
             cartListAdapter.notifyDataSetChanged();
@@ -1560,7 +2214,11 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
                 totalMrpPrice = Float.parseFloat(dataList.get(i).getArtprice()) * dataList.get(i).getQty() + totalMrpPrice;
             }
         }
-        grandTotalPrice.setText(rupeeSymbol + "" + String.format("%.2f", totalMrpPrice));
+
+        DecimalFormat formatter = new DecimalFormat("#,###.00");
+        String pharmaformatted = formatter.format(totalMrpPrice);
+
+        grandTotalPrice.setText(rupeeSymbol + "" + pharmaformatted);
         grandTotalPriceValue = grandTotalPrice.getText().toString();
 
         SessionManager.INSTANCE.setDataList(dataList);
@@ -1688,5 +2346,57 @@ public class MyCartActivity extends AppCompatActivity implements OnItemClickList
     @Override
     public void onSuccessUploadBgImage() {
         Utils.printMessage(TAG, "Successfully Image Uploaded");
+    }
+
+    private int scannerEvent = 0;
+
+    @Override
+    public void scannerBarcodeEvent(byte[] barcodeData, int barcodeType, int scannerID) {
+        if (!isDialogShow) {
+            if (scannerEvent == 0) {
+                scannerEvent = 1;
+                barcodeEventHandle();
+                String barcode_code = new String(barcodeData);
+                if (barcode_code != null) {
+//            Toast.makeText(this, barcode_code, Toast.LENGTH_LONG).show();
+                    Utils.showDialog(this, "Plaese wait...");
+                    myCartController.searchItemProducts(barcode_code, 0, 0, 0);
+                } else {
+                    Toast.makeText(this, "Scan Cancelled", Toast.LENGTH_LONG).show();
+                }
+            }
+        } else {
+            Utils.showSnackbar(MyCartActivity.this, constraint_Layout, "Please complete present action first.");
+        }
+    }
+
+    private void barcodeEventHandle() {
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                scannerEvent = 0;
+            }
+        }, 5000);
+    }
+
+    @Override
+    public void scannerFirmwareUpdateEvent(FirmwareUpdateEvent firmwareUpdateEvent) {
+
+    }
+
+    @Override
+    public void scannerImageEvent(byte[] imageData) {
+
+    }
+
+    @Override
+    public void scannerVideoEvent(byte[] videoData) {
+
+    }
+
+    @Override
+    public void onDismissDialog() {
+        isDialogShow = false;
     }
 }
