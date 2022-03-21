@@ -57,8 +57,10 @@ import com.apollo.pharmacy.ocr.interfaces.CartCountListener;
 import com.apollo.pharmacy.ocr.interfaces.MyOffersListener;
 import com.apollo.pharmacy.ocr.interfaces.MySearchCallback;
 import com.apollo.pharmacy.ocr.interfaces.SubCategoryListener;
+import com.apollo.pharmacy.ocr.model.BatchListResponse;
 import com.apollo.pharmacy.ocr.model.Category_request;
 import com.apollo.pharmacy.ocr.model.GetProductListResponse;
+import com.apollo.pharmacy.ocr.model.GroupOffersModelResponse;
 import com.apollo.pharmacy.ocr.model.ItemSearchResponse;
 import com.apollo.pharmacy.ocr.model.NewSearchapirequest;
 import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
@@ -1112,6 +1114,51 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
 
     @Override
     public void onSearchFailureUpcellCroscell(String message) {
+
+    }
+
+    @Override
+    public void onSuccessGroupOffersApi(GroupOffersModelResponse groupOffersModelResponse) {
+
+    }
+
+    @Override
+    public void onFailureGroupOffers() {
+
+    }
+
+    @Override
+    public void onfiftyPerOffOffer(GroupOffersModelResponse.Offer offer, List<GroupOffersModelResponse.Offer.PromoItem> image) {
+
+    }
+
+    @Override
+    public void onBuyOneGetOneOffer(GroupOffersModelResponse.Offer offer, List<GroupOffersModelResponse.Offer.PromoItem> image) {
+
+    }
+
+    @Override
+    public void onBuyMultipleOnGroupOfOffers(GroupOffersModelResponse.Offer offer, List<GroupOffersModelResponse.Offer.PromoItem> image) {
+
+    }
+
+    @Override
+    public void onContinueOfSelectedOffers() {
+
+    }
+
+    @Override
+    public void onSelectedOffersList(GroupOffersModelResponse.Offer offer, GroupOffersModelResponse.Offer.PromoItem image, List<GroupOffersModelResponse.Offer.PromoItem> imageList) {
+
+    }
+
+    @Override
+    public void setSuccessBatchList(BatchListResponse body, int position, ItemSearchResponse.Item itemSearchData) {
+
+    }
+
+    @Override
+    public void onSuccessSearchItemApi(ItemSearchResponse itemSearchResponse, int position) {
 
     }
 

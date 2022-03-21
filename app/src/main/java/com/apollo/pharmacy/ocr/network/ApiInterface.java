@@ -15,6 +15,7 @@ import com.apollo.pharmacy.ocr.model.GetProductListResponse;
 import com.apollo.pharmacy.ocr.model.GetStoreInfoResponse;
 import com.apollo.pharmacy.ocr.model.Global_api_request;
 import com.apollo.pharmacy.ocr.model.Global_api_response;
+import com.apollo.pharmacy.ocr.model.GroupOffersModelResponse;
 import com.apollo.pharmacy.ocr.model.ItemSearchRequest;
 import com.apollo.pharmacy.ocr.model.ItemSearchResponse;
 import com.apollo.pharmacy.ocr.model.Meta;
@@ -240,4 +241,8 @@ public interface ApiInterface {
 
     @GET("http://apollodashboard.theretailinsightsdemos.com/api/all-offers")
     Call<AllOffersResponse> GET_ALL_OFFERS_API_CALL();
+
+    @GET("https://jsonblob.com/api/jsonBlob/930811897528467456")
+    Call<GroupOffersModelResponse> GET_OFFERS_LIST();
+
 }

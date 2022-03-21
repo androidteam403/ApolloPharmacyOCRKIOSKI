@@ -7,8 +7,11 @@ import androidx.annotation.NonNull;
 import com.apollo.pharmacy.ocr.R;
 import com.apollo.pharmacy.ocr.interfaces.MyOffersListener;
 import com.apollo.pharmacy.ocr.model.AllOffersResponse;
+import com.apollo.pharmacy.ocr.model.BatchListRequest;
+import com.apollo.pharmacy.ocr.model.BatchListResponse;
 import com.apollo.pharmacy.ocr.model.Category_request;
 import com.apollo.pharmacy.ocr.model.GetProductListResponse;
+import com.apollo.pharmacy.ocr.model.GroupOffersModelResponse;
 import com.apollo.pharmacy.ocr.model.ItemSearchRequest;
 import com.apollo.pharmacy.ocr.model.ItemSearchResponse;
 import com.apollo.pharmacy.ocr.model.NewSearchapirequest;
@@ -23,7 +26,10 @@ import com.apollo.pharmacy.ocr.network.CallbackWithRetry;
 import com.apollo.pharmacy.ocr.utility.ApplicationConstant;
 import com.apollo.pharmacy.ocr.utility.Constants;
 import com.apollo.pharmacy.ocr.utility.SessionManager;
+import com.apollo.pharmacy.ocr.utility.Utils;
 import com.google.gson.Gson;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -281,6 +287,91 @@ public class MyOffersController {
             public void onFailure(@NonNull Call<AllOffersResponse> call, @NonNull Throwable t) {
                 dismissDialog();
                 myOffersListener.onFailure(t.getMessage());
+            }
+        });
+    }
+
+
+    public void groupOffersListeners(Context context) {
+        ApiInterface apiInterface = ApiClient.getApiService();
+        showDialog(context, context.getResources().getString(R.string.label_please_wait));
+
+        Call<GroupOffersModelResponse> call = apiInterface.GET_OFFERS_LIST();
+        call.enqueue(new Callback<GroupOffersModelResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<GroupOffersModelResponse> call, @NonNull Response<GroupOffersModelResponse> response) {
+                if (response.isSuccessful()) {
+                    dismissDialog();
+                    myOffersListener.onSuccessGroupOffersApi(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<GroupOffersModelResponse> call, @NonNull Throwable t) {
+                dismissDialog();
+                myOffersListener.onFailureGroupOffers();
+            }
+        });
+    }
+
+
+    public void searchItemProducts(String item, int position) {
+        ApiInterface apiInterface = ApiClient.getApiServiceMposBaseUrl(SessionManager.INSTANCE.getEposUrl());
+        ItemSearchRequest itemSearchRequest = new ItemSearchRequest();
+        itemSearchRequest.setCorpCode("0");
+        itemSearchRequest.setIsGeneric(false);
+        itemSearchRequest.setIsInitial(true);
+        itemSearchRequest.setIsStockCheck(true);
+        itemSearchRequest.setSearchString(item);
+        itemSearchRequest.setStoreID("16001");
+        Call<ItemSearchResponse> call = apiInterface.getSearchItemApiCall(itemSearchRequest);
+        call.enqueue(new Callback<ItemSearchResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<ItemSearchResponse> call, @NonNull Response<ItemSearchResponse> response) {
+                if (response.isSuccessful() && response.body().getItemList().size() > 0) {
+                    Gson gson = new Gson();
+                    String json = gson.toJson(response.body());
+                    System.out.println("void data" + json);
+                    ItemSearchResponse itemSearchResponse = response.body();
+                    assert itemSearchResponse != null;
+                    myOffersListener.onSuccessSearchItemApi(itemSearchResponse, position);
+                    if (itemSearchResponse != null && itemSearchResponse.getItemList().size() > 0) {
+                        getBatchList(itemSearchResponse.getItemList().get(0).getArtCode(), position, itemSearchResponse.getItemList().get(0));
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ItemSearchResponse> call, @NonNull Throwable t) {
+                myOffersListener.onSearchFailure(t.getMessage());
+            }
+        });
+    }
+
+    public void getBatchList(String artcode, int position, ItemSearchResponse.Item itemSerachData) {
+//        Utils.showDialog(activity, "Loading…");
+        ApiInterface api = ApiClient.getApiServiceMposBaseUrl(SessionManager.INSTANCE.getEposUrl());
+        BatchListRequest batchListRequest = new BatchListRequest();
+        batchListRequest.setArticleCode(artcode);
+        batchListRequest.setCustomerState("");
+        batchListRequest.setDataAreaId("ahel");
+        batchListRequest.setSez(0);
+        batchListRequest.setSearchType(1);
+        batchListRequest.setStoreId("16001");
+        batchListRequest.setStoreState("AP");
+        batchListRequest.setTerminalId("005");
+        Call<BatchListResponse> call = api.GET_BATCH_LIST(batchListRequest);
+        call.enqueue(new Callback<BatchListResponse>() {
+            @Override
+            public void onResponse(@NotNull Call<BatchListResponse> call, @NotNull Response<BatchListResponse> response) {
+                if (response.body() != null) {
+                    myOffersListener.setSuccessBatchList(response.body(), position, itemSerachData);
+                }
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<BatchListResponse> call, @NotNull Throwable t) {
+                Utils.dismissDialog();
             }
         });
     }
