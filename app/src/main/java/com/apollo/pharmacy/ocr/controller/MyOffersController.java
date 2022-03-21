@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 
 import com.apollo.pharmacy.ocr.R;
 import com.apollo.pharmacy.ocr.interfaces.MyOffersListener;
+import com.apollo.pharmacy.ocr.model.AllOffersResponse;
 import com.apollo.pharmacy.ocr.model.Category_request;
 import com.apollo.pharmacy.ocr.model.GetProductListResponse;
 import com.apollo.pharmacy.ocr.model.ItemSearchRequest;
@@ -238,7 +239,7 @@ public class MyOffersController {
         });
     }
 
-    public void upcellCrosscellList(String mobileNo,Context context) {
+    public void upcellCrosscellList(String mobileNo, Context context) {
         ApiInterface apiInterface = ApiClient.getApiService();
         showDialog(context, context.getResources().getString(R.string.label_please_wait));
         UpCellCrossCellRequest upCellCrossCellRequest = new UpCellCrossCellRequest();
@@ -257,6 +258,29 @@ public class MyOffersController {
             public void onFailure(@NonNull Call<UpCellCrossCellResponse> call, @NonNull Throwable t) {
                 dismissDialog();
                 myOffersListener.onSearchFailureUpcellCroscell(t.getMessage());
+            }
+        });
+    }
+
+    public void getAllOffersApiCall() {
+        ApiInterface apiInterface = ApiClient.getApiService();
+        showDialog(context, context.getResources().getString(R.string.label_please_wait));
+        Call<AllOffersResponse> call = apiInterface.GET_ALL_OFFERS_API_CALL();
+        call.enqueue(new Callback<AllOffersResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<AllOffersResponse> call, @NonNull Response<AllOffersResponse> response) {
+                if (response.isSuccessful()) {
+                    dismissDialog();
+                    if (response.body().getSuccess() && response.body().getData() != null && response.body().getData().size() > 0) {
+                        myOffersListener.onSuccessAllOffers(response.body());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<AllOffersResponse> call, @NonNull Throwable t) {
+                dismissDialog();
+                myOffersListener.onFailure(t.getMessage());
             }
         });
     }

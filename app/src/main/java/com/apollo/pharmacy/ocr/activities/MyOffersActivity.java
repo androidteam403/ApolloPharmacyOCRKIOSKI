@@ -36,6 +36,7 @@ import com.apollo.pharmacy.ocr.controller.MyOffersController;
 import com.apollo.pharmacy.ocr.databinding.ActivityMyOffersBinding;
 import com.apollo.pharmacy.ocr.interfaces.CartCountListener;
 import com.apollo.pharmacy.ocr.interfaces.MyOffersListener;
+import com.apollo.pharmacy.ocr.model.AllOffersResponse;
 import com.apollo.pharmacy.ocr.model.GetProductListResponse;
 import com.apollo.pharmacy.ocr.model.ItemSearchResponse;
 import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
@@ -130,6 +131,10 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
         super.onCreate(savedInstanceState);
         activityMyOffersBinding = DataBindingUtil.setContentView(this, R.layout.activity_my_offers);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+
+        new MyOffersController(this).getAllOffersApiCall();
+
 
         mPdfView = (ImageView) findViewById(R.id.offers_pdf_image);
 //        WebSettings webSettings = mPdfView.getSettings();
@@ -298,8 +303,6 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
             activityMyOffersBinding.upSellingItemCountTxt.setText("0");
         }
         activityMyOffersBinding.nodataFound.setVisibility(View.GONE);
-
-
         listeners();
     }
 
@@ -586,6 +589,16 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
 
     @Override
     public void onSearchFailureUpcellCroscell(String message) {
+
+    }
+
+    @Override
+    public void onSuccessAllOffers(AllOffersResponse allOffersResponse) {
+
+    }
+
+    @Override
+    public void onFailureAllOffers(String message) {
 
     }
 

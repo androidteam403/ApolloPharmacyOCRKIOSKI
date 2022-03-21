@@ -3,6 +3,7 @@ package com.apollo.pharmacy.ocr.network;
 import com.apollo.pharmacy.ocr.activities.mposstoresetup.model.StoreListResponseModel;
 import com.apollo.pharmacy.ocr.controller.GetStoreInfoRequest;
 import com.apollo.pharmacy.ocr.model.AddFCMTokenRequest;
+import com.apollo.pharmacy.ocr.model.AllOffersResponse;
 import com.apollo.pharmacy.ocr.model.BatchListRequest;
 import com.apollo.pharmacy.ocr.model.BatchListResponse;
 import com.apollo.pharmacy.ocr.model.Category_request;
@@ -133,7 +134,7 @@ public interface ApiInterface {
     @POST("https://online.apollopharmacy.org/UATTAT/Apollo/GetHistory")
 //https://jsonblob.com/api/jsonBlob/887622755529539584
 //webresources/OrderHistory/getHistory
-    Call<List<OrderHistoryResponse>> getOrderHistory(@Header("Authentication") String token,@Body OrderHistoryRequest request);
+    Call<List<OrderHistoryResponse>> getOrderHistory(@Header("Authentication") String token, @Body OrderHistoryRequest request);
 
     @GET("Customer/GetByMobile?")
     @Headers({"APIKey: 2B577C3C4C144160A5FD4885F7BA53A4", "AccessToken: 03F80DDA69A84382A8AC0E108270972F"})
@@ -237,5 +238,6 @@ public interface ApiInterface {
     @POST("https://apollorehab.in/rest/V1/pincode/getstatecountry")
     Call<List<PincodeValidateResponse>> doPincodeValidateApi(@Header("authorization") String token, @Body Object pincodeValidateRequest);
 
-
+    @GET("http://apollodashboard.theretailinsightsdemos.com/api/all-offers")
+    Call<AllOffersResponse> GET_ALL_OFFERS_API_CALL();
 }

@@ -1,5 +1,6 @@
 package com.apollo.pharmacy.ocr.interfaces;
 
+import com.apollo.pharmacy.ocr.model.AllOffersResponse;
 import com.apollo.pharmacy.ocr.model.GetProductListResponse;
 import com.apollo.pharmacy.ocr.model.ItemSearchResponse;
 import com.apollo.pharmacy.ocr.model.Suggestion_Product;
@@ -35,6 +36,10 @@ public interface MyOffersListener {
     void onSuccessSearchUpcellCroscellApi(UpCellCrossCellResponse body);
 
     void onSearchFailureUpcellCroscell(String message);
+
+    void onSuccessAllOffers(AllOffersResponse allOffersResponse);
+
+    void onFailureAllOffers(String message);
 
 
 }
