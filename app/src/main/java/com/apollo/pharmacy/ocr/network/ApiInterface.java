@@ -14,6 +14,7 @@ import com.apollo.pharmacy.ocr.model.GetProductListResponse;
 import com.apollo.pharmacy.ocr.model.GetStoreInfoResponse;
 import com.apollo.pharmacy.ocr.model.Global_api_request;
 import com.apollo.pharmacy.ocr.model.Global_api_response;
+import com.apollo.pharmacy.ocr.model.GroupOffersModelResponse;
 import com.apollo.pharmacy.ocr.model.ItemSearchRequest;
 import com.apollo.pharmacy.ocr.model.ItemSearchResponse;
 import com.apollo.pharmacy.ocr.model.Meta;
@@ -237,5 +238,7 @@ public interface ApiInterface {
     @POST("https://apollorehab.in/rest/V1/pincode/getstatecountry")
     Call<List<PincodeValidateResponse>> doPincodeValidateApi(@Header("authorization") String token, @Body Object pincodeValidateRequest);
 
+    @GET("https://jsonblob.com/api/jsonBlob/930811897528467456")
+    Call<GroupOffersModelResponse> GET_OFFERS_LIST();
 
 }

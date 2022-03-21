@@ -18,25 +18,31 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.databinding.DataBindingUtil;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.apollo.pharmacy.ocr.R;
 import com.apollo.pharmacy.ocr.adapters.CategoryGridItemAdapter;
+import com.apollo.pharmacy.ocr.adapters.GroupOffersAdapters;
 import com.apollo.pharmacy.ocr.adapters.MedicineSearchAdapter;
 import com.apollo.pharmacy.ocr.adapters.MyOfersAdapterNew;
 import com.apollo.pharmacy.ocr.adapters.MyOffersAdapter;
 import com.apollo.pharmacy.ocr.adapters.MyoffersAdapterTrending;
 import com.apollo.pharmacy.ocr.controller.MyOffersController;
 import com.apollo.pharmacy.ocr.databinding.ActivityMyOffersBinding;
+import com.apollo.pharmacy.ocr.dialog.OfferSelectionDialog;
 import com.apollo.pharmacy.ocr.interfaces.CartCountListener;
 import com.apollo.pharmacy.ocr.interfaces.MyOffersListener;
+import com.apollo.pharmacy.ocr.model.BatchListResponse;
 import com.apollo.pharmacy.ocr.model.GetProductListResponse;
+import com.apollo.pharmacy.ocr.model.GroupOffersModelResponse;
 import com.apollo.pharmacy.ocr.model.ItemSearchResponse;
 import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
 import com.apollo.pharmacy.ocr.model.Product;
@@ -131,7 +137,7 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
         activityMyOffersBinding = DataBindingUtil.setContentView(this, R.layout.activity_my_offers);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-        mPdfView = (ImageView) findViewById(R.id.offers_pdf_image);
+//        mPdfView = (ImageView) findViewById(R.id.offers_pdf_image);
 //        WebSettings webSettings = mPdfView.getSettings();
 //        webSettings.setJavaScriptEnabled(true);
 //        webSettings.setLoadWithOverviewMode(true);
@@ -204,6 +210,8 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
         trendingLayout = findViewById(R.id.trending_layout);
         offerTxt = findViewById(R.id.offer_name);
         trendingTxt = findViewById(R.id.trending_name);
+
+        myOffersController.groupOffersListeners(this);
 
         promotionsRecyclerView = (RecyclerView) findViewById(R.id.recyclerViewOffers);
         promotionsRecyclerView.setLayoutManager(new GridLayoutManager(this, 7));
@@ -587,6 +595,294 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
     @Override
     public void onSearchFailureUpcellCroscell(String message) {
 
+    }
+
+    @Override
+    public void onSuccessGroupOffersApi(GroupOffersModelResponse groupOffersModelResponse) {
+        GroupOffersAdapters adapter = new GroupOffersAdapters(this, groupOffersModelResponse.getOffers(), this);
+        activityMyOffersBinding.offersRecycle.setLayoutManager(new LinearLayoutManager(this));
+        activityMyOffersBinding.offersRecycle.setAdapter(adapter);
+    }
+
+    @Override
+    public void onFailureGroupOffers() {
+
+    }
+
+
+    @Override
+    public void onfiftyPerOffOffer(GroupOffersModelResponse.Offer offer, List<GroupOffersModelResponse.Offer.PromoItem> image) {
+        offerSelectionDialogCcall(offer, image);
+        toasCount = 0;
+    }
+
+    @Override
+    public void onBuyOneGetOneOffer(GroupOffersModelResponse.Offer offer, List<GroupOffersModelResponse.Offer.PromoItem> image) {
+        offerSelectionDialogCcall(offer, image);
+        toasCount = 0;
+
+    }
+
+    @Override
+    public void onBuyMultipleOnGroupOfOffers(GroupOffersModelResponse.Offer offer, List<GroupOffersModelResponse.Offer.PromoItem> image) {
+        offerSelectionDialogCcall(offer, image);
+        toasCount = 0;
+    }
+
+
+    @Override
+    public void onContinueOfSelectedOffers() {
+        if (offerCount == offer.getPromoItemSelection()) {
+//            Toast.makeText(this, "success", Toast.LENGTH_SHORT).show();
+            offerCount = 0;
+            offerSelectionDialog.dismiss();
+
+            for (int i = 0; i < imageList.size(); i++) {
+                if (imageList.get(i).isSelected()) {
+                    myOffersController.searchItemProducts(imageList.get(i).getArtCode().toString(), i);
+                }
+            }
+//            offersAddToCartData();
+        } else {
+            Toast.makeText(this, "We can add maximum " + offer.getPromoItemSelection() + "products", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    List<OCRToDigitalMedicineResponse> dummyDataList = new ArrayList<>();
+
+    private void offersAddToCartData() {
+        for (int i = 0; i < imageList.size(); i++) {
+            if (imageList.get(i).isSelected()) {
+                OCRToDigitalMedicineResponse data = new OCRToDigitalMedicineResponse();
+                data.setArtName(imageList.get(i).getProductName());
+                data.setArtCode(imageList.get(i).getArtCode());
+                data.setBatchId("");
+                data.setArtprice("0");
+                data.setContainer("");
+                data.setQty(0);
+
+                data.setMedicineType("FMCG");
+                dummyDataList.add(data);
+            }
+        }
+
+
+        if (null != SessionManager.INSTANCE.getDataList()) {
+            if (SessionManager.INSTANCE.getDataList().size() > 0) {
+                List<OCRToDigitalMedicineResponse> tempCartItemList = new ArrayList<>();
+                tempCartItemList = SessionManager.INSTANCE.getDataList();
+                for (OCRToDigitalMedicineResponse listItem : tempCartItemList) {
+                    boolean isItemEqual = false;
+                    for (OCRToDigitalMedicineResponse duplecateItem : dummyDataList) {
+                        if (duplecateItem.getArtCode().equals(listItem.getArtCode())) {
+                            isItemEqual = true;
+                        }
+                    }
+                    if (!isItemEqual)
+                        dummyDataList.add(listItem);
+                }
+            }
+        }
+        SessionManager.INSTANCE.setDataList(dummyDataList);
+        Intent intent = new Intent("OrderhistoryCardReciver");
+        intent.putExtra("message", "OrderNow");
+        intent.putExtra("MedininesNames", new Gson().toJson(dummyDataList));
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+
+    }
+
+
+    private GroupOffersModelResponse.Offer offer;
+    private int offerCount;
+    List<GroupOffersModelResponse.Offer.PromoItem> imageList;
+
+    @Override
+    public void onSelectedOffersList(GroupOffersModelResponse.Offer offer, GroupOffersModelResponse.Offer.PromoItem image, List<GroupOffersModelResponse.Offer.PromoItem> imageList) {
+        this.offerCount = image.getOfferCount();
+    }
+
+    //    private List<OCRToDigitalMedicineResponse> dummyDataList = new ArrayList<>();
+    float overallBatchQuantity;
+
+    int requiredBalanceQty;
+    private int flag = 0;
+    private int toasCount = 0;
+
+    @Override
+    public void setSuccessBatchList(BatchListResponse batchListResponse, int position, ItemSearchResponse.Item iteSearchData) {
+        if (batchListResponse != null && batchListResponse.getBatchList() != null && batchListResponse.getBatchList().size() > 0) {
+            toasCount = toasCount + 1;
+            for (int i = 0; i < batchListResponse.getBatchList().size(); i++) {
+                overallBatchQuantity += Float.parseFloat(batchListResponse.getBatchList().get(i).getQOH());
+            }
+            flag = 0;
+            for (int i = 0; i < batchListResponse.getBatchList().size(); i++) {
+                if (Float.parseFloat(batchListResponse.getBatchList().get(i).getQOH()) >= Float.parseFloat(String.valueOf(imageList.get(position).getQty()))) {
+                    flag = 1;
+//                    dataList.get(position).setArtprice(String.valueOf(batchListResponse.getBatchList().get(i).getMrp()));
+
+                    OCRToDigitalMedicineResponse data = new OCRToDigitalMedicineResponse();
+                    data.setArtName(iteSearchData.getDescription());
+                    data.setArtCode(iteSearchData.getArtCode() + "," + batchListResponse.getBatchList().get(i).getBatchNo());
+                    data.setBatchId(batchListResponse.getBatchList().get(i).getBatchNo());
+                    data.setArtprice(String.valueOf(batchListResponse.getBatchList().get(i).getMrp()));
+                    data.setContainer("");
+                    data.setQty(imageList.get(position).getQty());
+
+                    for (OCRToDigitalMedicineResponse proQtyIncorg : SessionManager.INSTANCE.getDataList()) {
+                        if (proQtyIncorg.getArtCode().equals(data.getArtCode())) {
+                            data.setQty(proQtyIncorg.getQty() + Integer.parseInt(imageList.get(position).getQty().toString()));
+                        }
+                    }
+
+                    data.setMedicineType(iteSearchData.getCategory());
+                    dummyDataList.add(data);
+                    break;
+                } else if (overallBatchQuantity >= imageList.get(position).getQty()) {
+                    if (imageList.get(position).getQty() > 0) {
+                        OCRToDigitalMedicineResponse data = new OCRToDigitalMedicineResponse();
+                        data.setArtName(iteSearchData.getDescription());
+                        data.setArtCode(iteSearchData.getArtCode() + "," + batchListResponse.getBatchList().get(i).getBatchNo());
+                        data.setBatchId(batchListResponse.getBatchList().get(i).getBatchNo());
+                        data.setArtprice(String.valueOf(batchListResponse.getBatchList().get(i).getMrp()));
+                        data.setContainer("");
+                        data.setQty((int) Float.parseFloat(batchListResponse.getBatchList().get(i).getQOH()));
+                        requiredBalanceQty = imageList.get(position).getQty() - 1;
+                        imageList.get(position).setQty(requiredBalanceQty);
+                        for (OCRToDigitalMedicineResponse proQtyIncorg : SessionManager.INSTANCE.getDataList()) {
+                            if (proQtyIncorg.getArtCode().equals(data.getArtCode())) {
+                                data.setQty(proQtyIncorg.getQty() + Integer.parseInt(imageList.get(position).getQty().toString()));
+                            }
+                        }
+                        data.setMedicineType(iteSearchData.getCategory());
+                        dummyDataList.add(data);
+                    }
+                }
+            }
+
+            if (flag == 0) {
+//                dataList.get(position).setOutOfStock(true);
+
+                OCRToDigitalMedicineResponse data = new OCRToDigitalMedicineResponse();
+                data.setArtName(iteSearchData.getDescription());
+                data.setArtCode(iteSearchData.getArtCode() + "," + batchListResponse.getBatchList().get(position).getBatchNo());
+                data.setBatchId(batchListResponse.getBatchList().get(position).getBatchNo());
+                data.setArtprice(String.valueOf(batchListResponse.getBatchList().get(position).getMrp()));
+                data.setContainer("");
+                data.setQty((int) Float.parseFloat(batchListResponse.getBatchList().get(position).getQOH()));
+                imageList.get(position).setOutOfStock(true);
+                data.setMedicineType(iteSearchData.getCategory());
+                requiredBalanceQty = imageList.get(position).getQty() - 1;
+                imageList.get(position).setQty(requiredBalanceQty);
+
+                for (OCRToDigitalMedicineResponse proQtyIncorg : SessionManager.INSTANCE.getDataList()) {
+                    if (proQtyIncorg.getArtCode().equals(data.getArtCode())) {
+                        data.setQty(proQtyIncorg.getQty() + Integer.parseInt(imageList.get(position).getQty().toString()));
+                    }
+                }
+                dummyDataList.add(data);
+
+
+            }
+        } else {
+//            Toast.makeText(getContext(), "Product Out Of Stock", Toast.LENGTH_LONG).show();
+//            dataList.get(position).setOutOfStock(true);
+
+            OCRToDigitalMedicineResponse data = new OCRToDigitalMedicineResponse();
+            data.setArtName(iteSearchData.getDescription());
+            data.setArtCode(iteSearchData.getArtCode() + "," + batchListResponse.getBatchList().get(position).getBatchNo());
+            data.setBatchId(batchListResponse.getBatchList().get(position).getBatchNo());
+            data.setArtprice(String.valueOf(batchListResponse.getBatchList().get(position).getMrp()));
+            data.setContainer("");
+            data.setQty((int) Float.parseFloat(batchListResponse.getBatchList().get(position).getQOH()));
+            imageList.get(position).setOutOfStock(true);
+            data.setMedicineType(iteSearchData.getCategory());
+            requiredBalanceQty = imageList.get(position).getQty() - 1;
+            imageList.get(position).setQty(requiredBalanceQty);
+            for (OCRToDigitalMedicineResponse proQtyIncorg : SessionManager.INSTANCE.getDataList()) {
+                if (proQtyIncorg.getArtCode().equals(data.getArtCode())) {
+                    data.setQty(proQtyIncorg.getQty() + Integer.parseInt(imageList.get(position).getQty().toString()));
+                }
+            }
+            dummyDataList.add(data);
+        }
+
+        if (null != SessionManager.INSTANCE.getDataList()) {
+            if (SessionManager.INSTANCE.getDataList().size() > 0) {
+                List<OCRToDigitalMedicineResponse> tempCartItemList = new ArrayList<>();
+                tempCartItemList = SessionManager.INSTANCE.getDataList();
+                for (OCRToDigitalMedicineResponse listItem : tempCartItemList) {
+                    boolean isItemEqual = false;
+                    for (OCRToDigitalMedicineResponse duplecateItem : dummyDataList) {
+                        if (duplecateItem.getArtCode().equals(listItem.getArtCode())) {
+                            isItemEqual = true;
+                        }
+                    }
+                    if (!isItemEqual)
+                        dummyDataList.add(listItem);
+                }
+            }
+        }
+
+        for (int i = 0; i < dummyDataList.size(); i++) {
+            for (int j = 0; j < dummyDataList.size(); j++) {
+                if (i != j && dummyDataList.get(i).getArtCode().equals(dummyDataList.get(j).getArtCode())) {
+//                    dummyDataList.get(j).setQty(dummyDataList.get(i).getQty()+dummyDataList.get(j).getQty());
+                    dummyDataList.set(i, dummyDataList.get(j));
+                    dummyDataList.remove(j);
+                    j--;
+                }
+            }
+        }
+        SessionManager.INSTANCE.setDataList(dummyDataList);
+        Intent intent = new Intent("OrderhistoryCardReciver");
+        intent.putExtra("message", "OrderNow");
+        intent.putExtra("MedininesNames", new Gson().toJson(dummyDataList));
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+
+    }
+
+    public List<OCRToDigitalMedicineResponse> dataListLatest() {
+        for (int i = 0; i < dummyDataList.size(); i++) {
+            if (dummyDataList.get(i).isOutOfStock()) {
+                dummyDataList.remove(dummyDataList.get(i));
+                i--;
+            }
+        }
+        return dummyDataList;
+    }
+
+    @Override
+    public void onSuccessSearchItemApi(ItemSearchResponse itemSearchResponse, int position) {
+        if (itemSearchResponse != null && itemSearchResponse.getItemList() != null && itemSearchResponse.getItemList().size() > 0) {
+            for (int i = 0; i < itemSearchResponse.getItemList().size(); i++) {
+                imageList.get(position).setMedicineType(String.valueOf(itemSearchResponse.getItemList().get(i).getCategory()));
+                imageList.get(position).setArtName(String.valueOf(itemSearchResponse.getItemList().get(i).getDescription()));
+            }
+        } else {
+            imageList.get(position).setOutOfStock(true);
+        }
+    }
+
+    OfferSelectionDialog offerSelectionDialog;
+
+    private void offerSelectionDialogCcall(GroupOffersModelResponse.Offer offer, List<GroupOffersModelResponse.Offer.PromoItem> image) {
+        this.offer = offer;
+        this.imageList = image;
+        offerSelectionDialog = new OfferSelectionDialog(this, offer, image, this, this);
+        offerSelectionDialog.setPositiveListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onContinueOfSelectedOffers();
+            }
+        });
+        offerSelectionDialog.setNegativeListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                offerSelectionDialog.dismiss();
+            }
+        });
+        offerSelectionDialog.show();
     }
 
     @Override
@@ -1008,7 +1304,9 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
                         dataList = SessionManager.INSTANCE.getDataList();
                     }
                 }
-                Utils.showSnackbar(MyOffersActivity.this, constraintLayout, getApplicationContext().getResources().getString(R.string.label_item_added_cart));
+                if (toasCount == 1) {
+                    Utils.showSnackbar(MyOffersActivity.this, constraintLayout, getApplicationContext().getResources().getString(R.string.label_item_added_cart));
+                }
                 cartCount(dataList.size());
             }
         }

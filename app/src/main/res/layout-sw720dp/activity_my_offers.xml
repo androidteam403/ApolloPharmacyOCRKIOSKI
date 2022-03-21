@@ -304,19 +304,12 @@
                                 <!--                                    app:zoomage_translatable="true"-->
                                 <!--                                    app:zoomage_zoomable="true" />-->
 
-                                <ScrollView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="match_parent">
 
-                                    <ImageView
-                                        android:id="@+id/offers_pdf_image"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:contentDescription="@string/app_name"
-                                        android:scaleType="fitStart"
-                                        android:adjustViewBounds="true"
-                                        android:src="@drawable/kisok_offers" />
-                                </ScrollView>
+
+                                    <androidx.recyclerview.widget.RecyclerView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:id="@+id/offers_recycle"/>
 
                             </RelativeLayout>
 
