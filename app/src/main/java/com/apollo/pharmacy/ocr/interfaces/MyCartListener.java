@@ -1,5 +1,7 @@
 package com.apollo.pharmacy.ocr.interfaces;
 
+import com.apollo.pharmacy.ocr.model.BatchListResponse;
+import com.apollo.pharmacy.ocr.model.CalculatePosTransactionResponse;
 import com.apollo.pharmacy.ocr.model.GetImageRes;
 import com.apollo.pharmacy.ocr.model.GetProductListResponse;
 import com.apollo.pharmacy.ocr.model.ItemSearchResponse;
@@ -35,4 +37,10 @@ public interface MyCartListener {
 
     void upSellCrosssellApiCall(List<UpCellCrossCellResponse.Crossselling> crossselling,
                                         List<UpCellCrossCellResponse.Upselling> upselling);
+
+    void setSuccessBatchList(BatchListResponse body, int position, ItemSearchResponse.Item itemSearchData);
+
+    void onSuccessCalculatePosTransactionApi(CalculatePosTransactionResponse calculatePosTransactionResponse);
+
+    void onSuccessSearchItemApi(ItemSearchResponse itemSearchResponse, int position);
 }

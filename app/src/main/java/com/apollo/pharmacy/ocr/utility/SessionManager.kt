@@ -426,4 +426,13 @@ object SessionManager {
     fun getBatchId(): String {
         return pref.getString(ApplicationConstant.BATCH_ID, String());
     }
+
+    fun setCustName(name: String) {
+        editor.putString(ApplicationConstant.CUST_NAME, name)
+        editor.apply()
+    }
+
+    fun getCustrName(): String {
+        return pref.getString(ApplicationConstant.CUST_NAME, "");
+    }
 }

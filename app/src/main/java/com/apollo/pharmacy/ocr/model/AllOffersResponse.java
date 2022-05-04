@@ -192,7 +192,13 @@ public class AllOffersResponse {
         @SerializedName("qty")
         @Expose
         private String qty;
+        private int offerCount;
 
+        private boolean isSelected;
+
+        private String medicineType;
+        private String artName;
+        private boolean outOfStock;
         public String getArtImage() {
             return artImage;
         }
@@ -225,5 +231,44 @@ public class AllOffersResponse {
             this.qty = qty;
         }
 
+        public int getOfferCount() {
+            return offerCount;
+        }
+
+        public void setOfferCount(int offerCount) {
+            this.offerCount = offerCount;
+        }
+
+        public boolean isSelected() {
+            return isSelected;
+        }
+
+        public void setSelected(boolean selected) {
+            isSelected = selected;
+        }
+
+        public String getMedicineType() {
+            return medicineType;
+        }
+
+        public void setMedicineType(String medicineType) {
+            this.medicineType = medicineType;
+        }
+
+        public String getArtName() {
+            return artName;
+        }
+
+        public void setArtName(String artName) {
+            this.artName = artName;
+        }
+
+        public boolean isOutOfStock() {
+            return outOfStock;
+        }
+
+        public void setOutOfStock(boolean outOfStock) {
+            this.outOfStock = outOfStock;
+        }
     }
 }

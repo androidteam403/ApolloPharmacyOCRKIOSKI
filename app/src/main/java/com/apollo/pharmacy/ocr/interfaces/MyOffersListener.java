@@ -2,6 +2,7 @@ package com.apollo.pharmacy.ocr.interfaces;
 
 import com.apollo.pharmacy.ocr.model.AllOffersResponse;
 import com.apollo.pharmacy.ocr.model.BatchListResponse;
+import com.apollo.pharmacy.ocr.model.CalculatePosTransactionResponse;
 import com.apollo.pharmacy.ocr.model.GetProductListResponse;
 import com.apollo.pharmacy.ocr.model.GroupOffersModelResponse;
 import com.apollo.pharmacy.ocr.model.ItemSearchResponse;
@@ -47,18 +48,20 @@ public interface MyOffersListener {
 
     void onFailureGroupOffers();
 
-    void onfiftyPerOffOffer(GroupOffersModelResponse.Offer offer, List<GroupOffersModelResponse.Offer.PromoItem> image);
+    void onfiftyPerOffOffer(AllOffersResponse.Datum offer, List<AllOffersResponse.PromoItem> image);
 
-    void onBuyOneGetOneOffer(GroupOffersModelResponse.Offer offer, List<GroupOffersModelResponse.Offer.PromoItem> image);
+    void onBuyOneGetOneOffer(AllOffersResponse.Datum offer, List<AllOffersResponse.PromoItem> image);
 
-    void onBuyMultipleOnGroupOfOffers(GroupOffersModelResponse.Offer offer, List<GroupOffersModelResponse.Offer.PromoItem> image);
+    void onBuyMultipleOnGroupOfOffers(AllOffersResponse.Datum offer, List<AllOffersResponse.PromoItem> image);
 
     void onContinueOfSelectedOffers();
 
-    void onSelectedOffersList(GroupOffersModelResponse.Offer offer, GroupOffersModelResponse.Offer.PromoItem image, List<GroupOffersModelResponse.Offer.PromoItem> imageList);
+    void onSelectedOffersList(AllOffersResponse.Datum offer, AllOffersResponse.PromoItem image, List<AllOffersResponse.PromoItem> imageList);
 
     void setSuccessBatchList(BatchListResponse body, int position, ItemSearchResponse.Item itemSearchData);
 
     void onSuccessSearchItemApi(ItemSearchResponse itemSearchResponse, int position);
+
+    void onSuccessCalculatePosTransactionApi(CalculatePosTransactionResponse calculatePosTransactionResponse);
 
 }

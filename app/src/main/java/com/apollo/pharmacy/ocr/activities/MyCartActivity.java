@@ -54,6 +54,9 @@ import com.apollo.pharmacy.ocr.interfaces.CheckPrescriptionListener;
 import com.apollo.pharmacy.ocr.interfaces.MyCartListener;
 import com.apollo.pharmacy.ocr.interfaces.OnItemClickListener;
 import com.apollo.pharmacy.ocr.interfaces.UploadBgImageListener;
+import com.apollo.pharmacy.ocr.model.BatchListResponse;
+import com.apollo.pharmacy.ocr.model.CalculatePosTransactionRequest;
+import com.apollo.pharmacy.ocr.model.CalculatePosTransactionResponse;
 import com.apollo.pharmacy.ocr.model.GetImageRes;
 import com.apollo.pharmacy.ocr.model.GetProductListResponse;
 import com.apollo.pharmacy.ocr.model.ItemSearchResponse;
@@ -102,7 +105,6 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
     private List<OCRToDigitalMedicineResponse> expandholdedDataList = new ArrayList<>();
     private List<OCRToDigitalMedicineResponse> labelDataList = new ArrayList<>();
 
-
     private List<OCRToDigitalMedicineResponse> deletedataList;
     private Boolean existelemnt;
     private List<String> SpecialOfferList;
@@ -147,6 +149,7 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
     RecyclerView crossCell_recycle, upcell_recycle;
     TextView noDataFound, noDataFoundCrosssel, noDataFoundUpsel;
     private boolean isDialogShow = false;
+    private List<OCRToDigitalMedicineResponse> dataListSphare;
 
     @Override
     public void onSuccessProductList(HashMap<String, GetProductListResponse> productList) {
@@ -377,8 +380,12 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                                 float grandTotalVal = 0;
                                 for (int i = 0; i < dataList.size(); i++) {
                                     if (!TextUtils.isEmpty(dataList.get(i).getArtprice())) {
-                                        float totalPrice = Float.parseFloat(dataList.get(i).getArtprice()) * dataList.get(i).getQty();
-                                        grandTotalVal = grandTotalVal + totalPrice;
+                                        if (dataList.get(i).getNetAmountInclTax() != null && !dataList.get(i).getNetAmountInclTax().isEmpty()) {
+                                            grandTotalVal = grandTotalVal + Float.parseFloat(dataList.get(i).getNetAmountInclTax());
+                                        } else {
+                                            float totalPrice = Float.parseFloat(dataList.get(i).getArtprice()) * dataList.get(i).getQty();
+                                            grandTotalVal = grandTotalVal + totalPrice;
+                                        }
                                     }
                                 }
                                 String rupeeSymbol = "\u20B9";
@@ -459,8 +466,12 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                             float grandTotalVal = 0;
                             for (int i = 0; i < dataList.size(); i++) {
                                 if (!TextUtils.isEmpty(dataList.get(i).getArtprice())) {
-                                    Float totalPrice = Float.parseFloat(dataList.get(i).getArtprice()) * dataList.get(i).getQty();
-                                    grandTotalVal = grandTotalVal + totalPrice;
+                                    if (dataList.get(i).getNetAmountInclTax() != null && !dataList.get(i).getNetAmountInclTax().isEmpty()) {
+                                        grandTotalVal = grandTotalVal + Float.parseFloat(dataList.get(i).getNetAmountInclTax());
+                                    } else {
+                                        float totalPrice = Float.parseFloat(dataList.get(i).getArtprice()) * dataList.get(i).getQty();
+                                        grandTotalVal = grandTotalVal + totalPrice;
+                                    }
                                 }
                             }
                             String rupeeSymbol = "\u20B9";
@@ -502,8 +513,12 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                         float grandTotalVal = 0;
                         for (int i = 0; i < dataList.size(); i++) {
                             if (!TextUtils.isEmpty(dataList.get(i).getArtprice())) {
-                                Float totalPrice = Float.parseFloat(dataList.get(i).getArtprice()) * dataList.get(i).getQty();
-                                grandTotalVal = grandTotalVal + totalPrice;
+                                if (dataList.get(i).getNetAmountInclTax() != null && !dataList.get(i).getNetAmountInclTax().isEmpty()) {
+                                    grandTotalVal = grandTotalVal + Float.parseFloat(dataList.get(i).getNetAmountInclTax());
+                                } else {
+                                    float totalPrice = Float.parseFloat(dataList.get(i).getArtprice()) * dataList.get(i).getQty();
+                                    grandTotalVal = grandTotalVal + totalPrice;
+                                }
                             }
                         }
                         String rupeeSymbol = "\u20B9";
@@ -546,8 +561,12 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                     float grandTotalVal = 0;
                     for (int i = 0; i < dataList.size(); i++) {
                         if (!TextUtils.isEmpty(dataList.get(i).getArtprice())) {
-                            Float totalPrice = Float.parseFloat(dataList.get(i).getArtprice()) * dataList.get(i).getQty();
-                            grandTotalVal = grandTotalVal + totalPrice;
+                            if (dataList.get(i).getNetAmountInclTax() != null && !dataList.get(i).getNetAmountInclTax().isEmpty()) {
+                                grandTotalVal = grandTotalVal + Float.parseFloat(dataList.get(i).getNetAmountInclTax());
+                            } else {
+                                float totalPrice = Float.parseFloat(dataList.get(i).getArtprice()) * dataList.get(i).getQty();
+                                grandTotalVal = grandTotalVal + totalPrice;
+                            }
                         }
                     }
                     String rupeeSymbol = "\u20B9";
@@ -813,7 +832,33 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
         dataList = new ArrayList<>();
         deletedataList = new ArrayList<>();
         initLeftMenu();
+        if (SessionManager.INSTANCE.getDataList() != null && SessionManager.INSTANCE.getDataList().size() > 0) {
+            this.dataListSphare = SessionManager.INSTANCE.getDataList();
+            for (int i = 0; i < dataListSphare.size(); i++) {
+                if (dataListSphare.get(i).getArtCode().contains(",")) {
+                    dataListSphare.get(i).setArtCode(dataListSphare.get(i).getArtCode().substring(0, dataListSphare.get(i).getArtCode().indexOf(",")));
+                }
+            }
 
+            for (int i = 0; i < dataListSphare.size(); i++) {
+                for (int j = 0; j < dataListSphare.size(); j++) {
+                    if (dataListSphare.get(i).getArtCode().equals(dataListSphare.get(j).getArtCode()) && i != j) {
+                        dataListSphare.get(i).setQty(dataListSphare.get(i).getQty() + dataListSphare.get(j).getQty());
+                        dataListSphare.remove(j);
+                        j--;
+                    }
+                }
+            }
+            SessionManager.INSTANCE.setDataList(dataListSphare);
+            for (int i = 0; i < dataListSphare.size(); i++) {
+                new MyCartController(this).searchItemProducts(dataListSphare.get(i).getArtCode(), i, this);
+            }
+        } else {
+            setUp();
+        }
+    }
+
+    private void setUp() {
         grandTotalPrice = findViewById(R.id.grand_total_price);
         myCartCount = findViewById(R.id.lblCartCnt);
         constraint_Layout = findViewById(R.id.constraint_layout);
@@ -981,8 +1026,12 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                         float grandTotalVal = 0;
                         for (int i = 0; i < dataList.size(); i++) {
                             if (!TextUtils.isEmpty(dataList.get(i).getArtprice())) {
-                                Float totalPrice = Float.parseFloat(dataList.get(i).getArtprice()) * dataList.get(i).getQty();
-                                grandTotalVal = grandTotalVal + totalPrice;
+                                if (dataList.get(i).getNetAmountInclTax() != null && !dataList.get(i).getNetAmountInclTax().isEmpty()) {
+                                    grandTotalVal = grandTotalVal + Float.parseFloat(dataList.get(i).getNetAmountInclTax());
+                                } else {
+                                    float totalPrice = Float.parseFloat(dataList.get(i).getArtprice()) * dataList.get(i).getQty();
+                                    grandTotalVal = grandTotalVal + totalPrice;
+                                }
                             }
                         }
                         DecimalFormat formatter1 = new DecimalFormat("#,###.00");
@@ -1013,8 +1062,12 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                         for (int i = 0; i < dataList.size(); i++) {
                             if (dataList.get(i).getArtprice() != null) {
                                 if (!TextUtils.isEmpty(dataList.get(i).getArtprice())) {
-                                    Float totalPrice = Float.parseFloat(dataList.get(i).getArtprice()) * dataList.get(i).getQty();
-                                    grandTotalVal = grandTotalVal + totalPrice;
+                                    if (dataList.get(i).getNetAmountInclTax() != null && !dataList.get(i).getNetAmountInclTax().isEmpty()) {
+                                        grandTotalVal = grandTotalVal + Float.parseFloat(dataList.get(i).getNetAmountInclTax());
+                                    } else {
+                                        float totalPrice = Float.parseFloat(dataList.get(i).getArtprice()) * dataList.get(i).getQty();
+                                        grandTotalVal = grandTotalVal + totalPrice;
+                                    }
                                 }
                             }
                         }
@@ -1172,7 +1225,11 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                 float totalMrpPrice = 0;
                 for (int i = 0; i < dataList.size(); i++) {
                     if (!TextUtils.isEmpty(dataList.get(i).getArtprice())) {
-                        totalMrpPrice = Float.parseFloat(dataList.get(i).getArtprice()) * dataList.get(i).getQty() + totalMrpPrice;
+                        if (dataList.get(i).getNetAmountInclTax() != null && !dataList.get(i).getNetAmountInclTax().isEmpty()) {
+                            totalMrpPrice = Float.parseFloat(dataList.get(i).getNetAmountInclTax()) + totalMrpPrice;
+                        } else {
+                            totalMrpPrice = Float.parseFloat(dataList.get(i).getArtprice()) * dataList.get(i).getQty() + totalMrpPrice;
+                        }
                     }
                 }
 
@@ -1291,6 +1348,7 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
 //        });
     }
 
+
     private List<OCRToDigitalMedicineResponse> duplicatelabelDataList = new ArrayList<>();
 
     private void groupingDuplicates() {
@@ -1337,6 +1395,7 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
             float labelPrice = 0;
             String labelName = "";
             int repeatCount = 0;
+            String netAmountinclTax = "";
             for (int j = 0; j < expandListDummy.size(); j++) {
                 if (labelDataList.get(i).getArtName().equalsIgnoreCase(expandListDummy.get(j).getArtName())) {
                     if (!maxOnce) {
@@ -1353,6 +1412,7 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                     labelAvgQty = labelAvgQty + expandListDummy.get(j).getQty();
                     repeatCount = repeatCount + 1;
                     labelName = expandListDummy.get(j).getArtName();
+                    netAmountinclTax = expandListDummy.get(j).getNetAmountInclTax();
                 }
             }
 
@@ -1364,6 +1424,7 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
             labelResponse.setLabelAvgQty(labelAvgQty);
             labelResponse.setDuplicateCount(repeatCount);
             labelResponse.setLabelName(labelName);
+            labelResponse.setNetAmountInclTax(netAmountinclTax);
             duplicatelabelDataList.add(labelResponse);
         }
 
@@ -1373,6 +1434,7 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
             labelResponse.setArtName(duplicatelabelDataList.get(i).getLabelName());
             labelResponse.setArtprice(String.valueOf(duplicatelabelDataList.get(i).getLabelAveragePrice()));
             labelResponse.setQty(duplicatelabelDataList.get(i).getLabelAvgQty());
+            labelResponse.setNetAmountInclTax(duplicatelabelDataList.get(i).getNetAmountInclTax());
             dataComparingList.add(labelResponse);
         }
 
@@ -1545,8 +1607,12 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
             float grandTotalVal = 0;
             for (int i = 0; i < dataList.size(); i++) {
                 if (!TextUtils.isEmpty(dataList.get(i).getArtprice())) {
-                    Float totalPrice = Float.parseFloat(dataList.get(i).getArtprice()) * dataList.get(i).getQty();
-                    grandTotalVal = grandTotalVal + totalPrice;
+                    if (dataList.get(i).getNetAmountInclTax() != null && !dataList.get(i).getNetAmountInclTax().isEmpty()) {
+                        grandTotalVal = grandTotalVal + Float.parseFloat(dataList.get(i).getNetAmountInclTax());
+                    } else {
+                        float totalPrice = Float.parseFloat(dataList.get(i).getArtprice()) * dataList.get(i).getQty();
+                        grandTotalVal = grandTotalVal + totalPrice;
+                    }
                 }
             }
             String rupeeSymbol = "\u20B9";
@@ -1696,8 +1762,12 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
             float grandTotalVal = 0;
             for (int i = 0; i < dataList.size(); i++) {
                 if (!TextUtils.isEmpty(dataList.get(i).getArtprice())) {
-                    Float totalPrice = Float.parseFloat(dataList.get(i).getArtprice()) * dataList.get(i).getQty();
-                    grandTotalVal = grandTotalVal + totalPrice;
+                    if (dataList.get(i).getNetAmountInclTax() != null && !dataList.get(i).getNetAmountInclTax().isEmpty()) {
+                        grandTotalVal = grandTotalVal + Float.parseFloat(dataList.get(i).getNetAmountInclTax());
+                    } else {
+                        float totalPrice = Float.parseFloat(dataList.get(i).getArtprice()) * dataList.get(i).getQty();
+                        grandTotalVal = grandTotalVal + totalPrice;
+                    }
                 }
             }
             String rupeeSymbol = "\u20B9";
@@ -1770,6 +1840,396 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
     public void upSellCrosssellApiCall(List<UpCellCrossCellResponse.Crossselling> crossselling,
                                        List<UpCellCrossCellResponse.Upselling> upselling) {
 
+    }
+
+    int k = 0;
+
+    @Override
+    public void setSuccessBatchList(BatchListResponse batchListResponse, int position, ItemSearchResponse.Item iteSearchData) {
+        int requiredQty = dataListSphare.get(position).getQty();
+        for (int i = 0; i < batchListResponse.getBatchList().size(); i++) {
+            if (Double.parseDouble(batchListResponse.getBatchList().get(i).getQOH()) >= requiredQty) {
+                OCRToDigitalMedicineResponse data = new OCRToDigitalMedicineResponse();
+                data.setArtName(iteSearchData.getDescription());
+                data.setArtCode(iteSearchData.getArtCode() + "," + batchListResponse.getBatchList().get(i).getBatchNo());
+                data.setBatchId(batchListResponse.getBatchList().get(i).getBatchNo());
+                data.setArtprice(String.valueOf(batchListResponse.getBatchList().get(i).getMrp()));
+                data.setContainer("");
+                data.setQty(requiredQty);
+
+                //calculate pos transaction
+                CalculatePosTransactionRequest.SalesLine salesLine = new CalculatePosTransactionRequest.SalesLine();
+                salesLine.setBatchNo(batchListResponse.getBatchList().get(i).getBatchNo());
+                salesLine.setAdditionaltax(0.0);
+                salesLine.setApplyDiscount(false);
+                salesLine.setBarcode("");
+                salesLine.setBaseAmount(batchListResponse.getBatchList().get(i).getMrp());
+                salesLine.setCESSPerc(batchListResponse.getBatchList().get(i).getCESSPerc());
+                salesLine.setCESSTaxCode(batchListResponse.getBatchList().get(i).getCESSTaxCode());
+                salesLine.setCGSTPerc(batchListResponse.getBatchList().get(i).getCGSTPerc());
+                salesLine.setCGSTTaxCode(batchListResponse.getBatchList().get(i).getCGSTTaxCode());
+                salesLine.setCategory(iteSearchData.getCategory());
+                salesLine.setCategoryCode(iteSearchData.getCategoryCode());
+                salesLine.setCategoryReference("");
+                salesLine.setComment("");
+                salesLine.setDpco(iteSearchData.getDpco());
+                salesLine.setDiscAmount(0.0);
+                salesLine.setDiscId("");
+                salesLine.setDiscOfferId("");
+                salesLine.setDiscountStructureType(0.0);
+                salesLine.setDiscountType("");
+                salesLine.setDiseaseType(iteSearchData.getDiseaseType());
+                salesLine.setExpiry(batchListResponse.getBatchList().get(i).getExpDate());
+                salesLine.setHsncodeIn(iteSearchData.getHsncodeIn());
+                salesLine.setIGSTPerc(batchListResponse.getBatchList().get(i).getIGSTPerc());
+                salesLine.setIGSTTaxCode(batchListResponse.getBatchList().get(i).getIGSTTaxCode());
+                salesLine.setISPrescribed(0.0);
+                salesLine.setISReserved(false);
+                salesLine.setISStockAvailable(true);
+                salesLine.setInventBatchId("");//-----0B110081BQ
+                salesLine.setIsChecked(false);
+                salesLine.setIsGeneric(iteSearchData.getIsGeneric());
+                salesLine.setIsPriceOverride(false);
+                salesLine.setIsSubsitute(false);
+                salesLine.setIsVoid(false);
+                salesLine.setItemId(batchListResponse.getBatchList().get(i).getItemID());
+                salesLine.setItemName(iteSearchData.getDescription());
+                salesLine.setLineDiscPercentage(0.0);
+                salesLine.setLineManualDiscountAmount(0.0);
+                salesLine.setLineManualDiscountPercentage(0.0);
+                salesLine.setLineNo(1);
+                salesLine.setLinedscAmount(0.0);
+                salesLine.setMMGroupId("0");
+                salesLine.setMrp(batchListResponse.getBatchList().get(i).getMrp());
+                salesLine.setManufacturerCode(iteSearchData.getManufactureCode());
+                salesLine.setManufacturerName(iteSearchData.getManufacture());
+                salesLine.setMixMode(false);
+                salesLine.setModifyBatchId("");
+                salesLine.setNetAmount(batchListResponse.getBatchList().get(i).getMrp());
+                salesLine.setNetAmountInclTax(batchListResponse.getBatchList().get(i).getMrp());
+                salesLine.setOfferAmount(0.0);
+                salesLine.setOfferDiscountType(0.0);
+                salesLine.setOfferQty(0.0);
+                salesLine.setOfferType(0.0);
+                salesLine.setOmsLineID(0.0);
+                salesLine.setOmsLineRECID(0.0);
+                salesLine.setOrderStatus(0.0);
+                salesLine.setNetAmountInclTax(0.0);
+                salesLine.setOriginalPrice(batchListResponse.getBatchList().get(i).getMrp());
+                salesLine.setPeriodicDiscAmount(0.0);
+                salesLine.setPhysicalMRP(0.0);
+                salesLine.setPreviewText("");
+                salesLine.setPrice(batchListResponse.getBatchList().get(i).getMrp());
+                salesLine.setProductRecID(iteSearchData.getProductRecID());
+                salesLine.setQty(requiredQty);
+                salesLine.setRemainderDays(0.0);
+                salesLine.setRemainingQty(0.0);
+                salesLine.setResqtyflag(false);
+                salesLine.setRetailCategoryRecID(iteSearchData.getRetailCategoryRecID());
+                salesLine.setRetailMainCategoryRecID(iteSearchData.getRetailMainCategoryRecID());
+                salesLine.setRetailSubCategoryRecID(iteSearchData.getRetailSubCategoryRecID());
+                salesLine.setReturnQty(0.0);
+                salesLine.setSGSTPerc(batchListResponse.getBatchList().get(i).getSGSTPerc());
+                salesLine.setSGSTTaxCode(batchListResponse.getBatchList().get(i).getSGSTTaxCode());
+                salesLine.setScheduleCategory(iteSearchData.getSchCatg());
+                salesLine.setScheduleCategoryCode(iteSearchData.getSchCatgCode());
+                salesLine.setStockQty(Double.valueOf(iteSearchData.getStockqty()));
+                salesLine.setSubCategory(iteSearchData.getSubCategory());
+                salesLine.setSubCategoryCode(iteSearchData.getSubCategory());
+                salesLine.setSubClassification(iteSearchData.getSubClassification());
+                salesLine.setSubstitudeItemId("");
+                salesLine.setTax(batchListResponse.getBatchList().get(i).getTotalTax());
+                salesLine.setTaxAmount(batchListResponse.getBatchList().get(i).getTotalTax());
+                salesLine.setTotal(batchListResponse.getBatchList().get(i).getMrp());
+                salesLine.setTotalDiscAmount(0.0);
+                salesLine.setTotalDiscPct(0.0);
+                salesLine.setTotalRoundedAmount(0.0);
+                salesLine.setTotalTax(batchListResponse.getBatchList().get(i).getTotalTax());
+                salesLine.setUnit("");
+                salesLine.setUnitPrice(batchListResponse.getBatchList().get(i).getMrp());
+                salesLine.setUnitQty((double) requiredQty);
+                salesLine.setVariantId("");
+                salesLine.setIsReturnClick(false);
+                salesLine.setIsSelectedReturnItem(false);
+                data.setSalesLine(salesLine);
+
+                data.setMedicineType(iteSearchData.getCategory());
+                dummyDataList.add(data);
+                break;
+            } else if (Double.parseDouble(batchListResponse.getBatchList().get(i).getQOH()) < requiredQty) {
+                OCRToDigitalMedicineResponse data = new OCRToDigitalMedicineResponse();
+                data.setArtName(iteSearchData.getDescription());
+                data.setArtCode(iteSearchData.getArtCode() + "," + batchListResponse.getBatchList().get(i).getBatchNo());
+                data.setBatchId(batchListResponse.getBatchList().get(i).getBatchNo());
+                data.setArtprice(String.valueOf(batchListResponse.getBatchList().get(i).getMrp()));
+                data.setContainer("");
+                data.setQty((int) Float.parseFloat(batchListResponse.getBatchList().get(i).getQOH()));
+
+
+                //calculate pos transaction
+                CalculatePosTransactionRequest.SalesLine salesLine = new CalculatePosTransactionRequest.SalesLine();
+                salesLine.setBatchNo(batchListResponse.getBatchList().get(i).getBatchNo());
+                salesLine.setAdditionaltax(0.0);
+                salesLine.setApplyDiscount(false);
+                salesLine.setBarcode("");
+                salesLine.setBaseAmount(batchListResponse.getBatchList().get(i).getMrp());
+                salesLine.setCESSPerc(batchListResponse.getBatchList().get(i).getCESSPerc());
+                salesLine.setCESSTaxCode(batchListResponse.getBatchList().get(i).getCESSTaxCode());
+                salesLine.setCGSTPerc(batchListResponse.getBatchList().get(i).getCGSTPerc());
+                salesLine.setCGSTTaxCode(batchListResponse.getBatchList().get(i).getCGSTTaxCode());
+                salesLine.setCategory(iteSearchData.getCategory());
+                salesLine.setCategoryCode(iteSearchData.getCategoryCode());
+                salesLine.setCategoryReference("");
+                salesLine.setComment("");
+                salesLine.setDpco(iteSearchData.getDpco());
+                salesLine.setDiscAmount(0.0);
+                salesLine.setDiscId("");
+                salesLine.setDiscOfferId("");
+                salesLine.setDiscountStructureType(0.0);
+                salesLine.setDiscountType("");
+                salesLine.setDiseaseType(iteSearchData.getDiseaseType());
+                salesLine.setExpiry(batchListResponse.getBatchList().get(i).getExpDate());
+                salesLine.setHsncodeIn(iteSearchData.getHsncodeIn());
+                salesLine.setIGSTPerc(batchListResponse.getBatchList().get(i).getIGSTPerc());
+                salesLine.setIGSTTaxCode(batchListResponse.getBatchList().get(i).getIGSTTaxCode());
+                salesLine.setISPrescribed(0.0);
+                salesLine.setISReserved(false);
+                salesLine.setISStockAvailable(true);
+                salesLine.setInventBatchId("");//-----0B110081BQ
+                salesLine.setIsChecked(false);
+                salesLine.setIsGeneric(iteSearchData.getIsGeneric());
+                salesLine.setIsPriceOverride(false);
+                salesLine.setIsSubsitute(false);
+                salesLine.setIsVoid(false);
+                salesLine.setItemId(batchListResponse.getBatchList().get(i).getItemID());
+                salesLine.setItemName(iteSearchData.getDescription());
+                salesLine.setLineDiscPercentage(0.0);
+                salesLine.setLineManualDiscountAmount(0.0);
+                salesLine.setLineManualDiscountPercentage(0.0);
+                salesLine.setLineNo(1);
+                salesLine.setLinedscAmount(0.0);
+                salesLine.setMMGroupId("0");
+                salesLine.setMrp(batchListResponse.getBatchList().get(i).getMrp());
+                salesLine.setManufacturerCode(iteSearchData.getManufactureCode());
+                salesLine.setManufacturerName(iteSearchData.getManufacture());
+                salesLine.setMixMode(false);
+                salesLine.setModifyBatchId("");
+                salesLine.setNetAmount(batchListResponse.getBatchList().get(i).getMrp());
+                salesLine.setNetAmountInclTax(batchListResponse.getBatchList().get(i).getMrp());
+                salesLine.setOfferAmount(0.0);
+                salesLine.setOfferDiscountType(0.0);
+                salesLine.setOfferQty(0.0);
+                salesLine.setOfferType(0.0);
+                salesLine.setOmsLineID(0.0);
+                salesLine.setOmsLineRECID(0.0);
+                salesLine.setOrderStatus(0.0);
+                salesLine.setNetAmountInclTax(0.0);
+                salesLine.setOriginalPrice(batchListResponse.getBatchList().get(i).getMrp());
+                salesLine.setPeriodicDiscAmount(0.0);
+                salesLine.setPhysicalMRP(0.0);
+                salesLine.setPreviewText("");
+                salesLine.setPrice(batchListResponse.getBatchList().get(i).getMrp());
+                salesLine.setProductRecID(iteSearchData.getProductRecID());
+                salesLine.setQty((int) Float.parseFloat(batchListResponse.getBatchList().get(i).getQOH()));
+                salesLine.setRemainderDays(0.0);
+                salesLine.setRemainingQty(0.0);
+                salesLine.setResqtyflag(false);
+                salesLine.setRetailCategoryRecID(iteSearchData.getRetailCategoryRecID());
+                salesLine.setRetailMainCategoryRecID(iteSearchData.getRetailMainCategoryRecID());
+                salesLine.setRetailSubCategoryRecID(iteSearchData.getRetailSubCategoryRecID());
+                salesLine.setReturnQty(0.0);
+                salesLine.setSGSTPerc(batchListResponse.getBatchList().get(i).getSGSTPerc());
+                salesLine.setSGSTTaxCode(batchListResponse.getBatchList().get(i).getSGSTTaxCode());
+                salesLine.setScheduleCategory(iteSearchData.getSchCatg());
+                salesLine.setScheduleCategoryCode(iteSearchData.getSchCatgCode());
+                salesLine.setStockQty(Double.valueOf(iteSearchData.getStockqty()));
+                salesLine.setSubCategory(iteSearchData.getSubCategory());
+                salesLine.setSubCategoryCode(iteSearchData.getSubCategory());
+                salesLine.setSubClassification(iteSearchData.getSubClassification());
+                salesLine.setSubstitudeItemId("");
+                salesLine.setTax(batchListResponse.getBatchList().get(i).getTotalTax());
+                salesLine.setTaxAmount(batchListResponse.getBatchList().get(i).getTotalTax());
+                salesLine.setTotal(batchListResponse.getBatchList().get(i).getMrp());
+                salesLine.setTotalDiscAmount(0.0);
+                salesLine.setTotalDiscPct(0.0);
+                salesLine.setTotalRoundedAmount(0.0);
+                salesLine.setTotalTax(batchListResponse.getBatchList().get(i).getTotalTax());
+                salesLine.setUnit("");
+                salesLine.setUnitPrice(batchListResponse.getBatchList().get(i).getMrp());
+                salesLine.setUnitQty((double) ((int) Float.parseFloat(batchListResponse.getBatchList().get(i).getQOH())));
+                salesLine.setVariantId("");
+                salesLine.setIsReturnClick(false);
+                salesLine.setIsSelectedReturnItem(false);
+                data.setSalesLine(salesLine);
+
+                data.setMedicineType(iteSearchData.getCategory());
+                dummyDataList.add(data);
+                requiredQty = (int) (requiredQty - Double.parseDouble(batchListResponse.getBatchList().get(i).getQOH()));
+            }
+        }
+
+        CalculatePosTransactionRequest calculatePosTransactionRequest = new CalculatePosTransactionRequest();
+        calculatePosTransactionRequest.setAmounttoAccount(0);
+        calculatePosTransactionRequest.setBatchTerminalid("");
+        calculatePosTransactionRequest.setBillingCity("");
+        calculatePosTransactionRequest.setBusinessDate(Utils.getCurrentDate(Constants.DATE_FORMAT_DD_MMM_YYYY));
+        calculatePosTransactionRequest.setCancelReasonCode("");
+        calculatePosTransactionRequest.setChannel("");
+        calculatePosTransactionRequest.setComment("");
+        calculatePosTransactionRequest.setCorpCode("0");
+        calculatePosTransactionRequest.setCouponCode("");
+        calculatePosTransactionRequest.setCreatedonPosTerminal("006");
+        calculatePosTransactionRequest.setCurrency("INR");
+        calculatePosTransactionRequest.setCurrentSalesLine(0);
+        calculatePosTransactionRequest.setCustAccount("");
+        calculatePosTransactionRequest.setCustAddress("");
+        calculatePosTransactionRequest.setCustDiscamount(0);
+        calculatePosTransactionRequest.setCustomerName(SessionManager.INSTANCE.getCustrName());
+        calculatePosTransactionRequest.setCustomerState("");
+        calculatePosTransactionRequest.setDob("");
+        calculatePosTransactionRequest.setDataAreaId("Ahel");
+        calculatePosTransactionRequest.setDeliveryDate("");
+        calculatePosTransactionRequest.setDiscAmount(0);
+        calculatePosTransactionRequest.setDoctorCode("");
+        calculatePosTransactionRequest.setDoctorName("");
+        calculatePosTransactionRequest.setEntryStatus(0);
+        calculatePosTransactionRequest.setGender(0);
+        calculatePosTransactionRequest.setGrossAmount(0.0);
+        calculatePosTransactionRequest.setIpno("");
+        calculatePosTransactionRequest.setIPSerialNO("");
+        calculatePosTransactionRequest.setISAdvancePayment(true);
+        calculatePosTransactionRequest.setISBatchModifiedAllowed(false);
+        calculatePosTransactionRequest.setISOMSOrder(false);
+        calculatePosTransactionRequest.setISPosted(false);
+        calculatePosTransactionRequest.setISPrescibeDiscount(false);
+        calculatePosTransactionRequest.setISReserved(false);
+        calculatePosTransactionRequest.setISReturnAllowed(false);
+        calculatePosTransactionRequest.setIsManualBill(false);
+        calculatePosTransactionRequest.setIsReturn(false);
+        calculatePosTransactionRequest.setIsStockCheck(true);
+        calculatePosTransactionRequest.setIsVoid(false);
+        calculatePosTransactionRequest.setMobileNO(SessionManager.INSTANCE.getMobilenumber());
+        calculatePosTransactionRequest.setNetAmount(0.0);
+        calculatePosTransactionRequest.setNetAmountInclTax(0.0);
+        calculatePosTransactionRequest.setNumberofItemLines(1);
+        calculatePosTransactionRequest.setNumberofItems(1);
+        calculatePosTransactionRequest.setOrderSource("");
+        calculatePosTransactionRequest.setOrderType("");
+        calculatePosTransactionRequest.setPaymentSource("");
+        calculatePosTransactionRequest.setPincode("");
+        calculatePosTransactionRequest.setPosEvent(0);
+        calculatePosTransactionRequest.setRefno("");
+        calculatePosTransactionRequest.setReciptId("");
+        calculatePosTransactionRequest.setRegionCode("");
+        calculatePosTransactionRequest.setRemainingamount(0.0);
+        calculatePosTransactionRequest.setReminderDays(0);
+        calculatePosTransactionRequest.setRequestStatus(0);
+        calculatePosTransactionRequest.setReturnMessage("");
+        calculatePosTransactionRequest.setReturnReceiptId("");
+        calculatePosTransactionRequest.setReturnStore("");
+        calculatePosTransactionRequest.setReturnTerminal("");
+        calculatePosTransactionRequest.setReturnTransactionId("");
+        calculatePosTransactionRequest.setReturnType(0);
+        calculatePosTransactionRequest.setRoundedAmount(0);
+        calculatePosTransactionRequest.setSez(0);
+
+        List<CalculatePosTransactionRequest.SalesLine> salesLineList = new ArrayList<>();
+        if (dummyDataList != null && dummyDataList.size() > 0) {
+            for (int i = 0; i < dummyDataList.size(); i++) {
+                salesLineList.add(dummyDataList.get(i).getSalesLine());
+            }
+        }
+        calculatePosTransactionRequest.setSalesLine(salesLineList);
+
+        calculatePosTransactionRequest.setSalesOrigin("0");
+        calculatePosTransactionRequest.setShippingMethod("");
+        calculatePosTransactionRequest.setStaff("");
+        calculatePosTransactionRequest.setState("AP");
+        calculatePosTransactionRequest.setStore("16001");
+        calculatePosTransactionRequest.setStoreName("POS TESTING");
+        calculatePosTransactionRequest.setTenderLine(null);
+        calculatePosTransactionRequest.setTerminal("006");
+        calculatePosTransactionRequest.setTimewhenTransClosed(0);
+        calculatePosTransactionRequest.setTotalDiscAmount(0);
+        calculatePosTransactionRequest.setTotalMRP(0.0);
+        calculatePosTransactionRequest.setTotalManualDiscountAmount(0);
+        calculatePosTransactionRequest.setTotalManualDiscountPercentage(0);
+        calculatePosTransactionRequest.setTotalTaxAmount(0.0);
+        calculatePosTransactionRequest.setTrackingRef("");
+        calculatePosTransactionRequest.setTransDate(Utils.getCurrentDate(Constants.DATE_FORMAT_DD_MMM_YYYY));
+        calculatePosTransactionRequest.setTransType(0);
+        calculatePosTransactionRequest.setTransactionId("");
+        calculatePosTransactionRequest.setType(2);
+        calculatePosTransactionRequest.setVendorId("");
+        calculatePosTransactionRequest.setOMSCreditAmount(0.0);
+        calculatePosTransactionRequest.setShippingCharges(0.0);
+        k++;
+        if (k == dataListSphare.size()) {
+            k = 0;
+            dummyDataList.clear();
+            new MyCartController(this).calculatePosTransaction(calculatePosTransactionRequest, this);
+        }
+    }
+
+    @Override
+    public void onSuccessCalculatePosTransactionApi(CalculatePosTransactionResponse calculatePosTransactionResponse) {
+        List<OCRToDigitalMedicineResponse> dummyDataListdummy = new ArrayList<>();
+        if (calculatePosTransactionResponse != null && calculatePosTransactionResponse.getSalesLine() != null && calculatePosTransactionResponse.getSalesLine().size() > 0) {
+            for (int i = 0; i < calculatePosTransactionResponse.getSalesLine().size(); i++) {
+                OCRToDigitalMedicineResponse data = new OCRToDigitalMedicineResponse();
+                data.setArtName(calculatePosTransactionResponse.getSalesLine().get(i).getItemName());
+                data.setArtCode(calculatePosTransactionResponse.getSalesLine().get(i).getItemId() + "," + calculatePosTransactionResponse.getSalesLine().get(i).getBatchNo());
+                data.setBatchId(calculatePosTransactionResponse.getSalesLine().get(i).getBatchNo());
+                data.setArtprice(String.valueOf(calculatePosTransactionResponse.getSalesLine().get(i).getMrp()));
+                data.setContainer("");
+                data.setMedicineType(calculatePosTransactionResponse.getSalesLine().get(i).getCategory());
+                data.setNetAmountInclTax((calculatePosTransactionResponse.getSalesLine().get(i).getBaseAmount().equals(calculatePosTransactionResponse.getSalesLine().get(i).getNetAmountInclTax())) ? null : String.valueOf(calculatePosTransactionResponse.getSalesLine().get(i).getNetAmountInclTax()));
+                data.setQty(calculatePosTransactionResponse.getSalesLine().get(i).getQty());
+                dummyDataListdummy.add(data);
+            }
+        }
+//        List<OCRToDigitalMedicineResponse> temporaryDataList = new ArrayList<>();
+//        if (SessionManager.INSTANCE.getDataList() != null && SessionManager.INSTANCE.getDataList().size() > 0) {
+//            temporaryDataList = SessionManager.INSTANCE.getDataList();
+//            for (int i = 0; i < temporaryDataList.size(); i++) {
+//                for (int j = 0; j < dummyDataListdummy.size(); j++) {
+//                    if (temporaryDataList.get(i).getArtCode().equals(dummyDataListdummy.get(j).getArtCode())) {
+//                        if (dummyDataListdummy.get(j).getNetAmountInclTax() != null && temporaryDataList.get(i).getNetAmountInclTax() != null)
+//                            temporaryDataList.get(i).setNetAmountInclTax(String.valueOf(Double.parseDouble(temporaryDataList.get(i).getNetAmountInclTax()) + Double.parseDouble(dummyDataListdummy.get(j).getNetAmountInclTax())));
+//                        temporaryDataList.get(i).setQty(temporaryDataList.get(i).getQty() + dummyDataListdummy.get(j).getQty());
+//                        dummyDataListdummy.remove(j);
+//                        j--;
+//                    }
+//                }
+//            }
+//            temporaryDataList.addAll(dummyDataListdummy);
+        SessionManager.INSTANCE.setDataList(dummyDataListdummy);
+        setUp();
+//            Intent intent = new Intent("OrderhistoryCardReciver");
+//            intent.putExtra("message", "OrderNow");
+//            intent.putExtra("MedininesNames", new Gson().toJson(temporaryDataList));
+//            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+//        } else {
+//            temporaryDataList.addAll(dummyDataListdummy);
+//            SessionManager.INSTANCE.setDataList(temporaryDataList);
+//            setUp();
+////            Intent intent = new Intent("OrderhistoryCardReciver");
+////            intent.putExtra("message", "OrderNow");
+////            intent.putExtra("MedininesNames", new Gson().toJson(temporaryDataList));
+////            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+//        }
+    }
+
+    @Override
+    public void onSuccessSearchItemApi(ItemSearchResponse itemSearchResponse, int position) {
+        if (itemSearchResponse != null && itemSearchResponse.getItemList() != null && itemSearchResponse.getItemList().size() > 0) {
+            for (int i = 0; i < itemSearchResponse.getItemList().size(); i++) {
+                dataListSphare.get(position).setMedicineType(String.valueOf(itemSearchResponse.getItemList().get(i).getCategory()));
+                dataListSphare.get(position).setArtName(String.valueOf(itemSearchResponse.getItemList().get(i).getDescription()));
+            }
+        } else {
+            dataListSphare.get(position).setOutOfStock(true);
+        }
     }
 
     @Override
@@ -1961,8 +2421,12 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                 float grandTotalVal = 0;
                 for (int i = 0; i < dataList.size(); i++) {
                     if (!TextUtils.isEmpty(dataList.get(i).getArtprice())) {
-                        Float totalPrice = Float.parseFloat(dataList.get(i).getArtprice()) * dataList.get(i).getQty();
-                        grandTotalVal = grandTotalVal + totalPrice;
+                        if (dataList.get(i).getNetAmountInclTax() != null && !dataList.get(i).getNetAmountInclTax().isEmpty()) {
+                            grandTotalVal = grandTotalVal + Float.parseFloat(dataList.get(i).getNetAmountInclTax());
+                        } else {
+                            float totalPrice = Float.parseFloat(dataList.get(i).getArtprice()) * dataList.get(i).getQty();
+                            grandTotalVal = grandTotalVal + totalPrice;
+                        }
                     }
                 }
                 String rupeeSymbol = "\u20B9";
@@ -2056,8 +2520,12 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                 float grandTotalVal = 0;
                 for (int i = 0; i < dataList.size(); i++) {
                     if (!TextUtils.isEmpty(dataList.get(i).getArtprice())) {
-                        Float totalPrice = Float.parseFloat(dataList.get(i).getArtprice()) * dataList.get(i).getQty();
-                        grandTotalVal = grandTotalVal + totalPrice;
+                        if (dataList.get(i).getNetAmountInclTax() != null && !dataList.get(i).getNetAmountInclTax().isEmpty()) {
+                            grandTotalVal = grandTotalVal + Float.parseFloat(dataList.get(i).getNetAmountInclTax());
+                        } else {
+                            float totalPrice = Float.parseFloat(dataList.get(i).getArtprice()) * dataList.get(i).getQty();
+                            grandTotalVal = grandTotalVal + totalPrice;
+                        }
                     }
                 }
                 String rupeeSymbol = "\u20B9";
@@ -2161,7 +2629,11 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                 float totalMrpPrice = 0;
                 for (int i = 0; i < dataList.size(); i++) {
                     if (!TextUtils.isEmpty(dataList.get(i).getArtprice())) {
-                        totalMrpPrice = Float.parseFloat(dataList.get(i).getArtprice()) * dataList.get(i).getQty() + totalMrpPrice;
+                        if (dataList.get(i).getNetAmountInclTax() != null && !dataList.get(i).getNetAmountInclTax().isEmpty()) {
+                            totalMrpPrice = Float.parseFloat(dataList.get(i).getNetAmountInclTax()) + totalMrpPrice;
+                        } else {
+                            totalMrpPrice = Float.parseFloat(dataList.get(i).getArtprice()) * dataList.get(i).getQty() + totalMrpPrice;
+                        }
                     }
                 }
 
@@ -2211,7 +2683,11 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
         float totalMrpPrice = 0;
         for (int i = 0; i < dataList.size(); i++) {
             if (!TextUtils.isEmpty(dataList.get(i).getArtprice())) {
-                totalMrpPrice = Float.parseFloat(dataList.get(i).getArtprice()) * dataList.get(i).getQty() + totalMrpPrice;
+                if (dataList.get(i).getNetAmountInclTax() != null && !dataList.get(i).getNetAmountInclTax().isEmpty()) {
+                    totalMrpPrice = Float.parseFloat(dataList.get(i).getNetAmountInclTax()) + totalMrpPrice;
+                } else {
+                    totalMrpPrice = Float.parseFloat(dataList.get(i).getArtprice()) * dataList.get(i).getQty() + totalMrpPrice;
+                }
             }
         }
 

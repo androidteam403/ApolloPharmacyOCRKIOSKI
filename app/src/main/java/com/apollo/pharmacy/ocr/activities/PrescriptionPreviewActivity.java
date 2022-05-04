@@ -29,6 +29,8 @@ import com.apollo.pharmacy.ocr.controller.UploadBgImageController;
 import com.apollo.pharmacy.ocr.interfaces.MyCartListener;
 import com.apollo.pharmacy.ocr.interfaces.PrescriptionPreviewListener;
 import com.apollo.pharmacy.ocr.interfaces.UploadBgImageListener;
+import com.apollo.pharmacy.ocr.model.BatchListResponse;
+import com.apollo.pharmacy.ocr.model.CalculatePosTransactionResponse;
 import com.apollo.pharmacy.ocr.model.GetImageRes;
 import com.apollo.pharmacy.ocr.model.GetProductListResponse;
 import com.apollo.pharmacy.ocr.model.ItemSearchResponse;
@@ -390,6 +392,21 @@ public class PrescriptionPreviewActivity extends AppCompatActivity implements Pr
 
     @Override
     public void upSellCrosssellApiCall(List<UpCellCrossCellResponse.Crossselling> crossselling, List<UpCellCrossCellResponse.Upselling> upselling) {
+
+    }
+
+    @Override
+    public void setSuccessBatchList(BatchListResponse body, int position, ItemSearchResponse.Item itemSearchData) {
+
+    }
+
+    @Override
+    public void onSuccessCalculatePosTransactionApi(CalculatePosTransactionResponse calculatePosTransactionResponse) {
+
+    }
+
+    @Override
+    public void onSuccessSearchItemApi(ItemSearchResponse itemSearchResponse, int position) {
 
     }
 

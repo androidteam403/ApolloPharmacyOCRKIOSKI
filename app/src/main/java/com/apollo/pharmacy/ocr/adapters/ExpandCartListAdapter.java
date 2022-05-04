@@ -86,17 +86,46 @@ public class ExpandCartListAdapter extends RecyclerView.Adapter<ExpandCartListAd
                     listener.onClickIncrement(position);
                 }
             });
-            if (!TextUtils.isEmpty(item.getArtprice())) {
-                Float total_price = Float.parseFloat(item.getArtprice()) * item.getQty();
+
+
+
+
+
+
+            if (item.getNetAmountInclTax() != null && !item.getNetAmountInclTax().isEmpty()) {
 
                 DecimalFormat formatter = new DecimalFormat("#,###.00");
-                String pharmaformatted = formatter.format(total_price);
+                String pharmaformatted = formatter.format(Double.valueOf(item.getNetAmountInclTax()));
+
 
                 holder.totalPriceTxt.setText(rupeeSymbol + pharmaformatted);
+
             } else {
-                Float total_price = Float.parseFloat("00") * item.getQty();
-                holder.totalPriceTxt.setText(rupeeSymbol + String.format(Locale.ENGLISH, "%.2f", total_price));
+
+                if (!TextUtils.isEmpty(item.getArtprice())) {
+                    Float total_price = Float.parseFloat(item.getArtprice()) * item.getQty();
+
+                    DecimalFormat formatter = new DecimalFormat("#,###.00");
+                    String pharmaformatted = formatter.format(total_price);
+
+
+                    holder.totalPriceTxt.setText(rupeeSymbol + pharmaformatted);
+                } else {
+                    Float total_price = Float.parseFloat("00") * item.getQty();
+                    holder.totalPriceTxt.setText(rupeeSymbol + String.format(Locale.ENGLISH, "%.2f", total_price));
+                }
+
             }
+
+
+
+
+
+
+
+
+
+
             holder.deleteButton.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onClickDelete(position, item);

@@ -20,6 +20,8 @@ public class Constants extends Application {
     private static Constants mInstance;
     public static boolean IS_LOG_ENABLED = true;
 
+    public static final String DATE_FORMAT_DD_MMM_YYYY = "dd-MMM-YYYY";
+
     public static String MainCategoryHealthWellness = "Health and Wellness";
     public static String Get_Redeption_url = "http://lms.apollopharmacy.org:8085/";
     public static String Pinelabs_URL = "https://www.plutuscloudserviceuat.in:8201/";

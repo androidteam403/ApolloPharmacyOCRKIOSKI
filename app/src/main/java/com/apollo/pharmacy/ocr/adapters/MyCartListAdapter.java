@@ -2,6 +2,7 @@ package com.apollo.pharmacy.ocr.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Paint;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,7 +46,7 @@ public class MyCartListAdapter extends RecyclerView.Adapter<MyCartListAdapter.Vi
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView snoTxt, productNameTxt, offerPriceTxt, productQty, totalPriceTxt, mrppricetextview;
+        TextView snoTxt, productNameTxt, offerPriceTxt, productQty, totalPriceTxt, mrppricetextview, offerPrice;
         ImageView decButton, incButton;
         ImageView deleteButton, expandView;
         RecyclerView expandResyclerView;
@@ -63,6 +64,8 @@ public class MyCartListAdapter extends RecyclerView.Adapter<MyCartListAdapter.Vi
             deleteButton = view.findViewById(R.id.delete_item_button);
             expandView = view.findViewById(R.id.expand_view);
             expandResyclerView = view.findViewById(R.id.expand_recycle);
+            offerPrice = view.findViewById(R.id.offer_price);
+
         }
     }
 
@@ -113,18 +116,46 @@ public class MyCartListAdapter extends RecyclerView.Adapter<MyCartListAdapter.Vi
                     listener.onClickIncrement(position);
                 }
             });
-            if (!TextUtils.isEmpty(item.getArtprice())) {
-                Float total_price = Float.parseFloat(item.getArtprice()) * item.getQty();
 
+
+            if (item.getNetAmountInclTax() != null && !item.getNetAmountInclTax().isEmpty()) {
                 DecimalFormat formatter = new DecimalFormat("#,###.00");
-                String pharmaformatted = formatter.format(total_price);
 
-
+                String pharmaformatted = formatter.format(Double.valueOf(item.getNetAmountInclTax()));
                 holder.totalPriceTxt.setText(rupeeSymbol + pharmaformatted);
+
+                Float total_price = Float.parseFloat(item.getArtprice()) * item.getQty();
+                String totalPharmaformatted = formatter.format(total_price);
+                holder.offerPrice.setText(rupeeSymbol + totalPharmaformatted);
+                holder.offerPrice.setVisibility(View.VISIBLE);
+                holder.offerPrice.setPaintFlags(holder.offerPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+
             } else {
-                Float total_price = Float.parseFloat("00") * item.getQty();
-                holder.totalPriceTxt.setText(rupeeSymbol + String.format(Locale.ENGLISH, "%.2f", total_price));
+                if (!TextUtils.isEmpty(item.getArtprice())) {
+                    double total_price = 0.0;
+                    if (expandList != null && expandList.size() > 0) {
+                        for (int i = 0; i < expandList.size(); i++) {
+                            if (expandList.get(i).getArtName().equals(item.getArtName())) {
+                                if (expandList.get(i).getNetAmountInclTax() != null) {
+                                    total_price = total_price + Float.parseFloat(expandList.get(i).getNetAmountInclTax());
+                                } else {
+                                    total_price = total_price + Float.parseFloat(expandList.get(i).getArtprice()) * expandList.get(i).getQty();
+                                }
+                            }
+                        }
+                    } else {
+                        total_price = Float.parseFloat(item.getArtprice()) * item.getQty();
+                    }
+                    DecimalFormat formatter = new DecimalFormat("#,###.00");
+                    String pharmaformatted = formatter.format(total_price);
+                    holder.totalPriceTxt.setText(rupeeSymbol + pharmaformatted);
+                } else {
+                    Float total_price = Float.parseFloat("00") * item.getQty();
+                    holder.totalPriceTxt.setText(rupeeSymbol + String.format(Locale.ENGLISH, "%.2f", total_price));
+                }
             }
+
+
             holder.deleteButton.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onClickDelete(position, item);

@@ -6,6 +6,8 @@ import com.apollo.pharmacy.ocr.model.AddFCMTokenRequest;
 import com.apollo.pharmacy.ocr.model.AllOffersResponse;
 import com.apollo.pharmacy.ocr.model.BatchListRequest;
 import com.apollo.pharmacy.ocr.model.BatchListResponse;
+import com.apollo.pharmacy.ocr.model.CalculatePosTransactionRequest;
+import com.apollo.pharmacy.ocr.model.CalculatePosTransactionResponse;
 import com.apollo.pharmacy.ocr.model.Category_request;
 import com.apollo.pharmacy.ocr.model.Categorylist_Response;
 import com.apollo.pharmacy.ocr.model.DeviceRegistrationRequest;
@@ -240,7 +242,11 @@ public interface ApiInterface {
     Call<List<PincodeValidateResponse>> doPincodeValidateApi(@Header("authorization") String token, @Body Object pincodeValidateRequest);
 
     @GET("http://apollodashboard.theretailinsightsdemos.com/api/all-offers")
-    Call<AllOffersResponse> GET_ALL_OFFERS_API_CALL();
+    Call<AllOffersResponse> GET_ALL_OFFERS_API_CALL(@Header("authorization") String token);
+
+    @POST("SalesTransactionService.svc/CalculatePosTransaction")
+    Call<CalculatePosTransactionResponse> CALCULATE_POS_TRANSACTION_API_CALL(@Body CalculatePosTransactionRequest calculatePosTransactionRequest);
+
 
     @GET("https://jsonblob.com/api/jsonBlob/930811897528467456")
     Call<GroupOffersModelResponse> GET_OFFERS_LIST();

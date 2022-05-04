@@ -40,6 +40,10 @@ public class HomeActivityController {
                 if (response.isSuccessful()) {
                     handleGetCategoryListService(context);
                     assert response.body() != null;
+                    if (response.body().getCustomerData().getName() != null && !response.body().getCustomerData().getName().isEmpty())
+                        SessionManager.INSTANCE.setCustName(response.body().getCustomerData().getName());
+                    else
+                        SessionManager.INSTANCE.setCustName("");
                     homeListener.onSuccessRedeemPoints(response.body());
                 } else {
                     homeListener.onFailureService(context.getResources().getString(R.string.label_something_went_wrong));

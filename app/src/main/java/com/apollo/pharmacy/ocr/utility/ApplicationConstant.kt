@@ -21,6 +21,7 @@ object ApplicationConstant {
     var OFFERLIST = "OFFERLIST"
     var TRENDINGLIST = "TRENDINGLIST"
     var USERNAME = "userName"
+    var CUST_NAME = "CUST_NAME"
     var DELIVERYDATE = "DELIVERYDATE"
     var DELETEDDATALIST = "DELETEDDATALIST"
     var IMAGEPATHLIST = "IMAGEPATHLIST"
@@ -63,7 +64,6 @@ object ApplicationConstant {
     val ACESS_DIALOG_HANDEL = "ACESS_DIALOG_HANDEL"
 
     val BATCH_ID = "BATCH_ID"
-
 
 
 }

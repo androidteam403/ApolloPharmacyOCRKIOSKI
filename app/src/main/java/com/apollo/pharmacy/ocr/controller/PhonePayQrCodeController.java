@@ -35,7 +35,7 @@ public class PhonePayQrCodeController {
 //        Utils.showDialog(activity, "Loading…");
         ApiInterface api = ApiClient.getApiServiceMposBaseUrl(SessionManager.INSTANCE.getEposUrl());
         PhonePayQrCodeRequest phonePayQrCodeRequest = new PhonePayQrCodeRequest();
-        phonePayQrCodeRequest.setAmount(1.0);
+        phonePayQrCodeRequest.setAmount(grandTotal);
         phonePayQrCodeRequest.setExpiresIn(2000);
         phonePayQrCodeRequest.setMessage("");
         phonePayQrCodeRequest.setOriginalTransactionId("");
@@ -45,8 +45,8 @@ public class PhonePayQrCodeController {
         phonePayQrCodeRequest.setTransactionId(Utils.getOrderedID());
         phonePayQrCodeRequest.setUrl("http://172.16.2.251:8033/PHONEPEUAT/APOLLO/PhonePe");
 
-        Gson gson=new Gson();
-        String json=gson.toJson(phonePayQrCodeRequest);
+        Gson gson = new Gson();
+        String json = gson.toJson(phonePayQrCodeRequest);
 
         Call<PhonePayQrCodeResponse> call = api.GET_PhonePay_Qr_Code(phonePayQrCodeRequest);
         call.enqueue(new Callback<PhonePayQrCodeResponse>() {

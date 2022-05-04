@@ -1,6 +1,7 @@
 package com.apollo.pharmacy.ocr.activities.checkout;
 
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
@@ -47,6 +48,8 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
     double fmcgToatalPass = 0.0;
 
     private void setUp() {
+        activityCheckoutBinding.pharmaTotalInclOffer.setPaintFlags(activityCheckoutBinding.pharmaTotalInclOffer.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        activityCheckoutBinding.fmcgTotalInclOffer.setPaintFlags(activityCheckoutBinding.fmcgTotalInclOffer.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         dataList = SessionManager.INSTANCE.getDataList();
         if (dataList != null && dataList.size() > 0) {
 //            dataList = (List<OCRToDigitalMedicineResponse>) getIntent().getSerializableExtra("dataList");
@@ -71,16 +74,31 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
                 double fmcgTotal = 0.0;
                 boolean isFmcg = false;
                 boolean isPharma = false;
+                double pharmaTotalOffer = 0.0;
+                double fmcgTotalOffer = 0.0;
+
+
                 for (OCRToDigitalMedicineResponse data : dataList) {
                     if (data.getMedicineType() != null) {
                         if (data.getMedicineType().equals("PHARMA")) {
                             isPharma = true;
-//                            pharmaMedicineCount++;
-                            pharmaTotal = pharmaTotal + (Double.parseDouble(data.getArtprice()) * data.getQty());
+
+                            if (data.getNetAmountInclTax() != null && !data.getNetAmountInclTax().isEmpty()) {
+                                pharmaTotal = pharmaTotal + (Double.parseDouble(data.getNetAmountInclTax()));
+                                pharmaTotalOffer = pharmaTotalOffer + (Double.parseDouble(data.getArtprice()) * data.getQty());
+                            } else {
+                                pharmaTotal = pharmaTotal + (Double.parseDouble(data.getArtprice()) * data.getQty());
+                                pharmaTotalOffer = pharmaTotalOffer + (Double.parseDouble(data.getArtprice()) * data.getQty());
+                            }
                         } else {
                             isFmcg = true;
-//                            fmcgMedicineCount++;
-                            fmcgTotal = fmcgTotal + (Double.parseDouble(data.getArtprice()) * data.getQty());
+                            if (data.getNetAmountInclTax() != null && !data.getNetAmountInclTax().isEmpty()) {
+                                fmcgTotal = fmcgTotal + (Double.parseDouble(data.getNetAmountInclTax()));
+                                fmcgTotalOffer = fmcgTotalOffer + (Double.parseDouble(data.getArtprice()) * data.getQty());
+                            } else {
+                                fmcgTotal = fmcgTotal + (Double.parseDouble(data.getArtprice()) * data.getQty());
+                                fmcgTotalOffer = fmcgTotalOffer + (Double.parseDouble(data.getArtprice()) * data.getQty());
+                            }
                         }
                     }
                 }
@@ -89,11 +107,11 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
                 for (int i = 0; i < dataList.size(); i++) {
                     for (int j = 0; j < countUniques.size(); j++) {
                         if (dataList.get(i).getArtName().equalsIgnoreCase(countUniques.get(j).getArtName())) {
-                            if (countUniques.get(j).getMedicineType().equals("FMCG")){
+                            if (countUniques.get(j).getMedicineType().equals("FMCG")) {
                                 fmcgMedicineCount++;
                                 countUniques.remove(j);
                                 j--;
-                            }else {
+                            } else {
                                 pharmaMedicineCount++;
                                 countUniques.remove(j);
                                 j--;
@@ -110,8 +128,12 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
                 DecimalFormat formatter = new DecimalFormat("#,###.00");
                 String pharmaformatted = formatter.format(pharmaTotal);
                 String fmcgFormatted = formatter.format(fmcgTotal);
-                checkoutuiModel.setPharmaTotal(getResources().getString(R.string.rupee) + String.valueOf(pharmaformatted));
-                checkoutuiModel.setFmcgTotal(getResources().getString(R.string.rupee) + String.valueOf(fmcgFormatted));
+                String pharmaOfferformatted = formatter.format(pharmaTotalOffer);
+                String fmcgOfferFormatted = formatter.format(fmcgTotalOffer);
+                checkoutuiModel.setPharmaTotalOffer(getResources().getString(R.string.rupee) + pharmaOfferformatted);
+                checkoutuiModel.setFmcgTotalOffer(getResources().getString(R.string.rupee) + fmcgOfferFormatted);
+                checkoutuiModel.setPharmaTotal(getResources().getString(R.string.rupee) + pharmaformatted);
+                checkoutuiModel.setFmcgTotal(getResources().getString(R.string.rupee) + fmcgFormatted);
                 checkoutuiModel.setTotalMedicineCount(String.valueOf(dataList.size()));
                 String totalprodAmt = formatter.format(pharmaTotal + fmcgTotal);
                 checkoutuiModel.setMedicineTotal(getResources().getString(R.string.rupee) + String.valueOf(totalprodAmt));
@@ -321,6 +343,8 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
         private String fmcgCount;
         private String fmcgTotal;
         private String pharmaTotal;
+        private String pharmaTotalOffer;
+        private String fmcgTotalOffer;
         private String totalMedicineCount;
         private String medicineTotal;
         private boolean isFmcgPharma;
@@ -357,6 +381,22 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
 
         public void setPharmaTotal(String pharmaTotal) {
             this.pharmaTotal = pharmaTotal;
+        }
+
+        public String getPharmaTotalOffer() {
+            return pharmaTotalOffer;
+        }
+
+        public void setPharmaTotalOffer(String pharmaTotalOffer) {
+            this.pharmaTotalOffer = pharmaTotalOffer;
+        }
+
+        public String getFmcgTotalOffer() {
+            return fmcgTotalOffer;
+        }
+
+        public void setFmcgTotalOffer(String fmcgTotalOffer) {
+            this.fmcgTotalOffer = fmcgTotalOffer;
         }
 
         public String getTotalMedicineCount() {

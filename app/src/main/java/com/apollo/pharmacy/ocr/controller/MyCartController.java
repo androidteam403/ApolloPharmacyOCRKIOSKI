@@ -1,11 +1,16 @@
 package com.apollo.pharmacy.ocr.controller;
 
 import android.content.Context;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import com.apollo.pharmacy.ocr.R;
 import com.apollo.pharmacy.ocr.interfaces.MyCartListener;
+import com.apollo.pharmacy.ocr.model.BatchListRequest;
+import com.apollo.pharmacy.ocr.model.BatchListResponse;
+import com.apollo.pharmacy.ocr.model.CalculatePosTransactionRequest;
+import com.apollo.pharmacy.ocr.model.CalculatePosTransactionResponse;
 import com.apollo.pharmacy.ocr.model.Category_request;
 import com.apollo.pharmacy.ocr.model.GetImageRes;
 import com.apollo.pharmacy.ocr.model.GetProductListResponse;
@@ -216,7 +221,7 @@ public class MyCartController {
                     assert itemSearchResponse != null;
                     if (itemSearchResponse.getItemList() != null && itemSearchResponse.getItemList().size() > 0)
                         itemSearchResponse.getItemList().get(0).setMedicineType(itemSearchResponse.getItemList().get(0).getCategory());
-                    myCartListener.onSuccessBarcodeItemApi(itemSearchResponse, serviceType,qty,position);
+                    myCartListener.onSuccessBarcodeItemApi(itemSearchResponse, serviceType, qty, position);
                 }
             }
 
@@ -226,5 +231,88 @@ public class MyCartController {
             }
         });
     }
+    public void searchItemProducts(String item, int position, Context mContext) {
+        ApiInterface apiInterface = ApiClient.getApiServiceMposBaseUrl(SessionManager.INSTANCE.getEposUrl());
+        ItemSearchRequest itemSearchRequest = new ItemSearchRequest();
+        itemSearchRequest.setCorpCode("0");
+        itemSearchRequest.setIsGeneric(false);
+        itemSearchRequest.setIsInitial(true);
+        itemSearchRequest.setIsStockCheck(true);
+        itemSearchRequest.setSearchString(item);
+        itemSearchRequest.setStoreID("16001");
+        Call<ItemSearchResponse> call = apiInterface.getSearchItemApiCall(itemSearchRequest);
+        call.enqueue(new Callback<ItemSearchResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<ItemSearchResponse> call, @NonNull Response<ItemSearchResponse> response) {
+                if (response.isSuccessful() && response.body().getItemList().size() > 0) {
+                    Gson gson = new Gson();
+                    String json = gson.toJson(response.body());
+                    System.out.println("void data" + json);
+                    ItemSearchResponse itemSearchResponse = response.body();
+                    assert itemSearchResponse != null;
+                    myCartListener.onSuccessSearchItemApi(itemSearchResponse, position);
+                    if (itemSearchResponse != null && itemSearchResponse.getItemList().size() > 0) {
+                        getBatchList(itemSearchResponse.getItemList().get(0).getArtCode(), position, itemSearchResponse.getItemList().get(0), mContext);
+                    }
+                } else if (response.isSuccessful() && response.body().getItemList().size() == 0) {
+                    Toast.makeText(mContext, "No Items Found", Toast.LENGTH_SHORT).show();
+                }
+            }
 
+            @Override
+            public void onFailure(@NonNull Call<ItemSearchResponse> call, @NonNull Throwable t) {
+                myCartListener.onSearchFailure(t.getMessage());
+            }
+        });
+    }
+    public void getBatchList(String artcode, int position, ItemSearchResponse.Item itemSerachData, Context mContext) {
+//        Utils.showDialog(activity, "Loading…");
+        ApiInterface api = ApiClient.getApiServiceMposBaseUrl(SessionManager.INSTANCE.getEposUrl());
+        BatchListRequest batchListRequest = new BatchListRequest();
+        batchListRequest.setArticleCode(artcode);
+        batchListRequest.setCustomerState("");
+        batchListRequest.setDataAreaId("ahel");
+        batchListRequest.setSez(0);
+        batchListRequest.setSearchType(1);
+        batchListRequest.setStoreId("16001");
+        batchListRequest.setStoreState("AP");
+        batchListRequest.setTerminalId("005");
+        Call<BatchListResponse> call = api.GET_BATCH_LIST(batchListRequest);
+        call.enqueue(new Callback<BatchListResponse>() {
+            @Override
+            public void onResponse(@NotNull Call<BatchListResponse> call, @NotNull Response<BatchListResponse> response) {
+                if (response.body() != null) {
+                    myCartListener.setSuccessBatchList(response.body(), position, itemSerachData);
+                }
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<BatchListResponse> call, @NotNull Throwable t) {
+                Utils.dismissDialog();
+            }
+        });
+    }
+
+    public void calculatePosTransaction(CalculatePosTransactionRequest calculatePosTransactionRequest, Context mContext) {
+        Utils.showDialog(mContext, "Please Wait...");
+        ApiInterface api = ApiClient.getApiServiceMposBaseUrl(SessionManager.INSTANCE.getEposUrl());
+        Call<CalculatePosTransactionResponse> call = api.CALCULATE_POS_TRANSACTION_API_CALL(calculatePosTransactionRequest);
+        call.enqueue(new Callback<CalculatePosTransactionResponse>() {
+            @Override
+            public void onResponse(@NotNull Call<CalculatePosTransactionResponse> call, @NotNull Response<CalculatePosTransactionResponse> response) {
+                if (response.body() != null) {
+                    Utils.dismissDialog();
+                    for (int i = 0; i < calculatePosTransactionRequest.getSalesLine().size(); i++) {
+                        response.body().getSalesLine().get(i).setBatchNo(calculatePosTransactionRequest.getSalesLine().get(i).getBatchNo());
+                    }
+                    myCartListener.onSuccessCalculatePosTransactionApi(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<CalculatePosTransactionResponse> call, @NotNull Throwable t) {
+                Utils.dismissDialog();
+            }
+        });
+    }
 }

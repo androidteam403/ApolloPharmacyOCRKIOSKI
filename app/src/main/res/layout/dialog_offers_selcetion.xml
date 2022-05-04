@@ -1,62 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/transperent_black_color">
+        android:gravity="center">
 
-        <LinearLayout
-            android:id="@+id/parent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/twenty_five_dp"
-            android:layout_marginEnd="@dimen/twenty_five_dp"
-            android:layout_marginTop="@dimen/twenty_five_dp"
-            android:layout_marginBottom="@dimen/ten_dp"
-            android:orientation="vertical">
+        <RelativeLayout
+            android:layout_width="@dimen/six_hundred_dp"
+            android:layout_height="@dimen/three_hundred_fifty_dp"
+            android:background="@color/white">
+
+            <LinearLayout
+                android:id="@+id/parent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/twenty_five_dp"
+                android:layout_marginTop="@dimen/twenty_five_dp"
+                android:layout_marginEnd="@dimen/twenty_five_dp"
+                android:layout_marginBottom="@dimen/ten_dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/offer_tittle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/choose_any_some_products"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/five_dp"
+                    android:textColor="@color/grey_color"
+                    android:textSize="@dimen/thirteen_sp" />
+
+                <LinearLayout
+                    android:id="@+id/select_clear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/selected_offers_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="#fee6ad"
+                        android:padding="@dimen/two_dp"
+                        android:text="Selected 1/3"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/thirteen_sp" />
+
+                    <TextView
+                        android:id="@+id/clear"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/five_dp"
+                        android:background="#ff0000"
+                        android:padding="@dimen/two_dp"
+                        android:text="Clear"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/thirteen_sp" />
+
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/selectionoffers_recycle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/five_dp"
+                    android:layout_marginBottom="@dimen/thirty_five_dp" />
+
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/offer_tittle"
+                android:id="@+id/dialogButtonOK"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="Offer Tittle"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/five_dp"
+                android:layout_marginBottom="@dimen/three_dp"
+                android:background="@drawable/add_btn_bg"
+                android:gravity="center"
+                android:paddingStart="@dimen/thirty_dp"
+                android:paddingTop="@dimen/ten_dp"
+                android:paddingEnd="@dimen/thirty_dp"
+                android:paddingBottom="@dimen/ten_dp"
+                android:text="Add"
+                android:textAlignment="center"
+                android:textAllCaps="true"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/selectionoffers_recycle"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/twenty_five_dp"
-                android:layout_marginBottom="@dimen/thirty_five_dp"/>
+            <ImageView
+                android:id="@+id/dialogButtonNO"
+                android:layout_width="@dimen/twenty_five_dp"
+                android:layout_height="@dimen/twenty_five_dp"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="@dimen/margin_10dp"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/close_icon" />
 
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/dialogButtonOK"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/thirty_five_dp"
-            android:layout_alignParentBottom="true"
-            android:background="@color/selected_text_color"
-            android:gravity="center"
-            android:text="Buy Now"
-            android:textAlignment="center"
-            android:textAllCaps="true"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-        <ImageView
-            android:id="@+id/dialogButtonNO"
-            android:layout_width="@dimen/twenty_five_dp"
-            android:layout_height="@dimen/twenty_five_dp"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="@dimen/margin_10dp"
-            android:src="@drawable/delete_black_icon"
-            android:tint="@color/white" />
-
+        </RelativeLayout>
     </RelativeLayout>
 </layout>

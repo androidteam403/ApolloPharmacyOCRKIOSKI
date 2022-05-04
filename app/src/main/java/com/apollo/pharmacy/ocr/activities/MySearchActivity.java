@@ -57,7 +57,9 @@ import com.apollo.pharmacy.ocr.interfaces.CartCountListener;
 import com.apollo.pharmacy.ocr.interfaces.MyOffersListener;
 import com.apollo.pharmacy.ocr.interfaces.MySearchCallback;
 import com.apollo.pharmacy.ocr.interfaces.SubCategoryListener;
+import com.apollo.pharmacy.ocr.model.AllOffersResponse;
 import com.apollo.pharmacy.ocr.model.BatchListResponse;
+import com.apollo.pharmacy.ocr.model.CalculatePosTransactionResponse;
 import com.apollo.pharmacy.ocr.model.Category_request;
 import com.apollo.pharmacy.ocr.model.GetProductListResponse;
 import com.apollo.pharmacy.ocr.model.GroupOffersModelResponse;
@@ -172,7 +174,7 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
         dataList = new ArrayList<>();
         searchAutoComplete = findViewById(R.id.search_autocomplete);
         myAdapter = new MedicineSearchAdapter(MySearchActivity.this, item, this, this);
-        addMoreController = new MyOffersController(this);
+        addMoreController = new MyOffersController(this, this);
         itemCountLayout = findViewById(R.id.item_count_layout);
         subCategoryCount = (TextView) findViewById(R.id.subcategory_count);
         search_listview = (ListView) findViewById(R.id.search_listview);
@@ -195,7 +197,7 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
 
         doneProductsLayout.setVisibility(View.GONE);
         mySearchController = new MySearchController(this, this);
-        myOffersController = new MyOffersController(this);
+        myOffersController = new MyOffersController(this, this);
 
         myOffersController.upcellCrosscellList("", MySearchActivity.this);
 
@@ -1118,6 +1120,16 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
     }
 
     @Override
+    public void onSuccessAllOffers(AllOffersResponse allOffersResponse) {
+
+    }
+
+    @Override
+    public void onFailureAllOffers(String message) {
+
+    }
+
+    @Override
     public void onSuccessGroupOffersApi(GroupOffersModelResponse groupOffersModelResponse) {
 
     }
@@ -1128,19 +1140,20 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
     }
 
     @Override
-    public void onfiftyPerOffOffer(GroupOffersModelResponse.Offer offer, List<GroupOffersModelResponse.Offer.PromoItem> image) {
+    public void onfiftyPerOffOffer(AllOffersResponse.Datum offer, List<AllOffersResponse.PromoItem> image) {
 
     }
 
     @Override
-    public void onBuyOneGetOneOffer(GroupOffersModelResponse.Offer offer, List<GroupOffersModelResponse.Offer.PromoItem> image) {
+    public void onBuyOneGetOneOffer(AllOffersResponse.Datum offer, List<AllOffersResponse.PromoItem> image) {
 
     }
 
     @Override
-    public void onBuyMultipleOnGroupOfOffers(GroupOffersModelResponse.Offer offer, List<GroupOffersModelResponse.Offer.PromoItem> image) {
+    public void onBuyMultipleOnGroupOfOffers(AllOffersResponse.Datum offer, List<AllOffersResponse.PromoItem> image) {
 
     }
+
 
     @Override
     public void onContinueOfSelectedOffers() {
@@ -1148,9 +1161,10 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
     }
 
     @Override
-    public void onSelectedOffersList(GroupOffersModelResponse.Offer offer, GroupOffersModelResponse.Offer.PromoItem image, List<GroupOffersModelResponse.Offer.PromoItem> imageList) {
+    public void onSelectedOffersList(AllOffersResponse.Datum offer, AllOffersResponse.PromoItem image, List<AllOffersResponse.PromoItem> imageList) {
 
     }
+
 
     @Override
     public void setSuccessBatchList(BatchListResponse body, int position, ItemSearchResponse.Item itemSearchData) {
@@ -1159,6 +1173,11 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
 
     @Override
     public void onSuccessSearchItemApi(ItemSearchResponse itemSearchResponse, int position) {
+
+    }
+
+    @Override
+    public void onSuccessCalculatePosTransactionApi(CalculatePosTransactionResponse calculatePosTransactionResponse) {
 
     }
 

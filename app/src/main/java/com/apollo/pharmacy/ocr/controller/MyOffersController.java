@@ -1,6 +1,7 @@
 package com.apollo.pharmacy.ocr.controller;
 
 import android.content.Context;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -9,6 +10,8 @@ import com.apollo.pharmacy.ocr.interfaces.MyOffersListener;
 import com.apollo.pharmacy.ocr.model.AllOffersResponse;
 import com.apollo.pharmacy.ocr.model.BatchListRequest;
 import com.apollo.pharmacy.ocr.model.BatchListResponse;
+import com.apollo.pharmacy.ocr.model.CalculatePosTransactionRequest;
+import com.apollo.pharmacy.ocr.model.CalculatePosTransactionResponse;
 import com.apollo.pharmacy.ocr.model.Category_request;
 import com.apollo.pharmacy.ocr.model.GetProductListResponse;
 import com.apollo.pharmacy.ocr.model.GroupOffersModelResponse;
@@ -50,9 +53,11 @@ import static com.apollo.pharmacy.ocr.utility.Utils.showDialog;
 
 public class MyOffersController {
     MyOffersListener myOffersListener;
+    private Context mContext;
 
-    public MyOffersController(MyOffersListener listInterface) {
+    public MyOffersController(MyOffersListener listInterface, Context mContext) {
         myOffersListener = listInterface;
+        this.mContext = mContext;
     }
 
     public void searchSuggestion(Searchsuggestionrequest q, MyOffersListener myOffersListener) {
@@ -270,8 +275,8 @@ public class MyOffersController {
 
     public void getAllOffersApiCall() {
         ApiInterface apiInterface = ApiClient.getApiService();
-        showDialog(context, context.getResources().getString(R.string.label_please_wait));
-        Call<AllOffersResponse> call = apiInterface.GET_ALL_OFFERS_API_CALL();
+        showDialog(mContext, mContext.getResources().getString(R.string.label_please_wait));
+        Call<AllOffersResponse> call = apiInterface.GET_ALL_OFFERS_API_CALL("Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY1MTA0ODcyMSwiZXhwIjoxNjUxNjUzNTIxfQ.RzbQhhuxVMm3THoYA-K5Wke5Eim-lbdcRjn8jG7xtCM");
         call.enqueue(new Callback<AllOffersResponse>() {
             @Override
             public void onResponse(@NonNull Call<AllOffersResponse> call, @NonNull Response<AllOffersResponse> response) {
@@ -338,6 +343,8 @@ public class MyOffersController {
                     if (itemSearchResponse != null && itemSearchResponse.getItemList().size() > 0) {
                         getBatchList(itemSearchResponse.getItemList().get(0).getArtCode(), position, itemSearchResponse.getItemList().get(0));
                     }
+                } else if (response.isSuccessful() && response.body().getItemList().size() == 0) {
+                    Toast.makeText(mContext, "No Items Found", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -371,6 +378,29 @@ public class MyOffersController {
 
             @Override
             public void onFailure(@NotNull Call<BatchListResponse> call, @NotNull Throwable t) {
+                Utils.dismissDialog();
+            }
+        });
+    }
+
+    public void calculatePosTransaction(CalculatePosTransactionRequest calculatePosTransactionRequest) {
+        Utils.showDialog(mContext, "Please Wait...");
+        ApiInterface api = ApiClient.getApiServiceMposBaseUrl(SessionManager.INSTANCE.getEposUrl());
+        Call<CalculatePosTransactionResponse> call = api.CALCULATE_POS_TRANSACTION_API_CALL(calculatePosTransactionRequest);
+        call.enqueue(new Callback<CalculatePosTransactionResponse>() {
+            @Override
+            public void onResponse(@NotNull Call<CalculatePosTransactionResponse> call, @NotNull Response<CalculatePosTransactionResponse> response) {
+                if (response.body() != null) {
+                    Utils.dismissDialog();
+                    for (int i = 0; i < calculatePosTransactionRequest.getSalesLine().size(); i++) {
+                        response.body().getSalesLine().get(i).setBatchNo(calculatePosTransactionRequest.getSalesLine().get(i).getBatchNo());
+                    }
+                    myOffersListener.onSuccessCalculatePosTransactionApi(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<CalculatePosTransactionResponse> call, @NotNull Throwable t) {
                 Utils.dismissDialog();
             }
         });

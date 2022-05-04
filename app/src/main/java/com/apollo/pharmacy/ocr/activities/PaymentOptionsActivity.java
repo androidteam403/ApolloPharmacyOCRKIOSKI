@@ -2,6 +2,7 @@ package com.apollo.pharmacy.ocr.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
@@ -56,6 +57,8 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
         activityPaymentOptionsBinding = DataBindingUtil.setContentView(this, R.layout.activity_payment_options);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        activityPaymentOptionsBinding.pharmaTotalInclOffer.setPaintFlags(activityPaymentOptionsBinding.pharmaTotalInclOffer.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        activityPaymentOptionsBinding.fmcgTotalInclOffer.setPaintFlags(activityPaymentOptionsBinding.fmcgTotalInclOffer.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         if (SessionManager.INSTANCE.getMobilenumber() != null) {
             activityPaymentOptionsBinding.userNum.setText(SessionManager.INSTANCE.getMobilenumber());
         }
@@ -104,18 +107,32 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
             double fmcgTotal = 0.0;
             boolean isFmcg = false;
             boolean isPharma = false;
+            double pharmaTotalOffer = 0.0;
+            double fmcgTotalOffer = 0.0;
             for (OCRToDigitalMedicineResponse data : dataList) {
                 if (data.getMedicineType() != null) {
                     if (data.getMedicineType().equals("PHARMA")) {
                         isPharma = true;
                         isPharmaOrder = true;
-//                        pharmaMedicineCount++;
-                        pharmaTotal = pharmaTotal + (Double.parseDouble(data.getArtprice()) * data.getQty());
+                        if (data.getNetAmountInclTax() != null && !data.getNetAmountInclTax().isEmpty()) {
+                            pharmaTotal = pharmaTotal + (Double.parseDouble(data.getNetAmountInclTax()));
+                            pharmaTotalOffer = pharmaTotalOffer + (Double.parseDouble(data.getArtprice()) * data.getQty());
+                        } else {
+                            pharmaTotal = pharmaTotal + (Double.parseDouble(data.getArtprice()) * data.getQty());
+                            pharmaTotalOffer = pharmaTotalOffer + (Double.parseDouble(data.getArtprice()) * data.getQty());
+                        }
+
                     } else {
                         isFmcg = true;
                         isFmcgOrder = true;
-//                        fmcgMedicineCount++;
-                        fmcgTotal = fmcgTotal + (Double.parseDouble(data.getArtprice()) * data.getQty());
+                        if (data.getNetAmountInclTax() != null && !data.getNetAmountInclTax().isEmpty()) {
+                            fmcgTotal = fmcgTotal + (Double.parseDouble(data.getNetAmountInclTax()));
+                            fmcgTotalOffer = fmcgTotalOffer + (Double.parseDouble(data.getArtprice()) * data.getQty());
+                        } else {
+                            fmcgTotal = fmcgTotal + (Double.parseDouble(data.getArtprice()) * data.getQty());
+                            fmcgTotalOffer = fmcgTotalOffer + (Double.parseDouble(data.getArtprice()) * data.getQty());
+                        }
+
                     }
                 }
             }
@@ -123,11 +140,11 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
             for (int i = 0; i < dataList.size(); i++) {
                 for (int j = 0; j < countUniques.size(); j++) {
                     if (dataList.get(i).getArtName().equalsIgnoreCase(countUniques.get(j).getArtName())) {
-                        if (countUniques.get(j).getMedicineType().equals("FMCG")){
+                        if (countUniques.get(j).getMedicineType().equals("FMCG")) {
                             fmcgMedicineCount++;
                             countUniques.remove(j);
                             j--;
-                        }else {
+                        } else {
                             pharmaMedicineCount++;
                             countUniques.remove(j);
                             j--;
@@ -144,6 +161,10 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
             DecimalFormat formatter = new DecimalFormat("#,###.00");
             String pharmaformatted = formatter.format(pharmaTotal);
             String fmcgFormatted = formatter.format(fmcgTotal);
+            String pharmaOfferformatted = formatter.format(pharmaTotalOffer);
+            String fmcgOfferFormatted = formatter.format(fmcgTotalOffer);
+            orderDetailsuiModel.setPharmaTotalOffer(getResources().getString(R.string.rupee) + pharmaOfferformatted);
+            orderDetailsuiModel.setFmcgTotalOffer(getResources().getString(R.string.rupee) + fmcgOfferFormatted);
 
             orderDetailsuiModel.setPharmaTotal(getResources().getString(R.string.rupee) + String.valueOf(pharmaformatted));
             orderDetailsuiModel.setFmcgTotal(getResources().getString(R.string.rupee) + String.valueOf(fmcgFormatted));
@@ -573,8 +594,8 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
                     intent.putExtra("PharmaOrderPlacedData", pharmaOrderId);
                     intent.putExtra("FmcgOrderPlacedData", fmcgOrderId);
                     intent.putExtra("OnlineAmountPaid", onlineAmountPaid);
-                    intent.putExtra("pharma_delivery_type",isPharmadeliveryType);
-                    intent.putExtra("fmcg_delivery_type",isFmcgDeliveryType);
+                    intent.putExtra("pharma_delivery_type", isPharmadeliveryType);
+                    intent.putExtra("fmcg_delivery_type", isFmcgDeliveryType);
                     startActivity(intent);
                     overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
                 }
@@ -896,6 +917,8 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
         private String fmcgCount;
         private String fmcgTotal;
         private String pharmaTotal;
+        private String pharmaTotalOffer;
+        private String fmcgTotalOffer;
         private String totalMedicineCount;
         private String medicineTotal;
         private boolean isFmcgPharma;
@@ -934,6 +957,22 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
 
         public void setPharmaTotal(String pharmaTotal) {
             this.pharmaTotal = pharmaTotal;
+        }
+
+        public String getPharmaTotalOffer() {
+            return pharmaTotalOffer;
+        }
+
+        public void setPharmaTotalOffer(String pharmaTotalOffer) {
+            this.pharmaTotalOffer = pharmaTotalOffer;
+        }
+
+        public String getFmcgTotalOffer() {
+            return fmcgTotalOffer;
+        }
+
+        public void setFmcgTotalOffer(String fmcgTotalOffer) {
+            this.fmcgTotalOffer = fmcgTotalOffer;
         }
 
         public String getTotalMedicineCount() {

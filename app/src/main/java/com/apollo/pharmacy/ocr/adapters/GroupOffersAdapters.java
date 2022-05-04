@@ -14,8 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.apollo.pharmacy.ocr.R;
 import com.apollo.pharmacy.ocr.databinding.AdapterGroupOffersBinding;
 import com.apollo.pharmacy.ocr.interfaces.MyOffersListener;
+import com.apollo.pharmacy.ocr.model.AllOffersResponse;
 import com.apollo.pharmacy.ocr.model.GroupOffersModelResponse;
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 
 import java.util.List;
 
@@ -23,11 +24,14 @@ public class GroupOffersAdapters extends RecyclerView.Adapter<GroupOffersAdapter
 
     private Activity activity;
     private List<GroupOffersModelResponse.Offer> imageList;
+    private List<AllOffersResponse.Datum> offersDateList;
+
     private MyOffersListener myOffersListener;
 
-    public GroupOffersAdapters(Activity activity, List<GroupOffersModelResponse.Offer> imageList, MyOffersListener myOffersListener) {
+
+    public GroupOffersAdapters(Activity activity, List<AllOffersResponse.Datum> offersDateList, MyOffersListener myOffersListener) {
         this.activity = activity;
-        this.imageList = imageList;
+        this.offersDateList = offersDateList;
         this.myOffersListener = myOffersListener;
     }
 
@@ -42,19 +46,19 @@ public class GroupOffersAdapters extends RecyclerView.Adapter<GroupOffersAdapter
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull GroupOffersAdapters.ViewHolder holder, int position) {
-        GroupOffersModelResponse.Offer image = imageList.get(position);
-
-        Picasso.with(activity).load(Uri.parse(String.valueOf(image.getPromoBanner()))).into(holder.adapterGroupOffersBinding.offersBanners);
+        AllOffersResponse.Datum image = offersDateList.get(position);
+//        holder.adapterGroupOffersBinding.offersBanners.setImageResource(R.drawable.banner);
+        Glide.with(activity).load(Uri.parse(String.valueOf("http://" + image.getPromoBanner()))).into(holder.adapterGroupOffersBinding.offersBanners);
 
         holder.adapterGroupOffersBinding.offersBanners.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (image.getPromoItemSelection() == 1) {
-                    myOffersListener.onfiftyPerOffOffer(image,image.getPromoItems());
+                    myOffersListener.onfiftyPerOffOffer(image, image.getPromoItems());
                 } else if (image.getPromoItemSelection() == 2) {
-                    myOffersListener.onBuyOneGetOneOffer(image,image.getPromoItems());
+                    myOffersListener.onBuyOneGetOneOffer(image, image.getPromoItems());
                 } else if (image.getPromoItemSelection() == 3) {
-                    myOffersListener.onBuyMultipleOnGroupOfOffers(image,image.getPromoItems());
+                    myOffersListener.onBuyMultipleOnGroupOfOffers(image, image.getPromoItems());
                 }
             }
         });
@@ -63,7 +67,7 @@ public class GroupOffersAdapters extends RecyclerView.Adapter<GroupOffersAdapter
 
     @Override
     public int getItemCount() {
-        return imageList.size();
+        return offersDateList.size();
     }
 
     @Override

@@ -196,17 +196,35 @@
                                 android:textSize="@dimen/eighteen_sp"
                                 android:textStyle="bold" />
 
-                            <TextView
-                                android:id="@+id/pharma_total"
+                            <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:gravity="center"
-                                android:text="@{model.pharmaTotal}"
-                                android:textColor="@color/black"
-                                android:textSize="@dimen/eighteen_sp"
-                                android:textStyle="bold" />
+                                android:orientation="vertical">
 
+                                <TextView
+                                    android:id="@+id/pharma_total_incl_offer"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="@{model.pharmaTotalOffer}"
+                                    android:textColor="@color/RED"
+                                    android:textSize="@dimen/sixteen_sp"
+                                    android:textStyle="bold"
+                                    android:visibility="@{model.pharmaTotalOffer.equals(model.pharmaTotal) ? view.GONE : view.VISIBLE}" />
+
+                                <TextView
+                                    android:id="@+id/pharma_total"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="@{model.pharmaTotal}"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/eighteen_sp"
+                                    android:textStyle="bold" />
+
+                            </LinearLayout>
 
                         </LinearLayout>
 
@@ -358,17 +376,32 @@
                                 android:textSize="@dimen/eighteen_sp"
                                 android:textStyle="bold" />
 
-                            <TextView
-                                android:id="@+id/fmcg_total"
+                            <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:gravity="center"
-                                android:text="@{model.fmcgTotal}"
-                                android:textColor="@color/black"
-                                android:textSize="@dimen/eighteen_sp"
-                                android:textStyle="bold" />
+                                android:orientation="vertical">
 
+                                <TextView
+                                    android:id="@+id/fmcg_total_incl_offer"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@{model.fmcgTotalOffer}"
+                                    android:textColor="@color/RED"
+                                    android:textSize="@dimen/sixteen_sp"
+                                    android:textStyle="bold"
+                                    android:visibility="@{model.fmcgTotalOffer.equals(model.fmcgTotal) ? view.GONE : view.VISIBLE}" />
+
+                                <TextView
+                                    android:id="@+id/fmcg_total"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@{model.fmcgTotal}"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/eighteen_sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
 
                         </LinearLayout>
 
@@ -473,12 +506,12 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:visibility="invisible"
                         android:padding="@dimen/three_dp"
                         android:text="@{model.totalMedicineCount}"
                         android:textColor="@color/white"
                         android:textSize="@dimen/fourteen_sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:visibility="invisible" />
 
                     <TextView
                         android:layout_width="0dp"

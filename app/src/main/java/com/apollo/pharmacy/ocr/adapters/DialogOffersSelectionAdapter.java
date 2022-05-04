@@ -15,22 +15,22 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.apollo.pharmacy.ocr.R;
 import com.apollo.pharmacy.ocr.databinding.AdapterSelectionOffersDialogBinding;
 import com.apollo.pharmacy.ocr.interfaces.MyOffersListener;
-import com.apollo.pharmacy.ocr.model.GroupOffersModelResponse;
-import com.squareup.picasso.Picasso;
+import com.apollo.pharmacy.ocr.model.AllOffersResponse;
+import com.bumptech.glide.Glide;
 
 import java.util.List;
 
 public class DialogOffersSelectionAdapter extends RecyclerView.Adapter<DialogOffersSelectionAdapter.ViewHolder> {
 
     private Activity activity;
-    private List<GroupOffersModelResponse.Offer.PromoItem> imageList;
+    private List<AllOffersResponse.PromoItem> imageList;
     private MyOffersListener myOffersListener;
-    private GroupOffersModelResponse.Offer offer;
+    private AllOffersResponse.Datum offer;
     int offerCount = 0;
     private ContinueEnablingHandlings continueEnablingHandlings;
 
 
-    public DialogOffersSelectionAdapter(Activity activity, List<GroupOffersModelResponse.Offer.PromoItem> imageList, MyOffersListener myOffersListener, GroupOffersModelResponse.Offer offer, ContinueEnablingHandlings continueEnablingHandlings) {
+    public DialogOffersSelectionAdapter(Activity activity, List<AllOffersResponse.PromoItem> imageList, MyOffersListener myOffersListener, AllOffersResponse.Datum offer, ContinueEnablingHandlings continueEnablingHandlings) {
         this.activity = activity;
         this.imageList = imageList;
         this.myOffersListener = myOffersListener;
@@ -49,20 +49,35 @@ public class DialogOffersSelectionAdapter extends RecyclerView.Adapter<DialogOff
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull DialogOffersSelectionAdapter.ViewHolder holder, int position) {
-        GroupOffersModelResponse.Offer.PromoItem image = imageList.get(position);
+        AllOffersResponse.PromoItem image = imageList.get(position);
         imageList.get(position).setOfferCount(0);
         imageList.get(position).setSelected(false);
-        continueEnablingHandlings.continueHandlings(image);
-        Picasso.with(activity).load(Uri.parse(String.valueOf(image.getArtImage()))).into(holder.adapterSelectionOffersDialogBinding.image);
+
+
+        Glide.with(activity).load(Uri.parse(String.valueOf("http://" + image.getArtImage()))).into(holder.adapterSelectionOffersDialogBinding.image);
         holder.adapterSelectionOffersDialogBinding.itemName.setText(image.getProductName());
         if (offer.getPromoItemSelectionType().equalsIgnoreCase("auto")) {
-            if (offerCount < offer.getPromoItemSelection()) {
-                imageList.get(position).setSelected(true);
-                image.setOfferCount(offerCount + 1);
+                if (offerCount < offer.getPromoItemSelection()) {
+                    imageList.get(position).setSelected(true);
+                    image.setOfferCount(offerCount + 1);
+                    offerCount = image.getOfferCount();
+                    holder.adapterSelectionOffersDialogBinding.icGreenTick.setImageResource(R.drawable.ic_green_tick);
+                    holder.adapterSelectionOffersDialogBinding.parent.setBackgroundResource(R.drawable.offers_dialog_adapter_select_bg);
+                    myOffersListener.onSelectedOffersList(offer, image, imageList);
+                    continueEnablingHandlings.continueHandlings(image, offerCount);
+                }
+        } else {
+            if (image.getOfferCount() == 0 && !image.isSelected()) {
+                imageList.get(position).setSelected(false);
+                if (offerCount > 0)
+                    image.setOfferCount(offerCount - 1);
+                else
+                    image.setOfferCount(0);
                 offerCount = image.getOfferCount();
-                holder.adapterSelectionOffersDialogBinding.parent.setBackgroundResource(R.color.home_bottom_background);
-                myOffersListener.onSelectedOffersList(offer, image, imageList);
-                continueEnablingHandlings.continueHandlings(image);
+                holder.adapterSelectionOffersDialogBinding.icGreenTick.setImageResource(0);
+                holder.adapterSelectionOffersDialogBinding.parent.setBackgroundResource(R.drawable.offers_dialog_adapter_unselect_bg);
+//                        holder.adapterSelectionOffersDialogBinding.parent.setBackgroundResource(R.color.white);
+                continueEnablingHandlings.continueHandlings(image, offerCount);
             }
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -73,30 +88,36 @@ public class DialogOffersSelectionAdapter extends RecyclerView.Adapter<DialogOff
                         imageList.get(position).setSelected(true);
                         image.setOfferCount(offerCount + 1);
                         offerCount = image.getOfferCount();
-                        holder.adapterSelectionOffersDialogBinding.parent.setBackgroundResource(R.color.home_bottom_background);
+                        holder.adapterSelectionOffersDialogBinding.parent.setBackgroundResource(R.drawable.offers_dialog_adapter_select_bg);
+//                        holder.adapterSelectionOffersDialogBinding.parent.setBackgroundResource(R.color.home_bottom_background);
+                        holder.adapterSelectionOffersDialogBinding.icGreenTick.setImageResource(R.drawable.ic_green_tick);
                         myOffersListener.onSelectedOffersList(offer, image, imageList);
-                        continueEnablingHandlings.continueHandlings(image);
+                        continueEnablingHandlings.continueHandlings(image, offerCount);
                     } else {
                         imageList.get(position).setSelected(false);
                         image.setOfferCount(offerCount - 1);
                         offerCount = image.getOfferCount();
-                        holder.adapterSelectionOffersDialogBinding.parent.setBackgroundResource(R.color.white);
-                        continueEnablingHandlings.continueHandlings(image);
+                        holder.adapterSelectionOffersDialogBinding.icGreenTick.setImageResource(0);
+                        holder.adapterSelectionOffersDialogBinding.parent.setBackgroundResource(R.drawable.offers_dialog_adapter_unselect_bg);
+//                        holder.adapterSelectionOffersDialogBinding.parent.setBackgroundResource(R.color.white);
+                        continueEnablingHandlings.continueHandlings(image, offerCount);
                     }
-                } else if (offer.getPromoItemSelectionType().equalsIgnoreCase("manual")&&imageList.get(position).isSelected()) {
+                } else if (offer.getPromoItemSelectionType().equalsIgnoreCase("manual") && imageList.get(position).isSelected()) {
                     imageList.get(position).setSelected(false);
                     image.setOfferCount(offerCount - 1);
                     offerCount = image.getOfferCount();
-                    holder.adapterSelectionOffersDialogBinding.parent.setBackgroundResource(R.color.white);
-                    continueEnablingHandlings.continueHandlings(image);
+                    holder.adapterSelectionOffersDialogBinding.icGreenTick.setImageResource(0);
+                    holder.adapterSelectionOffersDialogBinding.parent.setBackgroundResource(R.drawable.offers_dialog_adapter_unselect_bg);
+//                    holder.adapterSelectionOffersDialogBinding.parent.setBackgroundResource(R.color.white);
+                    continueEnablingHandlings.continueHandlings(image, offerCount);
                 } else {
                     if (offer.getPromoItemSelectionType().equalsIgnoreCase("manual")) {
                         Toast.makeText(activity, "" + offer.getPromoTitle(), Toast.LENGTH_SHORT).show();
                     }
                 }
             }
-    });
-}
+        });
+    }
 
     @Override
     public int getItemCount() {
@@ -109,16 +130,16 @@ public class DialogOffersSelectionAdapter extends RecyclerView.Adapter<DialogOff
     }
 
 
-public static class ViewHolder extends RecyclerView.ViewHolder {
-    AdapterSelectionOffersDialogBinding adapterSelectionOffersDialogBinding;
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        AdapterSelectionOffersDialogBinding adapterSelectionOffersDialogBinding;
 
-    public ViewHolder(@NonNull AdapterSelectionOffersDialogBinding adapterSelectionOffersDialogBinding) {
-        super(adapterSelectionOffersDialogBinding.getRoot());
-        this.adapterSelectionOffersDialogBinding = adapterSelectionOffersDialogBinding;
+        public ViewHolder(@NonNull AdapterSelectionOffersDialogBinding adapterSelectionOffersDialogBinding) {
+            super(adapterSelectionOffersDialogBinding.getRoot());
+            this.adapterSelectionOffersDialogBinding = adapterSelectionOffersDialogBinding;
+        }
     }
-}
 
-public interface ContinueEnablingHandlings {
-    public void continueHandlings(GroupOffersModelResponse.Offer.PromoItem image);
-}
+    public interface ContinueEnablingHandlings {
+        void continueHandlings(AllOffersResponse.PromoItem image, int offerCount);
+    }
 }

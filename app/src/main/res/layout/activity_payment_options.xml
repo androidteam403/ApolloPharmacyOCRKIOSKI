@@ -181,15 +181,33 @@
                                 android:text="Total Amount"
                                 android:textStyle="bold" />
 
-                            <TextView
-                                android:id="@+id/pharma_total"
+                            <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerInParent="true"
-                                android:text="@{model.pharmaTotal}"
-                                android:textColor="@color/black"
-                                android:textSize="@dimen/sixteen_sp"
-                                android:textStyle="bold" />
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/pharma_total_incl_offer"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="@{model.pharmaTotalOffer}"
+                                    android:textColor="@color/RED"
+                                    android:textSize="@dimen/fourteen_sp"
+                                    android:textStyle="bold"
+                                    android:visibility="@{model.pharmaTotalOffer.equals(model.pharmaTotal) ? view.GONE : view.VISIBLE}" />
+
+                                <TextView
+                                    android:id="@+id/pharma_total"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@{model.pharmaTotal}"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/sixteen_sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
                         </RelativeLayout>
 
                         <RelativeLayout
@@ -332,15 +350,32 @@
                                 android:text="Total Amount"
                                 android:textStyle="bold" />
 
-                            <TextView
-                                android:id="@+id/fmcg_total"
+                            <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerInParent="true"
-                                android:text="@{model.fmcgTotal}"
-                                android:textColor="@color/black"
-                                android:textSize="@dimen/sixteen_sp"
-                                android:textStyle="bold" />
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/fmcg_total_incl_offer"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@{model.fmcgTotalOffer}"
+                                    android:textColor="@color/RED"
+                                    android:textSize="@dimen/sixteen_sp"
+                                    android:textStyle="bold"
+                                    android:visibility="@{model.fmcgTotalOffer.equals(model.fmcgTotal) ? view.GONE : view.VISIBLE}" />
+
+                                <TextView
+                                    android:id="@+id/fmcg_total"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@{model.fmcgTotal}"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/sixteen_sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
                         </RelativeLayout>
 
                         <RelativeLayout
@@ -380,13 +415,13 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:orientation="vertical"
                         android:id="@+id/confirm_only_pharma_order"
                         android:layout_width="match_parent"
-                        android:visibility="gone"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:gravity="center_horizontal">
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical"
+                        android:visibility="gone">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -466,14 +501,14 @@
                                 </RelativeLayout>
 
                                 <RelativeLayout
-                                    android:visibility="gone"
                                     android:id="@+id/recieve_payment_sms"
                                     android:layout_width="200dp"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="@dimen/ten_dp"
                                     android:layout_marginTop="@dimen/five_dp"
                                     android:background="@drawable/ic_payment_methods_unselectebg"
-                                    android:padding="@dimen/ten_dp">
+                                    android:padding="@dimen/ten_dp"
+                                    android:visibility="gone">
 
                                     <TextView
                                         android:layout_width="200dp"
