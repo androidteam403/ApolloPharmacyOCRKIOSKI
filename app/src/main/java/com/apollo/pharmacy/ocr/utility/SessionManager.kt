@@ -95,6 +95,34 @@ object SessionManager {
         return pref.getString(ApplicationConstant.MOBILE_NUMBER, String());
     }
 
+    fun setStoreId(number: String) {
+        editor.putString(ApplicationConstant.STORE_ID, number)
+        editor.apply();
+    }
+
+    fun getStoreId(): String {
+        return pref.getString(ApplicationConstant.STORE_ID, String());
+    }
+
+    fun setEposUrl(number: String) {
+        editor.putString(ApplicationConstant.EPOS_URL, number)
+        editor.apply();
+    }
+
+    fun getEposUrl(): String {
+        return pref.getString(ApplicationConstant.EPOS_URL, String());
+    }
+
+
+    fun setTerminalId(number: String) {
+        editor.putString(ApplicationConstant.TERMINAL_ID, number)
+        editor.apply();
+    }
+
+    fun getTerminalId(): String {
+        return pref.getString(ApplicationConstant.TERMINAL_ID, String());
+    }
+
     fun setCartItems(list: List<OCRToDigitalMedicineResponse>) {
         editor.putString(ApplicationConstant.CartItems, Gson().toJson(list))
         editor.apply()
@@ -353,5 +381,58 @@ object SessionManager {
 
     fun getDynamicOrderId(): String {
         return pref.getString(ApplicationConstant.DYNAMIC_ORDER_ID, "")
+    }
+
+    fun setAccessKey(accessKey: String) {
+        editor.putString(ApplicationConstant.ACCESS_KEY, accessKey)
+        editor.apply()
+    }
+
+    fun getAccessKey(): String {
+        return pref.getString(ApplicationConstant.ACCESS_KEY, "")
+    }
+
+    fun setAccessDialogHandler(accessKey: String) {
+        editor.putString(ApplicationConstant.ACESS_DIALOG_HANDEL, accessKey)
+        editor.apply()
+    }
+
+    fun getAccessDialogHandler(): String {
+        return pref.getString(ApplicationConstant.ACESS_DIALOG_HANDEL, "")
+    }
+
+    fun setImagePath(imagePathList: List<String>) {
+        editor.putString(ApplicationConstant.IMAGEPATHLIST, Gson().toJson(imagePathList))
+        editor.apply()
+    }
+
+    var lists: List<String> = emptyList()
+    fun getImagePathList(): List<String> {
+        val json = pref.getString(ApplicationConstant.IMAGEPATHLIST, null)
+        val type = object : TypeToken<List<String>>() {
+
+        }.type
+        if (Gson().fromJson<List<String>>(json, type) != null)
+            return Gson().fromJson<List<String>>(json, type)
+        else
+            return lists
+    }
+
+    fun setBatchId(batchId: String) {
+        editor.putString(ApplicationConstant.BATCH_ID, batchId)
+        editor.apply();
+    }
+
+    fun getBatchId(): String {
+        return pref.getString(ApplicationConstant.BATCH_ID, String());
+    }
+
+    fun setCustName(name: String) {
+        editor.putString(ApplicationConstant.CUST_NAME, name)
+        editor.apply()
+    }
+
+    fun getCustrName(): String {
+        return pref.getString(ApplicationConstant.CUST_NAME, "");
     }
 }
