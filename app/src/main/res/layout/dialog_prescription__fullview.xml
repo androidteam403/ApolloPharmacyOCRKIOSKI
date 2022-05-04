@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/activity_theme_bg">
+
+
+        <com.apollo.pharmacy.ocr.utility.zoomage.ZoomageView
+            android:id="@+id/prescription_fullview_img"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/ten_dp"
+            app:zoomage_animateOnReset="true"
+            app:zoomage_autoCenter="true"
+            app:zoomage_autoResetMode="UNDER"
+            app:zoomage_maxScale="8"
+            app:zoomage_minScale="0.6"
+            app:zoomage_restrictBounds="false"
+            app:zoomage_translatable="true"
+            app:zoomage_zoomable="true" />
+
+        <ImageView
+            android:id="@+id/dismiss_prescription_fullview"
+            android:layout_width="@dimen/fifty_dp"
+            android:layout_height="@dimen/fifty_dp"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="@dimen/ten_dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/close_white_icon" />
+
+    </RelativeLayout>
+</layout>
