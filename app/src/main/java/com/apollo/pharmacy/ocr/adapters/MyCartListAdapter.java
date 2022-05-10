@@ -31,7 +31,6 @@ public class MyCartListAdapter extends RecyclerView.Adapter<MyCartListAdapter.Vi
     ExpandCartListAdapter expandCartListAdapter;
     List<OCRToDigitalMedicineResponse> expandListDummy = new ArrayList<>();
     private Context context;
-    private boolean expandHandlingBool;
 
     public MyCartListAdapter(Context context, List<OCRToDigitalMedicineResponse> cartMedicineList, OnItemClickListener listener, List<OCRToDigitalMedicineResponse> expandList) {
         this.context = context;
@@ -76,37 +75,44 @@ public class MyCartListAdapter extends RecyclerView.Adapter<MyCartListAdapter.Vi
     public void onBindViewHolder(@NonNull MyCartListAdapter.ViewHolder holder, int position) {
         if (cartMedicineList.size() > 0) {
             OCRToDigitalMedicineResponse item = cartMedicineList.get(position);
-            expandHandlingBool = false;
+//            expandHandlingBool = false;
 
-
+//            for (int i = 0; i < expandList.size(); i++) {
+//                if (expandList != null && expandList.size() > 1 && cartMedicineList.get(position).getArtName().equalsIgnoreCase(expandList.get(i).getArtName())) {
+//                    expandHandlingBool = true;
+//                }
+//            }
+            int count = 0;
             for (int i = 0; i < expandList.size(); i++) {
-                if (expandList != null && expandList.size() > 1 && cartMedicineList.get(position).getArtName().equalsIgnoreCase(expandList.get(i).getArtName())) {
-                    expandHandlingBool = true;
+                if (item.getArtName().equals(expandList.get(i).getArtName())) {
+                    count++;
                 }
             }
-            if (expandList.size() > 0) {
+            if (count > 1) {
                 holder.expandView.setVisibility(View.VISIBLE);
+                holder.deleteButton.setVisibility(View.GONE);
             } else {
-                holder.expandView.setVisibility(View.INVISIBLE);
-
-            }
-
-            item.setArtCode(expandList.get(position).getArtCode());
-            item.setArtName(expandList.get(position).getArtName());
-//            expandList.add(item);
-
-
-            if (expandHandlingBool) {
-                holder.expandView.setVisibility(View.VISIBLE);
-
-
-            } else {
+                for (int i = 0; i < expandList.size(); i++)
+                    if (item.getArtName().equals(expandList.get(i).getArtName()))
+                        item.setArtCode(expandList.get(i).getArtCode());
                 holder.deleteButton.setVisibility(View.VISIBLE);
                 holder.expandView.setVisibility(View.INVISIBLE);
 
-
             }
+//            if (expandList.size() > 0) {
+//                holder.expandView.setVisibility(View.VISIBLE);
+//            } else {
+//                holder.expandView.setVisibility(View.INVISIBLE);
+//
+//            }
 
+
+//            if (expandHandlingBool) {
+//                holder.expandView.setVisibility(View.VISIBLE);
+//            } else {
+//                holder.deleteButton.setVisibility(View.VISIBLE);
+//                holder.expandView.setVisibility(View.INVISIBLE);
+//            }
 
             holder.snoTxt.setText(String.valueOf(position + 1));
             if (cartMedicineList.get(position).getArtName().length() > 0) {
@@ -181,7 +187,8 @@ public class MyCartListAdapter extends RecyclerView.Adapter<MyCartListAdapter.Vi
                 public void onClick(View view) {
                     if (!cartMedicineList.get(position).isExpandStatus()) {
                         cartMedicineList.get(position).setExpandStatus(true);
-
+                        if (expandListDummy != null && expandListDummy.size() > 0)
+                            expandListDummy.clear();
 
                         for (int i = 0; i < expandList.size(); i++) {
                             if (cartMedicineList.get(position).getArtName().equalsIgnoreCase(expandList.get(i).getArtName())) {
