@@ -134,7 +134,8 @@ public class MainActivity extends BaseActivity implements ConnectivityReceiver.C
         View decorView = getWindow().getDecorView();
         int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
         decorView.setSystemUiVisibility(uiOptions);
-        LinearLayout faqLayout = findViewById(R.id.help_layout);
+        ImageView faqLayout = findViewById(R.id.faq);
+
         faqLayout.setOnClickListener(view -> startActivity(new Intent(MainActivity.this, FAQActivity.class)));
         mainLangLayout = findViewById(R.id.main_lang_layout);
         moreLangLayout = findViewById(R.id.more_lang_layout);

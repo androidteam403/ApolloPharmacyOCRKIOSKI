@@ -40,7 +40,7 @@ public class HomeActivityController {
                 if (response.isSuccessful()) {
                     handleGetCategoryListService(context);
                     assert response.body() != null;
-                    if (response.body().getCustomerData().getName() != null && !response.body().getCustomerData().getName().isEmpty())
+                    if (response.body().getCustomerData() != null && response.body().getCustomerData().getName() != null && !response.body().getCustomerData().getName().isEmpty())
                         SessionManager.INSTANCE.setCustName(response.body().getCustomerData().getName());
                     else
                         SessionManager.INSTANCE.setCustName("");

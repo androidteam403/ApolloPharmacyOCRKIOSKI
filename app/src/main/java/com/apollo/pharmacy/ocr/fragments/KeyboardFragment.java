@@ -282,9 +282,9 @@ public class KeyboardFragment extends Fragment implements OnClickListener {
                     if (str.length() == 1) {
                         str = "";
                         cursorPos = 0;
-                    } else if (str.length() > 1 && cursorPos < str.length()) {
+                    } else if (str.length() > 1 ) {
                         StringBuilder sb = new StringBuilder(str);
-                        sb.deleteCharAt(cursorPos);
+                       sb.deleteCharAt(cursorPos);
                         str = sb.toString();
                     }
                 } else if (ch.equals("backspace")) {
@@ -356,7 +356,7 @@ public class KeyboardFragment extends Fragment implements OnClickListener {
                 flag = true;
             }
         } else if (inputFilter.equals(filterArray[3])) {
-            String text = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 ";
+            String text = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890z ";
             if (text.contains(ch)) {
                 flag = true;
             }

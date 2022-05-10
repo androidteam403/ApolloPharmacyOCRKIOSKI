@@ -131,6 +131,7 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
     ArrayList<Product> outOfStack = new ArrayList<>();
     int totalPage = 1, currentPage = 1;
     boolean isEmpty = false;
+    public int pos;
     private String selectedProductName = "Baby Care";
     private int selectedProductID = Constants.Baby_Care;
     private RelativeLayout mySearchLayout, myCartLayout, myOrdersLayout, myOffersLayout, myProfileLayout, parentLayout;
@@ -146,10 +147,13 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
     private FrameLayout medic_keyboard;
     private TextView plusIcon, itemsCount;
     private ImageView checkOutImage;
+    private   ImageView faqLayout;
+    private ImageView searchIcon;
     private TextView fmcgTxt, pharmaTxt, fcItemCountTxt, pharmaItemCountTxt;
     private ImageView searchImg, checkOutNewBtn;
     private LinearLayout imageLayout;
     private boolean tabFlag;
+
     private boolean search_auto_complete_text;
     private MySearchController mySearchController;
     private MyOffersController myOffersController;
@@ -171,6 +175,7 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
         pDialog = findViewById(R.id.pdialog);
         offersRecycle = findViewById(R.id.cross_selling_recycle_new);
         item = new ArrayList<>();
+
         dataList = new ArrayList<>();
         searchAutoComplete = findViewById(R.id.search_autocomplete);
         myAdapter = new MedicineSearchAdapter(MySearchActivity.this, item, this, this);
@@ -187,14 +192,18 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
         cancel_image = findViewById(R.id.cancel_image);
         constraintLayout = findViewById(R.id.constraint_layout);
         medic_keyboard = findViewById(R.id.medic_keyboard);
+        searchIcon = findViewById(R.id.search_image);
         plusIcon = findViewById(R.id.plus_icon);
         itemsCount = findViewById(R.id.items_count);
+
         checkOutImage = findViewById(R.id.checkout_image);
         checkOutNewBtn = findViewById(R.id.check_out_btn);
         search_product_layout = findViewById(R.id.search_product_layout);
         subParentLayout = findViewById(R.id.sub_parent_layout);
         clearSearchText = findViewById(R.id.clear_search_text);
+        faqLayout = findViewById(R.id.faq);
 
+        searchIcon.setVisibility(View.VISIBLE);
         doneProductsLayout.setVisibility(View.GONE);
         mySearchController = new MySearchController(this, this);
         myOffersController = new MyOffersController(this, this);
@@ -209,7 +218,6 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
         ArrayAdapter<String> categoryAdapter = new ArrayAdapter<String>(this, R.layout.view_spinner_row, R.id.category_name, categories);
         categorySpinner.setAdapter(categoryAdapter);
 
-        LinearLayout faqLayout = findViewById(R.id.help_layout);
         faqLayout.setOnClickListener(view -> startActivity(new Intent(MySearchActivity.this, FAQActivity.class)));
 
         subCategoryRecyclerView = findViewById(R.id.sub_categories_recycler_view);
@@ -260,13 +268,11 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
         else
             checkOutNewBtn.setVisibility(View.GONE);
 
-        searchProducts.addTextChangedListener(new TextWatcher() {
 
+        searchProducts.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() <= 2) {
 
-                }
             }
 
             @Override
@@ -283,11 +289,13 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
                     search_suggestion_listview.setVisibility(View.VISIBLE);
                     offersRecycle.setVisibility(View.GONE);
                     itemCountLayout.setVisibility(View.GONE);
+                    searchIcon.setVisibility(View.GONE);
                     clearSearchText.setVisibility(View.VISIBLE);
                     subCategoryCount.setText("");
                     if (search_auto_complete_text) {
                         Searchsuggestionrequest request = new Searchsuggestionrequest();
                         request.setParams(searchProducts.getText().toString());
+
                         search_auto_complete_text = false;
                         if (NetworkUtils.isNetworkConnected(MySearchActivity.this)) {
                             pDialog.setVisibility(View.VISIBLE);
@@ -309,6 +317,10 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
             if (item != null && item.size() > 0) {
                 item.clear();
                 clearSearchText.setVisibility(View.GONE);
+
+                Intent intent=getIntent();
+                finish();
+                startActivity(intent);
             }
         });
 
@@ -415,6 +427,8 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
         searchProducts.setText("");
         searchProducts.setInputType(InputType.TYPE_CLASS_TEXT);
         searchProducts.setRawInputType(InputType.TYPE_CLASS_TEXT);
+        searchProducts.setTextIsSelectable(true);
+
 
         hideSystemKeyBoard();
 
@@ -689,14 +703,14 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
             @Override
             public void run() {
                 keyboardFrag.cursorPos = et.getSelectionStart();
-                keyboardFrag.str = "";
+                keyboardFrag.str = searchProducts.getText().toString();
             }
         }, 100);
     }
 
     @Override
     public void getKeyboardText(EditText editText, String str, int curPostion) {
-        editText.setText("" + str);
+        editText.setText(str);
         if (str.length() > 0 && str.length() >= curPostion)
             editText.setSelection(curPostion);
     }
@@ -1806,6 +1820,11 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
         }
     }
 
+    @Override
+    public void scannerFirmwareUpdateEvent(FirmwareUpdateEvent firmwareUpdateEvent) {
+
+    }
+
     private void barcodeEventHandle() {
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -1816,10 +1835,6 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
         }, 5000);
     }
 
-    @Override
-    public void scannerFirmwareUpdateEvent(FirmwareUpdateEvent firmwareUpdateEvent) {
-
-    }
 
     @Override
     public void scannerImageEvent(byte[] imageData) {

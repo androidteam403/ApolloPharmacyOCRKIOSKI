@@ -78,7 +78,7 @@ public class MyProfileActivity extends AppCompatActivity implements MyCartListen
     private HashMap<String, GetProductListResponse> productListResponseHashMap;
     private List<String> specialOfferList;
     private ArrayList<Product> outofstock_array, stockin_array;
-    private TextView myCartCount,promotionViewAll,nodataFound;
+    private TextView myCartCount, promotionViewAll, nodataFound;
     private List<OCRToDigitalMedicineResponse> dataList = new ArrayList<>();
     private ConstraintLayout constraintLayout;
     private MyCartController myCartController;
@@ -97,8 +97,8 @@ public class MyProfileActivity extends AppCompatActivity implements MyCartListen
         RecyclerView promotionsRecyclerView = findViewById(R.id.promotionsRecyclerView);
         promotionsRecyclerView.setLayoutManager(new GridLayoutManager(MyProfileActivity.this, 6));
         crossCellDataRecycle = findViewById(R.id.cross_cell_data_recycle);
-        promotionViewAll=findViewById(R.id.promotion_viewAll);
-        nodataFound=findViewById(R.id.nodata_found);
+        promotionViewAll = findViewById(R.id.promotion_viewAll);
+        nodataFound = findViewById(R.id.nodata_found);
         product_list_array = new ArrayList<Product>();
         outofstock_array = new ArrayList<Product>();
         stockin_array = new ArrayList<Product>();
@@ -117,7 +117,7 @@ public class MyProfileActivity extends AppCompatActivity implements MyCartListen
             }
         }
 
-        LinearLayout faqLayout = findViewById(R.id.help_layout);
+        ImageView faqLayout = findViewById(R.id.faq);
         TextView helpText = findViewById(R.id.help_text);
         helpText.setText(getResources().getString(R.string.faq));
         faqLayout.setOnClickListener(view -> startActivity(new Intent(MyProfileActivity.this, FAQActivity.class)));
@@ -220,20 +220,22 @@ public class MyProfileActivity extends AppCompatActivity implements MyCartListen
 
     private void updateUI(PortFolioModel portFolioModel) {
         CustomerData customerData = portFolioModel.getCustomerData();
-        customer_id_txt.setText(customerData.getLCIN());
-        if (null != customerData.getName() && !customerData.getName().isEmpty()) {
-            name_txt.setText(customerData.getName());
-        } else {
-            name_txt.setText("-");
+        if (customerData != null) {
+            customer_id_txt.setText(customerData.getLCIN());
+            if (null != customerData.getName() && !customerData.getName().isEmpty()) {
+                name_txt.setText(customerData.getName());
+            } else {
+                name_txt.setText("-");
+            }
+            if (null != customerData.getMobileNumber() && !customerData.getMobileNumber().isEmpty()) {
+                phone_txt.setText(customerData.getMobileNumber().trim());
+            } else {
+                phone_txt.setText("-");
+            }
+            emial_address_txt.setText(String.valueOf(customerData.getEarnedCredits()));
+            location_txt.setText(String.valueOf(customerData.getAvailableCredits()));
+            address_txt.setText(String.valueOf(customerData.getBurnedCredits()));
         }
-        if (null != customerData.getMobileNumber() && !customerData.getMobileNumber().isEmpty()) {
-            phone_txt.setText(customerData.getMobileNumber().trim());
-        } else {
-            phone_txt.setText("-");
-        }
-        emial_address_txt.setText(String.valueOf(customerData.getEarnedCredits()));
-        location_txt.setText(String.valueOf(customerData.getAvailableCredits()));
-        address_txt.setText(String.valueOf(customerData.getBurnedCredits()));
     }
 
     private void initLeftMenu() {
