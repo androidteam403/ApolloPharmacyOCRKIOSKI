@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
@@ -28,12 +27,20 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_weight="0.4"
+            android:layout_weight="0.375"
             android:gravity="center_vertical"
             android:lines="2"
             android:maxLines="2"
             android:textColor="@color/black"
             android:textSize="@dimen/ten_sp" />
+
+        <ImageView
+            android:id="@+id/expand_view"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.025"
+            android:src="@drawable/simple_v_dropdown"
+            android:tint="@color/colorPrimary" />
 
         <TextView
             android:id="@+id/offer_price_txt"
@@ -59,7 +66,8 @@
                 android:layout_gravity="center"
                 android:contentDescription="@string/app_name"
                 android:padding="@dimen/five_dp"
-                android:src="@drawable/decrement" />
+                android:src="@drawable/decrement"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/product_qty"
@@ -77,20 +85,37 @@
                 android:layout_gravity="center"
                 android:contentDescription="@string/app_name"
                 android:padding="@dimen/five_dp"
-                android:src="@drawable/increment" />
+                android:src="@drawable/increment"
+                android:visibility="gone" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/total_price_txt"
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="0.13"
-            android:gravity="end"
-            android:paddingStart="@dimen/thirty_dp"
-            android:textColor="@color/black"
-            android:textSize="@dimen/ten_sp"
-            android:textStyle="bold" />
+            android:orientation="vertical"
+            android:gravity="center"
+            android:paddingStart="@dimen/thirty_dp">
+
+            <TextView
+                android:id="@+id/offer_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/RED"
+                android:textSize="@dimen/ten_sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/total_price_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="@dimen/ten_sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
 
         <LinearLayout
             android:layout_width="0dp"
@@ -109,7 +134,8 @@
                 android:paddingStart="@dimen/ten_dp"
                 android:paddingEnd="@dimen/ten_dp"
                 android:src="@drawable/delete_cart_item"
-                android:tint="@color/unselected_red_color" />
+                android:tint="@color/unselected_red_color"
+                android:visibility="gone" />
         </LinearLayout>
     </LinearLayout>
 
@@ -117,4 +143,10 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/one_dp"
         android:background="@color/cart_item_view_divider_color" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/expand_recycle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
 </LinearLayout>
