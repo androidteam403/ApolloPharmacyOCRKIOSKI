@@ -93,7 +93,7 @@ public class MyCartListAdapter extends RecyclerView.Adapter<MyCartListAdapter.Vi
 
             item.setArtCode(expandList.get(position).getArtCode());
             item.setArtName(expandList.get(position).getArtName());
-            expandList.add(item);
+//            expandList.add(item);
 
 
             if (expandHandlingBool) {
