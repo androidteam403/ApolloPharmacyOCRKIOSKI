@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RelativeLayout
+        android:layout_width="@dimen/two_hundred_dp"
+        android:layout_height="@dimen/two_hundred_eighty_dp"
+        android:layout_marginStart="@dimen/five_dp"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/prescription_view_pager"
+            android:layout_width="@dimen/two_hundred_dp"
+            android:layout_height="@dimen/two_hundred_eighty_dp"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/app_name"
+            android:scaleType="fitXY"
+            android:src="@drawable/apollo_prescription_image" />
+
+        <ImageView
+            android:id="@+id/item_delete"
+            android:layout_width="@dimen/thirty_dp"
+            android:layout_height="@dimen/thirty_dp"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="@dimen/five_dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/scanagain_close" />
+
+        <TextView
+            android:id="@+id/item_count"
+            android:layout_width="@dimen/twenty_five_dp"
+            android:layout_height="@dimen/thirty_five_dp"
+            android:background="@color/colorPrimary"
+            android:gravity="center"
+            android:text="1"
+            android:layout_margin="@dimen/five_dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/eighteen_sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:layout_width="@dimen/thirty_dp"
+            android:layout_height="@dimen/thirty_dp"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:padding="@dimen/five_dp"
+            android:background="@drawable/ic_round_bg"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/ic_zoom_in" />
+
+    </RelativeLayout>
+</layout>

@@ -21,9 +21,10 @@ object ApplicationConstant {
     var OFFERLIST = "OFFERLIST"
     var TRENDINGLIST = "TRENDINGLIST"
     var USERNAME = "userName"
+    var CUST_NAME = "CUST_NAME"
     var DELIVERYDATE = "DELIVERYDATE"
     var DELETEDDATALIST = "DELETEDDATALIST"
-
+    var IMAGEPATHLIST = "IMAGEPATHLIST"
     var pinelab_transaction_status = "pinelab_transaction_status"
 
     var ISFCM = "fcmLog"
@@ -54,4 +55,15 @@ object ApplicationConstant {
     const val FCM_MEDICINE_RECEIVED = "fcm_medicine_received"
     const val KIOSK_SETUP_RESPONSE = "KioskSetupResponse"
     const val DYNAMIC_ORDER_ID = "DynamicOrderID"
+
+    val STORE_ID = "store_id"
+    val TERMINAL_ID = "terminal_id"
+    const val ACCESS_KEY = "ACCESS_KEY"
+    val EPOS_URL = "EPOS_URL"
+
+    val ACESS_DIALOG_HANDEL = "ACESS_DIALOG_HANDEL"
+
+    val BATCH_ID = "BATCH_ID"
+
+
 }
