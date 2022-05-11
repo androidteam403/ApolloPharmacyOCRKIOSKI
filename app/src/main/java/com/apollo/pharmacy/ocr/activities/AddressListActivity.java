@@ -30,6 +30,7 @@ import com.apollo.pharmacy.ocr.interfaces.AddressListListener;
 import com.apollo.pharmacy.ocr.interfaces.OnItemClickListener;
 import com.apollo.pharmacy.ocr.model.Meta;
 import com.apollo.pharmacy.ocr.model.ModelMobileNumVerify;
+import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
 import com.apollo.pharmacy.ocr.model.PlaceOrderReqModel;
 import com.apollo.pharmacy.ocr.model.PlaceOrderResModel;
 import com.apollo.pharmacy.ocr.model.StateCodes;
@@ -42,7 +43,6 @@ import com.apollo.pharmacy.ocr.utility.ApplicationConstant;
 import com.apollo.pharmacy.ocr.utility.Constants;
 import com.apollo.pharmacy.ocr.utility.ImageManager;
 import com.apollo.pharmacy.ocr.utility.NetworkUtils;
-import com.apollo.pharmacy.ocr.utility.Session;
 import com.apollo.pharmacy.ocr.utility.SessionManager;
 import com.apollo.pharmacy.ocr.utility.Singleton;
 import com.apollo.pharmacy.ocr.utility.Utils;
@@ -496,7 +496,7 @@ public class AddressListActivity extends AppCompatActivity implements AddressLis
     }
 
     @Override
-    public void onClickDelete(int position) {
+    public void onClickDelete(int position, OCRToDigitalMedicineResponse item) {
         final Dialog dialog = new Dialog(AddressListActivity.this);
         dialog.setContentView(R.layout.dialog_custom_alert);
         dialog.setCancelable(false);
