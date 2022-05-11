@@ -147,7 +147,7 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
     private FrameLayout medic_keyboard;
     private TextView plusIcon, itemsCount;
     private ImageView checkOutImage;
-    private   ImageView faqLayout;
+    private ImageView faqLayout;
     private ImageView searchIcon;
     private TextView fmcgTxt, pharmaTxt, fcItemCountTxt, pharmaItemCountTxt;
     private ImageView searchImg, checkOutNewBtn;
@@ -318,7 +318,7 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
                 item.clear();
                 clearSearchText.setVisibility(View.GONE);
 
-                Intent intent=getIntent();
+                Intent intent = getIntent();
                 finish();
                 startActivity(intent);
             }

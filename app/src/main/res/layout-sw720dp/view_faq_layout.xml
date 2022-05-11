@@ -50,7 +50,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:id="@+id/faq_icon"
-
                 android:contentDescription="@string/app_name"
                 android:src="@drawable/faq_icon" />
         </LinearLayout>
