@@ -273,6 +273,7 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
+
             }
 
             @Override
@@ -307,6 +308,9 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
                     }
                 } else {
                     search_auto_complete_text = true;
+                    offersRecycle.setVisibility(View.VISIBLE);
+                    searchIcon.setVisibility(View.VISIBLE);
+                    clearSearchText.setVisibility(View.GONE);
                     search_listview.setVisibility(View.GONE);
                     search_suggestion_listview.setVisibility(View.GONE);
                 }
