@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.databinding.DataBindingUtil;
 
 import com.apollo.pharmacy.ocr.R;
@@ -18,7 +19,9 @@ import com.apollo.pharmacy.ocr.controller.PincodeValidateController;
 import com.apollo.pharmacy.ocr.databinding.DialogDeliveryAddressBinding;
 import com.apollo.pharmacy.ocr.interfaces.PincodeValidateListener;
 import com.apollo.pharmacy.ocr.model.PincodeValidateResponse;
+import com.apollo.pharmacy.ocr.model.ServicabilityResponse;
 import com.apollo.pharmacy.ocr.utility.SessionManager;
+import com.apollo.pharmacy.ocr.utility.Utils;
 
 import java.util.List;
 
@@ -29,8 +32,10 @@ public class DeliveryAddressDialog implements PincodeValidateListener {
 
     private boolean negativeExist = false;
     Context context;
+    private ConstraintLayout constraintLayout;
 
     public DeliveryAddressDialog(Context context) {
+
         this.context = context;
         dialog = new Dialog(context);
         dialog = new Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
@@ -49,7 +54,8 @@ public class DeliveryAddressDialog implements PincodeValidateListener {
             public void afterTextChanged(Editable s) {
                 if (s.length() == 6) {
                     PincodeValidateController pincodeValidateController = new PincodeValidateController(context, DeliveryAddressDialog.this);
-                    pincodeValidateController.onPincodeValidateApi(s.toString());
+//                    pincodeValidateController.onPincodeValidateApi(s.toString());
+                    pincodeValidateController.checkServiceAvailability(context, s.toString());
                 }
             }
 
@@ -141,7 +147,8 @@ public class DeliveryAddressDialog implements PincodeValidateListener {
         deliveryAddressDialog.number.setText(SessionManager.INSTANCE.getMobilenumber().toString());
         deliveryAddressDialog.zipCode.setText(pincode);
         PincodeValidateController pincodeValidateController = new PincodeValidateController(context, DeliveryAddressDialog.this);
-        pincodeValidateController.onPincodeValidateApi(pincode.toString());
+//        pincodeValidateController.onPincodeValidateApi(pincode.toString());
+        pincodeValidateController.checkServiceAvailability(context, pincode.toString());
     }
 
     public boolean validations() {
@@ -173,12 +180,16 @@ public class DeliveryAddressDialog implements PincodeValidateListener {
 //            deliveryAddressDialog.email.setError("Enter Valid Email");
 //            deliveryAddressDialog.email.requestFocus();
 //            return false;
+        } else if (!name.matches("^[A-Za-z]+$")){
+            deliveryAddressDialog.name.setError("Enter valid name");
+            deliveryAddressDialog.name.requestFocus();
+            return false;
         } else if (address.isEmpty()) {
-            deliveryAddressDialog.address.setError("Address not empty");
+            deliveryAddressDialog.address.setError("Address should not be empty");
             deliveryAddressDialog.address.requestFocus();
             return false;
         } else if (zipCode.isEmpty()) {
-            deliveryAddressDialog.zipCode.setError("Pin Code should not empty");
+            deliveryAddressDialog.zipCode.setError("Pin Code should not be empty");
             deliveryAddressDialog.zipCode.requestFocus();
             return false;
 //        } else if (city.isEmpty()) {
@@ -199,13 +210,22 @@ public class DeliveryAddressDialog implements PincodeValidateListener {
 
     @Override
     public void onSuccessPincodeValidate(List<PincodeValidateResponse> body) {
-        deliveryAddressDialog.city.setText(body.get(0).getCity().toString());
-        deliveryAddressDialog.state.setText(body.get(0).getState().toString());
-        View view1 = dialog.getCurrentFocus();
-        if (view1 != null) {
-            InputMethodManager inputManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-            inputManager.hideSoftInputFromWindow(dialog.getCurrentFocus().getWindowToken(),
-                    InputMethodManager.HIDE_NOT_ALWAYS);
+        if (body != null && body.size() > 0 && body.get(0) != null && body.get(0).getCity() != null && body.get(0).getState() != null) {
+            deliveryAddressDialog.city.setText(body.get(0).getCity().toString());
+            deliveryAddressDialog.state.setText(body.get(0).getState().toString());
+            View view1 = dialog.getCurrentFocus();
+            if (view1 != null) {
+                InputMethodManager inputManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputManager.hideSoftInputFromWindow(dialog.getCurrentFocus().getWindowToken(),
+                        InputMethodManager.HIDE_NOT_ALWAYS);
+            }
+        } else if (body != null && body.size() > 0 && body.get(0).getStatus() != null && body.get(0).getStatus().equals("False")) {
+            deliveryAddressDialog.city.setText(null);
+            deliveryAddressDialog.state.setText(null);
+            Toast.makeText(context, body.get(0).getMessage(), Toast.LENGTH_SHORT).show();
+        } else {
+            deliveryAddressDialog.city.setText(null);
+            deliveryAddressDialog.state.setText(null);
         }
     }
 
@@ -223,6 +243,34 @@ public class DeliveryAddressDialog implements PincodeValidateListener {
             inputManager.hideSoftInputFromWindow(dialog.getCurrentFocus().getWindowToken(),
                     InputMethodManager.HIDE_NOT_ALWAYS);
         }
+    }
+
+    @Override
+    public void onSuccessServiceability(ServicabilityResponse response) {
+        Utils.dismissDialog();
+        deliveryAddressDialog.city.setText(response.getDeviceDetails().get(0).getCITY());
+        deliveryAddressDialog.state.setText(response.getDeviceDetails().get(0).getSTATE());
+        View view1 = dialog.getCurrentFocus();
+        if (view1 != null) {
+            InputMethodManager inputManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputManager.hideSoftInputFromWindow(dialog.getCurrentFocus().getWindowToken(),
+                    InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+        Utils.showSnackbarDialog(context, dialog.getWindow().getDecorView(), context.getResources().getString(R.string.label_service_available));
+    }
+
+    @Override
+    public void onFailureServiceability(String message) {
+        Utils.dismissDialog();
+        deliveryAddressDialog.city.setText(null);
+        deliveryAddressDialog.state.setText(null);
+        View view1 = dialog.getCurrentFocus();
+        if (view1 != null) {
+            InputMethodManager inputManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputManager.hideSoftInputFromWindow(dialog.getCurrentFocus().getWindowToken(),
+                    InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+        Utils.showSnackbarDialog(context, dialog.getWindow().getDecorView(), message);
     }
 
 

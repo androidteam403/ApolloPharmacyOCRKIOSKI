@@ -276,7 +276,7 @@ public class MyOffersController {
     public void getAllOffersApiCall() {
         ApiInterface apiInterface = ApiClient.getApiService();
         showDialog(mContext, mContext.getResources().getString(R.string.label_please_wait));
-        Call<AllOffersResponse> call = apiInterface.GET_ALL_OFFERS_API_CALL("Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsImlhdCI6MTY1MTA0ODcyMSwiZXhwIjoxNjUxNjUzNTIxfQ.RzbQhhuxVMm3THoYA-K5Wke5Eim-lbdcRjn8jG7xtCM");
+        Call<AllOffersResponse> call = apiInterface.GET_ALL_OFFERS_API_CALL("Bearer SHJSKSTBBSYYDYYYSMSUUYEJKSAY");
         call.enqueue(new Callback<AllOffersResponse>() {
             @Override
             public void onResponse(@NonNull Call<AllOffersResponse> call, @NonNull Response<AllOffersResponse> response) {

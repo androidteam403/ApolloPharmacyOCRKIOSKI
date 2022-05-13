@@ -2,10 +2,17 @@ package com.apollo.pharmacy.ocr.controller;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
+
+import com.apollo.pharmacy.ocr.R;
 import com.apollo.pharmacy.ocr.interfaces.PincodeValidateListener;
 import com.apollo.pharmacy.ocr.model.PincodeValidateResponse;
+import com.apollo.pharmacy.ocr.model.ServicabilityResponse;
+import com.apollo.pharmacy.ocr.model.ServiceAvailabilityRequest;
 import com.apollo.pharmacy.ocr.network.ApiClient;
 import com.apollo.pharmacy.ocr.network.ApiInterface;
+import com.apollo.pharmacy.ocr.network.CallbackWithRetry;
+import com.apollo.pharmacy.ocr.utility.Constants;
 import com.apollo.pharmacy.ocr.utility.Utils;
 
 import org.jetbrains.annotations.NotNull;
@@ -54,6 +61,29 @@ public class PincodeValidateController {
             }
         });
     }
+    public void checkServiceAvailability(Context context, String inputPincode) {
+        ApiInterface apiInterface = ApiClient.getApiService(Constants.CheckServiceAvailability);
+        ServiceAvailabilityRequest serviceAvailabilityRequest = new ServiceAvailabilityRequest();
+        serviceAvailabilityRequest.setVendorName("KIOSK");
+        serviceAvailabilityRequest.setPincode(inputPincode);
 
+        Call<ServicabilityResponse> call = apiInterface.get_servicability_api(serviceAvailabilityRequest);
+        call.enqueue(new CallbackWithRetry<ServicabilityResponse>(call) {
+            @Override
+            public void onResponse(@NonNull Call<ServicabilityResponse> call, @NonNull Response<ServicabilityResponse> response) {
+                assert response.body() != null;
+                if (response.body().getStatus()) {
+                    pincodeValidateListener.onSuccessServiceability(response.body());
+                } else {
+                    pincodeValidateListener.onFailureServiceability(response.body().getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ServicabilityResponse> call, @NonNull Throwable t) {
+                pincodeValidateListener.onFailureServiceability(context.getApplicationContext().getResources().getString(R.string.try_again_later));
+            }
+        });
+    }
 
 }
