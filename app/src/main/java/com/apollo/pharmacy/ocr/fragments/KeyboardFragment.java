@@ -1,6 +1,7 @@
 package com.apollo.pharmacy.ocr.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.apollo.pharmacy.ocr.R;
+import com.apollo.pharmacy.ocr.activities.MySearchActivity;
 
 import java.util.ArrayList;
 
@@ -282,15 +284,20 @@ public class KeyboardFragment extends Fragment implements OnClickListener {
                     if (str.length() == 1) {
                         str = "";
                         cursorPos = 0;
-                    } else if (str.length() > 1 && cursorPos < str.length()) {
+                    } else if (str.length() > 1 ) {
                         StringBuilder sb = new StringBuilder(str);
-                        sb.deleteCharAt(cursorPos);
+                       sb.deleteCharAt(cursorPos);
                         str = sb.toString();
                     }
                 } else if (ch.equals("backspace")) {
                     if (str.length() == 1 || str.length() == 0) {
                         str = "";
+
                         cursorPos = 0;
+//                        if (cursorPos==0){
+//                            Intent i=new Intent(getContext(), MySearchActivity.class);
+//                            startActivity(i);
+//                        }
                     } else if (str.length() > 1) {
                         if (cursorPos >= 1) {
                             --cursorPos;
@@ -356,7 +363,7 @@ public class KeyboardFragment extends Fragment implements OnClickListener {
                 flag = true;
             }
         } else if (inputFilter.equals(filterArray[3])) {
-            String text = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 ";
+            String text = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890z ";
             if (text.contains(ch)) {
                 flag = true;
             }
