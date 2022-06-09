@@ -82,7 +82,6 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
                     if (data.getMedicineType() != null) {
                         if (data.getMedicineType().equals("PHARMA")) {
                             isPharma = true;
-
                             if (data.getNetAmountInclTax() != null && !data.getNetAmountInclTax().isEmpty()) {
                                 pharmaTotal = pharmaTotal + (Double.parseDouble(data.getNetAmountInclTax()));
                                 pharmaTotalOffer = pharmaTotalOffer + (Double.parseDouble(data.getArtprice()) * data.getQty());
@@ -111,8 +110,12 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
                                 fmcgMedicineCount++;
                                 countUniques.remove(j);
                                 j--;
-                            } else {
+                            } else if (countUniques.get(j).getMedicineType().equals("PHARMA")) {
                                 pharmaMedicineCount++;
+                                countUniques.remove(j);
+                                j--;
+                            }else {
+                                fmcgMedicineCount++;
                                 countUniques.remove(j);
                                 j--;
                             }
@@ -123,6 +126,7 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
 
                 fmcgToatalPass = fmcgTotal;
                 CheckoutuiModel checkoutuiModel = new CheckoutuiModel();
+
                 checkoutuiModel.setPharmaCount(String.valueOf(pharmaMedicineCount));
                 checkoutuiModel.setFmcgCount(String.valueOf(fmcgMedicineCount));
                 DecimalFormat formatter = new DecimalFormat("#,###.00");
@@ -175,24 +179,24 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
         activityCheckoutBinding.needHomeDeliveryText.setTextColor(getResources().getColor(R.color.black));
         activityCheckoutBinding.needHomeDeliveryImg.setImageDrawable(getResources().getDrawable(R.drawable.tick_green));
 
-        if (address == null) {
-            DeliveryAddressDialog deliveryAddressDialog = new DeliveryAddressDialog(CheckoutActivity.this);
-            deliveryAddressDialog.setPositiveListener(view -> {
-                if (deliveryAddressDialog.validations()) {
-                    address = deliveryAddressDialog.getAddressData();
-                    name = deliveryAddressDialog.getName();
-                    singleAdd = deliveryAddressDialog.getAddress();
-                    pincode = deliveryAddressDialog.getPincode();
-                    city = deliveryAddressDialog.getCity();
-                    state = deliveryAddressDialog.getState();
-                    deliveryAddressDialog.dismiss();
-                }
-            });
-            deliveryAddressDialog.setNegativeListener(view -> {
-                deliveryAddressDialog.dismiss();
-            });
-            deliveryAddressDialog.show();
-        }
+//        if (address == null) {
+//            DeliveryAddressDialog deliveryAddressDialog = new DeliveryAddressDialog(CheckoutActivity.this);
+//            deliveryAddressDialog.setPositiveListener(view -> {
+//                if (deliveryAddressDialog.validations()) {
+//                    address = deliveryAddressDialog.getAddressData();
+//                    name = deliveryAddressDialog.getName();
+//                    singleAdd = deliveryAddressDialog.getAddress();
+//                    pincode = deliveryAddressDialog.getPincode();
+//                    city = deliveryAddressDialog.getCity();
+//                    state = deliveryAddressDialog.getState();
+//                    deliveryAddressDialog.dismiss();
+//                }
+//            });
+//            deliveryAddressDialog.setNegativeListener(view -> {
+//                deliveryAddressDialog.dismiss();
+//            });
+//            deliveryAddressDialog.show();
+//        }
     }
 
     @Override
@@ -220,24 +224,24 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
         activityCheckoutBinding.needHomeDelivery1.setBackground(getResources().getDrawable(R.drawable.blackstroke_yellowsolid));
         activityCheckoutBinding.needHomeDelivery1Text.setTextColor(getResources().getColor(R.color.black));
         activityCheckoutBinding.needHomeDelivery1Img.setImageDrawable(getResources().getDrawable(R.drawable.tick_green));
-        if (address == null) {
-            DeliveryAddressDialog deliveryAddressDialog = new DeliveryAddressDialog(CheckoutActivity.this);
-            deliveryAddressDialog.setPositiveListener(view -> {
-                if (deliveryAddressDialog.validations()) {
-                    address = deliveryAddressDialog.getAddressData();
-                    name = deliveryAddressDialog.getName();
-                    singleAdd = deliveryAddressDialog.getAddress();
-                    pincode = deliveryAddressDialog.getPincode();
-                    city = deliveryAddressDialog.getCity();
-                    state = deliveryAddressDialog.getState();
-                    deliveryAddressDialog.dismiss();
-                }
-            });
-            deliveryAddressDialog.setNegativeListener(view -> {
-                deliveryAddressDialog.dismiss();
-            });
-            deliveryAddressDialog.show();
-        }
+//        if (address == null) {
+//            DeliveryAddressDialog deliveryAddressDialog = new DeliveryAddressDialog(CheckoutActivity.this);
+//            deliveryAddressDialog.setPositiveListener(view -> {
+//                if (deliveryAddressDialog.validations()) {
+//                    address = deliveryAddressDialog.getAddressData();
+//                    name = deliveryAddressDialog.getName();
+//                    singleAdd = deliveryAddressDialog.getAddress();
+//                    pincode = deliveryAddressDialog.getPincode();
+//                    city = deliveryAddressDialog.getCity();
+//                    state = deliveryAddressDialog.getState();
+//                    deliveryAddressDialog.dismiss();
+//                }
+//            });
+//            deliveryAddressDialog.setNegativeListener(view -> {
+//                deliveryAddressDialog.dismiss();
+//            });
+//            deliveryAddressDialog.show();
+//        }
     }
 
     @Override
@@ -267,44 +271,24 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
 
     @Override
     public void onClickPaynow() {
-        if (isPharmaHomeDelivery || isFmcgHomeDelivery) {
-            if (address != null) {
-                Intent intent = new Intent(CheckoutActivity.this, PaymentOptionsActivity.class);
-                intent.putExtra("fmcgTotal", fmcgToatalPass);
-                intent.putExtra("isPharmaHomeDelivery", isPharmaHomeDelivery);
-                intent.putExtra("isFmcgHomeDelivery", isFmcgHomeDelivery);
-                intent.putExtra("customerDeliveryAddress", address);
-                intent.putExtra("name", name);
-                intent.putExtra("singleAdd", singleAdd);
-                intent.putExtra("pincode", pincode);
-                intent.putExtra("city", city);
-                intent.putExtra("state", state);
-                startActivity(intent);
-                overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
-            } else {
-//                Toast.makeText(this, "Please Fill Address Form", Toast.LENGTH_SHORT).show();
-
-                if (address == null) {
-                    DeliveryAddressDialog deliveryAddressDialog = new DeliveryAddressDialog(CheckoutActivity.this);
-                    deliveryAddressDialog.setPositiveListener(view -> {
-                        if (deliveryAddressDialog.validations()) {
-                            address = deliveryAddressDialog.getAddressData();
-                            name = deliveryAddressDialog.getName();
-                            singleAdd = deliveryAddressDialog.getAddress();
-                            pincode = deliveryAddressDialog.getPincode();
-                            city = deliveryAddressDialog.getCity();
-                            state = deliveryAddressDialog.getState();
-                            deliveryAddressDialog.dismiss();
-                        }
-                    });
-                    deliveryAddressDialog.setNegativeListener(view -> {
-                        deliveryAddressDialog.dismiss();
-                    });
-                    deliveryAddressDialog.show();
+        if (address == null) {
+            DeliveryAddressDialog deliveryAddressDialog = new DeliveryAddressDialog(CheckoutActivity.this);
+            deliveryAddressDialog.setPositiveListener(view -> {
+                if (deliveryAddressDialog.validations()) {
+                    address = deliveryAddressDialog.getAddressData();
+                    name = deliveryAddressDialog.getName();
+                    singleAdd = deliveryAddressDialog.getAddress();
+                    pincode = deliveryAddressDialog.getPincode();
+                    city = deliveryAddressDialog.getCity();
+                    state = deliveryAddressDialog.getState();
+                    deliveryAddressDialog.dismiss();
                 }
-
-            }
-        } else {
+            });
+            deliveryAddressDialog.setNegativeListener(view -> {
+                deliveryAddressDialog.dismiss();
+            });
+            deliveryAddressDialog.show();
+        }else{
             Intent intent = new Intent(CheckoutActivity.this, PaymentOptionsActivity.class);
             intent.putExtra("fmcgTotal", fmcgToatalPass);
             intent.putExtra("isPharmaHomeDelivery", isPharmaHomeDelivery);
@@ -318,6 +302,67 @@ public class CheckoutActivity extends AppCompatActivity implements CheckoutListe
             startActivity(intent);
             overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
         }
+
+
+
+
+
+
+
+
+
+
+//        if (isPharmaHomeDelivery || isFmcgHomeDelivery) {
+//            if (address != null) {
+//                Intent intent = new Intent(CheckoutActivity.this, PaymentOptionsActivity.class);
+//                intent.putExtra("fmcgTotal", fmcgToatalPass);
+//                intent.putExtra("isPharmaHomeDelivery", isPharmaHomeDelivery);
+//                intent.putExtra("isFmcgHomeDelivery", isFmcgHomeDelivery);
+//                intent.putExtra("customerDeliveryAddress", address);
+//                intent.putExtra("name", name);
+//                intent.putExtra("singleAdd", singleAdd);
+//                intent.putExtra("pincode", pincode);
+//                intent.putExtra("city", city);
+//                intent.putExtra("state", state);
+//                startActivity(intent);
+//                overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
+//            } else {
+////                Toast.makeText(this, "Please Fill Address Form", Toast.LENGTH_SHORT).show();
+//
+//                if (address == null) {
+//                    DeliveryAddressDialog deliveryAddressDialog = new DeliveryAddressDialog(CheckoutActivity.this);
+//                    deliveryAddressDialog.setPositiveListener(view -> {
+//                        if (deliveryAddressDialog.validations()) {
+//                            address = deliveryAddressDialog.getAddressData();
+//                            name = deliveryAddressDialog.getName();
+//                            singleAdd = deliveryAddressDialog.getAddress();
+//                            pincode = deliveryAddressDialog.getPincode();
+//                            city = deliveryAddressDialog.getCity();
+//                            state = deliveryAddressDialog.getState();
+//                            deliveryAddressDialog.dismiss();
+//                        }
+//                    });
+//                    deliveryAddressDialog.setNegativeListener(view -> {
+//                        deliveryAddressDialog.dismiss();
+//                    });
+//                    deliveryAddressDialog.show();
+//                }
+//
+//            }
+//        } else {
+//            Intent intent = new Intent(CheckoutActivity.this, PaymentOptionsActivity.class);
+//            intent.putExtra("fmcgTotal", fmcgToatalPass);
+//            intent.putExtra("isPharmaHomeDelivery", isPharmaHomeDelivery);
+//            intent.putExtra("isFmcgHomeDelivery", isFmcgHomeDelivery);
+//            intent.putExtra("customerDeliveryAddress", address);
+//            intent.putExtra("name", name);
+//            intent.putExtra("singleAdd", singleAdd);
+//            intent.putExtra("pincode", pincode);
+//            intent.putExtra("city", city);
+//            intent.putExtra("state", state);
+//            startActivity(intent);
+//            overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
+//        }
     }
 
     private void deliveryModeHandle() {

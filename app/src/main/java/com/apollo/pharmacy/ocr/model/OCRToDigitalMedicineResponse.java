@@ -35,6 +35,7 @@ public class OCRToDigitalMedicineResponse implements Serializable {
     private String batchId;
     private String netAmountInclTax;
     private boolean expandStatus;
+    private String pack;
 
     private int labelAvgQty;
 
@@ -102,6 +103,14 @@ public class OCRToDigitalMedicineResponse implements Serializable {
 
     public void setExpandStatus(boolean expandStatus) {
         this.expandStatus = expandStatus;
+    }
+
+    public String getPack() {
+        return pack;
+    }
+
+    public void setPack(String pack) {
+        this.pack = pack;
     }
 
     public OCRToDigitalMedicineResponse() {

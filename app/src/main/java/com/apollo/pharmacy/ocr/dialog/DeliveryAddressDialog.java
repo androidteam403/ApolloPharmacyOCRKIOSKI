@@ -111,8 +111,10 @@ public class DeliveryAddressDialog implements PincodeValidateListener {
     String userAddress;
 
     public String getAddressData() {
-        userAddress = deliveryAddressDialog.address.getText().toString() + "," + deliveryAddressDialog.zipCode.getText().toString() + "," + deliveryAddressDialog.city.getText().toString() + "," +
-                deliveryAddressDialog.state.getText().toString();
+        userAddress = deliveryAddressDialog.address.getText().toString()
+                + "," + deliveryAddressDialog.city.getText().toString()
+                + "," + deliveryAddressDialog.state.getText().toString()
+                + "," + deliveryAddressDialog.zipCode.getText().toString();
         return userAddress;
     }
 
@@ -180,7 +182,7 @@ public class DeliveryAddressDialog implements PincodeValidateListener {
 //            deliveryAddressDialog.email.setError("Enter Valid Email");
 //            deliveryAddressDialog.email.requestFocus();
 //            return false;
-        } else if (!name.matches("^[A-Za-z]+$")){
+        } else if (!name.matches("^[A-Za-z ]+$")) {
             deliveryAddressDialog.name.setError("Enter valid name");
             deliveryAddressDialog.name.requestFocus();
             return false;

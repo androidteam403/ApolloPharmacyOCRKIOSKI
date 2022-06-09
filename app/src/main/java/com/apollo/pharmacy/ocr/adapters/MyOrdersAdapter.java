@@ -51,11 +51,14 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.MyView
         holder.totalitem_count_textview.setText("( " + item.getItems().size() + " items )");
         List<OrderHistoryResponse.StatusHistory> statusdata = item.getStatusHistory();
         String orderdate;
-        if (statusdata != null && statusdata.size() > 0 ) {
+        if (statusdata != null && statusdata.size() > 0) {
             for (OrderHistoryResponse.StatusHistory data : statusdata) {
                 if (data.getStatus().equalsIgnoreCase("Order placed")) {
                     orderdate = data.getDateTime();
-                    holder.orderdate_textview.setText(orderdate);
+                    if (orderdate.contains("."))
+                        holder.orderdate_textview.setText(orderdate.substring(0, orderdate.indexOf(".")));
+                    else
+                        holder.orderdate_textview.setText(orderdate);
                 }
             }
         }

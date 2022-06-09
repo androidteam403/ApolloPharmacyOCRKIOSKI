@@ -424,7 +424,7 @@ public class InsertPrescriptionActivityNew extends AppCompatActivity implements 
         PlaceOrderReqModel placeOrderReqModel = new PlaceOrderReqModel();
         PlaceOrderReqModel.TpdetailsEntity tpDetailsEntity = new PlaceOrderReqModel.TpdetailsEntity();
         tpDetailsEntity.setOrderId(Utils.getTransactionGeneratedId());
-        tpDetailsEntity.setShopId("16001");
+        tpDetailsEntity.setShopId(SessionManager.INSTANCE.getStoreId());
         tpDetailsEntity.setShippingMethod(deliveryTypeName);
         tpDetailsEntity.setPaymentMethod("COD");
         tpDetailsEntity.setVendorName(SessionManager.INSTANCE.getKioskSetupResponse().getKIOSK_ID());

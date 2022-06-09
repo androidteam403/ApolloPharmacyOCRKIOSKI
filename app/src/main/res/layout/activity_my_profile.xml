@@ -49,7 +49,7 @@
                                 android:layout_marginTop="@dimen/thirty_dp"
                                 android:layout_marginBottom="@dimen/ten_dp"
                                 android:gravity="center"
-                                android:text="@string/label_my_portfolio"
+                                android:text="@string/label_my_profile"
                                 android:textColor="@color/colorWhite"
                                 android:textSize="@dimen/eighteen_sp"
                                 android:textStyle="bold" />

@@ -293,19 +293,20 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
                     searchIcon.setVisibility(View.GONE);
                     clearSearchText.setVisibility(View.VISIBLE);
                     subCategoryCount.setText("");
-                    if (search_auto_complete_text) {
-                        Searchsuggestionrequest request = new Searchsuggestionrequest();
-                        request.setParams(searchProducts.getText().toString());
+//                    if (search_auto_complete_text) {
+                    Searchsuggestionrequest request = new Searchsuggestionrequest();
+                    String searchText = s.toString().replace(" ", "%");
+                    request.setParams(searchText);
 
-                        search_auto_complete_text = false;
-                        if (NetworkUtils.isNetworkConnected(MySearchActivity.this)) {
-                            pDialog.setVisibility(View.VISIBLE);
-                            addMoreController.searchItemProducts(s.toString());
+                    search_auto_complete_text = false;
+                    if (NetworkUtils.isNetworkConnected(MySearchActivity.this)) {
+                        pDialog.setVisibility(View.VISIBLE);
+                        addMoreController.searchItemProducts(s.toString());
 //                            addMoreController.searchSuggestion(request, MySearchActivity.this);
-                        } else {
-                            Utils.showSnackbar(MySearchActivity.this, constraintLayout, getApplicationContext().getResources().getString(R.string.label_internet_error_text));
-                        }
+                    } else {
+                        Utils.showSnackbar(MySearchActivity.this, constraintLayout, getApplicationContext().getResources().getString(R.string.label_internet_error_text));
                     }
+//                    }
                 } else {
                     search_auto_complete_text = true;
                     offersRecycle.setVisibility(View.VISIBLE);
@@ -510,16 +511,17 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
                     search_suggestion_listview.setVisibility(View.VISIBLE);
                     itemCountLayout.setVisibility(View.GONE);
                     subCategoryCount.setText("");
-                    if (search_auto_complete_text) {
-                        Searchsuggestionrequest request = new Searchsuggestionrequest();
-                        request.setParams(searchAutoComplete.getText().toString());
-                        search_auto_complete_text = false;
-                        if (NetworkUtils.isNetworkConnected(MySearchActivity.this)) {
-                            addMoreController.searchSuggestion(request, MySearchActivity.this);
-                        } else {
-                            Utils.showSnackbar(MySearchActivity.this, constraintLayout, getApplicationContext().getResources().getString(R.string.label_internet_error_text));
-                        }
+//                    if (search_auto_complete_text) {
+                    Searchsuggestionrequest request = new Searchsuggestionrequest();
+                    String searchText = searchAutoComplete.getText().toString().replace(" ", "%");
+                    request.setParams(searchText);
+                    search_auto_complete_text = false;
+                    if (NetworkUtils.isNetworkConnected(MySearchActivity.this)) {
+                        addMoreController.searchSuggestion(request, MySearchActivity.this);
+                    } else {
+                        Utils.showSnackbar(MySearchActivity.this, constraintLayout, getApplicationContext().getResources().getString(R.string.label_internet_error_text));
                     }
+//                    }
                 } else {
                     search_auto_complete_text = true;
                     search_listview.setVisibility(View.GONE);

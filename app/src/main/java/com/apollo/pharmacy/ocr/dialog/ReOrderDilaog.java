@@ -18,6 +18,7 @@ import com.apollo.pharmacy.ocr.interfaces.ReOrderListener;
 import com.apollo.pharmacy.ocr.model.BatchListResponse;
 import com.apollo.pharmacy.ocr.model.ItemSearchResponse;
 import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
+import com.apollo.pharmacy.ocr.utility.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +46,12 @@ public class ReOrderDilaog implements ReOrderListener {
         ReOrderController reOrderController = new ReOrderController(this, context);
         alertDialogBoxBinding.loadingPanel.setVisibility(View.VISIBLE);
         for (int i = 0; i < dataList.size(); i++) {
-            reOrderController.searchItemProducts(dataList.get(i).getArtCode().toString(), i);
+            if (dataList.get(i).getArtCode().contains(",")){
+                reOrderController.searchItemProducts(dataList.get(i).getArtCode().substring(0, dataList.get(i).getArtCode().indexOf(",")).toString(), i);
+            }else {
+                reOrderController.searchItemProducts(dataList.get(i).getArtCode().toString(), i);
+            }
+
         }
     }
 
@@ -149,10 +155,10 @@ public class ReOrderDilaog implements ReOrderListener {
         }
 
 //        if (dataList.size() - 1 == position) {
-            alertDialogBoxBinding.medicinesRecyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-            trackInfoAdaptor = new ReorderAdapter(context, dummyDataList);
-            alertDialogBoxBinding.loadingPanel.setVisibility(View.GONE);
-            alertDialogBoxBinding.medicinesRecyclerView.setAdapter(trackInfoAdaptor);
+        alertDialogBoxBinding.medicinesRecyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+        trackInfoAdaptor = new ReorderAdapter(context, dummyDataList);
+        alertDialogBoxBinding.loadingPanel.setVisibility(View.GONE);
+        alertDialogBoxBinding.medicinesRecyclerView.setAdapter(trackInfoAdaptor);
 //        }
     }
 
@@ -175,12 +181,16 @@ public class ReOrderDilaog implements ReOrderListener {
             }
         } else {
             dataList.get(position).setOutOfStock(true);
+            if (dataList.size()== position+1){
+                dialog.dismiss();
+                Utils.showSnackbarMessage(context, dialog.getWindow().getDecorView(), "No Item Found");
+                alertDialogBoxBinding.loadingPanel.setVisibility(View.GONE);
+            }
         }
     }
 
     @Override
     public void onSearchFailure(String message) {
-
     }
 
 

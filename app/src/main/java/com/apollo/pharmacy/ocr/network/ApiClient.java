@@ -5,6 +5,7 @@ import com.apollo.pharmacy.ocr.utility.Constants;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import com.localebro.okhttpprofiler.OkHttpProfilerInterceptor;
 
 import java.util.concurrent.TimeUnit;
 
@@ -17,16 +18,20 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
     private static Retrofit getRetrofitInstance(String serviceUrl) {
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        if (BuildConfig.DEBUG) {
+            builder.addInterceptor(new OkHttpProfilerInterceptor());
+        }
         OkHttpClient client;
         if (Constants.IS_LOG_ENABLED) {
-            client = new OkHttpClient.Builder()
+            client = builder
                     .connectTimeout(1, TimeUnit.MINUTES)
                     .writeTimeout(1, TimeUnit.MINUTES)
                     .readTimeout(1, TimeUnit.MINUTES)
                     .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
                     .build();
         } else {
-            client = new OkHttpClient.Builder()
+            client = builder
                     .connectTimeout(1, TimeUnit.MINUTES)
                     .writeTimeout(1, TimeUnit.MINUTES)
                     .readTimeout(1, TimeUnit.MINUTES)
@@ -45,9 +50,13 @@ public class ApiClient {
     }
 
     public static <S> S createService(Class<S> serviceClass, String Url) {
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        if (BuildConfig.DEBUG) {
+            builder.addInterceptor(new OkHttpProfilerInterceptor());
+        }
         OkHttpClient httpClient;
         if (Constants.IS_LOG_ENABLED) {
-            httpClient = new OkHttpClient.Builder()
+            httpClient = builder
                     .connectTimeout(30, TimeUnit.SECONDS)
                     .readTimeout(30, TimeUnit.SECONDS)
                     .writeTimeout(30, TimeUnit.SECONDS)
@@ -55,7 +64,7 @@ public class ApiClient {
                     .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
                     .build();
         } else {
-            httpClient = new OkHttpClient.Builder()
+            httpClient = builder
                     .connectTimeout(30, TimeUnit.SECONDS)
                     .readTimeout(30, TimeUnit.SECONDS)
                     .writeTimeout(30, TimeUnit.SECONDS)
@@ -70,6 +79,7 @@ public class ApiClient {
                 .addConverterFactory(GsonConverterFactory.create(gson)).build();
         return retrofit.create(serviceClass);
     }
+
     private static final String ROOT_URL = "https://jsonblob.com/api/jsonBlob/";
 
     public static ApiInterface getApiService() {
@@ -77,7 +87,11 @@ public class ApiClient {
     }
 
     private static Retrofit getRetrofitInstance3() {
-        OkHttpClient client = new OkHttpClient.Builder()
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        if (BuildConfig.DEBUG) {
+            builder.addInterceptor(new OkHttpProfilerInterceptor());
+        }
+        OkHttpClient client = builder
                 .connectTimeout(1, TimeUnit.MINUTES)
                 .writeTimeout(1, TimeUnit.MINUTES)
                 .readTimeout(1, TimeUnit.MINUTES)
@@ -97,7 +111,11 @@ public class ApiClient {
     }
 
     private static Retrofit getRetrofitInstance2() {
-        OkHttpClient client = new OkHttpClient.Builder()
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        if (BuildConfig.DEBUG) {
+            builder.addInterceptor(new OkHttpProfilerInterceptor());
+        }
+        OkHttpClient client = builder
                 .connectTimeout(1, TimeUnit.MINUTES)
                 .writeTimeout(1, TimeUnit.MINUTES)
                 .readTimeout(1, TimeUnit.MINUTES)

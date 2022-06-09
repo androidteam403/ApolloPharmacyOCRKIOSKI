@@ -225,7 +225,7 @@ public class MyProfileActivity extends AppCompatActivity implements MyCartListen
             if (null != customerData.getName() && !customerData.getName().isEmpty()) {
                 name_txt.setText(customerData.getName());
             } else {
-                name_txt.setText("-");
+                name_txt.setText("One Apollo User");
             }
             if (null != customerData.getMobileNumber() && !customerData.getMobileNumber().isEmpty()) {
                 phone_txt.setText(customerData.getMobileNumber().trim());
@@ -235,6 +235,8 @@ public class MyProfileActivity extends AppCompatActivity implements MyCartListen
             emial_address_txt.setText(String.valueOf(customerData.getEarnedCredits()));
             location_txt.setText(String.valueOf(customerData.getAvailableCredits()));
             address_txt.setText(String.valueOf(customerData.getBurnedCredits()));
+        }else{
+            name_txt.setText("One Apollo User");
         }
     }
 

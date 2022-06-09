@@ -457,6 +457,9 @@
     <string name="label_about_phone_click_here" translatable="false">About phone (<font color="#0000CC">Click here</font>).</string>
     <string name="lebel_one_number">1</string>
     <string name="label_insert_your_prescription">Insert your prescription.</string>
+    <string name="label_enter_your_personal_details_and_delivery_address">Enter your personal details and Delivery address</string>
+    <string name="label_my_profile">My Profile</string>
+    <string name="label_continue_shopping">Continue Shopping</string>
 
 
 </resources>

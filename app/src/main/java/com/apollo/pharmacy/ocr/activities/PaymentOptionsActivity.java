@@ -36,6 +36,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
@@ -144,8 +145,12 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
                             fmcgMedicineCount++;
                             countUniques.remove(j);
                             j--;
-                        } else {
+                        } else if (countUniques.get(j).getMedicineType().equals("PHARMA")) {
                             pharmaMedicineCount++;
+                            countUniques.remove(j);
+                            j--;
+                        } else {
+                            fmcgMedicineCount++;
                             countUniques.remove(j);
                             j--;
                         }
@@ -233,10 +238,11 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
         activityPaymentOptionsBinding.scanToPay.setBackgroundResource(R.drawable.ic_payment_methods_selectebg);
         PaymentInfoLayoutsHandlings();
         activityPaymentOptionsBinding.scanToPayInfoLay.setVisibility(View.VISIBLE);
-        Utils.showDialog(PaymentOptionsActivity.this, "Loading…");
-        PhonePayQrCodeController phonePayQrCodeController = new PhonePayQrCodeController(getApplicationContext(), PaymentOptionsActivity.this);
-        phonePayQrCodeController.getPhonePayQrCodeGeneration(scanPay, grandTotalAmountFmcg);
-
+        if (grandTotalAmountFmcg > 0) {
+            Utils.showDialog(PaymentOptionsActivity.this, "Loading…");
+            PhonePayQrCodeController phonePayQrCodeController = new PhonePayQrCodeController(getApplicationContext(), PaymentOptionsActivity.this);
+            phonePayQrCodeController.getPhonePayQrCodeGeneration(scanPay, grandTotalAmountFmcg);
+        }
         activityPaymentOptionsBinding.changeDeliveryAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -404,7 +410,7 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
                 }
             }
         });
-
+        activityPaymentOptionsBinding.parentInner.setOnClickListener(v -> startActivity(new Intent(PaymentOptionsActivity.this, MySearchActivity.class)));
 
         paymentTicksUnticksHandlings();
     }
@@ -683,12 +689,12 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
         }
 //        UserAddress userAddress = SessionManager.INSTANCE.getUseraddress();
         if (null != userAddress.getAddress1() && userAddress.getAddress1().length() > 0) {
-            String address = userAddress.getAddress1().toUpperCase() + ", " + userAddress.getCity().toUpperCase() + ", " + userAddress.getState().toUpperCase();
+            String address = userAddress.getAddress1().toUpperCase() + ", " + userAddress.getCity().toUpperCase() + ", " + userAddress.getState().toUpperCase() + userAddress.getPincode();
             address = address.replace("null", "");
             userSelectedAdd = address;
         } else {
             if (null != userAddress.getCity() && null != userAddress.getState()) {
-                String address = userAddress.getCity().toUpperCase() + ", " + userAddress.getState().toUpperCase();
+                String address = userAddress.getCity().toUpperCase() + ", " + userAddress.getState().toUpperCase() + userAddress.getPincode();
                 address = address.replace("null", "");
                 userSelectedAdd = address;
             }
@@ -706,7 +712,7 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
         PlaceOrderReqModel placeOrderReqModel = new PlaceOrderReqModel();
         PlaceOrderReqModel.TpdetailsEntity tpDetailsEntity = new PlaceOrderReqModel.TpdetailsEntity();
         tpDetailsEntity.setOrderId(Utils.getTransactionGeneratedId());
-        tpDetailsEntity.setShopId("16001");
+        tpDetailsEntity.setShopId(SessionManager.INSTANCE.getStoreId());
         if (isFmcgDeliveryType) {
             tpDetailsEntity.setShippingMethod("HOME DELIVERY");
         } else {
@@ -734,7 +740,8 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
         tpDetailsEntity.setCustomerDetails(customerDetailsEntity);
 
         PlaceOrderReqModel.PaymentDetailsEntity paymentDetailsEntity = new PlaceOrderReqModel.PaymentDetailsEntity();
-        paymentDetailsEntity.setTotalAmount(String.valueOf(grandTotalAmountFmcg));
+
+        paymentDetailsEntity.setTotalAmount(String.format(Locale.US, "%.2f", grandTotalAmountFmcg));//String.valueOf(grandTotalAmountFmcg)
         if (onlineAmountPaid) {
             paymentDetailsEntity.setPaymentSource("Online Payment");
         } else {
@@ -747,11 +754,11 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
         ArrayList<PlaceOrderReqModel.ItemDetailsEntity> itemDetailsArr = new ArrayList<>();
         for (int i = 0; i < SessionManager.INSTANCE.getDataList().size(); i++) {
             PlaceOrderReqModel.ItemDetailsEntity itemDetailsEntity = new PlaceOrderReqModel.ItemDetailsEntity();
-            if (SessionManager.INSTANCE.getDataList().get(i).getMedicineType().equals("FMCG")) {
-                itemDetailsEntity.setItemID(SessionManager.INSTANCE.getDataList().get(i).getArtCode());
+            if (SessionManager.INSTANCE.getDataList().get(i).getMedicineType().equals("FMCG") || SessionManager.INSTANCE.getDataList().get(i).getMedicineType().equals("PRIVATE LABEL")) {
+                itemDetailsEntity.setItemID(SessionManager.INSTANCE.getDataList().get(i).getArtCode().substring(0, SessionManager.INSTANCE.getDataList().get(i).getArtCode().indexOf(",")));
                 itemDetailsEntity.setItemName(SessionManager.INSTANCE.getDataList().get(i).getArtName());
-                itemDetailsEntity.setMOU(0);
-                itemDetailsEntity.setPack("");
+                itemDetailsEntity.setMOU(SessionManager.INSTANCE.getDataList().get(i).getQty());
+                itemDetailsEntity.setPack(String.valueOf(SessionManager.INSTANCE.getDataList().get(i).getQty()));
                 itemDetailsEntity.setQty(SessionManager.INSTANCE.getDataList().get(i).getQty());
                 itemDetailsEntity.setPrice(Double.parseDouble(SessionManager.INSTANCE.getDataList().get(i).getArtprice()));
                 itemDetailsEntity.setStatus(true);
@@ -772,7 +779,7 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
         tpDetailsEntity.setRequestType("CART");
         ArrayList<PlaceOrderReqModel.PrescUrlEntity> prescEntityArray = new ArrayList<>();
         PlaceOrderReqModel.PrescUrlEntity pue = new PlaceOrderReqModel.PrescUrlEntity();
-        pue.setUrl("http://172.16.2.251:8033/ApolloKMD/apolloMedBuddy/Medibuddy/WalletCheck");
+//        pue.setUrl("http://172.16.2.251:8033/ApolloKMD/apolloMedBuddy/Medibuddy/WalletCheck");
         prescEntityArray.add(pue);
         tpDetailsEntity.setPrescUrl(prescEntityArray);
         placeOrderReqModel.setTpdetails(tpDetailsEntity);
@@ -842,7 +849,7 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
         PlaceOrderReqModel placeOrderReqModel = new PlaceOrderReqModel();
         PlaceOrderReqModel.TpdetailsEntity tpDetailsEntity = new PlaceOrderReqModel.TpdetailsEntity();
         tpDetailsEntity.setOrderId(Utils.getTransactionGeneratedId());
-        tpDetailsEntity.setShopId("16001");
+        tpDetailsEntity.setShopId(SessionManager.INSTANCE.getStoreId());
         if (isPharmadeliveryType) {
             tpDetailsEntity.setShippingMethod("HOME DELIVERY");
         } else {
@@ -866,7 +873,7 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
         tpDetailsEntity.setCustomerDetails(customerDetailsEntity);
 
         PlaceOrderReqModel.PaymentDetailsEntity paymentDetailsEntity = new PlaceOrderReqModel.PaymentDetailsEntity();
-        paymentDetailsEntity.setTotalAmount(String.valueOf(grandTotalAmountPharma));
+        paymentDetailsEntity.setTotalAmount(String.format(Locale.US, "%.2f", grandTotalAmountPharma));
         paymentDetailsEntity.setPaymentSource("COD");
         paymentDetailsEntity.setPaymentStatus("");
         paymentDetailsEntity.setPaymentOrderId("");
@@ -876,10 +883,10 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
         for (int i = 0; i < SessionManager.INSTANCE.getDataList().size(); i++) {
             PlaceOrderReqModel.ItemDetailsEntity itemDetailsEntity = new PlaceOrderReqModel.ItemDetailsEntity();
             if (SessionManager.INSTANCE.getDataList().get(i).getMedicineType().equals("PHARMA")) {
-                itemDetailsEntity.setItemID(SessionManager.INSTANCE.getDataList().get(i).getArtCode());
+                itemDetailsEntity.setItemID(SessionManager.INSTANCE.getDataList().get(i).getArtCode().substring(0, SessionManager.INSTANCE.getDataList().get(i).getArtCode().indexOf(",")));
                 itemDetailsEntity.setItemName(SessionManager.INSTANCE.getDataList().get(i).getArtName());
-                itemDetailsEntity.setMOU(0);
-                itemDetailsEntity.setPack("");
+                itemDetailsEntity.setMOU(SessionManager.INSTANCE.getDataList().get(i).getQty());
+                itemDetailsEntity.setPack(String.valueOf(SessionManager.INSTANCE.getDataList().get(i).getQty()));
                 itemDetailsEntity.setQty(SessionManager.INSTANCE.getDataList().get(i).getQty());
                 itemDetailsEntity.setPrice(Double.parseDouble(SessionManager.INSTANCE.getDataList().get(i).getArtprice()));
                 itemDetailsEntity.setStatus(true);
@@ -900,7 +907,6 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
         tpDetailsEntity.setRequestType("CART");
         ArrayList<PlaceOrderReqModel.PrescUrlEntity> prescEntityArray = new ArrayList<>();
         PlaceOrderReqModel.PrescUrlEntity pue = new PlaceOrderReqModel.PrescUrlEntity();
-        pue.setUrl("http://172.16.2.251:8033/ApolloKMD/apolloMedBuddy/Medibuddy/WalletCheck");
         prescEntityArray.add(pue);
         tpDetailsEntity.setPrescUrl(prescEntityArray);
         placeOrderReqModel.setTpdetails(tpDetailsEntity);

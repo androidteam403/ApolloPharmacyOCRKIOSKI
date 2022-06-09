@@ -188,7 +188,7 @@ public interface ApiInterface {
     @GET
     Call<GetImageRes> getScannedPrescription(@Url String fileUrl);
 
-    @POST("PLACE_ORDERS")
+    @POST("Place_orders")//PLACE_ORDERS
     Call<PlaceOrderResModel> PLACE_ORDER_SERVICE_CALL(@Header("token") String token, @Body PlaceOrderReqModel placeOrderReqModel);
 
     @GET

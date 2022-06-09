@@ -2186,6 +2186,7 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                 data.setBatchId(calculatePosTransactionResponse.getSalesLine().get(i).getBatchNo());
                 data.setArtprice(String.valueOf(calculatePosTransactionResponse.getSalesLine().get(i).getMrp()));
                 data.setContainer("");
+//                data.setPack(calculatePosTransactionResponse.getSalesLine().get(i));
                 data.setMedicineType(calculatePosTransactionResponse.getSalesLine().get(i).getCategory());
                 data.setNetAmountInclTax((calculatePosTransactionResponse.getSalesLine().get(i).getBaseAmount().equals(calculatePosTransactionResponse.getSalesLine().get(i).getNetAmountInclTax())) ? null : String.valueOf(calculatePosTransactionResponse.getSalesLine().get(i).getNetAmountInclTax()));
                 data.setQty(calculatePosTransactionResponse.getSalesLine().get(i).getQty());

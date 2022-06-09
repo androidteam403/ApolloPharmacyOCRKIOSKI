@@ -1,6 +1,7 @@
 package com.apollo.pharmacy.ocr.controller;
 
 import android.content.Context;
+import android.widget.Toast;
 
 import com.apollo.pharmacy.ocr.R;
 import com.apollo.pharmacy.ocr.interfaces.PhonePayQrCodeListener;
@@ -61,6 +62,7 @@ public class PhonePayQrCodeController {
 
             @Override
             public void onFailure(@NotNull Call<PhonePayQrCodeResponse> call, @NotNull Throwable t) {
+                Toast.makeText(activity, t.getMessage(), Toast.LENGTH_SHORT).show();
 //                Utils.dismissDialog();
             }
         });
