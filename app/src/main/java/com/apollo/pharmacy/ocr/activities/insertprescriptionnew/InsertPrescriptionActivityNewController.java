@@ -28,7 +28,7 @@ public class InsertPrescriptionActivityNewController {
     public void handleOrderPlaceService(Context context, PlaceOrderReqModel placeOrderReqModel) {
         Utils.showDialog(context, "Please wait");
         ApiInterface apiInterface = ApiClient.getApiService(Constants.Order_Place_With_Prescription_API);
-        Call<PlaceOrderResModel> call = apiInterface.PLACE_ORDER_SERVICE_CALL(Constants.Order_Place_With_Prescription_Token, placeOrderReqModel);
+        Call<PlaceOrderResModel> call = apiInterface.PLACE_ORDER_SERVICE_CALL(Constants.New_Order_Place_With_Prescription_Token, placeOrderReqModel);
         call.enqueue(new Callback<PlaceOrderResModel>() {
             @Override
             public void onResponse(@NotNull Call<PlaceOrderResModel> call, @NotNull Response<PlaceOrderResModel> response) {

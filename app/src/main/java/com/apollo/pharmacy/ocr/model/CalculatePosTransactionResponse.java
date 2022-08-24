@@ -122,7 +122,7 @@ public class CalculatePosTransactionResponse {
     private Integer gender;
     @SerializedName("GrossAmount")
     @Expose
-    private Integer grossAmount;
+    private double grossAmount;
     @SerializedName("HCOfferCode")
     @Expose
     private String hCOfferCode;
@@ -209,7 +209,7 @@ public class CalculatePosTransactionResponse {
     private Double netAmount;
     @SerializedName("NetAmountInclTax")
     @Expose
-    private Integer netAmountInclTax;
+    private double netAmountInclTax;
     @SerializedName("NumberofItemLines")
     @Expose
     private Integer numberofItemLines;
@@ -353,7 +353,7 @@ public class CalculatePosTransactionResponse {
     private Integer totalDiscAmount;
     @SerializedName("TotalMRP")
     @Expose
-    private Integer totalMRP;
+    private double totalMRP;
     @SerializedName("TotalManualDiscountAmount")
     @Expose
     private Integer totalManualDiscountAmount;
@@ -689,11 +689,11 @@ public class CalculatePosTransactionResponse {
         this.gender = gender;
     }
 
-    public Integer getGrossAmount() {
+    public double getGrossAmount() {
         return grossAmount;
     }
 
-    public void setGrossAmount(Integer grossAmount) {
+    public void setGrossAmount(double grossAmount) {
         this.grossAmount = grossAmount;
     }
 
@@ -921,11 +921,11 @@ public class CalculatePosTransactionResponse {
         this.netAmount = netAmount;
     }
 
-    public Integer getNetAmountInclTax() {
+    public double getNetAmountInclTax() {
         return netAmountInclTax;
     }
 
-    public void setNetAmountInclTax(Integer netAmountInclTax) {
+    public void setNetAmountInclTax(double netAmountInclTax) {
         this.netAmountInclTax = netAmountInclTax;
     }
 
@@ -1305,11 +1305,11 @@ public class CalculatePosTransactionResponse {
         this.totalDiscAmount = totalDiscAmount;
     }
 
-    public Integer getTotalMRP() {
+    public double getTotalMRP() {
         return totalMRP;
     }
 
-    public void setTotalMRP(Integer totalMRP) {
+    public void setTotalMRP(double totalMRP) {
         this.totalMRP = totalMRP;
     }
 

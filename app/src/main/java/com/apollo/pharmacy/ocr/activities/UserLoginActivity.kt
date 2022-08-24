@@ -99,7 +99,7 @@ class UserLoginActivity : AppCompatActivity(), UserLoginListener, ConnectivityRe
         edittext_mobileNum.setTextIsSelectable(true)
 
         setMobileNumberKeyboard()
-
+val faq_layout=findViewById<ImageView>(R.id.faq);
         val customerCareImg = findViewById<ImageView>(R.id.customer_care_icon)
         val customerHelpLayout = findViewById<LinearLayout>(R.id.customer_help_layout)
         constraint_layout = findViewById(R.id.constraint_layout)
@@ -157,7 +157,8 @@ class UserLoginActivity : AppCompatActivity(), UserLoginListener, ConnectivityRe
             finish()
             overridePendingTransition(R.animator.trans_right_in, R.animator.trans_right_out)
         }
-        help_layout.setOnClickListener(View.OnClickListener {
+
+        faq_layout.setOnClickListener(View.OnClickListener {
             startActivity(Intent(this@UserLoginActivity, FAQActivity::class.java))
         })
         back_otp_icon.setOnClickListener {

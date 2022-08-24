@@ -52,10 +52,11 @@ public class ReOrderController {
                     assert itemSearchResponse != null;
                     reOrderListener.onSuccessSearchItemApi(itemSearchResponse, position);
                     if (itemSearchResponse != null && itemSearchResponse.getItemList().size() > 0) {
-                        getBatchList(itemSearchResponse.getItemList().get(0).getArtCode(), position,itemSearchResponse.getItemList().get(0));
-                    } else {
-                        getBatchList("", position, itemSearchResponse.getItemList().get(0));
+                        getBatchList(itemSearchResponse.getItemList().get(0).getArtCode(), position, itemSearchResponse.getItemList().get(0));
                     }
+//                    else {
+//                        getBatchList("", position, itemSearchResponse.getItemList().get(0));
+//                    }
                 }
             }
 
@@ -83,7 +84,7 @@ public class ReOrderController {
             @Override
             public void onResponse(@NotNull Call<BatchListResponse> call, @NotNull Response<BatchListResponse> response) {
                 if (response.body() != null) {
-                    reOrderListener.setSuccessBatchList(response.body(), position,itemSerachData);
+                    reOrderListener.setSuccessBatchList(response.body(), position, itemSerachData);
                 }
             }
 

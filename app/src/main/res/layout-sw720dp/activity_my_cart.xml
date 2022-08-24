@@ -346,7 +346,7 @@
                             android:background="@color/curation_layout_bg"
                             android:gravity="center"
                             android:orientation="vertical"
-                            android:visibility="visible">
+                            android:visibility="gone">
 
                             <ImageView
                                 android:layout_width="@dimen/forty_five_dp"

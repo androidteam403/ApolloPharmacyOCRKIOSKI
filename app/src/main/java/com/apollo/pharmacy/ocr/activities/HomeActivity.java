@@ -135,7 +135,7 @@ public class HomeActivity extends BaseActivity implements ConnectivityReceiver.C
             }
         });
 
-        LinearLayout faqLayout = findViewById(R.id.help_layout);
+        ImageView faqLayout = findViewById(R.id.faq);
         TextView helpText = findViewById(R.id.help_text);
         helpText.setText(getResources().getString(R.string.faq));
         faqLayout.setOnClickListener(view -> startActivity(new Intent(HomeActivity.this, FAQActivity.class)));

@@ -34,6 +34,7 @@ import com.apollo.pharmacy.ocr.model.OrderHistoryResponse;
 import com.apollo.pharmacy.ocr.model.PricePrescriptionResponse;
 import com.apollo.pharmacy.ocr.model.ScannedData;
 import com.apollo.pharmacy.ocr.model.ScannedMedicine;
+import com.apollo.pharmacy.ocr.model.SelfOrderHistoryResponse;
 import com.apollo.pharmacy.ocr.receiver.ConnectivityReceiver;
 import com.apollo.pharmacy.ocr.utility.ApplicationConstant;
 import com.apollo.pharmacy.ocr.utility.Constants;
@@ -42,8 +43,12 @@ import com.apollo.pharmacy.ocr.utility.SessionManager;
 import com.apollo.pharmacy.ocr.utility.Utils;
 import com.google.gson.Gson;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -57,11 +62,15 @@ public class MyOrdersActivity extends AppCompatActivity implements ConnectivityR
     private RecyclerView orderListRecyclerView;
     private MyOrdersAdapter orderdetails_adaptor;
     private List<OrderHistoryResponse> orderdetials_list = new ArrayList<>();
+
+    private List<SelfOrderHistoryResponse.Order> orderList = new ArrayList<>();
+    List<OrderHistoryResponse> dateList = new ArrayList<>();
     private MyOrdersController myOrdersController;
     private TextView myCartCount;
     private List<OCRToDigitalMedicineResponse> dataList = new ArrayList<>();
     private ConstraintLayout constraintLayout;
     private Button refresh_button;
+    public int i, j;
 
     @Override
     protected void onResume() {
@@ -81,7 +90,7 @@ public class MyOrdersActivity extends AppCompatActivity implements ConnectivityR
     }
 
     private void initLeftMenu() {
-        LinearLayout faqLayout = findViewById(R.id.help_layout);
+        ImageView faqLayout = findViewById(R.id.faq);
         TextView helpText = findViewById(R.id.help_text);
         helpText.setText(getResources().getString(R.string.faq));
         faqLayout.setOnClickListener(view -> startActivity(new Intent(MyOrdersActivity.this, FAQActivity.class)));
@@ -329,7 +338,8 @@ public class MyOrdersActivity extends AppCompatActivity implements ConnectivityR
         Constants.getInstance().setConnectivityListener(this);
 
         if (NetworkUtils.isNetworkConnected(MyOrdersActivity.this)) {
-            myOrdersController.getOrderHistory(this);
+//            myOrdersController.getOrderHistory(this);
+            myOrdersController.getSelfOrderHistoryApiCall(this);
         } else {
             Utils.showSnackbar(MyOrdersActivity.this, constraintLayout, getApplicationContext().getResources().getString(R.string.label_internet_error_text));
         }
@@ -374,28 +384,70 @@ public class MyOrdersActivity extends AppCompatActivity implements ConnectivityR
     @Override
     public void onOrderHistorySuccess(List<OrderHistoryResponse> response) {
         orderdetials_list = new ArrayList<OrderHistoryResponse>();
+        orderdetials_list = response;
+
+
         if (response.size() > 0) {
-            for (int i = 0; i < response.size(); i++) {
-                orderdetials_list.add(response.get(i));
+//            for (int i = 0; i < response.size(); i++) {
+//                orderdetials_list.add(response.get(i));
 //                if (i == 4)
 //                    break;
 //                ;
-            }
+//          }
 //            orderdetials_list.addAll(response);
 //            Collections.reverse(orderdetials_list);
 //for(int i=0; i<orderdetials_list.size(); i++){
 //    if (orderdetials_list.get(i).getStatusHistory().get(i).getStatus().equalsIgnoreCase(""))
 //}
 //
-//            Collections.sort(orderdetials_list, new Comparator<OrderHistoryResponse>() {
-//                public Date compare(OrderHistoryResponse o1, OrderHistoryResponse o2) {
-//                    return o1.getStatusHistory().get(0).getDateTime().compareTo(o2.getStatusHistory().get(0).getDateTime());
+
+
+//            for( i=0;i<=orderdetials_list.size()-2;i++){
+//                for ( j=+1;j<=orderdetials_list.size()-1;j++){
+//                    Collections.sort(orderdetials_list, new Comparator<OrderHistoryResponse>() {
+//                        public int compare(OrderHistoryResponse o1, OrderHistoryResponse o2) {
+//
+//                            return o1.getStatusHistory().get(i).getDateTime().compareTo(o2.getStatusHistory().get(j).getDateTime());
+//                        }
+//                    });
 //                }
+//            }
+
+            Collections.sort(orderdetials_list, new Comparator<OrderHistoryResponse>() {
+                public int compare(OrderHistoryResponse o1, OrderHistoryResponse o2) {
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                    Date date1 = null;
+                    Date date2 = null;
+                    try {
+                        date1 = dateFormat.parse(o1.getStatusHistory().get(0).getDateTime());
+                        date2 = dateFormat.parse(o2.getStatusHistory().get(0).getDateTime());
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+                    return date1.compareTo(date2);
+                }
+            });
+            Collections.reverse(orderdetials_list);
+//          Collections.sort(orderdetials_list, new Comparator<OrderHistoryResponse>() {
+//                public int compare(OrderHistoryResponse o1, OrderHistoryResponse o2) {
+//                  return o1.getStatusHistory().get(0).getDateTime().compareTo(o2.getStatusHistory().get(0).getDateTime());
+//     }
 //            });
+//           SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyyMMdd");
+//            for (int i=0;i<=orderdetials_list.size()-2;i++){
+//                for (int j=+1;j<=orderdetials_list.size()-1;j++){
+//                    if (simpleDateFormat.format(orderdetials_list.get(i).getStatusHistory().get(i).getDateTime()).equals(simpleDateFormat.format(orderdetials_list.get(j).getStatusHistory().get(j).getDateTime()) )){
+//                        dateList.add((OrderHistoryResponse) orderdetials_list);
+//                    }
+//                }
+//
+//            }
 
 
-
-            orderdetails_adaptor = new MyOrdersAdapter(this, orderdetials_list, this);
+            orderdetails_adaptor = new MyOrdersAdapter(this, this, orderdetials_list);
+//            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(MyOrdersActivity.this);
+//            orderListRecyclerView.setLayoutManager(mLayoutManager);
             orderListRecyclerView.setAdapter(orderdetails_adaptor);
             orderdetails_adaptor.notifyDataSetChanged();
         } else {
@@ -406,6 +458,49 @@ public class MyOrdersActivity extends AppCompatActivity implements ConnectivityR
     @Override
     public void onOrderHistoryFailure(String error) {
 //        Utils.showCustomAlertDialog(MyOrdersActivity.this, getResources().getString(R.string.label_server_err_message), false, getResources().getString(R.string.label_ok), "");
+    }
+
+    @Override
+    public void onSelfOrderHistorySuccess(SelfOrderHistoryResponse selfOrderHistoryResponse) {
+        if (selfOrderHistoryResponse.getOrders() != null && selfOrderHistoryResponse.getOrders().size() > 0) {
+            this.orderList = selfOrderHistoryResponse.getOrders();
+
+//            Collections.sort(orderList, new Comparator<SelfOrderHistoryResponse.Order>() {
+//                public int compare(SelfOrderHistoryResponse.Order o1, SelfOrderHistoryResponse.Order o2) {
+//                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+//                    Date date1 = null;
+//                    Date date2 = null;
+//                    try {
+//                        date1 = dateFormat.parse(o1.getOrderJourney().get(0).getDate());
+//                        date2 = dateFormat.parse(o2.getOrderJourney().get(0).getDate());
+//                    } catch (ParseException e) {
+//                        e.printStackTrace();
+//                    }
+//                    if (date1 != null && date2 != null)
+//                        return date1.compareTo(date2);
+//                    else
+//                        return 0;
+//                }
+//            });
+//            Collections.reverse(orderList);
+
+
+            orderdetails_adaptor = new MyOrdersAdapter(this, orderList, this);
+//            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(MyOrdersActivity.this);
+//            orderListRecyclerView.setLayoutManager(mLayoutManager);
+            orderListRecyclerView.setAdapter(orderdetails_adaptor);
+            orderdetails_adaptor.notifyDataSetChanged();
+
+        } else {
+            Utils.showCustomAlertDialog(MyOrdersActivity.this, getApplicationContext().getResources().getString(R.string.try_again_later), false, getResources().getString(R.string.label_ok), "");
+
+        }
+
+    }
+
+    @Override
+    public void onSelfOrderHistoryFailure(String error) {
+
     }
 
     @Override

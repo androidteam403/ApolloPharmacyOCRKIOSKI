@@ -95,6 +95,7 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
         ConnectivityReceiver.ConnectivityReceiverListener, CheckPrescriptionListener, UploadBgImageListener, ScannerAppEngine.IScannerAppEngineDevEventsDelegate {
 
     private ImageView checkOutImage;
+    private LinearLayout continueShoppingLayout;
     private PromotionsAdapter promotionadaptor;
     private TrendingNowAdapter trendingNowAdapter;
     private ArrayList<Product> outOfStockArrayList, inStockArrayList, outOfStockArrayList1, inStockArrayList1;
@@ -408,6 +409,7 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                             }
                         }
                     });
+
                     declineButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -862,11 +864,12 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
         grandTotalPrice = findViewById(R.id.grand_total_price);
         myCartCount = findViewById(R.id.lblCartCnt);
         constraint_Layout = findViewById(R.id.constraint_layout);
-
-        LinearLayout faqLayout = findViewById(R.id.help_layout);
+        continueShoppingLayout = findViewById(R.id.continue_shopping);
+        ImageView faqLayout = findViewById(R.id.faq);
         TextView helpText = findViewById(R.id.help_text);
         helpText.setText(getResources().getString(R.string.faq));
         faqLayout.setOnClickListener(view -> startActivity(new Intent(MyCartActivity.this, FAQActivity.class)));
+        continueShoppingLayout.setOnClickListener(view -> startActivity(new Intent(MyCartActivity.this, MySearchActivity.class)));
 
 
         ImageView customerCareImg = findViewById(R.id.customer_care_icon);
@@ -897,6 +900,7 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
         product_list_array1 = new ArrayList<Product>();
         total_itemcount_textview = findViewById(R.id.total_itemcount_textview);
         cartItemCountLayout = findViewById(R.id.cart_item_count_layout);
+
         checkOutImage = findViewById(R.id.checkout_image);
         outOfStockArrayList = new ArrayList<Product>();
         inStockArrayList = new ArrayList<Product>();
@@ -2182,6 +2186,7 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                 data.setBatchId(calculatePosTransactionResponse.getSalesLine().get(i).getBatchNo());
                 data.setArtprice(String.valueOf(calculatePosTransactionResponse.getSalesLine().get(i).getMrp()));
                 data.setContainer("");
+//                data.setPack(calculatePosTransactionResponse.getSalesLine().get(i));
                 data.setMedicineType(calculatePosTransactionResponse.getSalesLine().get(i).getCategory());
                 data.setNetAmountInclTax((calculatePosTransactionResponse.getSalesLine().get(i).getBaseAmount().equals(calculatePosTransactionResponse.getSalesLine().get(i).getNetAmountInclTax())) ? null : String.valueOf(calculatePosTransactionResponse.getSalesLine().get(i).getNetAmountInclTax()));
                 data.setQty(calculatePosTransactionResponse.getSalesLine().get(i).getQty());
@@ -2599,6 +2604,7 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
             OCRToDigitalMedicineResponse loadobject = new OCRToDigitalMedicineResponse();
 
             for (int i = 0; i < dataList.size(); i++) {
+//                if (dataList.get(i).getArtCode().equalsIgnoreCase(item.getArtCode()) ) {
                 if (dataList.get(i).getArtCode().equalsIgnoreCase(item.getArtCode())) {
                     pos = i;
                     loadobject.setArtCode(dataList.get(i).getArtCode());
@@ -2609,8 +2615,13 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                     loadobject.setArtprice(dataList.get(i).getArtprice());
                     deletedataList.add(loadobject);
                     SessionManager.INSTANCE.setDeletedDataList(deletedataList);
+
+
                 }
+
+
             }
+//            }
 
 //            loadobject.setArtCode(dataList.get(position).getArtCode());
 //            loadobject.setArtName(dataList.get(position).getArtName());
@@ -2621,7 +2632,9 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
 //            deletedataList.add(loadobject);
 //            SessionManager.INSTANCE.setDeletedDataList(deletedataList);
 
-            dataList.remove(pos);
+
+                dataList.remove(pos);
+
             String rupeeSymbol = "\u20B9";
             SessionManager.INSTANCE.setDataList(dataList);
             cartCount(dataList.size());

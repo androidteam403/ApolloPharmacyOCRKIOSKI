@@ -3,7 +3,6 @@ package com.apollo.pharmacy.ocr.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -93,11 +92,11 @@ public class OrderinProgressActivity extends AppCompatActivity implements Orderi
             for (int i = 0; i < dataList.size(); i++) {
                 for (int j = 0; j < countUniques.size(); j++) {
                     if (dataList.get(i).getArtName().equalsIgnoreCase(countUniques.get(j).getArtName())) {
-                        if (countUniques.get(j).getMedicineType().equals("FMCG")){
+                        if (countUniques.get(j).getMedicineType().equals("FMCG")) {
                             fmcgMedicineCount++;
                             countUniques.remove(j);
                             j--;
-                        }else {
+                        } else {
                             pharmaMedicineCount++;
                             countUniques.remove(j);
                             j--;
@@ -141,7 +140,6 @@ public class OrderinProgressActivity extends AppCompatActivity implements Orderi
 
     @Override
     public void onClickContinueShopping() {
-        Toast.makeText(this, "You clicked", Toast.LENGTH_SHORT).show();
         List<OCRToDigitalMedicineResponse> dataList = new ArrayList<>();
         SessionManager.INSTANCE.setDataList(dataList);
         Intent intent = new Intent(OrderinProgressActivity.this, MySearchActivity.class);

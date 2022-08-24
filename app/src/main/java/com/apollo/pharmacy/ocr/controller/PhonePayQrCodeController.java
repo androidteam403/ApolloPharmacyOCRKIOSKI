@@ -1,9 +1,13 @@
 package com.apollo.pharmacy.ocr.controller;
 
 import android.content.Context;
+import android.widget.Toast;
 
 import com.apollo.pharmacy.ocr.R;
 import com.apollo.pharmacy.ocr.interfaces.PhonePayQrCodeListener;
+import com.apollo.pharmacy.ocr.model.GetPackSizeRequest;
+import com.apollo.pharmacy.ocr.model.GetPackSizeResponse;
+import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
 import com.apollo.pharmacy.ocr.model.PhonePayQrCodeRequest;
 import com.apollo.pharmacy.ocr.model.PhonePayQrCodeResponse;
 import com.apollo.pharmacy.ocr.model.PlaceOrderReqModel;
@@ -16,6 +20,9 @@ import com.apollo.pharmacy.ocr.utility.Utils;
 import com.google.gson.Gson;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -61,6 +68,7 @@ public class PhonePayQrCodeController {
 
             @Override
             public void onFailure(@NotNull Call<PhonePayQrCodeResponse> call, @NotNull Throwable t) {
+                Toast.makeText(activity, t.getMessage(), Toast.LENGTH_SHORT).show();
 //                Utils.dismissDialog();
             }
         });
@@ -123,4 +131,39 @@ public class PhonePayQrCodeController {
         });
     }
 
+    public void getPackSizeApiCall(List<OCRToDigitalMedicineResponse> dataList) {
+        Utils.showDialog(activity, "Loading…");
+        ApiInterface api = ApiClient.getApiServiceMposBaseUrl(SessionManager.INSTANCE.getEposUrl());
+        GetPackSizeRequest getPackSizeRequest = new GetPackSizeRequest();
+        List<GetPackSizeRequest.Itemsdetail> itemsdetails = new ArrayList<>();
+        for (OCRToDigitalMedicineResponse ocrToDigitalMedicineResponse : dataList) {
+            GetPackSizeRequest.Itemsdetail itemDetail = new GetPackSizeRequest.Itemsdetail();
+            if (ocrToDigitalMedicineResponse != null) {
+                itemDetail.setItemid(ocrToDigitalMedicineResponse.getArtCode().contains(",") ? ocrToDigitalMedicineResponse.getArtCode().substring(0, ocrToDigitalMedicineResponse.getArtCode().indexOf(",")) : ocrToDigitalMedicineResponse.getArtCode());
+                itemDetail.setPacksze(0);
+                itemsdetails.add(itemDetail);
+            }
+        }
+        getPackSizeRequest.setItemsdetails(itemsdetails);
+
+        Call<GetPackSizeResponse> call = api.GET_PACK_SIZE_API_CALL("YXV0aF91c2VyOnN1cGVyc2VjcmV0X3Rhd", getPackSizeRequest);
+        call.enqueue(new Callback<GetPackSizeResponse>() {
+            @Override
+            public void onResponse(@NotNull Call<GetPackSizeResponse> call, @NotNull Response<GetPackSizeResponse> response) {
+                Utils.dismissDialog();
+                if (response.body() != null && response.body().getStatus()) {
+                    phonePayQrCodeListener.onSuccessGetPackSizeApi(response.body());
+                } else {
+                    if (response.body() != null)
+                        phonePayQrCodeListener.onFailureGetPackSizeApi(response.body().getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<GetPackSizeResponse> call, @NotNull Throwable t) {
+                Toast.makeText(activity, t.getMessage(), Toast.LENGTH_SHORT).show();
+                Utils.dismissDialog();
+            }
+        });
+    }
 }

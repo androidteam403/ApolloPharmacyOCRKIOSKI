@@ -44,7 +44,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -164,6 +163,7 @@ public class Utils {
         }
         mSnackbar.show();
     }
+
     public static void showSnackbarDialog(Context context, View layout, String name) {
         Snackbar mSnackbar = Snackbar.make(layout, name, Snackbar.LENGTH_LONG);
         View snackbarView = mSnackbar.getView();
@@ -181,6 +181,7 @@ public class Utils {
         }
         mSnackbar.show();
     }
+
     public static void showSnackbarMessage(Context context, View layout, String name) {
         Snackbar mSnackbar = Snackbar.make(layout, name, Snackbar.LENGTH_LONG);
         View snackbarView = mSnackbar.getView();
@@ -198,6 +199,7 @@ public class Utils {
         }
         mSnackbar.show();
     }
+
     public static void showSnackbarLinear(Context context, LinearLayout layout, String name) {
         Snackbar mSnackbar = Snackbar.make(layout, name, Snackbar.LENGTH_LONG);
         View snackbarView = mSnackbar.getView();
@@ -236,6 +238,18 @@ public class Utils {
 
     public static String getDateFormat(String inputDate) {
         SimpleDateFormat spf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+        Date newDate = null;
+        try {
+            newDate = spf.parse(inputDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        spf = new SimpleDateFormat("dd MMM, yyyy", Locale.ENGLISH);
+        return spf.format(newDate);
+    }
+
+    public static String getDateFormatSelfOrderHistory(String inputDate) {//7/7/2022 2:20:49 PM
+        SimpleDateFormat spf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss aaa", Locale.ENGLISH);
         Date newDate = null;
         try {
             newDate = spf.parse(inputDate);
@@ -365,6 +379,7 @@ public class Utils {
     public static boolean isValidEmail(CharSequence target) {
         return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
     }
+
     public static String getCurrentDate(String pattern) {
         SimpleDateFormat sdf = new SimpleDateFormat(pattern, Locale.getDefault());
         return sdf.format(new Date());

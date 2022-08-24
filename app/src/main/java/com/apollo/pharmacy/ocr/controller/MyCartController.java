@@ -231,7 +231,9 @@ public class MyCartController {
             }
         });
     }
+
     public void searchItemProducts(String item, int position, Context mContext) {
+        Utils.showDialog(mContext, "Please Wait...");
         ApiInterface apiInterface = ApiClient.getApiServiceMposBaseUrl(SessionManager.INSTANCE.getEposUrl());
         ItemSearchRequest itemSearchRequest = new ItemSearchRequest();
         itemSearchRequest.setCorpCode("0");
@@ -255,6 +257,7 @@ public class MyCartController {
                         getBatchList(itemSearchResponse.getItemList().get(0).getArtCode(), position, itemSearchResponse.getItemList().get(0), mContext);
                     }
                 } else if (response.isSuccessful() && response.body().getItemList().size() == 0) {
+                    Utils.dismissDialog();
                     Toast.makeText(mContext, "No Items Found", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -262,9 +265,11 @@ public class MyCartController {
             @Override
             public void onFailure(@NonNull Call<ItemSearchResponse> call, @NonNull Throwable t) {
                 myCartListener.onSearchFailure(t.getMessage());
+                Utils.dismissDialog();
             }
         });
     }
+
     public void getBatchList(String artcode, int position, ItemSearchResponse.Item itemSerachData, Context mContext) {
 //        Utils.showDialog(activity, "Loading…");
         ApiInterface api = ApiClient.getApiServiceMposBaseUrl(SessionManager.INSTANCE.getEposUrl());
