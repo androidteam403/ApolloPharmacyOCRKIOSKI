@@ -37,6 +37,7 @@
                 android:tint="@color/selected_text_color"
                 android:layout_gravity="center|right"
                 android:contentDescription="@string/app_name"
+                android:visibility="gone"
                 android:src="@drawable/icon_information" />
 
             <TextView

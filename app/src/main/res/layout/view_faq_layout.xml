@@ -38,7 +38,7 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/help_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -49,8 +49,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:id="@+id/faq_icon"
+
                 android:contentDescription="@string/app_name"
                 android:src="@drawable/faq_icon" />
-        </LinearLayout>
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:id="@+id/faq"
+                android:layout_marginTop="26dp"
+
+                android:layout_marginLeft="77dp"        android:src="@drawable/icon_question_mark"/>
+        </RelativeLayout>
     </LinearLayout>
+
+
 </RelativeLayout>

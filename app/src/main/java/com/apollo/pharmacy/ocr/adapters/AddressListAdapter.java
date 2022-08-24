@@ -84,7 +84,7 @@ public class AddressListAdapter extends RecyclerView.Adapter<AddressListAdapter.
         });
         holder.deleteAddressImg.setOnClickListener(v -> {
             if (listener != null) {
-                listener.onClickDelete(position);
+//                listener.onClickDelete(position, item);
             }
         });
     }
