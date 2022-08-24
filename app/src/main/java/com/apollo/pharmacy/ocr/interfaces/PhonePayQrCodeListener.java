@@ -1,5 +1,6 @@
 package com.apollo.pharmacy.ocr.interfaces;
 
+import com.apollo.pharmacy.ocr.model.GetPackSizeResponse;
 import com.apollo.pharmacy.ocr.model.PhonePayQrCodeResponse;
 import com.apollo.pharmacy.ocr.model.PlaceOrderResModel;
 
@@ -10,5 +11,9 @@ public interface PhonePayQrCodeListener {
 
     void onFailureService(String string);
 
-    void onSuccessPhonepePaymentDetails(PhonePayQrCodeResponse phonePayQrCodeResponse,String transactionId);
+    void onSuccessPhonepePaymentDetails(PhonePayQrCodeResponse phonePayQrCodeResponse, String transactionId);
+
+    void onSuccessGetPackSizeApi(GetPackSizeResponse getPackSizeResponse);
+
+    void onFailureGetPackSizeApi(String message);
 }

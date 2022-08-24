@@ -8,6 +8,8 @@ import com.apollo.pharmacy.ocr.R;
 import com.apollo.pharmacy.ocr.interfaces.MyOrdersListener;
 import com.apollo.pharmacy.ocr.model.OrderHistoryRequest;
 import com.apollo.pharmacy.ocr.model.OrderHistoryResponse;
+import com.apollo.pharmacy.ocr.model.SelfOrderHistoryRequest;
+import com.apollo.pharmacy.ocr.model.SelfOrderHistoryResponse;
 import com.apollo.pharmacy.ocr.network.ApiClient;
 import com.apollo.pharmacy.ocr.network.ApiInterface;
 import com.apollo.pharmacy.ocr.network.CallbackWithRetry;
@@ -46,6 +48,33 @@ public class MyOrdersController {
             public void onFailure(@NonNull Call<List<OrderHistoryResponse>> call, @NonNull Throwable throwable) {
                 Utils.dismissDialog();
                 myOrdersListener.onOrderHistoryFailure(throwable.getMessage());
+            }
+        });
+    }
+
+    public void getSelfOrderHistoryApiCall(Context context) {
+        SelfOrderHistoryRequest selfOrderHistoryRequest = new SelfOrderHistoryRequest();
+        selfOrderHistoryRequest.setFromDate("");
+        selfOrderHistoryRequest.setKey("2028");
+        selfOrderHistoryRequest.setToDate("");
+        selfOrderHistoryRequest.setUserId(SessionManager.INSTANCE.getMobilenumber());
+        ApiInterface apiInterface = ApiClient.getApiService(Constants.Get_Order_History_For_User);
+        Utils.showDialog(context, context.getResources().getString(R.string.label_fetching_order_history));
+        Call<SelfOrderHistoryResponse> call = apiInterface.GET_SELF_ORDER_HISTORY(selfOrderHistoryRequest);
+        call.enqueue(new CallbackWithRetry<SelfOrderHistoryResponse>(call) {
+            @Override
+
+            public void onResponse(@NonNull Call<SelfOrderHistoryResponse> call, @NonNull Response<SelfOrderHistoryResponse> response) {
+                Utils.dismissDialog();
+                if (response.body().getStatus()) {
+                    myOrdersListener.onSelfOrderHistorySuccess(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<SelfOrderHistoryResponse> call, @NonNull Throwable throwable) {
+                Utils.dismissDialog();
+                myOrdersListener.onSelfOrderHistoryFailure(throwable.getMessage());
             }
         });
     }

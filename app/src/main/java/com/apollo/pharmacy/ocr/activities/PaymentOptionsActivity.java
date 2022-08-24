@@ -21,6 +21,7 @@ import com.apollo.pharmacy.ocr.controller.PhonePayQrCodeController;
 import com.apollo.pharmacy.ocr.databinding.ActivityPaymentOptionsBinding;
 import com.apollo.pharmacy.ocr.dialog.DeliveryAddressDialog;
 import com.apollo.pharmacy.ocr.interfaces.PhonePayQrCodeListener;
+import com.apollo.pharmacy.ocr.model.GetPackSizeResponse;
 import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
 import com.apollo.pharmacy.ocr.model.PhonePayQrCodeResponse;
 import com.apollo.pharmacy.ocr.model.PlaceOrderReqModel;
@@ -274,6 +275,10 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
         });
 
         listeners();
+        if (dataList != null && dataList.size() > 0) {
+            new PhonePayQrCodeController(this, this).getPackSizeApiCall(dataList);
+
+        }
     }
 
     boolean scanPay = true;
@@ -638,6 +643,28 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
         }
     }
 
+    @Override
+    public void onSuccessGetPackSizeApi(GetPackSizeResponse getPackSizeResponse) {
+        if (getPackSizeResponse.getItemsdetails() != null && getPackSizeResponse.getItemsdetails().size() > 0) {
+            for (GetPackSizeResponse.Itemsdetail itemsdetail : getPackSizeResponse.getItemsdetails()) {
+                if (dataList != null && dataList.size() > 0) {
+                    for (int i = 0; i < dataList.size(); i++) {
+                        if (itemsdetail.getItemid().equalsIgnoreCase(dataList.get(i).getArtCode().contains(",") ? dataList.get(i).getArtCode().substring(0, dataList.get(i).getArtCode().indexOf(",")) : dataList.get(i).getArtCode())) {
+                            dataList.get(i).setPack(String.valueOf(itemsdetail.getPacksize()));
+                        }
+                    }
+                }
+            }
+            assert dataList != null;
+            SessionManager.INSTANCE.setDataList(dataList);
+        }
+    }
+
+    @Override
+    public void onFailureGetPackSizeApi(String message) {
+        Utils.showSnackbarDialog(this, findViewById(android.R.id.content), message);
+    }
+
     boolean paymentSuccess = true;
 
     @Override
@@ -755,10 +782,10 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
         for (int i = 0; i < SessionManager.INSTANCE.getDataList().size(); i++) {
             PlaceOrderReqModel.ItemDetailsEntity itemDetailsEntity = new PlaceOrderReqModel.ItemDetailsEntity();
             if (SessionManager.INSTANCE.getDataList().get(i).getMedicineType().equals("FMCG") || SessionManager.INSTANCE.getDataList().get(i).getMedicineType().equals("PRIVATE LABEL")) {
-                itemDetailsEntity.setItemID(SessionManager.INSTANCE.getDataList().get(i).getArtCode().substring(0, SessionManager.INSTANCE.getDataList().get(i).getArtCode().indexOf(",")));
+                itemDetailsEntity.setItemID(SessionManager.INSTANCE.getDataList().get(i).getArtCode().contains(",") ? SessionManager.INSTANCE.getDataList().get(i).getArtCode().substring(0, SessionManager.INSTANCE.getDataList().get(i).getArtCode().indexOf(",")) : SessionManager.INSTANCE.getDataList().get(i).getArtCode());
                 itemDetailsEntity.setItemName(SessionManager.INSTANCE.getDataList().get(i).getArtName());
-                itemDetailsEntity.setMOU(SessionManager.INSTANCE.getDataList().get(i).getQty());
-                itemDetailsEntity.setPack(String.valueOf(SessionManager.INSTANCE.getDataList().get(i).getQty()));
+                itemDetailsEntity.setMOU(SessionManager.INSTANCE.getDataList().get(i).getQty() * Integer.parseInt(SessionManager.INSTANCE.getDataList().get(i).getPack()));
+                itemDetailsEntity.setPack(String.valueOf(SessionManager.INSTANCE.getDataList().get(i).getPack()));
                 itemDetailsEntity.setQty(SessionManager.INSTANCE.getDataList().get(i).getQty());
                 itemDetailsEntity.setPrice(Double.parseDouble(SessionManager.INSTANCE.getDataList().get(i).getArtprice()));
                 itemDetailsEntity.setStatus(true);
@@ -883,10 +910,10 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
         for (int i = 0; i < SessionManager.INSTANCE.getDataList().size(); i++) {
             PlaceOrderReqModel.ItemDetailsEntity itemDetailsEntity = new PlaceOrderReqModel.ItemDetailsEntity();
             if (SessionManager.INSTANCE.getDataList().get(i).getMedicineType().equals("PHARMA")) {
-                itemDetailsEntity.setItemID(SessionManager.INSTANCE.getDataList().get(i).getArtCode().substring(0, SessionManager.INSTANCE.getDataList().get(i).getArtCode().indexOf(",")));
+                itemDetailsEntity.setItemID(SessionManager.INSTANCE.getDataList().get(i).getArtCode().contains(",") ? SessionManager.INSTANCE.getDataList().get(i).getArtCode().substring(0, SessionManager.INSTANCE.getDataList().get(i).getArtCode().indexOf(",")) : SessionManager.INSTANCE.getDataList().get(i).getArtCode());
                 itemDetailsEntity.setItemName(SessionManager.INSTANCE.getDataList().get(i).getArtName());
-                itemDetailsEntity.setMOU(SessionManager.INSTANCE.getDataList().get(i).getQty());
-                itemDetailsEntity.setPack(String.valueOf(SessionManager.INSTANCE.getDataList().get(i).getQty()));
+                itemDetailsEntity.setMOU(SessionManager.INSTANCE.getDataList().get(i).getQty() * Integer.parseInt(SessionManager.INSTANCE.getDataList().get(i).getPack()));
+                itemDetailsEntity.setPack(String.valueOf(SessionManager.INSTANCE.getDataList().get(i).getPack()));
                 itemDetailsEntity.setQty(SessionManager.INSTANCE.getDataList().get(i).getQty());
                 itemDetailsEntity.setPrice(Double.parseDouble(SessionManager.INSTANCE.getDataList().get(i).getArtprice()));
                 itemDetailsEntity.setStatus(true);

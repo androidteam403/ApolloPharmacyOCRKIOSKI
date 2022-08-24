@@ -13,6 +13,8 @@ import com.apollo.pharmacy.ocr.model.Categorylist_Response;
 import com.apollo.pharmacy.ocr.model.DeviceRegistrationRequest;
 import com.apollo.pharmacy.ocr.model.DeviceRegistrationResponse;
 import com.apollo.pharmacy.ocr.model.GetImageRes;
+import com.apollo.pharmacy.ocr.model.GetPackSizeRequest;
+import com.apollo.pharmacy.ocr.model.GetPackSizeResponse;
 import com.apollo.pharmacy.ocr.model.GetProductListResponse;
 import com.apollo.pharmacy.ocr.model.GetStoreInfoResponse;
 import com.apollo.pharmacy.ocr.model.Global_api_request;
@@ -59,6 +61,8 @@ import com.apollo.pharmacy.ocr.model.Redeempoints_validateotp_retry_request;
 import com.apollo.pharmacy.ocr.model.Redeempoints_validateotp_retry_response;
 import com.apollo.pharmacy.ocr.model.Searchsuggestionrequest;
 import com.apollo.pharmacy.ocr.model.Searchsuggestionresponse;
+import com.apollo.pharmacy.ocr.model.SelfOrderHistoryRequest;
+import com.apollo.pharmacy.ocr.model.SelfOrderHistoryResponse;
 import com.apollo.pharmacy.ocr.model.Send_Sms_Request;
 import com.apollo.pharmacy.ocr.model.Send_Sms_Response;
 import com.apollo.pharmacy.ocr.model.ServicabilityResponse;
@@ -139,6 +143,11 @@ public interface ApiInterface {
 //webresources/OrderHistory/getHistory
     Call<List<OrderHistoryResponse>> getOrderHistory(@Header("Authentication") String token, @Body OrderHistoryRequest request);
 
+
+    @POST("https://online.apollopharmacy.org/MAPPSUAT/apollompos/Self/OrderHistory")
+    Call<SelfOrderHistoryResponse> GET_SELF_ORDER_HISTORY(@Body SelfOrderHistoryRequest request);
+
+
     @GET("Customer/GetByMobile?")
     @Headers({"APIKey: 2B577C3C4C144160A5FD4885F7BA53A4", "AccessToken: 03F80DDA69A84382A8AC0E108270972F"})
     Call<PortFolioModel> getPortFolio(@Query("mobilenumber") String mob_num, @Query("GetTierBenefits") String GetTierBenefits, @Query("BusinessUnit") String BusinessUnit);
@@ -188,7 +197,8 @@ public interface ApiInterface {
     @GET
     Call<GetImageRes> getScannedPrescription(@Url String fileUrl);
 
-    @POST("Place_orders")//PLACE_ORDERS
+    @POST("Place_orders")
+//PLACE_ORDERS
     Call<PlaceOrderResModel> PLACE_ORDER_SERVICE_CALL(@Header("token") String token, @Body PlaceOrderReqModel placeOrderReqModel);
 
     @GET
@@ -247,6 +257,8 @@ public interface ApiInterface {
     @POST("SalesTransactionService.svc/CalculatePosTransaction")
     Call<CalculatePosTransactionResponse> CALCULATE_POS_TRANSACTION_API_CALL(@Body CalculatePosTransactionRequest calculatePosTransactionRequest);
 
+    @POST("https://online.apollopharmacy.org/UATTAT/Apollo/GetPackSize")
+    Call<GetPackSizeResponse> GET_PACK_SIZE_API_CALL(@Header("Authentication") String authentication, @Body GetPackSizeRequest getPackSizeRequest);
 
     @GET("https://jsonblob.com/api/jsonBlob/930811897528467456")
     Call<GroupOffersModelResponse> GET_OFFERS_LIST();

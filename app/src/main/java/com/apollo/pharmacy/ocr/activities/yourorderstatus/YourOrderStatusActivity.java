@@ -29,6 +29,9 @@ public class YourOrderStatusActivity extends AppCompatActivity implements YourOr
         if (getIntent() != null) {
             orderNo = (String) getIntent().getStringExtra("orderNo");
             deliveryTypeName = (String) getIntent().getStringExtra("deliveryTypeName");
+            if (deliveryTypeName.equalsIgnoreCase("HOME DELIVERY")){
+                activityYourorderStatusBinding.pleaseproceedtoBillingText.setText("Thank you! for placing your order with Us.");
+            }
         }
         activityYourorderStatusBinding.orderNo.setText(orderNo);
         activityYourorderStatusBinding.userNamePhoneNumber.setText(SessionManager.INSTANCE.getMobilenumber() != null ?  SessionManager.INSTANCE.getMobilenumber() : "--");

@@ -179,7 +179,7 @@ public class PlaceOrdersRequest {
 
     }
 
-    public class ItemDetail {
+    public static class ItemDetail {
 
         @SerializedName("ItemID")
         @Expose
