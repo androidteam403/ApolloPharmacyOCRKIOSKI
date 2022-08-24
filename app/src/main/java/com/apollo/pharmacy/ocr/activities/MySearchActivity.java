@@ -189,6 +189,7 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
         medic_keyboard = findViewById(R.id.medic_keyboard);
         plusIcon = findViewById(R.id.plus_icon);
         itemsCount = findViewById(R.id.items_count);
+
         checkOutImage = findViewById(R.id.checkout_image);
         checkOutNewBtn = findViewById(R.id.check_out_btn);
         search_product_layout = findViewById(R.id.search_product_layout);
