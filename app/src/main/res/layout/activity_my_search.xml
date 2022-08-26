@@ -162,6 +162,7 @@
                                     android:background="@color/white"
                                     android:hint="Search your product here like : crocin"
                                     android:padding="@dimen/two_dp"
+                                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789"
                                     android:textSize="@dimen/twelve_sp" />
 
                                 <ImageView

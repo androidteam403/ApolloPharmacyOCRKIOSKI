@@ -75,9 +75,9 @@ public class KeyboardFragment extends Fragment implements OnClickListener {
 
     private void getDynamicCharacters() {
         dynamicCharactersList.clear();
-        dynamicCharactersList.add("^");
-        dynamicCharactersList.add("(");
-        dynamicCharactersList.add(")");
+//        dynamicCharactersList.add("^");
+//        dynamicCharactersList.add("(");
+//        dynamicCharactersList.add(")");
         addDynamicCharacters();
     }
 
@@ -494,28 +494,28 @@ public class KeyboardFragment extends Fragment implements OnClickListener {
                     sendString("Z");
                     break;
                 case R.id.btn_percentage:
-                    sendString("%");
+//                    sendString("%");
                     break;
                 case R.id.btn_comma:
-                    sendString(",");
+//                    sendString(",");
                     break;
                 case R.id.btn_dot:
-                    sendString(".");
+//                    sendString(".");
                     break;
                 case R.id.btn_hyfen:
-                    sendString("-");
+//                    sendString("-");
                     break;
                 case R.id.btn_comma_normal:
-                    sendString(",");
+//                    sendString(",");
                     break;
                 case R.id.btn_dot_normal:
-                    sendString(".");
+//                    sendString(".");
                     break;
                 case R.id.btn_hyfen_normal:
-                    sendString("-");
+//                    sendString("-");
                     break;
                 case R.id.btn_and_normal:
-                    sendString("&");
+//                    sendString("&");
                     break;
                 case R.id.btn_hide:
                     mClickKeyboard.onHideKeyboard();
@@ -524,22 +524,22 @@ public class KeyboardFragment extends Fragment implements OnClickListener {
                     mClickKeyboard.onHideKeyboard();
                     break;
                 case R.id.btn_slash:
-                    sendString("/");
+//                    sendString("/");
                     break;
                 case R.id.btn_at:
-                    sendString("@");
+//                    sendString("@");
                     break;
                 case R.id.btn_hash:
-                    sendString("#");
+//                    sendString("#");
                     break;
                 case R.id.btn_and:
-                    sendString("&");
+//                    sendString("&");
                     break;
                 case R.id.btn_star:
-                    sendString("*");
+//                    sendString("*");
                     break;
                 case R.id.btn_apo:
-                    sendString("'");
+//                    sendString("'");
                     break;
                 case R.id.btn_space:
                     sendString(" ");
