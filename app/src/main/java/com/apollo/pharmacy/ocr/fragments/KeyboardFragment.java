@@ -585,6 +585,7 @@ public class KeyboardFragment extends Fragment implements OnClickListener {
         }
     }
 
+
     private void changeSkin() {
         if (ll_normal_keyboard.getTag().toString().equals("1")) {
             ll_normal_keyboard.setTag("0");
