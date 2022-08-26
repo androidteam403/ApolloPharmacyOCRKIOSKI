@@ -10,8 +10,10 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/BarcodeScannerLibrarys" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/circularimageview" />
+            <option value="$PROJECT_DIR$/epsonscansdk-release" />
             <option value="$PROJECT_DIR$/imagepicker" />
             <option value="$PROJECT_DIR$/library" />
             <option value="$PROJECT_DIR$/libusbcamera" />

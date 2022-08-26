@@ -247,22 +247,24 @@
 
                             <TextView
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_height="12dp"
                                 android:layout_gravity="center"
-                                android:gravity="center"
+
+
                                 android:text="@string/label_ordered_date"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/twelve_sp" />
+                                android:textSize="9dp" />
 
                             <TextView
-                                android:id="@+id/orderdate_textview"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_height="25dp"
                                 android:layout_gravity="center"
                                 android:gravity="center"
                                 android:text="-"
+                                android:id="@+id/orderdate_textview"
+
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/thirteen_sp"
+                                android:textSize="@dimen/margin_10dp"
                                 android:textStyle="bold" />
                         </LinearLayout>
                     </LinearLayout>

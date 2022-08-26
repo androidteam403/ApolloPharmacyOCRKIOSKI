@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.apollo.pharmacy.ocr.R;
 import com.apollo.pharmacy.ocr.adapters.MyOrdersAdapter;
 import com.apollo.pharmacy.ocr.controller.MyOrdersController;
+import com.apollo.pharmacy.ocr.dialog.ReOrderDilaog;
 import com.apollo.pharmacy.ocr.interfaces.MyOrdersListener;
 import com.apollo.pharmacy.ocr.model.Meta;
 import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
@@ -33,17 +34,21 @@ import com.apollo.pharmacy.ocr.model.OrderHistoryResponse;
 import com.apollo.pharmacy.ocr.model.PricePrescriptionResponse;
 import com.apollo.pharmacy.ocr.model.ScannedData;
 import com.apollo.pharmacy.ocr.model.ScannedMedicine;
+import com.apollo.pharmacy.ocr.model.SelfOrderHistoryResponse;
 import com.apollo.pharmacy.ocr.receiver.ConnectivityReceiver;
-import com.apollo.pharmacy.ocr.utility.Constants;
 import com.apollo.pharmacy.ocr.utility.ApplicationConstant;
+import com.apollo.pharmacy.ocr.utility.Constants;
 import com.apollo.pharmacy.ocr.utility.NetworkUtils;
 import com.apollo.pharmacy.ocr.utility.SessionManager;
 import com.apollo.pharmacy.ocr.utility.Utils;
 import com.google.gson.Gson;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -57,11 +62,15 @@ public class MyOrdersActivity extends AppCompatActivity implements ConnectivityR
     private RecyclerView orderListRecyclerView;
     private MyOrdersAdapter orderdetails_adaptor;
     private List<OrderHistoryResponse> orderdetials_list = new ArrayList<>();
+
+    private List<SelfOrderHistoryResponse.Order> orderList = new ArrayList<>();
+    List<OrderHistoryResponse> dateList = new ArrayList<>();
     private MyOrdersController myOrdersController;
     private TextView myCartCount;
     private List<OCRToDigitalMedicineResponse> dataList = new ArrayList<>();
     private ConstraintLayout constraintLayout;
     private Button refresh_button;
+    public int i, j;
 
     @Override
     protected void onResume() {
@@ -81,7 +90,7 @@ public class MyOrdersActivity extends AppCompatActivity implements ConnectivityR
     }
 
     private void initLeftMenu() {
-        LinearLayout faqLayout = findViewById(R.id.help_layout);
+        ImageView faqLayout = findViewById(R.id.faq);
         TextView helpText = findViewById(R.id.help_text);
         helpText.setText(getResources().getString(R.string.faq));
         faqLayout.setOnClickListener(view -> startActivity(new Intent(MyOrdersActivity.this, FAQActivity.class)));
@@ -329,7 +338,8 @@ public class MyOrdersActivity extends AppCompatActivity implements ConnectivityR
         Constants.getInstance().setConnectivityListener(this);
 
         if (NetworkUtils.isNetworkConnected(MyOrdersActivity.this)) {
-            myOrdersController.getOrderHistory(this);
+//            myOrdersController.getOrderHistory(this);
+            myOrdersController.getSelfOrderHistoryApiCall(this);
         } else {
             Utils.showSnackbar(MyOrdersActivity.this, constraintLayout, getApplicationContext().getResources().getString(R.string.label_internet_error_text));
         }
@@ -374,10 +384,70 @@ public class MyOrdersActivity extends AppCompatActivity implements ConnectivityR
     @Override
     public void onOrderHistorySuccess(List<OrderHistoryResponse> response) {
         orderdetials_list = new ArrayList<OrderHistoryResponse>();
+        orderdetials_list = response;
+
+
         if (response.size() > 0) {
-            orderdetials_list.addAll(response);
+//            for (int i = 0; i < response.size(); i++) {
+//                orderdetials_list.add(response.get(i));
+//                if (i == 4)
+//                    break;
+//                ;
+//          }
+//            orderdetials_list.addAll(response);
+//            Collections.reverse(orderdetials_list);
+//for(int i=0; i<orderdetials_list.size(); i++){
+//    if (orderdetials_list.get(i).getStatusHistory().get(i).getStatus().equalsIgnoreCase(""))
+//}
+//
+
+
+//            for( i=0;i<=orderdetials_list.size()-2;i++){
+//                for ( j=+1;j<=orderdetials_list.size()-1;j++){
+//                    Collections.sort(orderdetials_list, new Comparator<OrderHistoryResponse>() {
+//                        public int compare(OrderHistoryResponse o1, OrderHistoryResponse o2) {
+//
+//                            return o1.getStatusHistory().get(i).getDateTime().compareTo(o2.getStatusHistory().get(j).getDateTime());
+//                        }
+//                    });
+//                }
+//            }
+
+            Collections.sort(orderdetials_list, new Comparator<OrderHistoryResponse>() {
+                public int compare(OrderHistoryResponse o1, OrderHistoryResponse o2) {
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                    Date date1 = null;
+                    Date date2 = null;
+                    try {
+                        date1 = dateFormat.parse(o1.getStatusHistory().get(0).getDateTime());
+                        date2 = dateFormat.parse(o2.getStatusHistory().get(0).getDateTime());
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+                    return date1.compareTo(date2);
+                }
+            });
             Collections.reverse(orderdetials_list);
-            orderdetails_adaptor = new MyOrdersAdapter(this, orderdetials_list);
+//          Collections.sort(orderdetials_list, new Comparator<OrderHistoryResponse>() {
+//                public int compare(OrderHistoryResponse o1, OrderHistoryResponse o2) {
+//                  return o1.getStatusHistory().get(0).getDateTime().compareTo(o2.getStatusHistory().get(0).getDateTime());
+//     }
+//            });
+//           SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyyMMdd");
+//            for (int i=0;i<=orderdetials_list.size()-2;i++){
+//                for (int j=+1;j<=orderdetials_list.size()-1;j++){
+//                    if (simpleDateFormat.format(orderdetials_list.get(i).getStatusHistory().get(i).getDateTime()).equals(simpleDateFormat.format(orderdetials_list.get(j).getStatusHistory().get(j).getDateTime()) )){
+//                        dateList.add((OrderHistoryResponse) orderdetials_list);
+//                    }
+//                }
+//
+//            }
+
+
+            orderdetails_adaptor = new MyOrdersAdapter(this, this, orderdetials_list);
+//            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(MyOrdersActivity.this);
+//            orderListRecyclerView.setLayoutManager(mLayoutManager);
             orderListRecyclerView.setAdapter(orderdetails_adaptor);
             orderdetails_adaptor.notifyDataSetChanged();
         } else {
@@ -387,7 +457,50 @@ public class MyOrdersActivity extends AppCompatActivity implements ConnectivityR
 
     @Override
     public void onOrderHistoryFailure(String error) {
-        Utils.showCustomAlertDialog(MyOrdersActivity.this, getResources().getString(R.string.label_server_err_message), false, getResources().getString(R.string.label_ok), "");
+//        Utils.showCustomAlertDialog(MyOrdersActivity.this, getResources().getString(R.string.label_server_err_message), false, getResources().getString(R.string.label_ok), "");
+    }
+
+    @Override
+    public void onSelfOrderHistorySuccess(SelfOrderHistoryResponse selfOrderHistoryResponse) {
+        if (selfOrderHistoryResponse.getOrders() != null && selfOrderHistoryResponse.getOrders().size() > 0) {
+            this.orderList = selfOrderHistoryResponse.getOrders();
+
+//            Collections.sort(orderList, new Comparator<SelfOrderHistoryResponse.Order>() {
+//                public int compare(SelfOrderHistoryResponse.Order o1, SelfOrderHistoryResponse.Order o2) {
+//                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+//                    Date date1 = null;
+//                    Date date2 = null;
+//                    try {
+//                        date1 = dateFormat.parse(o1.getOrderJourney().get(0).getDate());
+//                        date2 = dateFormat.parse(o2.getOrderJourney().get(0).getDate());
+//                    } catch (ParseException e) {
+//                        e.printStackTrace();
+//                    }
+//                    if (date1 != null && date2 != null)
+//                        return date1.compareTo(date2);
+//                    else
+//                        return 0;
+//                }
+//            });
+//            Collections.reverse(orderList);
+
+
+            orderdetails_adaptor = new MyOrdersAdapter(this, orderList, this);
+//            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(MyOrdersActivity.this);
+//            orderListRecyclerView.setLayoutManager(mLayoutManager);
+            orderListRecyclerView.setAdapter(orderdetails_adaptor);
+            orderdetails_adaptor.notifyDataSetChanged();
+
+        } else {
+            Utils.showCustomAlertDialog(MyOrdersActivity.this, getApplicationContext().getResources().getString(R.string.try_again_later), false, getResources().getString(R.string.label_ok), "");
+
+        }
+
+    }
+
+    @Override
+    public void onSelfOrderHistoryFailure(String error) {
+
     }
 
     @Override
@@ -395,10 +508,58 @@ public class MyOrdersActivity extends AppCompatActivity implements ConnectivityR
 
     }
 
+    @Override
+    public void onReorderClick(List<OCRToDigitalMedicineResponse> dataList) {
+        ReOrderDilaog reOrderDilaog = new ReOrderDilaog(MyOrdersActivity.this, dataList);
+        reOrderDilaog.setPositiveListener(view -> {
+            reOrderDilaog.dataListLatest();
+
+            if (null != SessionManager.INSTANCE.getDataList()) {
+                if (SessionManager.INSTANCE.getDataList().size() > 0) {
+                    List<OCRToDigitalMedicineResponse> tempCartItemList = new ArrayList<>();
+                    tempCartItemList = SessionManager.INSTANCE.getDataList();
+                    for (OCRToDigitalMedicineResponse listItem : tempCartItemList) {
+                        boolean isItemEqual = false;
+                        for (OCRToDigitalMedicineResponse duplecateItem : reOrderDilaog.dataListLatest()) {
+                            if (duplecateItem.getArtCode().equals(listItem.getArtCode())) {
+                                isItemEqual = true;
+                            }
+                        }
+                        if (!isItemEqual)
+                            reOrderDilaog.dataListLatest().add(listItem);
+                    }
+                }
+            }
+            SessionManager.INSTANCE.setDataList(reOrderDilaog.dataListLatest());
+            Intent intent = new Intent("OrderhistoryCardReciver");
+            intent.putExtra("message", "OrderNow");
+            intent.putExtra("MedininesNames", new Gson().toJson(reOrderDilaog.dataListLatest()));
+            LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
+        });
+        reOrderDilaog.setNegativeListener(view -> {
+            reOrderDilaog.dismiss();
+        });
+        reOrderDilaog.show();
+    }
+
     public void cartCount(int count) {
         if (count != 0) {
+
+            List<OCRToDigitalMedicineResponse> countUniques = new ArrayList<>();
+            countUniques.addAll(SessionManager.INSTANCE.getDataList());
+
+            for (int i = 0; i < countUniques.size(); i++) {
+                for (int j = 0; j < countUniques.size(); j++) {
+                    if (i != j && countUniques.get(i).getArtName().equals(countUniques.get(j).getArtName())) {
+                        countUniques.remove(j);
+                        j--;
+                    }
+                }
+            }
+
             myCartCount.setVisibility(View.VISIBLE);
-            myCartCount.setText(String.valueOf(count));
+//            myCartCount.setText(String.valueOf(count));
+            myCartCount.setText(String.valueOf(countUniques.size()));
         } else {
             myCartCount.setVisibility(View.GONE);
             myCartCount.setText("0");
