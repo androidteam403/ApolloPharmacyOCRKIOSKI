@@ -56,7 +56,7 @@ import java.util.TreeSet;
 
 import static com.apollo.pharmacy.ocr.utility.Constants.getContext;
 
-public class MyOrdersActivity extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener,
+public class MyOrdersActivity extends BaseActivity implements ConnectivityReceiver.ConnectivityReceiverListener,
         MyOrdersListener {
 
     private RecyclerView orderListRecyclerView;
@@ -147,9 +147,9 @@ public class MyOrdersActivity extends AppCompatActivity implements ConnectivityR
             declineButton.setText(getResources().getString(R.string.label_cancel_text));
             okButton.setOnClickListener(v1 -> {
                 dialog.dismiss();
-                SessionManager.INSTANCE.logoutUser();
+//                SessionManager.INSTANCE.logoutUser();
 
-                Intent intent = new Intent(MyOrdersActivity.this, MainActivity.class);
+                Intent intent = new Intent(MyOrdersActivity.this, UserLoginActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
                 finishAffinity();

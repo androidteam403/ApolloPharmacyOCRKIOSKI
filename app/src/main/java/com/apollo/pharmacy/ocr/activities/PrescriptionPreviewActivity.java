@@ -53,7 +53,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class PrescriptionPreviewActivity extends AppCompatActivity implements PrescriptionPreviewListener, MyCartListener,
+public class PrescriptionPreviewActivity extends BaseActivity implements PrescriptionPreviewListener, MyCartListener,
         ConnectivityReceiver.ConnectivityReceiverListener, UploadBgImageListener {
 
     private ArrayList<PrescriptionItem> prescriptionList;

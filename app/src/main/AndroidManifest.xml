@@ -172,7 +172,7 @@
             android:name=".activities.MyProfileActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".activities.PaymentOptionsActivity"
+            android:name=".activities.paymentoptions.PaymentOptionsActivity"
             android:screenOrientation="landscape" />
         <activity
             android:name=".activities.insertprescriptionnew.InsertPrescriptionActivityNew"

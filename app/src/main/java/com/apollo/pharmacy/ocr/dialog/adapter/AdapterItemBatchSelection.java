@@ -39,12 +39,13 @@ public class AdapterItemBatchSelection extends RecyclerView.Adapter<AdapterItemB
         BatchListResponse.Batch itemBatchSelectionData = itemBatchSelectionDataList.get(position);
         holder.adapterBatchSelectionListBinding.date.setText(itemBatchSelectionData.getExpDate());
         holder.adapterBatchSelectionListBinding.price.setText(String.valueOf(itemBatchSelectionData.getPrice()));
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onItemBatchClick.onItemBatchClickData(position, itemBatchSelectionData);
-            }
-        });
+        holder.adapterBatchSelectionListBinding.itemId.setText(itemBatchSelectionData.getItemID());
+        holder.adapterBatchSelectionListBinding.batchNo.setText(itemBatchSelectionData.getBatchNo());
+        if (itemBatchSelectionData.getNearByExpiry()) {
+            holder.adapterBatchSelectionListBinding.batchSelectionData.setBackgroundColor(context.getResources().getColor(R.color.dialog_red_color));
+        }
+
+        holder.itemView.setOnClickListener(view -> onItemBatchClick.onItemBatchClickData(position, itemBatchSelectionData));
     }
 
 

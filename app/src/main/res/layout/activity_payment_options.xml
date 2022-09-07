@@ -1112,6 +1112,6 @@ above 400 Rupees"
 
         <variable
             name="model"
-            type="com.apollo.pharmacy.ocr.activities.PaymentOptionsActivity.OrderDetailsuiModel" />
+            type="com.apollo.pharmacy.ocr.activities.paymentoptions.PaymentOptionsActivity.OrderDetailsuiModel" />
     </data>
 </layout>

@@ -52,7 +52,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-public class StorePickupActivity extends AppCompatActivity implements DeliverySelectionListener, OnMapReadyCallback,
+public class StorePickupActivity extends BaseActivity implements DeliverySelectionListener, OnMapReadyCallback,
         ConnectivityReceiver.ConnectivityReceiverListener, KeyboardFragment.OnClickKeyboard, OnRecyclerItemClickListener {
 
     private RecyclerView pharmacy_location_listview;

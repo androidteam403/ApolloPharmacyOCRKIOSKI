@@ -1,4 +1,4 @@
-package com.apollo.pharmacy.ocr.activities;
+package com.apollo.pharmacy.ocr.activities.paymentoptions;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -13,10 +13,14 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import com.apollo.pharmacy.ocr.R;
+import com.apollo.pharmacy.ocr.activities.BaseActivity;
+import com.apollo.pharmacy.ocr.activities.MySearchActivity;
+import com.apollo.pharmacy.ocr.activities.OrderinProgressActivity;
+import com.apollo.pharmacy.ocr.activities.paymentoptions.model.ExpressCheckoutTransactionApiRequest;
+import com.apollo.pharmacy.ocr.activities.paymentoptions.model.ExpressCheckoutTransactionApiResponse;
 import com.apollo.pharmacy.ocr.controller.PhonePayQrCodeController;
 import com.apollo.pharmacy.ocr.databinding.ActivityPaymentOptionsBinding;
 import com.apollo.pharmacy.ocr.dialog.DeliveryAddressDialog;
@@ -42,7 +46,7 @@ import java.util.Locale;
 import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
 
-public class PaymentOptionsActivity extends AppCompatActivity implements PhonePayQrCodeListener {
+public class PaymentOptionsActivity extends BaseActivity implements PhonePayQrCodeListener {
     private ActivityPaymentOptionsBinding activityPaymentOptionsBinding;
     private double pharmaTotalData = 0.0;
     private List<OCRToDigitalMedicineResponse> dataList;
@@ -200,6 +204,7 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
 
                     if (isFmcgOrder) {
                         isFmcgOrder = false;
+//                        new PhonePayQrCodeController(PaymentOptionsActivity.this, PaymentOptionsActivity.this).expressCheckoutTransactionApiCall(getExpressCheckoutTransactionApiRequest());
                         placeOrderFmcg();
                     } else {
                         isPharmaOrder = false;
@@ -665,6 +670,13 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
         Utils.showSnackbarDialog(this, findViewById(android.R.id.content), message);
     }
 
+    @Override
+    public void onSuccessexpressCheckoutTransactionApiCall(ExpressCheckoutTransactionApiResponse expressCheckoutTransactionApiResponse) {
+        if (expressCheckoutTransactionApiResponse.getRequestStatus() != null && expressCheckoutTransactionApiResponse.getRequestStatus().equals("0")) {
+
+        }
+    }
+
     boolean paymentSuccess = true;
 
     @Override
@@ -1063,5 +1075,55 @@ public class PaymentOptionsActivity extends AppCompatActivity implements PhonePa
         public void setFmcgHomeDelivery(boolean fmcgHomeDelivery) {
             isFmcgHomeDelivery = fmcgHomeDelivery;
         }
+    }
+
+
+    public ExpressCheckoutTransactionApiRequest getExpressCheckoutTransactionApiRequest() {
+        ExpressCheckoutTransactionApiRequest expressCheckoutTransactionApiRequest = new ExpressCheckoutTransactionApiRequest();
+        expressCheckoutTransactionApiRequest.setCorpCode("");//Need Clarify
+        expressCheckoutTransactionApiRequest.setMobileNO("");//Need Clarify
+        expressCheckoutTransactionApiRequest.setCustomerName("");//Need Clarify
+        expressCheckoutTransactionApiRequest.setDoctorName("");//Need Clarify
+        expressCheckoutTransactionApiRequest.setDoctorCode("");//Need Clarify
+        expressCheckoutTransactionApiRequest.setTrackingRef("");//Need Clarify
+        expressCheckoutTransactionApiRequest.setStaff("");//Need Clarify
+        expressCheckoutTransactionApiRequest.setStore("");//Need Clarify
+        expressCheckoutTransactionApiRequest.setState("");//Need Clarify
+        expressCheckoutTransactionApiRequest.setTerminal("");//Need Clarify
+        expressCheckoutTransactionApiRequest.setDataAreaId("");//Need Clarify
+        expressCheckoutTransactionApiRequest.setIsStockCheck(true);//Need Clarify
+        expressCheckoutTransactionApiRequest.setExpiryDays(30);//Need Clarify
+
+        List<ExpressCheckoutTransactionApiRequest.SalesLine> salesLineList = new ArrayList<>();
+        // do add saleslines to salesLineList
+
+        for (int i = 0; i < SessionManager.INSTANCE.getDataList().size(); i++) {
+            ExpressCheckoutTransactionApiRequest.SalesLine salesLine = new ExpressCheckoutTransactionApiRequest.SalesLine();
+            if (SessionManager.INSTANCE.getDataList().get(i).getMedicineType().equals("FMCG") || SessionManager.INSTANCE.getDataList().get(i).getMedicineType().equals("PRIVATE LABEL")) {
+                salesLine.setLineNo(i + 1);
+                salesLine.setItemId(SessionManager.INSTANCE.getDataList().get(i).getArtCode().contains(",") ? SessionManager.INSTANCE.getDataList().get(i).getArtCode().substring(0, SessionManager.INSTANCE.getDataList().get(i).getArtCode().indexOf(",")) : SessionManager.INSTANCE.getDataList().get(i).getArtCode());
+                salesLine.setItemName(SessionManager.INSTANCE.getDataList().get(i).getArtName());
+                salesLine.setQty(SessionManager.INSTANCE.getDataList().get(i).getQty());
+                salesLine.setMrp(Double.parseDouble(SessionManager.INSTANCE.getDataList().get(i).getArtprice()));
+                salesLine.setDiscAmount(Double.parseDouble(SessionManager.INSTANCE.getDataList().get(i).getNetAmountInclTax()));//Need Clarify
+                salesLine.setTotalDiscAmount(0.0); //Need Clarify
+                salesLine.setTotalDiscPct(5);//Need Clarify
+                salesLine.setUnitPrice(SessionManager.INSTANCE.getDataList().get(i).getQty() * Double.parseDouble(SessionManager.INSTANCE.getDataList().get(i).getArtprice()));//Need Clarify
+                salesLine.setUnitQty(SessionManager.INSTANCE.getDataList().get(i).getQty());//Need Clarify
+                salesLine.setDiscId("EXPRESSCHECKOUT");//Need Clarify
+                salesLine.setLineDiscPercentage(5);//Need Clarify
+
+                salesLineList.add(salesLine);
+            }
+        }
+
+        expressCheckoutTransactionApiRequest.setSalesLine(salesLineList);
+
+        List<ExpressCheckoutTransactionApiRequest.TenderLine> tenderLineList = new ArrayList<>();
+        // do add TenderLines to tenderLineList
+        expressCheckoutTransactionApiRequest.setTenderLine(tenderLineList);
+
+
+        return expressCheckoutTransactionApiRequest;
     }
 }

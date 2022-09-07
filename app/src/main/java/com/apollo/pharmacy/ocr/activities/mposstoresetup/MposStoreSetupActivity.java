@@ -23,12 +23,12 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 
 import com.apollo.pharmacy.ocr.R;
-import com.apollo.pharmacy.ocr.activities.BaseActivity;
 import com.apollo.pharmacy.ocr.activities.mposstoresetup.dialog.MposGetStoresDialog;
 import com.apollo.pharmacy.ocr.activities.mposstoresetup.model.StoreListResponseModel;
 import com.apollo.pharmacy.ocr.activities.mposstoresetup.model.StoreSetupModel;
@@ -57,7 +57,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class MposStoreSetupActivity extends BaseActivity implements GoogleApiClient.OnConnectionFailedListener,
+public class MposStoreSetupActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener,
         GoogleApiClient.ConnectionCallbacks, LocationListener, StoreSetupMvpView {
 
     MposStoreSetupActivityBinding mposStoreSetupActivityBinding;
@@ -180,15 +180,20 @@ public class MposStoreSetupActivity extends BaseActivity implements GoogleApiCli
     private boolean isValidate() {
         String url = mposStoreSetupActivityBinding.baseUrl.getText().toString().trim();
         String terminalId = mposStoreSetupActivityBinding.terminalIdText.getText().toString().trim();
+        String sessionTime = mposStoreSetupActivityBinding.sessionTime.getText().toString().trim();
         if (url.isEmpty()) {
             mposStoreSetupActivityBinding.baseUrl.setError("Please Enter Epos Url");
             mposStoreSetupActivityBinding.baseUrl.requestFocus();
             return false;
-        }
-        if (terminalId.isEmpty()) {
+        } else if (terminalId.isEmpty()) {
             mposStoreSetupActivityBinding.terminalIdText.setError("Please Enter Terminal Id");
             mposStoreSetupActivityBinding.terminalIdText.requestFocus();
             return false;
+        } else if (sessionTime.isEmpty()) {
+            mposStoreSetupActivityBinding.sessionTime.setError("Please Enter session time");
+            mposStoreSetupActivityBinding.sessionTime.requestFocus();
+            return false;
+
         }
         return true;
     }
@@ -395,7 +400,7 @@ public class MposStoreSetupActivity extends BaseActivity implements GoogleApiCli
                 SessionManager.INSTANCE.setStoreId(storeIdNumber);
             else
                 SessionManager.INSTANCE.setStoreId(mposStoreSetupActivityBinding.storeId.getText().toString());
-
+            SessionManager.INSTANCE.setSessionTime(Integer.parseInt(mposStoreSetupActivityBinding.sessionTime.getText().toString().trim()));
             SessionManager.INSTANCE.setTerminalId(mposStoreSetupActivityBinding.terminalIdText.getText().toString());
             SessionManager.INSTANCE.setEposUrl(mposStoreSetupActivityBinding.baseUrl.getText().toString());
             SessionManager.INSTANCE.setAccessDialogHandler("Dismiss");

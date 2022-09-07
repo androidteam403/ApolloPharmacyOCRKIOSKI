@@ -1,6 +1,8 @@
 package com.apollo.pharmacy.ocr.zebrasdk;
 
 
+import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -9,15 +11,23 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.apollo.pharmacy.ocr.R;
+import com.apollo.pharmacy.ocr.activities.UserLoginActivity;
 import com.apollo.pharmacy.ocr.utility.Constants;
+import com.apollo.pharmacy.ocr.utility.SessionManager;
 import com.apollo.pharmacy.ocr.zebrasdk.helper.Barcode;
 import com.apollo.pharmacy.ocr.zebrasdk.helper.ScannerAppEngine;
 import com.zebra.scannercontrol.DCSSDKDefs;
@@ -26,6 +36,7 @@ import com.zebra.scannercontrol.FirmwareUpdateEvent;
 import com.zebra.scannercontrol.IDcsSdkApiDelegate;
 import com.zebra.scannercontrol.SDKHandler;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,11 +61,15 @@ public class BaseActivity extends AppCompatActivity implements ScannerAppEngine,
     static boolean waitingForFWReboot = false;
     boolean virtualTetherEnable = false;
 
+    private Dialog sessionTimeOutAlert;
+
+    public static final int IDLE_DELAY_MINUTES = SessionManager.INSTANCE.getSessionTime(); // 15 min
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        setContentView(R.layout.activity_main);
-
+        delayedIdle(IDLE_DELAY_MINUTES);
         Configuration configuration = getResources().getConfiguration();
         if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             if (configuration.smallestScreenWidthDp < Constants.minScreenWidth) {
@@ -89,6 +104,7 @@ public class BaseActivity extends AppCompatActivity implements ScannerAppEngine,
     @Override
     protected void onResume() {
         super.onResume();
+        delayedIdle(IDLE_DELAY_MINUTES);
         Constants.sdkHandler.dcssdkSetDelegate(this);
         //Register a dynamic receiver to handle the various RFID Reader Events when the app is in foreground
         //Actions to be handled should be registered here
@@ -106,6 +122,8 @@ public class BaseActivity extends AppCompatActivity implements ScannerAppEngine,
     @Override
     protected void onPause() {
         super.onPause();
+        logoutConfirmationHandler.removeCallbacks(logoutConfirmationRunnable);
+        sessionTimeOutHandler.removeCallbacks(sessionTimeOutRunnable);
         unregisterReceiver(onNotification);
     }
 
@@ -1128,5 +1146,88 @@ public class BaseActivity extends AppCompatActivity implements ScannerAppEngine,
         }
     };
 
+
+    // session time out
+    Handler sessionTimeOutHandler = new Handler();
+    Runnable sessionTimeOutRunnable = new Runnable() {
+        @Override
+        public void run() {
+            //handle your IDLE state
+            // Logout from app
+            logoutConfirmationCallback();
+            sessionTimeOutAlert = new Dialog(BaseActivity.this);
+            sessionTimeOutAlert.setContentView(R.layout.dialog_alert_for_idle);
+            if (sessionTimeOutAlert.getWindow() != null)
+                sessionTimeOutAlert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            sessionTimeOutAlert.setCancelable(false);
+            TextView dialogTitleText = sessionTimeOutAlert.findViewById(R.id.dialog_info);
+            Button okButton = sessionTimeOutAlert.findViewById(R.id.dialog_ok);
+            Button declineButton = sessionTimeOutAlert.findViewById(R.id.dialog_cancel);
+            TextView sessionTimeExpiry = sessionTimeOutAlert.findViewById(R.id.session_time_expiry_countdown);
+            downTimer(sessionTimeExpiry);
+            dialogTitleText.setText("Do you want to continue?");
+            okButton.setText("Yes, Continue");
+            declineButton.setText("Logout");
+            okButton.setOnClickListener(v -> {
+                if (sessionTimeOutAlert != null && sessionTimeOutAlert.isShowing()) {
+                    sessionTimeOutAlert.dismiss();
+                }
+                BaseActivity.this.delayedIdle(IDLE_DELAY_MINUTES);
+            });
+            declineButton.setOnClickListener(v -> sessionTimeOutAlert.dismiss());
+            sessionTimeOutAlert.show();
+        }
+    };
+
+    Handler logoutConfirmationHandler = new Handler();
+    Runnable logoutConfirmationRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (sessionTimeOutAlert != null && sessionTimeOutAlert.isShowing()) {
+                sessionTimeOutAlert.dismiss();
+            }
+//            SessionManager.INSTANCE.logoutUser();
+            Intent intent = new Intent(BaseActivity.this, UserLoginActivity.class);
+            startActivity(intent);
+            overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
+            finishAffinity();
+        }
+    };
+
+
+    private void logoutConfirmationCallback() {
+        logoutConfirmationHandler.removeCallbacks(logoutConfirmationRunnable);
+        logoutConfirmationHandler.postDelayed(logoutConfirmationRunnable, 30000);
+    }
+
+
+    private void delayedIdle(int delayMinutes) {
+        logoutConfirmationHandler.removeCallbacks(logoutConfirmationRunnable);
+        sessionTimeOutHandler.removeCallbacks(sessionTimeOutRunnable);
+        sessionTimeOutHandler.postDelayed(sessionTimeOutRunnable, ((delayMinutes * 1000 * 60) - 30000));
+    }
+
+    @Override
+    public void onUserInteraction() {
+        super.onUserInteraction();
+        delayedIdle(IDLE_DELAY_MINUTES);
+    }
+
+    private void downTimer(TextView sessionTimeOutCountDown) {
+        new CountDownTimer(30 * 1000, 1000) {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onTick(long millisUntilFinished) {
+                long second = (millisUntilFinished / 1000) % 60;
+                long minutes = (millisUntilFinished / (1000 * 60)) % 60;
+                sessionTimeOutCountDown.setText("Your session will expire in " + new DecimalFormat("00").format(minutes) + ":" + new DecimalFormat("00").format(second));
+            }
+
+            @Override
+            public void onFinish() {
+                sessionTimeOutCountDown.setText("00:00");
+            }
+        }.start();
+    }
 }
 

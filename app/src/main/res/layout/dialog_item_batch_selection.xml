@@ -20,18 +20,12 @@
 
             <LinearLayout
                 android:id="@+id/dialog_item_batch_inner_parent_layout"
-                android:layout_width="450dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
+                android:padding="@dimen/ten_dp"
                 android:background="@drawable/dialog_background"
                 android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="80dp"
-                    android:layout_height="150dp"
-                    android:layout_marginTop="@dimen/twenty_dp"
-                    android:contentDescription="@string/app_name"
-                    android:rotation="-30" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -89,22 +83,21 @@
                             android:layout_gravity="center_vertical"
                             android:background="@drawable/round_tick_bg"
                             android:padding="@dimen/two_dp"
-                            android:src="@drawable/tick_mark" />
+                            android:src="@drawable/tick_mark"
+                            android:contentDescription="@string/app_name" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginStart="@dimen/five_dp"
-                            android:text="Mfg:" />
+                            android:text="Mfg : " />
 
                         <TextView
                             android:id="@+id/date"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:layout_marginStart="@dimen/five_dp"
-                            android:text=""
                             android:textColor="@color/black"
                             android:textStyle="bold" />
 
@@ -112,14 +105,28 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:layout_marginStart="@dimen/fifteen_dp"
-                            android:text="Cost:" />
+                            android:layout_marginStart="@dimen/five_dp"
+                            android:text="Item ID : " />
+
+                        <TextView
+                            android:id="@+id/item_id"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:textColor="@color/black"
+                            android:textStyle="bold" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginStart="@dimen/five_dp"
+                            android:text="Cost : " />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
                             android:text="\u20B9"
                             android:textColor="@color/black"
                             android:textStyle="bold" />
@@ -130,8 +137,21 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginStart="@dimen/two_dp"
-                            android:layout_marginEnd="@dimen/fifteen_dp"
-                            android:text=""
+                            android:textColor="@color/black"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="@dimen/five_dp"
+                            android:text="Batch No. : " />
+
+                        <TextView
+                            android:id="@+id/batch_no"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
                             android:textColor="@color/black"
                             android:textStyle="bold" />
 
@@ -218,9 +238,9 @@
                                     android:id="@+id/unitIncrease"
                                     android:layout_width="50dp"
                                     android:layout_height="50dp"
+                                    android:contentDescription="@string/app_name"
                                     android:gravity="center"
-                                    android:src="@drawable/inc_button"
-                                    android:contentDescription="@string/app_name" />
+                                    android:src="@drawable/inc_button" />
 
                                 <TextView
                                     android:id="@+id/dialogButtonOK"

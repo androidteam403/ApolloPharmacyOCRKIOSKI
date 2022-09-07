@@ -460,6 +460,7 @@
     <string name="label_enter_your_personal_details_and_delivery_address">Enter your personal details and Delivery address</string>
     <string name="label_my_profile">My Profile</string>
     <string name="label_continue_shopping">Continue Shopping</string>
+    <string name="label_login_session_expired">Login session expired!!</string>
 
 
 </resources>

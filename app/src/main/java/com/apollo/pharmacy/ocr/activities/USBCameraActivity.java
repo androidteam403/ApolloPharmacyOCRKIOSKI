@@ -28,7 +28,7 @@ import com.serenegiant.usb.widget.CameraViewInterface;
 
 import static com.apollo.pharmacy.ocr.utility.Constants.DIRECTORY_NAME;
 
-public class USBCameraActivity extends AppCompatActivity implements CameraDialog.CameraDialogParent, CameraViewInterface.Callback {
+public class USBCameraActivity extends BaseActivity implements CameraDialog.CameraDialogParent, CameraViewInterface.Callback {
 
     private static final String TAG = "USBCameraActivity";
     private UVCCameraHelper mCameraHelper;

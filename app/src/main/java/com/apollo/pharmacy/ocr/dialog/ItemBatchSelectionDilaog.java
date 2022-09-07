@@ -36,6 +36,7 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static com.apollo.pharmacy.ocr.utility.Constants.getContext;
 
@@ -351,12 +352,21 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
 
     @Override
     public void onItemBatchClickData(int position, BatchListResponse.Batch itemBatchSelectionData) {
-        itemBatchSelectionDataQtyCompare = itemBatchSelectionData;
-        dialogItemBatchSelectionBinding.dialogItemBatchInnerParentLayout.setBackground(getContext().getResources().getDrawable(R.drawable.dialog_background));
-        dialogItemBatchSelectionBinding.recyclerViewLay.setVisibility(View.GONE);
-        dialogItemBatchSelectionBinding.date.setText(itemBatchSelectionData.getExpDate());
-        dialogItemBatchSelectionBinding.price.setText(String.valueOf(itemBatchSelectionData.getPrice()));
-        this.itemPrice = itemBatchSelectionData.getPrice();
+        if (!itemBatchSelectionData.getNearByExpiry()) {
+            itemBatchSelectionDataQtyCompare = itemBatchSelectionData;
+            dialogItemBatchSelectionBinding.dialogItemBatchInnerParentLayout.setBackground(getContext().getResources().getDrawable(R.drawable.dialog_background));
+            dialogItemBatchSelectionBinding.recyclerViewLay.setVisibility(View.GONE);
+            dialogItemBatchSelectionBinding.date.setText(itemBatchSelectionData.getExpDate());
+            dialogItemBatchSelectionBinding.price.setText(String.valueOf(itemBatchSelectionData.getPrice()));
+            dialogItemBatchSelectionBinding.itemId.setText(itemBatchSelectionData.getItemID());
+            dialogItemBatchSelectionBinding.batchNo.setText(itemBatchSelectionData.getBatchNo());
+
+            this.itemPrice = itemBatchSelectionData.getPrice();
+        }
+//        else {
+//            View view = dialog.getWindow().getDecorView();
+//            Utils.showSnackbarDialog(context, view, "Item not available in batch list");
+//        }
     }
 
     public float getTotalBatchQty() {
@@ -381,6 +391,8 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
                         if (batchListResponse.getBatchList().get(i).getBatchNo().equals(SessionManager.INSTANCE.getBatchId())) {
                             dialogItemBatchSelectionBinding.date.setText(batchListResponse.getBatchList().get(i).getExpDate());
                             dialogItemBatchSelectionBinding.price.setText(String.valueOf(batchListResponse.getBatchList().get(i).getPrice()));
+                            dialogItemBatchSelectionBinding.itemId.setText(batchListResponse.getBatchList().get(i).getItemID());
+                            dialogItemBatchSelectionBinding.batchNo.setText(batchListResponse.getBatchList().get(i).getBatchNo());
                             this.itemPrice = batchListResponse.getBatchList().get(i).getPrice();
                             this.itemBatchSelectionDataQtyCompare = batchListResponse.getBatchList().get(i);
                         }
@@ -388,6 +400,8 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
                 } else {
                     dialogItemBatchSelectionBinding.date.setText(batchListResponse.getBatchList().get(0).getExpDate());
                     dialogItemBatchSelectionBinding.price.setText(String.valueOf(batchListResponse.getBatchList().get(0).getPrice()));
+                    dialogItemBatchSelectionBinding.itemId.setText(batchListResponse.getBatchList().get(0).getItemID());
+                    dialogItemBatchSelectionBinding.batchNo.setText(batchListResponse.getBatchList().get(0).getBatchNo());
                     this.itemPrice = batchListResponse.getBatchList().get(0).getPrice();
                     this.itemBatchSelectionDataQtyCompare = batchListResponse.getBatchList().get(0);
                 }
@@ -486,189 +500,139 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
     boolean checkduplicate3 = false;
 
     public void globalBatchListHandlings(String itemName, String itemId, float balanceQtying, List<OCRToDigitalMedicineResponse> dummyDataListing, Context context, String medicineType) {
-        if (getBatchAvilableData() != null && getBatchAvilableData().getBatchList() != null && getBatchAvilableData().getBatchList().size() > 0) {
-            if (getQtyCount() != null && !getQtyCount().isEmpty() && Integer.parseInt(getQtyCount()) > 0) {
-                if (getTotalBatchQty() >= Float.parseFloat(getQtyCount())) {
-                    if (Float.parseFloat(getItemBatchSelectionDataQty().getQOH()) >= Float.parseFloat(getQtyCount())) {
-                        OCRToDigitalMedicineResponse data = new OCRToDigitalMedicineResponse();
-                        data.setArtName(TextUtils.isEmpty(itemName) ? "-" : itemName);
-                        data.setArtCode(itemId + "," + getItemBatchSelectionDataQty().getBatchNo());
-                        data.setBatchId(getItemBatchSelectionDataQty().getBatchNo());
-                        data.setArtprice(String.valueOf(getItemBatchSelectionDataQty().getPrice()));
-                        data.setContainer("");
-                        data.setQty(Integer.parseInt(getQtyCount().toString()));
 
-                        for (OCRToDigitalMedicineResponse proQtyIncorg : SessionManager.INSTANCE.getDataList()) {
-                            if (proQtyIncorg.getArtCode().equals(data.getArtCode())) {
-                                data.setQty(proQtyIncorg.getQty() + Integer.parseInt(getQtyCount().toString()));
-                            }
-                        }
-                        data.setMedicineType(medicineType);
-                        dummyDataList.add(data);
-
-                        if (null != SessionManager.INSTANCE.getDataList()) {
-                            if (SessionManager.INSTANCE.getDataList().size() > 0) {
-                                List<OCRToDigitalMedicineResponse> tempCartItemList = new ArrayList<>();
-                                tempCartItemList = SessionManager.INSTANCE.getDataList();
-                                for (OCRToDigitalMedicineResponse listItem : tempCartItemList) {
-                                    boolean isItemEqual = false;
-                                    for (OCRToDigitalMedicineResponse duplecateItem : dummyDataList) {
-                                        if (duplecateItem.getArtCode().equals(listItem.getArtCode())) {
-                                            isItemEqual = true;
-                                        }
+        if (!getItemBatchSelectionDataQty().getNearByExpiry()) {
+            if (getBatchAvilableData() != null && getBatchAvilableData().getBatchList() != null && getBatchAvilableData().getBatchList().size() > 0) {
+                if (getQtyCount() != null && !getQtyCount().isEmpty() && Integer.parseInt(getQtyCount()) > 0) {
+                    if (getTotalBatchQty() >= Float.parseFloat(getQtyCount())) {
+                        if (Float.parseFloat(getItemBatchSelectionDataQty().getQOH()) >= Float.parseFloat(getQtyCount())) {
+                            OCRToDigitalMedicineResponse data = new OCRToDigitalMedicineResponse();
+                            data.setArtName(TextUtils.isEmpty(itemName) ? "-" : itemName);
+                            data.setArtCode(itemId + "," + getItemBatchSelectionDataQty().getBatchNo());
+                            data.setBatchId(getItemBatchSelectionDataQty().getBatchNo());
+                            data.setArtprice(String.valueOf(getItemBatchSelectionDataQty().getPrice()));
+                            data.setContainer("");
+                            data.setQty(Integer.parseInt(getQtyCount().toString()));
+                            if (SessionManager.INSTANCE.getDataList() != null) {
+                                for (OCRToDigitalMedicineResponse proQtyIncorg : Objects.requireNonNull(SessionManager.INSTANCE.getDataList())) {
+                                    if (proQtyIncorg.getArtCode().equals(data.getArtCode())) {
+                                        data.setQty(proQtyIncorg.getQty() + Integer.parseInt(getQtyCount().toString()));
                                     }
-                                    if (!isItemEqual)
-                                        dummyDataList.add(listItem);
                                 }
                             }
-                        }
-                        SessionManager.INSTANCE.setDataList(dummyDataList);
-                        Intent intent = new Intent("OrderhistoryCardReciver");
-                        intent.putExtra("message", "OrderNow");
-                        intent.putExtra("MedininesNames", new Gson().toJson(dummyDataList));
-                        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
-                        if (itemBatchListDialogListener != null) {
-                            itemBatchListDialogListener.onDismissDialog();
-                        }
-                        dismiss();
+                            data.setMedicineType(medicineType);
+                            dummyDataList.add(data);
 
-                    } else {
-                        OCRToDigitalMedicineResponse data1 = new OCRToDigitalMedicineResponse();
-
-                        data1.setArtName(TextUtils.isEmpty(itemName) ? "-" : itemName);
-                        data1.setArtCode(itemId + "," + getItemBatchSelectionDataQty().getBatchNo());
-                        data1.setBatchId(getItemBatchSelectionDataQty().getBatchNo());
-                        data1.setArtprice(String.valueOf(getItemBatchSelectionDataQty().getPrice()));
-                        data1.setContainer("");
-                        data1.setQty((int) Float.parseFloat(getItemBatchSelectionDataQty().getQOH().toString()));
-                        balanceQty = Float.parseFloat(getQtyCount()) - Float.parseFloat(String.valueOf(data1.getQty()));
-                        data1.setMedicineType(medicineType);
-                        getItemBatchSelectionDataQty().setBatchQtySelected(true);
-
-                        for (OCRToDigitalMedicineResponse proQtyIncorg : SessionManager.INSTANCE.getDataList()) {
-                            if (proQtyIncorg.getArtCode().equals(data1.getArtCode())) {
-                                data1.setQty(proQtyIncorg.getQty() + Integer.parseInt(String.valueOf(data1.getQty())));
-                            }
-                        }
-                        if (dummyDataList!=null&&dummyDataList.size()>0) {
-                            for (int k = 0; k < dummyDataList.size(); k++) {
-                                if (dummyDataList.get(k).getArtCode().equalsIgnoreCase(data1.getArtCode())) {
-                                    checkduplicate1 = true;
-                                    dummyDataList.get(k).setQty(data1.getQty());
-                                    dummyDataList.set(k, dummyDataList.get(k));
-                                }
-                            }
-                        }
-                        if (!checkduplicate1) {
-                            dummyDataList.add(data1);
-                        }
-
-                        if (null != SessionManager.INSTANCE.getDataList()) {
-                            if (SessionManager.INSTANCE.getDataList().size() > 0) {
-                                List<OCRToDigitalMedicineResponse> tempCartItemList = new ArrayList<>();
-                                tempCartItemList = SessionManager.INSTANCE.getDataList();
-                                for (OCRToDigitalMedicineResponse listItem : tempCartItemList) {
-                                    boolean isItemEqual = false;
-                                    for (OCRToDigitalMedicineResponse duplecateItem : dummyDataList) {
-                                        if (duplecateItem.getArtCode().equals(listItem.getArtCode())) {
-                                            isItemEqual = true;
-                                        }
-                                    }
-                                    if (!isItemEqual)
-                                        dummyDataList.add(listItem);
-                                }
-                            }
-                        }
-
-                        for (int i = 0; i < getBatchAvilableData().getBatchList().size(); i++) {
-                            if (balanceQty != 0) {
-                                if (Float.parseFloat(getBatchAvilableData().getBatchList().get(i).getQOH()) >= balanceQty && !getBatchAvilableData().getBatchList().get(i).isBatchQtySelected()) {
-                                    OCRToDigitalMedicineResponse data2 = new OCRToDigitalMedicineResponse();
-
-                                    data2.setArtName(TextUtils.isEmpty(itemName) ? "-" : itemName);
-                                    data2.setArtCode(itemId + "," + getBatchAvilableData().getBatchList().get(i).getBatchNo());
-                                    data2.setBatchId(getBatchAvilableData().getBatchList().get(i).getBatchNo());
-                                    data2.setArtprice(String.valueOf(getBatchAvilableData().getBatchList().get(i).getPrice()));
-                                    data2.setContainer("");
-
-                                    if (balanceQty >= Float.parseFloat(getBatchAvilableData().getBatchList().get(i).getQOH())) {
-                                        data2.setQty((int) Float.parseFloat(getBatchAvilableData().getBatchList().get(i).getQOH().toString()));
-                                    } else {
-                                        data2.setQty((int) balanceQty);
-                                        balanceQty = 0;
-                                    }
-                                    balanceQty = balanceQty - Float.parseFloat(String.valueOf(data2.getQty()));
-                                    data2.setMedicineType(medicineType);
-
-                                    for (OCRToDigitalMedicineResponse proQtyIncorg : SessionManager.INSTANCE.getDataList()) {
-                                        if (proQtyIncorg.getArtCode().equals(data2.getArtCode())) {
-                                            data2.setQty(proQtyIncorg.getQty() + Integer.parseInt(String.valueOf(data2.getQty())));
-                                        }
-                                    }
-                                    if (dummyDataList!=null&&dummyDataList.size()>0) {
-                                        for (int k = 0; k < dummyDataList.size(); k++) {
-                                            if (dummyDataList.get(k).getArtCode().equalsIgnoreCase(data2.getArtCode())) {
-                                                checkduplicate2 = true;
-                                                dummyDataList.get(k).setQty(data2.getQty());
-                                                dummyDataList.set(k, dummyDataList.get(k));
+                            if (null != SessionManager.INSTANCE.getDataList()) {
+                                if (SessionManager.INSTANCE.getDataList().size() > 0) {
+                                    List<OCRToDigitalMedicineResponse> tempCartItemList = new ArrayList<>();
+                                    tempCartItemList = SessionManager.INSTANCE.getDataList();
+                                    for (OCRToDigitalMedicineResponse listItem : tempCartItemList) {
+                                        boolean isItemEqual = false;
+                                        for (OCRToDigitalMedicineResponse duplecateItem : dummyDataList) {
+                                            if (duplecateItem.getArtCode().equals(listItem.getArtCode())) {
+                                                isItemEqual = true;
                                             }
                                         }
+                                        if (!isItemEqual)
+                                            dummyDataList.add(listItem);
                                     }
-                                    if (!checkduplicate2) {
-                                        dummyDataList.add(data2);
+                                }
+                            }
+                            SessionManager.INSTANCE.setDataList(dummyDataList);
+                            Intent intent = new Intent("OrderhistoryCardReciver");
+                            intent.putExtra("message", "OrderNow");
+                            intent.putExtra("MedininesNames", new Gson().toJson(dummyDataList));
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                            if (itemBatchListDialogListener != null) {
+                                itemBatchListDialogListener.onDismissDialog();
+                            }
+                            dismiss();
+
+                        } else {
+                            OCRToDigitalMedicineResponse data1 = new OCRToDigitalMedicineResponse();
+
+                            data1.setArtName(TextUtils.isEmpty(itemName) ? "-" : itemName);
+                            data1.setArtCode(itemId + "," + getItemBatchSelectionDataQty().getBatchNo());
+                            data1.setBatchId(getItemBatchSelectionDataQty().getBatchNo());
+                            data1.setArtprice(String.valueOf(getItemBatchSelectionDataQty().getPrice()));
+                            data1.setContainer("");
+                            data1.setQty((int) Float.parseFloat(getItemBatchSelectionDataQty().getQOH().toString()));
+                            balanceQty = Float.parseFloat(getQtyCount()) - Float.parseFloat(String.valueOf(data1.getQty()));
+                            data1.setMedicineType(medicineType);
+                            getItemBatchSelectionDataQty().setBatchQtySelected(true);
+
+                            for (OCRToDigitalMedicineResponse proQtyIncorg : SessionManager.INSTANCE.getDataList()) {
+                                if (proQtyIncorg.getArtCode().equals(data1.getArtCode())) {
+                                    data1.setQty(proQtyIncorg.getQty() + Integer.parseInt(String.valueOf(data1.getQty())));
+                                }
+                            }
+                            if (dummyDataList != null && dummyDataList.size() > 0) {
+                                for (int k = 0; k < dummyDataList.size(); k++) {
+                                    if (dummyDataList.get(k).getArtCode().equalsIgnoreCase(data1.getArtCode())) {
+                                        checkduplicate1 = true;
+                                        dummyDataList.get(k).setQty(data1.getQty());
+                                        dummyDataList.set(k, dummyDataList.get(k));
                                     }
+                                }
+                            }
+                            if (!checkduplicate1) {
+                                dummyDataList.add(data1);
+                            }
 
-
-                                    if (null != SessionManager.INSTANCE.getDataList()) {
-                                        if (SessionManager.INSTANCE.getDataList().size() > 0) {
-                                            List<OCRToDigitalMedicineResponse> tempCartItemList = new ArrayList<>();
-                                            tempCartItemList = SessionManager.INSTANCE.getDataList();
-                                            for (OCRToDigitalMedicineResponse listItem : tempCartItemList) {
-                                                boolean isItemEqual = false;
-                                                for (OCRToDigitalMedicineResponse duplecateItem : dummyDataList) {
-                                                    if (duplecateItem.getArtCode().equals(listItem.getArtCode())) {
-                                                        isItemEqual = true;
-                                                    }
-                                                }
-                                                if (!isItemEqual)
-                                                    dummyDataList.add(listItem);
+                            if (null != SessionManager.INSTANCE.getDataList()) {
+                                if (SessionManager.INSTANCE.getDataList().size() > 0) {
+                                    List<OCRToDigitalMedicineResponse> tempCartItemList = new ArrayList<>();
+                                    tempCartItemList = SessionManager.INSTANCE.getDataList();
+                                    for (OCRToDigitalMedicineResponse listItem : tempCartItemList) {
+                                        boolean isItemEqual = false;
+                                        for (OCRToDigitalMedicineResponse duplecateItem : dummyDataList) {
+                                            if (duplecateItem.getArtCode().equals(listItem.getArtCode())) {
+                                                isItemEqual = true;
                                             }
                                         }
+                                        if (!isItemEqual)
+                                            dummyDataList.add(listItem);
                                     }
-                                    break;
-                                } else {
-                                    if (!getBatchAvilableData().getBatchList().get(i).isBatchQtySelected() && balanceQty != 0) {
-                                        OCRToDigitalMedicineResponse data3 = new OCRToDigitalMedicineResponse();
-                                        data3.setArtName(TextUtils.isEmpty(itemName) ? "-" : itemName);
-                                        data3.setArtCode(itemId + "," + getBatchAvilableData().getBatchList().get(i).getBatchNo());
-                                        data3.setBatchId(getBatchAvilableData().getBatchList().get(i).getBatchNo());
-                                        data3.setArtprice(String.valueOf(getBatchAvilableData().getBatchList().get(i).getPrice()));
-                                        data3.setContainer("");
+                                }
+                            }
+
+                            for (int i = 0; i < getBatchAvilableData().getBatchList().size(); i++) {
+                                if (balanceQty != 0) {
+                                    if (Float.parseFloat(getBatchAvilableData().getBatchList().get(i).getQOH()) >= balanceQty && !getBatchAvilableData().getBatchList().get(i).isBatchQtySelected()) {
+                                        OCRToDigitalMedicineResponse data2 = new OCRToDigitalMedicineResponse();
+
+                                        data2.setArtName(TextUtils.isEmpty(itemName) ? "-" : itemName);
+                                        data2.setArtCode(itemId + "," + getBatchAvilableData().getBatchList().get(i).getBatchNo());
+                                        data2.setBatchId(getBatchAvilableData().getBatchList().get(i).getBatchNo());
+                                        data2.setArtprice(String.valueOf(getBatchAvilableData().getBatchList().get(i).getPrice()));
+                                        data2.setContainer("");
+
                                         if (balanceQty >= Float.parseFloat(getBatchAvilableData().getBatchList().get(i).getQOH())) {
-                                            data3.setQty((int) Float.parseFloat(getBatchAvilableData().getBatchList().get(i).getQOH().toString()));
+                                            data2.setQty((int) Float.parseFloat(getBatchAvilableData().getBatchList().get(i).getQOH().toString()));
                                         } else {
-                                            data3.setQty((int) balanceQty);
+                                            data2.setQty((int) balanceQty);
                                             balanceQty = 0;
                                         }
-                                        balanceQty = balanceQty - Float.parseFloat(String.valueOf(data3.getQty()));
-                                        data3.setMedicineType(medicineType);
+                                        balanceQty = balanceQty - Float.parseFloat(String.valueOf(data2.getQty()));
+                                        data2.setMedicineType(medicineType);
 
                                         for (OCRToDigitalMedicineResponse proQtyIncorg : SessionManager.INSTANCE.getDataList()) {
-                                            if (proQtyIncorg.getArtCode().equals(data3.getArtCode())) {
-                                                data3.setQty(proQtyIncorg.getQty() + Integer.parseInt(String.valueOf(data3.getQty())));
+                                            if (proQtyIncorg.getArtCode().equals(data2.getArtCode())) {
+                                                data2.setQty(proQtyIncorg.getQty() + Integer.parseInt(String.valueOf(data2.getQty())));
                                             }
                                         }
-                                        if (dummyDataList!=null&&dummyDataList.size()>0) {
+                                        if (dummyDataList != null && dummyDataList.size() > 0) {
                                             for (int k = 0; k < dummyDataList.size(); k++) {
-                                                if (dummyDataList.get(k).getArtCode().equalsIgnoreCase(data3.getArtCode())) {
-                                                    checkduplicate3 = true;
-                                                    dummyDataList.get(k).setQty(data3.getQty());
+                                                if (dummyDataList.get(k).getArtCode().equalsIgnoreCase(data2.getArtCode())) {
+                                                    checkduplicate2 = true;
+                                                    dummyDataList.get(k).setQty(data2.getQty());
                                                     dummyDataList.set(k, dummyDataList.get(k));
                                                 }
                                             }
                                         }
-                                        if (!checkduplicate3) {
-                                            dummyDataList.add(data3);
+                                        if (!checkduplicate2) {
+                                            dummyDataList.add(data2);
                                         }
 
 
@@ -688,36 +652,93 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
                                                 }
                                             }
                                         }
+                                        break;
+                                    } else {
+                                        if (!getBatchAvilableData().getBatchList().get(i).isBatchQtySelected() && balanceQty != 0) {
+                                            OCRToDigitalMedicineResponse data3 = new OCRToDigitalMedicineResponse();
+                                            data3.setArtName(TextUtils.isEmpty(itemName) ? "-" : itemName);
+                                            data3.setArtCode(itemId + "," + getBatchAvilableData().getBatchList().get(i).getBatchNo());
+                                            data3.setBatchId(getBatchAvilableData().getBatchList().get(i).getBatchNo());
+                                            data3.setArtprice(String.valueOf(getBatchAvilableData().getBatchList().get(i).getPrice()));
+                                            data3.setContainer("");
+                                            if (balanceQty >= Float.parseFloat(getBatchAvilableData().getBatchList().get(i).getQOH())) {
+                                                data3.setQty((int) Float.parseFloat(getBatchAvilableData().getBatchList().get(i).getQOH().toString()));
+                                            } else {
+                                                data3.setQty((int) balanceQty);
+                                                balanceQty = 0;
+                                            }
+                                            balanceQty = balanceQty - Float.parseFloat(String.valueOf(data3.getQty()));
+                                            data3.setMedicineType(medicineType);
+
+                                            for (OCRToDigitalMedicineResponse proQtyIncorg : SessionManager.INSTANCE.getDataList()) {
+                                                if (proQtyIncorg.getArtCode().equals(data3.getArtCode())) {
+                                                    data3.setQty(proQtyIncorg.getQty() + Integer.parseInt(String.valueOf(data3.getQty())));
+                                                }
+                                            }
+                                            if (dummyDataList != null && dummyDataList.size() > 0) {
+                                                for (int k = 0; k < dummyDataList.size(); k++) {
+                                                    if (dummyDataList.get(k).getArtCode().equalsIgnoreCase(data3.getArtCode())) {
+                                                        checkduplicate3 = true;
+                                                        dummyDataList.get(k).setQty(data3.getQty());
+                                                        dummyDataList.set(k, dummyDataList.get(k));
+                                                    }
+                                                }
+                                            }
+                                            if (!checkduplicate3) {
+                                                dummyDataList.add(data3);
+                                            }
+
+
+                                            if (null != SessionManager.INSTANCE.getDataList()) {
+                                                if (SessionManager.INSTANCE.getDataList().size() > 0) {
+                                                    List<OCRToDigitalMedicineResponse> tempCartItemList = new ArrayList<>();
+                                                    tempCartItemList = SessionManager.INSTANCE.getDataList();
+                                                    for (OCRToDigitalMedicineResponse listItem : tempCartItemList) {
+                                                        boolean isItemEqual = false;
+                                                        for (OCRToDigitalMedicineResponse duplecateItem : dummyDataList) {
+                                                            if (duplecateItem.getArtCode().equals(listItem.getArtCode())) {
+                                                                isItemEqual = true;
+                                                            }
+                                                        }
+                                                        if (!isItemEqual)
+                                                            dummyDataList.add(listItem);
+                                                    }
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }
-                        }
 
-                        SessionManager.INSTANCE.setDataList(dummyDataList);
-                        Intent intent = new Intent("OrderhistoryCardReciver");
-                        intent.putExtra("message", "OrderNow");
-                        intent.putExtra("MedininesNames", new Gson().toJson(dummyDataList));
-                        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
-                        if (itemBatchListDialogListener != null) {
-                            itemBatchListDialogListener.onDismissDialog();
+                            SessionManager.INSTANCE.setDataList(dummyDataList);
+                            Intent intent = new Intent("OrderhistoryCardReciver");
+                            intent.putExtra("message", "OrderNow");
+                            intent.putExtra("MedininesNames", new Gson().toJson(dummyDataList));
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                            if (itemBatchListDialogListener != null) {
+                                itemBatchListDialogListener.onDismissDialog();
+                            }
+                            dismiss();
                         }
-                        dismiss();
+                    } else {
+                        View view = dialog.getWindow().getDecorView();
+                        Utils.showSnackbarDialog(context, view, "Selected quantity is not available in batch");
                     }
                 } else {
                     View view = dialog.getWindow().getDecorView();
-                    Utils.showSnackbarDialog(context, view, "Selected quantity is not available in batch");
+                    Utils.showSnackbarDialog(context, view, "Please enter product quantity");
                 }
             } else {
                 View view = dialog.getWindow().getDecorView();
-                Utils.showSnackbarDialog(context, view, "Please enter product quantity");
+                Utils.showSnackbarDialog(context, view, "Product Out of Stock");
+                if (itemBatchListDialogListener != null) {
+                    itemBatchListDialogListener.onDismissDialog();
+                }
+                dismiss();
             }
         } else {
             View view = dialog.getWindow().getDecorView();
-            Utils.showSnackbarDialog(context, view, "Product Out of Stock");
-            if (itemBatchListDialogListener != null) {
-                itemBatchListDialogListener.onDismissDialog();
-            }
-            dismiss();
+            Utils.showSnackbarDialog(context, view, "The selected batch Id has expired.");
         }
     }
 

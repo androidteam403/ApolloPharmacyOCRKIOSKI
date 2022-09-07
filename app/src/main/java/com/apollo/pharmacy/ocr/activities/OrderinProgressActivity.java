@@ -1,11 +1,18 @@
 package com.apollo.pharmacy.ocr.activities;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import com.apollo.pharmacy.ocr.R;
@@ -18,7 +25,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrderinProgressActivity extends AppCompatActivity implements OrderinProgressListener {
+public class OrderinProgressActivity extends BaseActivity implements OrderinProgressListener {
 
     private ActivityOrderinProgressBinding orderinProgressBinding;
     private List<OCRToDigitalMedicineResponse> dataList;
@@ -132,10 +139,71 @@ public class OrderinProgressActivity extends AppCompatActivity implements Orderi
         }
     }
 
+    Handler continueShopAlertHandler = new Handler();
+    Runnable continuShopAlertRunnable = () -> continueShoppingAlert();
+
+    private void continueShoppingAlert() {
+        Dialog continueShopAlertDialog = new Dialog(this);
+        continueShopAlertDialog.setContentView(R.layout.dialog_alert_for_idle);
+        if (continueShopAlertDialog.getWindow() != null)
+            continueShopAlertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        continueShopAlertDialog.setCancelable(false);
+        TextView dialogTitleText = continueShopAlertDialog.findViewById(R.id.dialog_info);
+        Button okButton = continueShopAlertDialog.findViewById(R.id.dialog_ok);
+        Button declineButton = continueShopAlertDialog.findViewById(R.id.dialog_cancel);
+        TextView alertTittle = continueShopAlertDialog.findViewById(R.id.session_time_expiry_countdown);
+
+        SpannableStringBuilder alertSpannnable = new SpannableStringBuilder("Alert!");
+        alertSpannnable.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), 0, alertSpannnable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        alertTittle.setText(alertSpannnable);
+
+
+        dialogTitleText.setText("Do you want to continue shopping?");
+        okButton.setText("Yes, Continue");
+        declineButton.setText("Logout");
+        okButton.setOnClickListener(v -> {
+            if (continueShopAlertDialog != null && continueShopAlertDialog.isShowing()) {
+                continueShopAlertDialog.dismiss();
+            }
+            List<OCRToDigitalMedicineResponse> dataList = new ArrayList<>();
+            SessionManager.INSTANCE.setDataList(dataList);
+            Intent intent = new Intent(OrderinProgressActivity.this, MySearchActivity.class);
+            startActivity(intent);
+            overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
+            finish();
+
+        });
+        declineButton.setOnClickListener(v -> {
+            continueShopAlertDialog.dismiss();
+
+//            SessionManager.INSTANCE.logoutUser();
+
+            Intent intent = new Intent(OrderinProgressActivity.this, UserLoginActivity.class);
+            startActivity(intent);
+            overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
+            finishAffinity();
+
+        });
+        continueShopAlertDialog.show();
+    }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         onClickContinueShopping();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        continueShopAlertHandler.removeCallbacks(continuShopAlertRunnable);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        continueShopAlertHandler.removeCallbacks(continuShopAlertRunnable);
+        continueShopAlertHandler.postDelayed(continuShopAlertRunnable, 5000);
     }
 
     @Override

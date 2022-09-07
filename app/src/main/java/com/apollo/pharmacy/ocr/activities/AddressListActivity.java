@@ -65,7 +65,7 @@ import retrofit2.Response;
 
 import static com.apollo.pharmacy.ocr.utility.Utils.getTransactionGeneratedId;
 
-public class AddressListActivity extends AppCompatActivity implements AddressListListener, OnItemClickListener,
+public class AddressListActivity extends BaseActivity implements AddressListListener, OnItemClickListener,
         ConnectivityReceiver.ConnectivityReceiverListener {
 
     private AddressListController addressListController;

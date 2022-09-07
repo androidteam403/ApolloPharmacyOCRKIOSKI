@@ -85,6 +85,7 @@ import com.apollo.pharmacy.ocr.utility.SessionManager;
 import com.apollo.pharmacy.ocr.utility.Utils;
 import com.apollo.pharmacy.ocr.zebrasdk.BaseActivity;
 import com.apollo.pharmacy.ocr.zebrasdk.helper.ScannerAppEngine;
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -150,7 +151,8 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
     private ImageView faqLayout;
     private ImageView searchIcon;
     private TextView fmcgTxt, pharmaTxt, fcItemCountTxt, pharmaItemCountTxt;
-    private ImageView searchImg, checkOutNewBtn;
+    private ImageView searchImg, checkOutNewBtn, advertiseBanner;
+    private TextView noItemFound;
     private LinearLayout imageLayout;
     private boolean tabFlag;
 
@@ -170,7 +172,8 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
         setContentView(R.layout.activity_my_search);
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
+        advertiseBanner = (ImageView) findViewById(R.id.advertise_banner);
+        Glide.with(this).load("http://dev.thresholdsoft.com/apollo_feedback_assets/advertisement1.png?123").into(advertiseBanner);
         searchProducts = findViewById(R.id.search_product_text);
         pDialog = findViewById(R.id.pdialog);
         offersRecycle = findViewById(R.id.cross_selling_recycle_new);
@@ -196,6 +199,8 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
         plusIcon = findViewById(R.id.plus_icon);
         itemsCount = findViewById(R.id.items_count);
 
+        noItemFound = findViewById(R.id.no_item_found);
+
         checkOutImage = findViewById(R.id.checkout_image);
         checkOutNewBtn = findViewById(R.id.check_out_btn);
         search_product_layout = findViewById(R.id.search_product_layout);
@@ -208,7 +213,7 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
         mySearchController = new MySearchController(this, this);
         myOffersController = new MyOffersController(this, this);
 
-        myOffersController.upcellCrosscellList("", MySearchActivity.this);
+//        myOffersController.upcellCrosscellList("", MySearchActivity.this);
 
         Spinner categorySpinner = (Spinner) findViewById(R.id.category_spinner);
         categorySpinner.setOnItemSelectedListener(this);
@@ -287,21 +292,24 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
                 if (s.length() >= 3) {
 //                    searchProductsApiCall(s.toString());
                     search_listview.setVisibility(View.GONE);
-                    search_suggestion_listview.setVisibility(View.VISIBLE);
+//                    search_suggestion_listview.setVisibility(View.VISIBLE);
                     offersRecycle.setVisibility(View.GONE);
                     itemCountLayout.setVisibility(View.GONE);
                     searchIcon.setVisibility(View.GONE);
                     clearSearchText.setVisibility(View.VISIBLE);
+                    advertiseBanner.setVisibility(View.GONE);
+                    noItemFound.setVisibility(View.GONE);
                     subCategoryCount.setText("");
 //                    if (search_auto_complete_text) {
                     Searchsuggestionrequest request = new Searchsuggestionrequest();
-                    String searchText = s.toString().replace(" ", "%");
+                    String searchText = s.toString().replace(" ", "%").replace("-", "%").replace(".", "%");
+
                     request.setParams(searchText);
 
                     search_auto_complete_text = false;
                     if (NetworkUtils.isNetworkConnected(MySearchActivity.this)) {
                         pDialog.setVisibility(View.VISIBLE);
-                        addMoreController.searchItemProducts(s.toString());
+                        addMoreController.searchItemProducts(searchText);
 //                            addMoreController.searchSuggestion(request, MySearchActivity.this);
                     } else {
                         Utils.showSnackbar(MySearchActivity.this, constraintLayout, getApplicationContext().getResources().getString(R.string.label_internet_error_text));
@@ -309,11 +317,13 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
 //                    }
                 } else {
                     search_auto_complete_text = true;
-                    offersRecycle.setVisibility(View.VISIBLE);
+                    noItemFound.setVisibility(View.GONE);
+//                    offersRecycle.setVisibility(View.VISIBLE);
                     searchIcon.setVisibility(View.VISIBLE);
+                    advertiseBanner.setVisibility(View.VISIBLE);
                     clearSearchText.setVisibility(View.GONE);
                     search_listview.setVisibility(View.GONE);
-                    search_suggestion_listview.setVisibility(View.GONE);
+//                    search_suggestion_listview.setVisibility(View.GONE);
                 }
             }
         });
@@ -1090,30 +1100,37 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
             item.clear();
         }
         if (m != null) {
-            for (ItemSearchResponse.Item r : m.getItemList()) {
-                ProductSearch product = new ProductSearch();
-                product.setName(r.getDescription());
-                product.setSku(r.getArtCode());
-                product.setQty(1);
-                if (r.getGenericName() != null && !r.getGenericName().isEmpty()) {
-                    product.setDescription(r.getGenericName());
-                } else {
-                    product.setDescription(r.getManufacture());
-                }
-                product.setCategory(r.getCategory());
-                product.setMedicineType(r.getCategory());
+            if (m.getItemList() != null && m.getItemList().size() > 0) {
+                for (ItemSearchResponse.Item r : m.getItemList()) {
+                    ProductSearch product = new ProductSearch();
+                    product.setName(r.getDescription());
+                    product.setSku(r.getArtCode());
+                    product.setQty(1);
+                    if (r.getGenericName() != null && !r.getGenericName().isEmpty()) {
+                        product.setDescription(r.getGenericName());
+                    } else {
+                        product.setDescription(r.getManufacture());
+                    }
+                    product.setCategory(r.getCategory());
+                    product.setMedicineType(r.getCategory());
 //                product.setId(r.getId());
 //                product.setImage(r.getImage());
-                product.setIsInStock(r.getStockqty() != 0 ? 1 : 0);
-                product.setIsPrescriptionRequired(0);
-                product.setPrice(r.getMrp());
+                    product.setIsInStock(r.getStockqty() != 0 ? 1 : 0);
+                    product.setIsPrescriptionRequired(0);
+                    product.setPrice(r.getMrp());
 //                product.setSmallImage(r.getSmallImage());
-                // product.setSpecialPrice(r.getSpecialPrice());
-                /* product.setStatus(r.getStatus());
-                 * product.setThumbnail(r.getThumbnail());
-                 *product.setTypeId(r.getTypeId());
-                 *product.setMou(r.getMou());      */
-                item.add(product);
+                    // product.setSpecialPrice(r.getSpecialPrice());
+                    /* product.setStatus(r.getStatus());
+                     * product.setThumbnail(r.getThumbnail());
+                     *product.setTypeId(r.getTypeId());
+                     *product.setMou(r.getMou());      */
+                    item.add(product);
+                }
+                search_listview.setVisibility(View.VISIBLE);
+                noItemFound.setVisibility(View.GONE);
+            } else {
+                search_listview.setVisibility(View.GONE);
+                noItemFound.setVisibility(View.VISIBLE);
             }
         }
 //        search_auto_complete_text = true;
@@ -1368,9 +1385,9 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
             declineButton.setText(getResources().getString(R.string.label_cancel_text));
             okButton.setOnClickListener(v1 -> {
                 dialog.dismiss();
-                SessionManager.INSTANCE.logoutUser();
+//                SessionManager.INSTANCE.logoutUser();
 
-                Intent intent = new Intent(MySearchActivity.this, MainActivity.class);
+                Intent intent = new Intent(MySearchActivity.this, UserLoginActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
                 finishAffinity();

@@ -20,7 +20,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.databinding.DataBindingUtil;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -76,10 +75,7 @@ import java.util.TreeSet;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import static com.apollo.pharmacy.ocr.utility.Constants.Promotions;
-import static com.apollo.pharmacy.ocr.utility.Constants.TrendingNow;
-
-public class MyOffersActivity extends AppCompatActivity implements MyOffersListener, CartCountListener,
+public class MyOffersActivity extends BaseActivity implements MyOffersListener, CartCountListener,
         ConnectivityReceiver.ConnectivityReceiverListener, CategoryGridItemAdapter.CheckOutData {
 
     public MyOffersController myOffersController;
@@ -211,7 +207,7 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
         });
 
         myOffersController = new MyOffersController(this, this);
-        myOffersController.upcellCrosscellList("7353910637", MyOffersActivity.this);
+//        myOffersController.upcellCrosscellList("7353910637", MyOffersActivity.this);
         offerLayout = findViewById(R.id.offer_layout);
         trendingLayout = findViewById(R.id.trending_layout);
         offerTxt = findViewById(R.id.offer_name);
@@ -232,7 +228,7 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
                 promotionsRecyclerView.setVisibility(View.VISIBLE);
                 myOffersText = "SpecialOffers";
                 if (NetworkUtils.isNetworkConnected(MyOffersActivity.this)) {
-                    myOffersController.getProductList(myOffersText, this, this, Promotions);
+//                    myOffersController.getProductList(myOffersText, this, this, Promotions);
                 } else {
                     Utils.showSnackbar(MyOffersActivity.this, constraintLayout, getApplicationContext().getResources().getString(R.string.label_internet_error_text));
                 }
@@ -250,7 +246,7 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
                 trendingNowRecyclerView.setVisibility(View.VISIBLE);
                 myOffersText = "TrendingNow";
                 if (NetworkUtils.isNetworkConnected(MyOffersActivity.this)) {
-                    myOffersController.getProductList("TrendingNow", this, this, TrendingNow);
+//                    myOffersController.getProductList("TrendingNow", this, this, TrendingNow);
                 } else {
                     Utils.showSnackbar(MyOffersActivity.this, constraintLayout, getApplicationContext().getResources().getString(R.string.label_internet_error_text));
                 }
@@ -734,222 +730,227 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
         int requiredQty = Integer.parseInt(imageList.get(position).getQty());
         for (int i = 0; i < batchListResponse.getBatchList().size(); i++) {
             if (Double.parseDouble(batchListResponse.getBatchList().get(i).getQOH()) >= requiredQty) {
-                OCRToDigitalMedicineResponse data = new OCRToDigitalMedicineResponse();
-                data.setArtName(iteSearchData.getDescription());
-                data.setArtCode(iteSearchData.getArtCode() + "," + batchListResponse.getBatchList().get(i).getBatchNo());
-                data.setBatchId(batchListResponse.getBatchList().get(i).getBatchNo());
-                data.setArtprice(String.valueOf(batchListResponse.getBatchList().get(i).getMrp()));
-                data.setContainer("");
-                data.setQty(requiredQty);
+                if (!batchListResponse.getBatchList().get(i).getNearByExpiry()) {
+                    OCRToDigitalMedicineResponse data = new OCRToDigitalMedicineResponse();
+                    data.setArtName(iteSearchData.getDescription());
+                    data.setArtCode(iteSearchData.getArtCode() + "," + batchListResponse.getBatchList().get(i).getBatchNo());
+                    data.setBatchId(batchListResponse.getBatchList().get(i).getBatchNo());
+                    data.setArtprice(String.valueOf(batchListResponse.getBatchList().get(i).getMrp()));
+                    data.setContainer("");
+                    data.setQty(requiredQty);
 
-                //calculate pos transaction
-                CalculatePosTransactionRequest.SalesLine salesLine = new CalculatePosTransactionRequest.SalesLine();
-                salesLine.setBatchNo(batchListResponse.getBatchList().get(i).getBatchNo());
-                salesLine.setAdditionaltax(0.0);
-                salesLine.setApplyDiscount(false);
-                salesLine.setBarcode("");
-                salesLine.setBaseAmount(batchListResponse.getBatchList().get(i).getMrp());
-                salesLine.setCESSPerc(batchListResponse.getBatchList().get(i).getCESSPerc());
-                salesLine.setCESSTaxCode(batchListResponse.getBatchList().get(i).getCESSTaxCode());
-                salesLine.setCGSTPerc(batchListResponse.getBatchList().get(i).getCGSTPerc());
-                salesLine.setCGSTTaxCode(batchListResponse.getBatchList().get(i).getCGSTTaxCode());
-                salesLine.setCategory(iteSearchData.getCategory());
-                salesLine.setCategoryCode(iteSearchData.getCategoryCode());
-                salesLine.setCategoryReference("");
-                salesLine.setComment("");
-                salesLine.setDpco(iteSearchData.getDpco());
-                salesLine.setDiscAmount(0.0);
-                salesLine.setDiscId("");
-                salesLine.setDiscOfferId("");
-                salesLine.setDiscountStructureType(0.0);
-                salesLine.setDiscountType("");
-                salesLine.setDiseaseType(iteSearchData.getDiseaseType());
-                salesLine.setExpiry(batchListResponse.getBatchList().get(i).getExpDate());
-                salesLine.setHsncodeIn(iteSearchData.getHsncodeIn());
-                salesLine.setIGSTPerc(batchListResponse.getBatchList().get(i).getIGSTPerc());
-                salesLine.setIGSTTaxCode(batchListResponse.getBatchList().get(i).getIGSTTaxCode());
-                salesLine.setISPrescribed(0.0);
-                salesLine.setISReserved(false);
-                salesLine.setISStockAvailable(true);
-                salesLine.setInventBatchId("");//-----0B110081BQ
-                salesLine.setIsChecked(false);
-                salesLine.setIsGeneric(iteSearchData.getIsGeneric());
-                salesLine.setIsPriceOverride(false);
-                salesLine.setIsSubsitute(false);
-                salesLine.setIsVoid(false);
-                salesLine.setItemId(batchListResponse.getBatchList().get(i).getItemID());
-                salesLine.setItemName(iteSearchData.getDescription());
-                salesLine.setLineDiscPercentage(0.0);
-                salesLine.setLineManualDiscountAmount(0.0);
-                salesLine.setLineManualDiscountPercentage(0.0);
-                salesLine.setLineNo(1);
-                salesLine.setLinedscAmount(0.0);
-                salesLine.setMMGroupId("0");
-                salesLine.setMrp(batchListResponse.getBatchList().get(i).getMrp());
-                salesLine.setManufacturerCode(iteSearchData.getManufactureCode());
-                salesLine.setManufacturerName(iteSearchData.getManufacture());
-                salesLine.setMixMode(false);
-                salesLine.setModifyBatchId("");
-                salesLine.setNetAmount(batchListResponse.getBatchList().get(i).getMrp());
-                salesLine.setNetAmountInclTax(batchListResponse.getBatchList().get(i).getMrp());
-                salesLine.setOfferAmount(0.0);
-                salesLine.setOfferDiscountType(0.0);
-                salesLine.setOfferQty(0.0);
-                salesLine.setOfferType(0.0);
-                salesLine.setOmsLineID(0.0);
-                salesLine.setOmsLineRECID(0.0);
-                salesLine.setOrderStatus(0.0);
-                salesLine.setNetAmountInclTax(0.0);
-                salesLine.setOriginalPrice(batchListResponse.getBatchList().get(i).getMrp());
-                salesLine.setPeriodicDiscAmount(0.0);
-                salesLine.setPhysicalMRP(0.0);
-                salesLine.setPreviewText("");
-                salesLine.setPrice(batchListResponse.getBatchList().get(i).getMrp());
-                salesLine.setProductRecID(iteSearchData.getProductRecID());
-                salesLine.setQty(requiredQty);
-                salesLine.setRemainderDays(0.0);
-                salesLine.setRemainingQty(0.0);
-                salesLine.setResqtyflag(false);
-                salesLine.setRetailCategoryRecID(iteSearchData.getRetailCategoryRecID());
-                salesLine.setRetailMainCategoryRecID(iteSearchData.getRetailMainCategoryRecID());
-                salesLine.setRetailSubCategoryRecID(iteSearchData.getRetailSubCategoryRecID());
-                salesLine.setReturnQty(0.0);
-                salesLine.setSGSTPerc(batchListResponse.getBatchList().get(i).getSGSTPerc());
-                salesLine.setSGSTTaxCode(batchListResponse.getBatchList().get(i).getSGSTTaxCode());
-                salesLine.setScheduleCategory(iteSearchData.getSchCatg());
-                salesLine.setScheduleCategoryCode(iteSearchData.getSchCatgCode());
-                salesLine.setStockQty(Double.valueOf(iteSearchData.getStockqty()));
-                salesLine.setSubCategory(iteSearchData.getSubCategory());
-                salesLine.setSubCategoryCode(iteSearchData.getSubCategory());
-                salesLine.setSubClassification(iteSearchData.getSubClassification());
-                salesLine.setSubstitudeItemId("");
-                salesLine.setTax(batchListResponse.getBatchList().get(i).getTotalTax());
-                salesLine.setTaxAmount(batchListResponse.getBatchList().get(i).getTotalTax());
-                salesLine.setTotal(batchListResponse.getBatchList().get(i).getMrp());
-                salesLine.setTotalDiscAmount(0.0);
-                salesLine.setTotalDiscPct(0.0);
-                salesLine.setTotalRoundedAmount(0.0);
-                salesLine.setTotalTax(batchListResponse.getBatchList().get(i).getTotalTax());
-                salesLine.setUnit("");
-                salesLine.setUnitPrice(batchListResponse.getBatchList().get(i).getMrp());
-                salesLine.setUnitQty((double) requiredQty);
-                salesLine.setVariantId("");
-                salesLine.setIsReturnClick(false);
-                salesLine.setIsSelectedReturnItem(false);
-                data.setSalesLine(salesLine);
+                    //calculate pos transaction
+                    CalculatePosTransactionRequest.SalesLine salesLine = new CalculatePosTransactionRequest.SalesLine();
+                    salesLine.setBatchNo(batchListResponse.getBatchList().get(i).getBatchNo());
+                    salesLine.setAdditionaltax(0.0);
+                    salesLine.setApplyDiscount(false);
+                    salesLine.setBarcode("");
+                    salesLine.setBaseAmount(batchListResponse.getBatchList().get(i).getMrp());
+                    salesLine.setCESSPerc(batchListResponse.getBatchList().get(i).getCESSPerc());
+                    salesLine.setCESSTaxCode(batchListResponse.getBatchList().get(i).getCESSTaxCode());
+                    salesLine.setCGSTPerc(batchListResponse.getBatchList().get(i).getCGSTPerc());
+                    salesLine.setCGSTTaxCode(batchListResponse.getBatchList().get(i).getCGSTTaxCode());
+                    salesLine.setCategory(iteSearchData.getCategory());
+                    salesLine.setCategoryCode(iteSearchData.getCategoryCode());
+                    salesLine.setCategoryReference("");
+                    salesLine.setComment("");
+                    salesLine.setDpco(iteSearchData.getDpco());
+                    salesLine.setDiscAmount(0.0);
+                    salesLine.setDiscId("");
+                    salesLine.setDiscOfferId("");
+                    salesLine.setDiscountStructureType(0.0);
+                    salesLine.setDiscountType("");
+                    salesLine.setDiseaseType(iteSearchData.getDiseaseType());
+                    salesLine.setExpiry(batchListResponse.getBatchList().get(i).getExpDate());
+                    salesLine.setHsncodeIn(iteSearchData.getHsncodeIn());
+                    salesLine.setIGSTPerc(batchListResponse.getBatchList().get(i).getIGSTPerc());
+                    salesLine.setIGSTTaxCode(batchListResponse.getBatchList().get(i).getIGSTTaxCode());
+                    salesLine.setISPrescribed(0.0);
+                    salesLine.setISReserved(false);
+                    salesLine.setISStockAvailable(true);
+                    salesLine.setInventBatchId("");//-----0B110081BQ
+                    salesLine.setIsChecked(false);
+                    salesLine.setIsGeneric(iteSearchData.getIsGeneric());
+                    salesLine.setIsPriceOverride(false);
+                    salesLine.setIsSubsitute(false);
+                    salesLine.setIsVoid(false);
+                    salesLine.setItemId(batchListResponse.getBatchList().get(i).getItemID());
+                    salesLine.setItemName(iteSearchData.getDescription());
+                    salesLine.setLineDiscPercentage(0.0);
+                    salesLine.setLineManualDiscountAmount(0.0);
+                    salesLine.setLineManualDiscountPercentage(0.0);
+                    salesLine.setLineNo(1);
+                    salesLine.setLinedscAmount(0.0);
+                    salesLine.setMMGroupId("0");
+                    salesLine.setMrp(batchListResponse.getBatchList().get(i).getMrp());
+                    salesLine.setManufacturerCode(iteSearchData.getManufactureCode());
+                    salesLine.setManufacturerName(iteSearchData.getManufacture());
+                    salesLine.setMixMode(false);
+                    salesLine.setModifyBatchId("");
+                    salesLine.setNetAmount(batchListResponse.getBatchList().get(i).getMrp());
+                    salesLine.setNetAmountInclTax(batchListResponse.getBatchList().get(i).getMrp());
+                    salesLine.setOfferAmount(0.0);
+                    salesLine.setOfferDiscountType(0.0);
+                    salesLine.setOfferQty(0.0);
+                    salesLine.setOfferType(0.0);
+                    salesLine.setOmsLineID(0.0);
+                    salesLine.setOmsLineRECID(0.0);
+                    salesLine.setOrderStatus(0.0);
+                    salesLine.setNetAmountInclTax(0.0);
+                    salesLine.setOriginalPrice(batchListResponse.getBatchList().get(i).getMrp());
+                    salesLine.setPeriodicDiscAmount(0.0);
+                    salesLine.setPhysicalMRP(0.0);
+                    salesLine.setPreviewText("");
+                    salesLine.setPrice(batchListResponse.getBatchList().get(i).getMrp());
+                    salesLine.setProductRecID(iteSearchData.getProductRecID());
+                    salesLine.setQty(requiredQty);
+                    salesLine.setRemainderDays(0.0);
+                    salesLine.setRemainingQty(0.0);
+                    salesLine.setResqtyflag(false);
+                    salesLine.setRetailCategoryRecID(iteSearchData.getRetailCategoryRecID());
+                    salesLine.setRetailMainCategoryRecID(iteSearchData.getRetailMainCategoryRecID());
+                    salesLine.setRetailSubCategoryRecID(iteSearchData.getRetailSubCategoryRecID());
+                    salesLine.setReturnQty(0.0);
+                    salesLine.setSGSTPerc(batchListResponse.getBatchList().get(i).getSGSTPerc());
+                    salesLine.setSGSTTaxCode(batchListResponse.getBatchList().get(i).getSGSTTaxCode());
+                    salesLine.setScheduleCategory(iteSearchData.getSchCatg());
+                    salesLine.setScheduleCategoryCode(iteSearchData.getSchCatgCode());
+                    salesLine.setStockQty(Double.valueOf(iteSearchData.getStockqty()));
+                    salesLine.setSubCategory(iteSearchData.getSubCategory());
+                    salesLine.setSubCategoryCode(iteSearchData.getSubCategory());
+                    salesLine.setSubClassification(iteSearchData.getSubClassification());
+                    salesLine.setSubstitudeItemId("");
+                    salesLine.setTax(batchListResponse.getBatchList().get(i).getTotalTax());
+                    salesLine.setTaxAmount(batchListResponse.getBatchList().get(i).getTotalTax());
+                    salesLine.setTotal(batchListResponse.getBatchList().get(i).getMrp());
+                    salesLine.setTotalDiscAmount(0.0);
+                    salesLine.setTotalDiscPct(0.0);
+                    salesLine.setTotalRoundedAmount(0.0);
+                    salesLine.setTotalTax(batchListResponse.getBatchList().get(i).getTotalTax());
+                    salesLine.setUnit("");
+                    salesLine.setUnitPrice(batchListResponse.getBatchList().get(i).getMrp());
+                    salesLine.setUnitQty((double) requiredQty);
+                    salesLine.setVariantId("");
+                    salesLine.setIsReturnClick(false);
+                    salesLine.setIsSelectedReturnItem(false);
+                    data.setSalesLine(salesLine);
 
-                data.setMedicineType(iteSearchData.getCategory());
-                dummyDataList.add(data);
-                break;
+                    data.setMedicineType(iteSearchData.getCategory());
+                    dummyDataList.add(data);
+                    break;
+                }
             } else if (Double.parseDouble(batchListResponse.getBatchList().get(i).getQOH()) < requiredQty) {
-                OCRToDigitalMedicineResponse data = new OCRToDigitalMedicineResponse();
-                data.setArtName(iteSearchData.getDescription());
-                data.setArtCode(iteSearchData.getArtCode() + "," + batchListResponse.getBatchList().get(i).getBatchNo());
-                data.setBatchId(batchListResponse.getBatchList().get(i).getBatchNo());
-                data.setArtprice(String.valueOf(batchListResponse.getBatchList().get(i).getMrp()));
-                data.setContainer("");
-                data.setQty((int) Float.parseFloat(batchListResponse.getBatchList().get(i).getQOH()));
+                if (!batchListResponse.getBatchList().get(i).getNearByExpiry()) {
+
+                    OCRToDigitalMedicineResponse data = new OCRToDigitalMedicineResponse();
+                    data.setArtName(iteSearchData.getDescription());
+                    data.setArtCode(iteSearchData.getArtCode() + "," + batchListResponse.getBatchList().get(i).getBatchNo());
+                    data.setBatchId(batchListResponse.getBatchList().get(i).getBatchNo());
+                    data.setArtprice(String.valueOf(batchListResponse.getBatchList().get(i).getMrp()));
+                    data.setContainer("");
+                    data.setQty((int) Float.parseFloat(batchListResponse.getBatchList().get(i).getQOH()));
 
 
-                //calculate pos transaction
-                CalculatePosTransactionRequest.SalesLine salesLine = new CalculatePosTransactionRequest.SalesLine();
-                salesLine.setBatchNo(batchListResponse.getBatchList().get(i).getBatchNo());
-                salesLine.setAdditionaltax(0.0);
-                salesLine.setApplyDiscount(false);
-                salesLine.setBarcode("");
-                salesLine.setBaseAmount(batchListResponse.getBatchList().get(i).getMrp());
-                salesLine.setCESSPerc(batchListResponse.getBatchList().get(i).getCESSPerc());
-                salesLine.setCESSTaxCode(batchListResponse.getBatchList().get(i).getCESSTaxCode());
-                salesLine.setCGSTPerc(batchListResponse.getBatchList().get(i).getCGSTPerc());
-                salesLine.setCGSTTaxCode(batchListResponse.getBatchList().get(i).getCGSTTaxCode());
-                salesLine.setCategory(iteSearchData.getCategory());
-                salesLine.setCategoryCode(iteSearchData.getCategoryCode());
-                salesLine.setCategoryReference("");
-                salesLine.setComment("");
-                salesLine.setDpco(iteSearchData.getDpco());
-                salesLine.setDiscAmount(0.0);
-                salesLine.setDiscId("");
-                salesLine.setDiscOfferId("");
-                salesLine.setDiscountStructureType(0.0);
-                salesLine.setDiscountType("");
-                salesLine.setDiseaseType(iteSearchData.getDiseaseType());
-                salesLine.setExpiry(batchListResponse.getBatchList().get(i).getExpDate());
-                salesLine.setHsncodeIn(iteSearchData.getHsncodeIn());
-                salesLine.setIGSTPerc(batchListResponse.getBatchList().get(i).getIGSTPerc());
-                salesLine.setIGSTTaxCode(batchListResponse.getBatchList().get(i).getIGSTTaxCode());
-                salesLine.setISPrescribed(0.0);
-                salesLine.setISReserved(false);
-                salesLine.setISStockAvailable(true);
-                salesLine.setInventBatchId("");//-----0B110081BQ
-                salesLine.setIsChecked(false);
-                salesLine.setIsGeneric(iteSearchData.getIsGeneric());
-                salesLine.setIsPriceOverride(false);
-                salesLine.setIsSubsitute(false);
-                salesLine.setIsVoid(false);
-                salesLine.setItemId(batchListResponse.getBatchList().get(i).getItemID());
-                salesLine.setItemName(iteSearchData.getDescription());
-                salesLine.setLineDiscPercentage(0.0);
-                salesLine.setLineManualDiscountAmount(0.0);
-                salesLine.setLineManualDiscountPercentage(0.0);
-                salesLine.setLineNo(1);
-                salesLine.setLinedscAmount(0.0);
-                salesLine.setMMGroupId("0");
-                salesLine.setMrp(batchListResponse.getBatchList().get(i).getMrp());
-                salesLine.setManufacturerCode(iteSearchData.getManufactureCode());
-                salesLine.setManufacturerName(iteSearchData.getManufacture());
-                salesLine.setMixMode(false);
-                salesLine.setModifyBatchId("");
-                salesLine.setNetAmount(batchListResponse.getBatchList().get(i).getMrp());
-                salesLine.setNetAmountInclTax(batchListResponse.getBatchList().get(i).getMrp());
-                salesLine.setOfferAmount(0.0);
-                salesLine.setOfferDiscountType(0.0);
-                salesLine.setOfferQty(0.0);
-                salesLine.setOfferType(0.0);
-                salesLine.setOmsLineID(0.0);
-                salesLine.setOmsLineRECID(0.0);
-                salesLine.setOrderStatus(0.0);
-                salesLine.setNetAmountInclTax(0.0);
-                salesLine.setOriginalPrice(batchListResponse.getBatchList().get(i).getMrp());
-                salesLine.setPeriodicDiscAmount(0.0);
-                salesLine.setPhysicalMRP(0.0);
-                salesLine.setPreviewText("");
-                salesLine.setPrice(batchListResponse.getBatchList().get(i).getMrp());
-                salesLine.setProductRecID(iteSearchData.getProductRecID());
-                salesLine.setQty((int) Float.parseFloat(batchListResponse.getBatchList().get(i).getQOH()));
-                salesLine.setRemainderDays(0.0);
-                salesLine.setRemainingQty(0.0);
-                salesLine.setResqtyflag(false);
-                salesLine.setRetailCategoryRecID(iteSearchData.getRetailCategoryRecID());
-                salesLine.setRetailMainCategoryRecID(iteSearchData.getRetailMainCategoryRecID());
-                salesLine.setRetailSubCategoryRecID(iteSearchData.getRetailSubCategoryRecID());
-                salesLine.setReturnQty(0.0);
-                salesLine.setSGSTPerc(batchListResponse.getBatchList().get(i).getSGSTPerc());
-                salesLine.setSGSTTaxCode(batchListResponse.getBatchList().get(i).getSGSTTaxCode());
-                salesLine.setScheduleCategory(iteSearchData.getSchCatg());
-                salesLine.setScheduleCategoryCode(iteSearchData.getSchCatgCode());
-                salesLine.setStockQty(Double.valueOf(iteSearchData.getStockqty()));
-                salesLine.setSubCategory(iteSearchData.getSubCategory());
-                salesLine.setSubCategoryCode(iteSearchData.getSubCategory());
-                salesLine.setSubClassification(iteSearchData.getSubClassification());
-                salesLine.setSubstitudeItemId("");
-                salesLine.setTax(batchListResponse.getBatchList().get(i).getTotalTax());
-                salesLine.setTaxAmount(batchListResponse.getBatchList().get(i).getTotalTax());
-                salesLine.setTotal(batchListResponse.getBatchList().get(i).getMrp());
-                salesLine.setTotalDiscAmount(0.0);
-                salesLine.setTotalDiscPct(0.0);
-                salesLine.setTotalRoundedAmount(0.0);
-                salesLine.setTotalTax(batchListResponse.getBatchList().get(i).getTotalTax());
-                salesLine.setUnit("");
-                salesLine.setUnitPrice(batchListResponse.getBatchList().get(i).getMrp());
-                salesLine.setUnitQty((double) ((int) Float.parseFloat(batchListResponse.getBatchList().get(i).getQOH())));
-                salesLine.setVariantId("");
-                salesLine.setIsReturnClick(false);
-                salesLine.setIsSelectedReturnItem(false);
-                data.setSalesLine(salesLine);
+                    //calculate pos transaction
+                    CalculatePosTransactionRequest.SalesLine salesLine = new CalculatePosTransactionRequest.SalesLine();
+                    salesLine.setBatchNo(batchListResponse.getBatchList().get(i).getBatchNo());
+                    salesLine.setAdditionaltax(0.0);
+                    salesLine.setApplyDiscount(false);
+                    salesLine.setBarcode("");
+                    salesLine.setBaseAmount(batchListResponse.getBatchList().get(i).getMrp());
+                    salesLine.setCESSPerc(batchListResponse.getBatchList().get(i).getCESSPerc());
+                    salesLine.setCESSTaxCode(batchListResponse.getBatchList().get(i).getCESSTaxCode());
+                    salesLine.setCGSTPerc(batchListResponse.getBatchList().get(i).getCGSTPerc());
+                    salesLine.setCGSTTaxCode(batchListResponse.getBatchList().get(i).getCGSTTaxCode());
+                    salesLine.setCategory(iteSearchData.getCategory());
+                    salesLine.setCategoryCode(iteSearchData.getCategoryCode());
+                    salesLine.setCategoryReference("");
+                    salesLine.setComment("");
+                    salesLine.setDpco(iteSearchData.getDpco());
+                    salesLine.setDiscAmount(0.0);
+                    salesLine.setDiscId("");
+                    salesLine.setDiscOfferId("");
+                    salesLine.setDiscountStructureType(0.0);
+                    salesLine.setDiscountType("");
+                    salesLine.setDiseaseType(iteSearchData.getDiseaseType());
+                    salesLine.setExpiry(batchListResponse.getBatchList().get(i).getExpDate());
+                    salesLine.setHsncodeIn(iteSearchData.getHsncodeIn());
+                    salesLine.setIGSTPerc(batchListResponse.getBatchList().get(i).getIGSTPerc());
+                    salesLine.setIGSTTaxCode(batchListResponse.getBatchList().get(i).getIGSTTaxCode());
+                    salesLine.setISPrescribed(0.0);
+                    salesLine.setISReserved(false);
+                    salesLine.setISStockAvailable(true);
+                    salesLine.setInventBatchId("");//-----0B110081BQ
+                    salesLine.setIsChecked(false);
+                    salesLine.setIsGeneric(iteSearchData.getIsGeneric());
+                    salesLine.setIsPriceOverride(false);
+                    salesLine.setIsSubsitute(false);
+                    salesLine.setIsVoid(false);
+                    salesLine.setItemId(batchListResponse.getBatchList().get(i).getItemID());
+                    salesLine.setItemName(iteSearchData.getDescription());
+                    salesLine.setLineDiscPercentage(0.0);
+                    salesLine.setLineManualDiscountAmount(0.0);
+                    salesLine.setLineManualDiscountPercentage(0.0);
+                    salesLine.setLineNo(1);
+                    salesLine.setLinedscAmount(0.0);
+                    salesLine.setMMGroupId("0");
+                    salesLine.setMrp(batchListResponse.getBatchList().get(i).getMrp());
+                    salesLine.setManufacturerCode(iteSearchData.getManufactureCode());
+                    salesLine.setManufacturerName(iteSearchData.getManufacture());
+                    salesLine.setMixMode(false);
+                    salesLine.setModifyBatchId("");
+                    salesLine.setNetAmount(batchListResponse.getBatchList().get(i).getMrp());
+                    salesLine.setNetAmountInclTax(batchListResponse.getBatchList().get(i).getMrp());
+                    salesLine.setOfferAmount(0.0);
+                    salesLine.setOfferDiscountType(0.0);
+                    salesLine.setOfferQty(0.0);
+                    salesLine.setOfferType(0.0);
+                    salesLine.setOmsLineID(0.0);
+                    salesLine.setOmsLineRECID(0.0);
+                    salesLine.setOrderStatus(0.0);
+                    salesLine.setNetAmountInclTax(0.0);
+                    salesLine.setOriginalPrice(batchListResponse.getBatchList().get(i).getMrp());
+                    salesLine.setPeriodicDiscAmount(0.0);
+                    salesLine.setPhysicalMRP(0.0);
+                    salesLine.setPreviewText("");
+                    salesLine.setPrice(batchListResponse.getBatchList().get(i).getMrp());
+                    salesLine.setProductRecID(iteSearchData.getProductRecID());
+                    salesLine.setQty((int) Float.parseFloat(batchListResponse.getBatchList().get(i).getQOH()));
+                    salesLine.setRemainderDays(0.0);
+                    salesLine.setRemainingQty(0.0);
+                    salesLine.setResqtyflag(false);
+                    salesLine.setRetailCategoryRecID(iteSearchData.getRetailCategoryRecID());
+                    salesLine.setRetailMainCategoryRecID(iteSearchData.getRetailMainCategoryRecID());
+                    salesLine.setRetailSubCategoryRecID(iteSearchData.getRetailSubCategoryRecID());
+                    salesLine.setReturnQty(0.0);
+                    salesLine.setSGSTPerc(batchListResponse.getBatchList().get(i).getSGSTPerc());
+                    salesLine.setSGSTTaxCode(batchListResponse.getBatchList().get(i).getSGSTTaxCode());
+                    salesLine.setScheduleCategory(iteSearchData.getSchCatg());
+                    salesLine.setScheduleCategoryCode(iteSearchData.getSchCatgCode());
+                    salesLine.setStockQty(Double.valueOf(iteSearchData.getStockqty()));
+                    salesLine.setSubCategory(iteSearchData.getSubCategory());
+                    salesLine.setSubCategoryCode(iteSearchData.getSubCategory());
+                    salesLine.setSubClassification(iteSearchData.getSubClassification());
+                    salesLine.setSubstitudeItemId("");
+                    salesLine.setTax(batchListResponse.getBatchList().get(i).getTotalTax());
+                    salesLine.setTaxAmount(batchListResponse.getBatchList().get(i).getTotalTax());
+                    salesLine.setTotal(batchListResponse.getBatchList().get(i).getMrp());
+                    salesLine.setTotalDiscAmount(0.0);
+                    salesLine.setTotalDiscPct(0.0);
+                    salesLine.setTotalRoundedAmount(0.0);
+                    salesLine.setTotalTax(batchListResponse.getBatchList().get(i).getTotalTax());
+                    salesLine.setUnit("");
+                    salesLine.setUnitPrice(batchListResponse.getBatchList().get(i).getMrp());
+                    salesLine.setUnitQty((double) ((int) Float.parseFloat(batchListResponse.getBatchList().get(i).getQOH())));
+                    salesLine.setVariantId("");
+                    salesLine.setIsReturnClick(false);
+                    salesLine.setIsSelectedReturnItem(false);
+                    data.setSalesLine(salesLine);
 
-                data.setMedicineType(iteSearchData.getCategory());
-                dummyDataList.add(data);
-                requiredQty = (int) (requiredQty - Double.parseDouble(batchListResponse.getBatchList().get(i).getQOH()));
+                    data.setMedicineType(iteSearchData.getCategory());
+                    dummyDataList.add(data);
+                    requiredQty = (int) (requiredQty - Double.parseDouble(batchListResponse.getBatchList().get(i).getQOH()));
+                }
             }
         }
 
@@ -1545,7 +1546,11 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
         if (k == imageList.size()) {
             k = 0;
             dummyDataList.clear();
-            new MyOffersController(this, this).calculatePosTransaction(calculatePosTransactionRequest);
+            if (calculatePosTransactionRequest.getSalesLine() != null && calculatePosTransactionRequest.getSalesLine().size() > 0) {
+                new MyOffersController(this, this).calculatePosTransaction(calculatePosTransactionRequest);
+            } else {
+                Utils.showSnackbar(MyOffersActivity.this, constraintLayout, "Product Not Available.");
+            }
         }
 
 //        if (null != SessionManager.INSTANCE.getDataList()) {
@@ -1864,7 +1869,7 @@ public class MyOffersActivity extends AppCompatActivity implements MyOffersListe
             declineButton.setText(getResources().getString(R.string.label_cancel_text));
             okButton.setOnClickListener(v1 -> {
                 dialog.dismiss();
-                SessionManager.INSTANCE.logoutUser();
+//                SessionManager.INSTANCE.logoutUser();
 
                 Intent intent = new Intent(MyOffersActivity.this, MainActivity.class);
                 startActivity(intent);
