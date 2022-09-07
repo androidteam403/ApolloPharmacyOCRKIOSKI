@@ -33,7 +33,7 @@ import com.apollo.pharmacy.ocr.utility.NetworkUtils;
 import com.apollo.pharmacy.ocr.utility.SessionManager;
 import com.apollo.pharmacy.ocr.utility.Utils;
 
-public class AddressEditActivity extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener, AddressEditListener {
+public class AddressEditActivity extends BaseActivity implements ConnectivityReceiver.ConnectivityReceiverListener, AddressEditListener {
 
     private EditText nameEditText, addressEditText, cityEditText, pinCodeEditText, stateEditText;
     private ConstraintLayout constraintLayout;

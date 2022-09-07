@@ -125,4 +125,5 @@
     <dimen name="nine_hundred_dp">900dp</dimen>
     <dimen name="five_hundred_thirty_dp">530dp</dimen>
     <dimen name="dimen1dp">1dp</dimen>
+    <dimen name="dimen130dp">130dp</dimen>
 </resources>

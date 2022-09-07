@@ -60,7 +60,7 @@ import kotlin.jvm.internal.Intrinsics;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class AddressAddActivity extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener,
+public class AddressAddActivity extends BaseActivity implements ConnectivityReceiver.ConnectivityReceiverListener,
         AddressAddListener {
 
     private EditText nameEditText, addressEditText, cityEditText, pinCodeEditText, stateEditText;

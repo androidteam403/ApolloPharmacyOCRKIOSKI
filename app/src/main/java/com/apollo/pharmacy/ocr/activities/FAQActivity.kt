@@ -13,7 +13,7 @@ import com.apollo.pharmacy.ocr.model.FAQData
 import kotlinx.android.synthetic.main.activity_faq.*
 import kotlinx.android.synthetic.main.view_close_layout.*
 
-class FAQActivity : AppCompatActivity(), OnRecyclerItemClickListener {
+class FAQActivity : BaseActivity(), OnRecyclerItemClickListener {
 
     override fun onViewClick(position: Int) {
         val item: FAQData = data.get(position)

@@ -500,10 +500,10 @@ public class KeyboardFragment extends Fragment implements OnClickListener {
 //                    sendString(",");
                     break;
                 case R.id.btn_dot:
-//                    sendString(".");
+                    sendString(".");
                     break;
                 case R.id.btn_hyfen:
-//                    sendString("-");
+                    sendString("-");
                     break;
                 case R.id.btn_comma_normal:
 //                    sendString(",");
@@ -512,7 +512,7 @@ public class KeyboardFragment extends Fragment implements OnClickListener {
 //                    sendString(".");
                     break;
                 case R.id.btn_hyfen_normal:
-//                    sendString("-");
+                    sendString("-");
                     break;
                 case R.id.btn_and_normal:
 //                    sendString("&");

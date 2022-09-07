@@ -320,13 +320,33 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="top"
                                 android:hint="@string/label_terminal_id"
-                                android:imeOptions="actionDone"
+                                android:imeOptions="flagNoExtractUi"
                                 android:inputType="number"
                                 android:padding="@dimen/ten_dp"
                                 android:singleLine="true"
                                 android:textSize="@dimen/sixteen_sp"
                                 android:textStyle="normal" />
                         </com.google.android.material.textfield.TextInputLayout>
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/EditTextInputLayoutStyle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/ten_dp">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/session_time"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="top"
+                                android:hint="Session time in minutes"
+                                android:imeOptions="flagNoExtractUi"
+                                android:inputType="number"
+                                android:padding="@dimen/ten_dp"
+                                android:singleLine="true"
+                                android:textSize="@dimen/sixteen_sp"
+                                android:textStyle="normal" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
 
                         <LinearLayout
                             android:id="@+id/verfication_url"

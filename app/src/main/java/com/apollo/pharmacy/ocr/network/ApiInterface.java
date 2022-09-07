@@ -1,6 +1,8 @@
 package com.apollo.pharmacy.ocr.network;
 
 import com.apollo.pharmacy.ocr.activities.mposstoresetup.model.StoreListResponseModel;
+import com.apollo.pharmacy.ocr.activities.paymentoptions.model.ExpressCheckoutTransactionApiRequest;
+import com.apollo.pharmacy.ocr.activities.paymentoptions.model.ExpressCheckoutTransactionApiResponse;
 import com.apollo.pharmacy.ocr.controller.GetStoreInfoRequest;
 import com.apollo.pharmacy.ocr.model.AddFCMTokenRequest;
 import com.apollo.pharmacy.ocr.model.AllOffersResponse;
@@ -262,5 +264,10 @@ public interface ApiInterface {
 
     @GET("https://jsonblob.com/api/jsonBlob/930811897528467456")
     Call<GroupOffersModelResponse> GET_OFFERS_LIST();
+
+
+    //made changes by Naveen.M - 05/08/2022
+    @POST("http://online.apollopharmacy.org:51/ExpressDelivery/SalesTransactionService.svc/ExpressCheckOutTransaction")
+    Call<ExpressCheckoutTransactionApiResponse> EXPRESS_CHECKOUT_TRANSACTION_API_CALL(@Body ExpressCheckoutTransactionApiRequest expressCheckoutTransactionApiRequest);
 
 }

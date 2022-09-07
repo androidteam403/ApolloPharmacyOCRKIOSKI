@@ -435,4 +435,13 @@ object SessionManager {
     fun getCustrName(): String {
         return pref.getString(ApplicationConstant.CUST_NAME, "");
     }
+
+    fun setSessionTime(sessionTime: Int) {
+        editor.putInt(ApplicationConstant.SESSION_TIME, sessionTime)
+        editor.apply()
+    }
+
+    fun getSessionTime(): Int {
+        return pref.getInt(ApplicationConstant.SESSION_TIME, 5);
+    }
 }

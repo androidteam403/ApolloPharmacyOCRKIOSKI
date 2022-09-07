@@ -117,6 +117,24 @@ public class HomeActivity extends BaseActivity implements ConnectivityReceiver.C
         LinearLayout customerHelpLayout = findViewById(R.id.customer_help_layout);
         customerHelpLayout.setVisibility(View.VISIBLE);
 //        crash.setText("crash");
+
+        if (SessionManager.INSTANCE.getDataList() != null && SessionManager.INSTANCE.getDataList().size() > 0) {
+            activityHomeBinding.checkoutImage.setImageResource(R.drawable.checkout_cart);
+        } else {
+            activityHomeBinding.checkoutImage.setImageResource(R.drawable.checkout_cart_unselect);
+        }
+
+        activityHomeBinding.checkoutImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (SessionManager.INSTANCE.getDataList() != null && SessionManager.INSTANCE.getDataList().size() > 0) {
+                    finish();
+                    Intent intent1 = new Intent(HomeActivity.this, MyCartActivity.class);
+                    startActivity(intent1);
+                    overridePendingTransition(R.animator.trans_right_in, R.animator.trans_right_out);
+                }
+            }
+        });
         customerCareImg.setOnClickListener(v -> {
             if (customerHelpLayout.getVisibility() == View.VISIBLE) {
                 customerCareImg.setBackgroundResource(R.drawable.icon_help_circle);
@@ -186,7 +204,7 @@ public class HomeActivity extends BaseActivity implements ConnectivityReceiver.C
                 dialog.dismiss();
                 SessionManager.INSTANCE.logoutUser();
 
-                Intent intent = new Intent(HomeActivity.this, MainActivity.class);
+                Intent intent = new Intent(HomeActivity.this, UserLoginActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
                 finishAffinity();
@@ -723,6 +741,11 @@ public class HomeActivity extends BaseActivity implements ConnectivityReceiver.C
                         dataList = SessionManager.INSTANCE.getDataList();
                     }
                 }
+                if (SessionManager.INSTANCE.getDataList() != null && SessionManager.INSTANCE.getDataList().size() > 0) {
+                    activityHomeBinding.checkoutImage.setImageResource(R.drawable.checkout_cart);
+                } else {
+                    activityHomeBinding.checkoutImage.setImageResource(R.drawable.checkout_cart_unselect);
+                }
                 Utils.showSnackbar(HomeActivity.this, constraintLayout, getApplicationContext().getResources().getString(R.string.label_item_added_cart));
 //                cartCount(dataList.size());
             }
@@ -789,6 +812,11 @@ public class HomeActivity extends BaseActivity implements ConnectivityReceiver.C
                         dataList.add(object1);
                         SessionManager.INSTANCE.setDataList(dataList);
                     }
+                }
+                if (SessionManager.INSTANCE.getDataList() != null && SessionManager.INSTANCE.getDataList().size() > 0) {
+                    activityHomeBinding.checkoutImage.setImageResource(R.drawable.checkout_cart);
+                } else {
+                    activityHomeBinding.checkoutImage.setImageResource(R.drawable.checkout_cart_unselect);
                 }
                 Utils.showSnackbar(HomeActivity.this, constraintLayout, getApplicationContext().getResources().getString(R.string.label_item_added_cart));
 //                cartCount(dataList.size());

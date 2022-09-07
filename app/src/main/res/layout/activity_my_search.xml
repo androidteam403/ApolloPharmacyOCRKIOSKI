@@ -160,9 +160,9 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:background="@color/white"
+                                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789"
                                     android:hint="Search your product here like : crocin"
                                     android:padding="@dimen/two_dp"
-                                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789"
                                     android:textSize="@dimen/twelve_sp" />
 
                                 <ImageView
@@ -172,8 +172,8 @@
                                     android:layout_alignParentEnd="true"
                                     android:contentDescription="@string/app_name"
                                     android:padding="@dimen/five_dp"
-                                    android:visibility="gone"
-                                    android:src="@drawable/close_icon" />
+                                    android:src="@drawable/close_icon"
+                                    android:visibility="gone" />
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
@@ -505,6 +505,7 @@
                                                     android:textColor="@color/colorPrimary"
                                                     android:textColorHint="@color/colorPrimary"
                                                     android:textSize="@dimen/eighteen_sp" />
+
                                                 <ImageView
                                                     android:id="@+id/search_image"
                                                     android:layout_width="wrap_content"
@@ -512,9 +513,8 @@
                                                     android:layout_alignParentEnd="true"
                                                     android:contentDescription="@string/app_name"
                                                     android:padding="@dimen/ten_dp"
-                                                    android:visibility="visible"
                                                     android:src="@drawable/ic_search"
-                                                    />
+                                                    android:visibility="visible" />
 
                                                 <ImageView
                                                     android:id="@+id/cancel_image"
@@ -644,11 +644,32 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent">
 
+                            <ImageView
+                                android:id="@+id/advertise_banner"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:contentDescription="@string/app_name"
+                                android:scaleType="fitXY" />
+
+                            <TextView
+                                android:id="@+id/no_item_found"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@color/white"
+                                android:contentDescription="@string/app_name"
+                                android:gravity="center"
+                                android:text="No item found"
+                                android:textColor="@color/RED"
+                                android:textSize="24sp"
+                                android:textStyle="bold"
+                                android:visibility="gone" />
+
                             <androidx.recyclerview.widget.RecyclerView
                                 android:id="@+id/categories_recycler_view"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:background="@color/orders_search_layout_blue_bg" />
+                                android:background="@color/orders_search_layout_blue_bg"
+                                android:visibility="gone" />
 
                             <androidx.recyclerview.widget.RecyclerView
                                 android:id="@+id/cross_selling_recycle_new"
@@ -669,7 +690,6 @@
                                 android:id="@+id/search_listview"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:layout_marginBottom="@dimen/twenty_five_dp"
                                 android:background="@color/orders_search_layout_bg"
                                 android:visibility="gone" />
 

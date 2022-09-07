@@ -17,10 +17,11 @@ import androidx.databinding.DataBindingUtil;
 
 import com.apollo.pharmacy.ocr.R;
 import com.apollo.pharmacy.ocr.databinding.ActivityBarcodeScannerBinding;
+import com.apollo.pharmacy.ocr.zebrasdk.BaseActivity;
 import com.journeyapps.barcodescanner.CaptureManager;
 import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 
-public class BarcodeScannerActivity extends AppCompatActivity implements BarcodeScannerListener, DecoratedBarcodeView.TorchListener {
+public class BarcodeScannerActivity extends BaseActivity implements BarcodeScannerListener, DecoratedBarcodeView.TorchListener {
     ActivityBarcodeScannerBinding barcodeScannerBinding;
     private CaptureManager capture;
     private DecoratedBarcodeView barcodeScannerView;

@@ -67,7 +67,7 @@ import java.util.TreeSet;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class MyProfileActivity extends AppCompatActivity implements MyCartListener, CartCountListener,
+public class MyProfileActivity extends BaseActivity implements MyCartListener, CartCountListener,
         ConnectivityReceiver.ConnectivityReceiverListener {
 
     private TextView name_txt, phone_txt, emial_address_txt, location_txt, address_txt, customer_id_txt;
@@ -279,9 +279,9 @@ public class MyProfileActivity extends AppCompatActivity implements MyCartListen
             declineButton.setText(getResources().getString(R.string.label_cancel_text));
             okButton.setOnClickListener(v1 -> {
                 dialog.dismiss();
-                SessionManager.INSTANCE.logoutUser();
+//                SessionManager.INSTANCE.logoutUser();
 
-                Intent intent = new Intent(MyProfileActivity.this, MainActivity.class);
+                Intent intent = new Intent(MyProfileActivity.this, UserLoginActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
                 finishAffinity();

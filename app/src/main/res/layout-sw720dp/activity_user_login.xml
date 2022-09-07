@@ -82,13 +82,14 @@
                                 android:layout_marginBottom="@dimen/thirty_five_dp"
                                 android:contentDescription="@string/app_name"
                                 android:rotation="90"
+                                android:visibility="gone"
                                 android:src="@drawable/back_arrow_click_effect" />
 
                             <TextView
                                 android:layout_width="@dimen/two_hundred_dp"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
-                                android:layout_marginStart="@dimen/one_hundred_forty_five_dp"
+                                android:layout_marginStart="30dp"
                                 android:gravity="center"
                                 android:text="@string/label_mobile_number_verification"
                                 android:textAlignment="center"
