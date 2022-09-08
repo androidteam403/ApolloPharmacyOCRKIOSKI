@@ -33,7 +33,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-public class DeliverySelectionActivity extends AppCompatActivity implements DeliverySelectionListener,
+public class DeliverySelectionActivity extends BaseActivity implements DeliverySelectionListener,
         ConnectivityReceiver.ConnectivityReceiverListener {
 
     private DeliverySelectionController controller;

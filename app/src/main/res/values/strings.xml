@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">ApolloPharmacyOCR</string>
+    <string name="app_name" translatable="false">ApolloKiosk</string>
     <string name="appbar_scrolling_view_behavior" translatable="false">com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior</string>
 
     <string name="label_scroll_welcome" translatable="false">WELCOME</string>
@@ -9,6 +9,7 @@
 
     <string name="Choose_Your_Language_tamil" translatable="false">மொழியை தேர்ந்தெடுங்கள்</string>
     <string name="Choose_Your_Language_telugu" translatable="false">మీ భాషను ఎంచుకోండి</string>
+    <string name="continue_txt">Continue</string>
 
     <!--Language list-->
     <string name="language_english" translatable="false">English</string>
@@ -104,7 +105,7 @@
     <string name="label_serial_number_eighteen" translatable="false">18</string>
 
     <string name="Lets_Begin">"Let's Begin"</string>
-    <string name="Mobile_Number">Mobile Number</string>
+    <string name="Mobile_Number">Mobile Number*</string>
     <string name="Back">Back</string>
     <string name="Home">Home</string>
 
@@ -427,4 +428,39 @@
     <string name="label_earned_credits" translatable="false">Earned Credits</string>
     <string name="label_available_credits" translatable="false">Available Credits</string>
     <string name="label_burned_credits" translatable="false">Burned Credits</string>
+    <string name="upi" translatable="false">@upi</string>
+    <string name="label_your_order_consists_of_fmcg_and_pharma_products_you_have_2_options" translatable="false">Your order consists of FMCG and Pharma Products. You have 2 Options</string>
+    <string name="label_order_type" translatable="false">Order Type</string>
+    <string name="label_total_items" translatable="false">Total Items</string>
+    <string name="label_choose_below_option" translatable="false">Choose Below Option</string>
+    <string name="label_checkout" translatable="false">Checkout</string>
+    <string name="label_two" translatable="false">2</string>
+    <string name="label_seven" translatable="false">7</string>
+    <string name="label_pay_now" translatable="false">Pay Now</string>
+    <string name="label_review_cart" translatable="false">Review Cart</string>
+    <string name="label_need_home_ndelivery" translatable="false">Need Home\nDelivery</string>
+    <string name="label_five" translatable="false">5</string>
+    <string name="label_pay_and_collect_at_counter" translatable="false">Pay and collect at counter</string>
+
+    <string name="label_generic_mac_id" translatable="false">MAC ID\n%1$s</string>
+    <string name="label_sight_registration" translatable="false">Site Registration</string>
+    <string name="label_terminal_id" translatable="false">Terminal Id</string>
+    <string name="label_site_id" translatable="false">Site ID:</string>
+    <string name="label_store_setup" translatable="false">Store Setup</string>
+    <string name="label_device_registration" translatable="false">Device Registration</string>
+    <string name="label_loading" translatable="false">Loading…</string>
+
+    <string name="label_out_of_stock" translatable="false">Product Out Of Stock</string>
+    <string name="label_please_enter_valid_key" translatable="false">Please enter valid key</string>
+    <string name="label_submit" translatable="false">Submit</string>
+    <string name="label_please_login_with_access_key" translatable="false">Please Login with access key</string>
+    <string name="label_about_phone_click_here" translatable="false">About phone (<font color="#0000CC">Click here</font>).</string>
+    <string name="lebel_one_number">1</string>
+    <string name="label_insert_your_prescription">Insert your prescription.</string>
+    <string name="label_enter_your_personal_details_and_delivery_address">Enter your personal details and Delivery address</string>
+    <string name="label_my_profile">My Profile</string>
+    <string name="label_continue_shopping">Continue Shopping</string>
+    <string name="label_login_session_expired">Login session expired!!</string>
+
+
 </resources>

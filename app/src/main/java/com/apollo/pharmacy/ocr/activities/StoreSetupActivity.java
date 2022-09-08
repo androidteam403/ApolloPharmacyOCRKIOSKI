@@ -43,7 +43,7 @@ public class StoreSetupActivity extends AppCompatActivity implements StoreSetupL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_store_setup);
         if (SessionManager.INSTANCE.getIsDeviceSetup()) {
-            Intent intent = new Intent(StoreSetupActivity.this, MainActivity.class);
+            Intent intent = new Intent(StoreSetupActivity.this, UserLoginActivity.class);
             startActivity(intent);
             finish();
             overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
@@ -130,7 +130,7 @@ public class StoreSetupActivity extends AppCompatActivity implements StoreSetupL
     @Override
     public void onSuccessDeviceRegister(GetStoreInfoResponse response) {
         SessionManager.INSTANCE.setIsDeviceSetup(true);
-        Intent intent = new Intent(StoreSetupActivity.this, MainActivity.class);
+        Intent intent = new Intent(StoreSetupActivity.this, UserLoginActivity.class);
         startActivity(intent);
         finish();
         overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);

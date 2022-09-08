@@ -1,14 +1,29 @@
 package com.apollo.pharmacy.ocr.network;
 
+import com.apollo.pharmacy.ocr.activities.mposstoresetup.model.StoreListResponseModel;
+import com.apollo.pharmacy.ocr.activities.paymentoptions.model.ExpressCheckoutTransactionApiRequest;
+import com.apollo.pharmacy.ocr.activities.paymentoptions.model.ExpressCheckoutTransactionApiResponse;
 import com.apollo.pharmacy.ocr.controller.GetStoreInfoRequest;
 import com.apollo.pharmacy.ocr.model.AddFCMTokenRequest;
+import com.apollo.pharmacy.ocr.model.AllOffersResponse;
+import com.apollo.pharmacy.ocr.model.BatchListRequest;
+import com.apollo.pharmacy.ocr.model.BatchListResponse;
+import com.apollo.pharmacy.ocr.model.CalculatePosTransactionRequest;
+import com.apollo.pharmacy.ocr.model.CalculatePosTransactionResponse;
 import com.apollo.pharmacy.ocr.model.Category_request;
 import com.apollo.pharmacy.ocr.model.Categorylist_Response;
+import com.apollo.pharmacy.ocr.model.DeviceRegistrationRequest;
+import com.apollo.pharmacy.ocr.model.DeviceRegistrationResponse;
 import com.apollo.pharmacy.ocr.model.GetImageRes;
+import com.apollo.pharmacy.ocr.model.GetPackSizeRequest;
+import com.apollo.pharmacy.ocr.model.GetPackSizeResponse;
 import com.apollo.pharmacy.ocr.model.GetProductListResponse;
 import com.apollo.pharmacy.ocr.model.GetStoreInfoResponse;
 import com.apollo.pharmacy.ocr.model.Global_api_request;
 import com.apollo.pharmacy.ocr.model.Global_api_response;
+import com.apollo.pharmacy.ocr.model.GroupOffersModelResponse;
+import com.apollo.pharmacy.ocr.model.ItemSearchRequest;
+import com.apollo.pharmacy.ocr.model.ItemSearchResponse;
 import com.apollo.pharmacy.ocr.model.Meta;
 import com.apollo.pharmacy.ocr.model.ModelMobileNumVerify;
 import com.apollo.pharmacy.ocr.model.NewSearchapirequest;
@@ -19,6 +34,9 @@ import com.apollo.pharmacy.ocr.model.OrderPushingRequest;
 import com.apollo.pharmacy.ocr.model.OrderPushingRequest_new;
 import com.apollo.pharmacy.ocr.model.OrderPushingResponse;
 import com.apollo.pharmacy.ocr.model.OrderPushingResponse_new;
+import com.apollo.pharmacy.ocr.model.PhonePayQrCodeRequest;
+import com.apollo.pharmacy.ocr.model.PhonePayQrCodeResponse;
+import com.apollo.pharmacy.ocr.model.PincodeValidateResponse;
 import com.apollo.pharmacy.ocr.model.PinelabTransaction_cancelresponse;
 import com.apollo.pharmacy.ocr.model.Pinelabs_paymenttransaction_response;
 import com.apollo.pharmacy.ocr.model.Pinelabs_transaction_payment_request;
@@ -28,6 +46,7 @@ import com.apollo.pharmacy.ocr.model.PinepayrequestResult;
 import com.apollo.pharmacy.ocr.model.PlaceOrderReqModel;
 import com.apollo.pharmacy.ocr.model.PlaceOrderResModel;
 import com.apollo.pharmacy.ocr.model.PortFolioModel;
+import com.apollo.pharmacy.ocr.model.ProductSrearchResponse;
 import com.apollo.pharmacy.ocr.model.Reddemponits_getpoints_response;
 import com.apollo.pharmacy.ocr.model.Reddemponits_sendotp_response;
 import com.apollo.pharmacy.ocr.model.Redeempoints_checkvoucher_request;
@@ -44,11 +63,15 @@ import com.apollo.pharmacy.ocr.model.Redeempoints_validateotp_retry_request;
 import com.apollo.pharmacy.ocr.model.Redeempoints_validateotp_retry_response;
 import com.apollo.pharmacy.ocr.model.Searchsuggestionrequest;
 import com.apollo.pharmacy.ocr.model.Searchsuggestionresponse;
+import com.apollo.pharmacy.ocr.model.SelfOrderHistoryRequest;
+import com.apollo.pharmacy.ocr.model.SelfOrderHistoryResponse;
 import com.apollo.pharmacy.ocr.model.Send_Sms_Request;
 import com.apollo.pharmacy.ocr.model.Send_Sms_Response;
 import com.apollo.pharmacy.ocr.model.ServicabilityResponse;
 import com.apollo.pharmacy.ocr.model.ServiceAvailabilityRequest;
 import com.apollo.pharmacy.ocr.model.StoreLocatorResponse;
+import com.apollo.pharmacy.ocr.model.UpCellCrossCellRequest;
+import com.apollo.pharmacy.ocr.model.UpCellCrossCellResponse;
 import com.apollo.pharmacy.ocr.model.UploadImageRequest;
 import com.apollo.pharmacy.ocr.model.UploadImageResponse;
 import com.apollo.pharmacy.ocr.model.UserAddress;
@@ -117,8 +140,15 @@ public interface ApiInterface {
     @PUT("userInfo/deleteAddress/{id}")
     Call<Meta> deleteAddress(@Path("id") Integer id);
 
-    @POST("webresources/OrderHistory/getHistory")
-    Call<List<OrderHistoryResponse>> getOrderHistory(@Body OrderHistoryRequest request);
+    @POST("https://online.apollopharmacy.org/UATTAT/Apollo/GetHistory")
+//https://jsonblob.com/api/jsonBlob/887622755529539584
+//webresources/OrderHistory/getHistory
+    Call<List<OrderHistoryResponse>> getOrderHistory(@Header("Authentication") String token, @Body OrderHistoryRequest request);
+
+
+    @POST("https://online.apollopharmacy.org/MAPPSUAT/apollompos/Self/OrderHistory")
+    Call<SelfOrderHistoryResponse> GET_SELF_ORDER_HISTORY(@Body SelfOrderHistoryRequest request);
+
 
     @GET("Customer/GetByMobile?")
     @Headers({"APIKey: 2B577C3C4C144160A5FD4885F7BA53A4", "AccessToken: 03F80DDA69A84382A8AC0E108270972F"})
@@ -169,7 +199,8 @@ public interface ApiInterface {
     @GET
     Call<GetImageRes> getScannedPrescription(@Url String fileUrl);
 
-    @POST("PLACE_ORDERS")
+    @POST("Place_orders")
+//PLACE_ORDERS
     Call<PlaceOrderResModel> PLACE_ORDER_SERVICE_CALL(@Header("token") String token, @Body PlaceOrderReqModel placeOrderReqModel);
 
     @GET
@@ -183,4 +214,60 @@ public interface ApiInterface {
 
     @POST
     Call<UploadImageResponse> getUploadPrescriptionService(@Url String url, @Body UploadImageRequest request);
+
+    @POST("http://20.197.57.170//rest/V1/searchapi")
+    Call<List<ProductSrearchResponse>> productSearch(@Header("authorization") String token, @Body Object productSearchRequest);
+
+    @POST("SalesTransactionService.svc/GetItemDetails")
+//http://online.apollopharmacy.org:51/EPOS/
+//ba8af54b-fa62-11eb-978a-d72b0c462c48
+    Call<ItemSearchResponse> getSearchItemApiCall(@Body ItemSearchRequest itemSearchRequest);
+
+    @POST("SalesTransactionService.svc/GetItemDetails")
+//http://online.apollopharmacy.org:51/EPOS/
+//ba8af54b-fa62-11eb-978a-d72b0c462c48
+    Call<List<ItemSearchResponse.Item>> getSearchItemApiCalls(@Body ItemSearchRequest itemSearchRequest);
+
+    @GET("apollompos/Self/STORELIST")
+    Call<StoreListResponseModel> GET_STORES_LIST();
+
+    @POST("SalesTransactionService.svc/GetBatchDetails")
+//http://online.apollopharmacy.org:51/EPOS/
+//6009921b-fa66-11eb-978a-85578f7c5b29
+    Call<BatchListResponse> GET_BATCH_LIST(@Body BatchListRequest batchListRequest);
+
+    @POST("http://lms.apollopharmacy.org:8033/APK/apollompos/Self/Registration")
+    Call<DeviceRegistrationResponse> deviceRegistration(@Body DeviceRegistrationRequest deviceRegistrationRequest);
+
+    @POST("WalletService.svc/GetQRCodePaymentDetails")
+//http://online.apollopharmacy.org:51/EPOS/
+    Call<PhonePayQrCodeResponse> GET_PhonePay_Qr_Code(@Body PhonePayQrCodeRequest phonePayQrCodeRequest);
+
+    @POST("WalletService.svc/GetQRCodePaymentDetails")
+//http://online.apollopharmacy.org:51/EPOS/
+    Call<PhonePayQrCodeResponse> GET_PhonePay_Qr_payment_Success(@Body PhonePayQrCodeRequest phonePayQrCodeRequest);
+
+    @POST("https://online.apollopharmacy.org/REC/api/upcrossapiselling")
+    Call<UpCellCrossCellResponse> GET_UPCELL_CROSSCELL_OFEERS(@Body UpCellCrossCellRequest upCellCrossCellRequest);
+
+    @POST("https://apollorehab.in/rest/V1/pincode/getstatecountry")
+    Call<List<PincodeValidateResponse>> doPincodeValidateApi(@Header("authorization") String token, @Body Object pincodeValidateRequest);
+
+    @GET("http://apollodashboard.theretailinsightsdemos.com/api/all-offers")
+    Call<AllOffersResponse> GET_ALL_OFFERS_API_CALL(@Header("authorization") String token);
+
+    @POST("SalesTransactionService.svc/CalculatePosTransaction")
+    Call<CalculatePosTransactionResponse> CALCULATE_POS_TRANSACTION_API_CALL(@Body CalculatePosTransactionRequest calculatePosTransactionRequest);
+
+    @POST("https://online.apollopharmacy.org/UATTAT/Apollo/GetPackSize")
+    Call<GetPackSizeResponse> GET_PACK_SIZE_API_CALL(@Header("Authentication") String authentication, @Body GetPackSizeRequest getPackSizeRequest);
+
+    @GET("https://jsonblob.com/api/jsonBlob/930811897528467456")
+    Call<GroupOffersModelResponse> GET_OFFERS_LIST();
+
+
+    //made changes by Naveen.M - 05/08/2022
+    @POST("http://online.apollopharmacy.org:51/ExpressDelivery/SalesTransactionService.svc/ExpressCheckOutTransaction")
+    Call<ExpressCheckoutTransactionApiResponse> EXPRESS_CHECKOUT_TRANSACTION_API_CALL(@Body ExpressCheckoutTransactionApiRequest expressCheckoutTransactionApiRequest);
+
 }

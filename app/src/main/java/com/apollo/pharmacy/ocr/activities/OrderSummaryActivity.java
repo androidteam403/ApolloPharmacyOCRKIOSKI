@@ -108,7 +108,7 @@ import kotlin.jvm.internal.Intrinsics;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class OrderSummaryActivity extends AppCompatActivity implements OrderSummaryListener, PaymentSelectionListener,
+public class OrderSummaryActivity extends BaseActivity implements OrderSummaryListener, PaymentSelectionListener,
         ConnectivityReceiver.ConnectivityReceiverListener {
 
     public String LastActivity;

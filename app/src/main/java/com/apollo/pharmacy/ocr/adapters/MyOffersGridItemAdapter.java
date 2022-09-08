@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.apollo.pharmacy.ocr.R;
 import com.apollo.pharmacy.ocr.activities.MyCartActivity;
+import com.apollo.pharmacy.ocr.dialog.ItemBatchSelectionDilaog;
 import com.apollo.pharmacy.ocr.interfaces.CartCountListener;
 import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
 import com.apollo.pharmacy.ocr.model.Product;
@@ -57,6 +58,7 @@ public class MyOffersGridItemAdapter extends RecyclerView.ViewHolder {
         increement_button = itemView.findViewById(R.id.increement_button);
         decreement_button = itemView.findViewById(R.id.decreement_button);
     }
+
 
     @SuppressLint("ResourceAsColor")
     public void setup(Context context, Product product, int position, List<OCRToDigitalMedicineResponse> datalist, ArrayList<Product> offersArrayList, CartCountListener cartCountListener) {
@@ -120,6 +122,22 @@ public class MyOffersGridItemAdapter extends RecyclerView.ViewHolder {
 
     private void setClickListeners(Product product, Context context, int position, List<OCRToDigitalMedicineResponse> datalist, ArrayList<Product> offersArrayList, CartCountListener cartCountListener) {
         itemAddToCartLayout.setOnClickListener(v -> {
+
+//            ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(product, context, position, datalist,offersArrayList, cartCountListener);
+//            itemBatchSelectionDilaog.setTitle(product.getName());
+//
+//            itemBatchSelectionDilaog.setPositiveListener(view2 -> {
+//                if (checkOutData != null) {
+//                    checkOutData.checkoutData();
+//                }
+//                itemBatchSelectionDilaog.dismiss();
+//            });
+//            itemBatchSelectionDilaog.setNegativeListener(v1 -> {
+////                activityHomeBinding.transColorId.setVisibility(View.GONE);
+//                itemBatchSelectionDilaog.dismiss();
+//            });
+//            itemBatchSelectionDilaog.show();
+
             boolean product_avilable = false;
             if (null != datalist) {
                 int count = 0;
