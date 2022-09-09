@@ -114,7 +114,7 @@ public class CheckoutActivity extends BaseActivity implements CheckoutListener {
                                 pharmaMedicineCount++;
                                 countUniques.remove(j);
                                 j--;
-                            }else {
+                            } else {
                                 fmcgMedicineCount++;
                                 countUniques.remove(j);
                                 j--;
@@ -165,7 +165,7 @@ public class CheckoutActivity extends BaseActivity implements CheckoutListener {
     }
 
     String address;
-    String name, singleAdd, pincode, city, state;
+    String name, singleAdd, pincode, city, state, stateCode, mobileNumber;
 
     @Override
     public void onClickNeedHomeDelivery() {
@@ -281,6 +281,8 @@ public class CheckoutActivity extends BaseActivity implements CheckoutListener {
                     pincode = deliveryAddressDialog.getPincode();
                     city = deliveryAddressDialog.getCity();
                     state = deliveryAddressDialog.getState();
+                    stateCode = deliveryAddressDialog.getStateCode();
+                    mobileNumber = deliveryAddressDialog.getMobileNumber();
                     deliveryAddressDialog.dismiss();
                 }
             });
@@ -288,7 +290,7 @@ public class CheckoutActivity extends BaseActivity implements CheckoutListener {
                 deliveryAddressDialog.dismiss();
             });
             deliveryAddressDialog.show();
-        }else{
+        } else {
             Intent intent = new Intent(CheckoutActivity.this, PaymentOptionsActivity.class);
             intent.putExtra("fmcgTotal", fmcgToatalPass);
             intent.putExtra("isPharmaHomeDelivery", isPharmaHomeDelivery);
@@ -299,17 +301,12 @@ public class CheckoutActivity extends BaseActivity implements CheckoutListener {
             intent.putExtra("pincode", pincode);
             intent.putExtra("city", city);
             intent.putExtra("state", state);
+            intent.putExtra("STATE_CODE", stateCode);
+            intent.putExtra("MOBILE_NUMBER", mobileNumber);
+
             startActivity(intent);
             overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
         }
-
-
-
-
-
-
-
-
 
 
 //        if (isPharmaHomeDelivery || isFmcgHomeDelivery) {
