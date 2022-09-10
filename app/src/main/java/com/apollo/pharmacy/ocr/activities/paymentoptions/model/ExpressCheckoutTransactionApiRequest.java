@@ -2576,7 +2576,7 @@ public class ExpressCheckoutTransactionApiRequest {
 
     }
 
-    public class TenderLine {
+    public static class TenderLine {
 
         @SerializedName("LineNo")
         @Expose
