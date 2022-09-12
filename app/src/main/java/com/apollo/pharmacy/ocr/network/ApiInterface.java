@@ -34,6 +34,8 @@ import com.apollo.pharmacy.ocr.model.OrderPushingRequest;
 import com.apollo.pharmacy.ocr.model.OrderPushingRequest_new;
 import com.apollo.pharmacy.ocr.model.OrderPushingResponse;
 import com.apollo.pharmacy.ocr.model.OrderPushingResponse_new;
+import com.apollo.pharmacy.ocr.model.PdfModelRequest;
+import com.apollo.pharmacy.ocr.model.PdfModelResponse;
 import com.apollo.pharmacy.ocr.model.PhonePayQrCodeRequest;
 import com.apollo.pharmacy.ocr.model.PhonePayQrCodeResponse;
 import com.apollo.pharmacy.ocr.model.PincodeValidateResponse;
@@ -269,5 +271,10 @@ public interface ApiInterface {
     //made changes by Naveen.M - 05/08/2022
     @POST("http://online.apollopharmacy.org:51/ExpressDelivery/SalesTransactionService.svc/ExpressCheckOutTransaction")
     Call<ExpressCheckoutTransactionApiResponse> EXPRESS_CHECKOUT_TRANSACTION_API_CALL(@Body ExpressCheckoutTransactionApiRequest expressCheckoutTransactionApiRequest);
+
+    @POST("http://online.apollopharmacy.org:51/EPOS/SalesTransactionService.svc/PrintReceipt")
+//http://online.apollopharmacy.org:51/EPOS/
+    Call<PdfModelResponse> DOWNLOAD_PDF(@Body PdfModelRequest response);
+
 
 }
