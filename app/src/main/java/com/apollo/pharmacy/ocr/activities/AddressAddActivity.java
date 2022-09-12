@@ -36,11 +36,10 @@ import com.apollo.pharmacy.ocr.network.ApiClient;
 import com.apollo.pharmacy.ocr.network.ApiInterface;
 import com.apollo.pharmacy.ocr.network.CallbackWithRetry;
 import com.apollo.pharmacy.ocr.receiver.ConnectivityReceiver;
-import com.apollo.pharmacy.ocr.utility.Constants;
 import com.apollo.pharmacy.ocr.utility.ApplicationConstant;
+import com.apollo.pharmacy.ocr.utility.Constants;
 import com.apollo.pharmacy.ocr.utility.ImageManager;
 import com.apollo.pharmacy.ocr.utility.NetworkUtils;
-import com.apollo.pharmacy.ocr.utility.Session;
 import com.apollo.pharmacy.ocr.utility.SessionManager;
 import com.apollo.pharmacy.ocr.utility.Singleton;
 import com.apollo.pharmacy.ocr.utility.Utils;
@@ -61,7 +60,7 @@ import kotlin.jvm.internal.Intrinsics;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class AddressAddActivity extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener,
+public class AddressAddActivity extends BaseActivity implements ConnectivityReceiver.ConnectivityReceiverListener,
         AddressAddListener {
 
     private EditText nameEditText, addressEditText, cityEditText, pinCodeEditText, stateEditText;
@@ -103,7 +102,7 @@ public class AddressAddActivity extends AppCompatActivity implements Connectivit
         pinCodeEditText = findViewById(R.id.pinCode_editText);
         cityEditText = findViewById(R.id.city_editText);
         stateEditText = findViewById(R.id.state_editText);
-         okLayout = findViewById(R.id.ok_layout);
+        okLayout = findViewById(R.id.ok_layout);
         LinearLayout cancelLayout = findViewById(R.id.cancel_layout);
         constraintLayout = findViewById(R.id.constraint_layout);
         addressAddController = new AddressAddController(this);
