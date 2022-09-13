@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/constraint_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,6 +14,7 @@
         android:background="@drawable/activity_theme_bg">
 
         <LinearLayout
+            android:id="@+id/sub_parent_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
@@ -29,20 +32,103 @@
             </RelativeLayout>
 
             <LinearLayout
-                android:layout_width="@dimen/eight_hundred_eighty_five_dp"
+                android:id="@+id/sub_sub_parent_layout"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="@dimen/sixty_five_dp"
                 android:orientation="vertical">
 
-                <TextView
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/forty_dp"
                     android:layout_marginBottom="@dimen/five_dp"
-                    android:gravity="center"
-                    android:text="@string/label_search_your_products"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/thirty_five_sp"
-                    android:textStyle="bold" />
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/search"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/label_search_your_products"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="@dimen/thirty_five_sp"
+                        android:textStyle="bold"
+                        android:visibility="gone" />
+
+                    <ImageView
+                        android:id="@+id/check_out_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/thirty_dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="@dimen/forty_dp"
+                        android:contentDescription="@string/app_name"
+                        android:src="@drawable/checkout_cart" />
+
+                    <!--                    <LinearLayout-->
+                    <!--                        android:id="@+id/check_out_btn"-->
+                    <!--                        android:layout_width="wrap_content"-->
+                    <!--                        android:layout_height="wrap_content"-->
+                    <!--                        android:layout_marginLeft="@dimen/forty_dp"-->
+                    <!--                        android:layout_toRightOf="@id/search"-->
+                    <!--                        android:background="@color/nutrition_color"-->
+                    <!--                        android:gravity="center"-->
+                    <!--                        android:orientation="horizontal">-->
+
+                    <!--                        <TextView-->
+                    <!--                            android:layout_width="101dp"-->
+                    <!--                            android:layout_height="30dp"-->
+                    <!--                            android:layout_gravity="center"-->
+                    <!--                            android:gravity="center"-->
+                    <!--                            android:padding="@dimen/ten_dp"-->
+                    <!--                            android:text="@string/label_check_out"-->
+                    <!--                            android:textAllCaps="true"-->
+                    <!--                            android:textColor="@color/colorWhite"-->
+                    <!--                            android:textSize="@dimen/eighteen_sp"-->
+                    <!--                            android:textStyle="bold" />-->
+                    <!--                    </LinearLayout>-->
+
+                    <RelativeLayout
+                        android:id="@+id/scan_products"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:visibility="gone">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:background="@drawable/okay_btn_bg"
+                            android:backgroundTint="@color/near_apollo_store_color"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/fifteen_dp"
+                                android:text="Scan your product bar code"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/fourteen_sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="@dimen/forty_dp"
+                            android:layout_height="@dimen/forty_dp"
+                            android:layout_centerVertical="true"
+                            android:background="@drawable/round_untick_bg"
+                            android:backgroundTint="@color/white"
+                            android:contentDescription="@string/app_name"
+                            android:padding="@dimen/ten_dp"
+                            android:src="@drawable/scan_products_icon" />
+
+
+                    </RelativeLayout>
+                </RelativeLayout>
 
                 <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                     android:layout_width="match_parent"
@@ -65,12 +151,47 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="@dimen/sixty_dp"
                                 android:background="@color/text_dark_blue_color"
-                                android:orientation="horizontal">
+                                android:orientation="horizontal"
+                                android:padding="@dimen/ten_dp">
+
+                                <EditText
+                                    android:id="@+id/search_product_text"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:background="@color/white"
+                                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789"
+                                    android:hint="Search your product here like : Crocin"
+                                    android:imeOptions="flagNoExtractUi"
+                                    android:importantForAutofill="no"
+                                    android:inputType="text"
+                                    android:padding="@dimen/ten_dp"
+                                    android:textSize="@dimen/twenty_sp" />
+
+                                <ImageView
+                                    android:id="@+id/search_image"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentEnd="true"
+                                    android:contentDescription="@string/app_name"
+                                    android:padding="@dimen/ten_dp"
+                                    android:src="@drawable/ic_search"
+                                    android:visibility="visible" />
+
+                                <ImageView
+                                    android:id="@+id/clear_search_text"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentEnd="true"
+                                    android:contentDescription="@string/app_name"
+                                    android:padding="@dimen/ten_dp"
+                                    android:src="@drawable/close_icon"
+                                    android:visibility="gone" />
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:orientation="horizontal"
+                                    android:visibility="gone"
                                     android:weightSum="1">
 
                                     <LinearLayout
@@ -139,11 +260,13 @@
                                             </LinearLayout>
 
                                         </LinearLayout>
+
                                         <View
                                             android:layout_width="2dp"
                                             android:layout_height="match_parent"
-                                            android:visibility="gone"
-                                            android:background="@color/color_yellow_button"/>
+                                            android:background="@color/color_yellow_button"
+                                            android:visibility="gone" />
+
                                         <LinearLayout
                                             android:id="@+id/pharma_layout"
                                             android:layout_width="0dp"
@@ -202,15 +325,16 @@
                                             </LinearLayout>
 
                                         </LinearLayout>
+
                                         <View
                                             android:layout_width="2dp"
                                             android:layout_height="match_parent"
-                                            android:background="@color/color_yellow_button"/>
+                                            android:background="@color/color_yellow_button" />
 
                                         <LinearLayout
                                             android:id="@+id/image_layout"
-                                            android:layout_height="match_parent"
                                             android:layout_width="0dp"
+                                            android:layout_height="match_parent"
                                             android:layout_gravity="center"
                                             android:layout_marginTop="@dimen/two_dp"
                                             android:layout_marginEnd="@dimen/two_dp"
@@ -402,8 +526,8 @@
                                                     android:layout_centerInParent="true"
                                                     android:layout_marginEnd="@dimen/ten_dp"
                                                     android:background="@drawable/close_icon"
-                                                    android:tint="@color/black"
-                                                    android:visibility="gone" />
+                                                    android:visibility="gone"
+                                                    card_view:tint="@color/black" />
                                             </RelativeLayout>
                                         </LinearLayout>
 
@@ -421,10 +545,10 @@
                                             android:layout_marginEnd="@dimen/two_dp"
                                             android:layout_marginBottom="@dimen/two_dp"
                                             android:layout_weight="0.2"
-                                            android:visibility="gone"
                                             android:background="@color/search_layout_bg"
                                             android:gravity="center"
-                                            android:orientation="horizontal">
+                                            android:orientation="horizontal"
+                                            android:visibility="gone">
 
                                             <ImageView
                                                 android:layout_width="@dimen/twenty_five_dp"
@@ -510,15 +634,52 @@
                             </LinearLayout>
                         </FrameLayout>
 
+                        <ProgressBar
+                            android:id="@+id/pdialog"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:indeterminate="true"
+                            android:visibility="gone" />
+
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent">
+
+                            <ImageView
+                                android:id="@+id/advertise_banner"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:contentDescription="@string/app_name"
+                                android:scaleType="fitXY" />
+
+                            <TextView
+                                android:id="@+id/no_item_found"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@color/white"
+                                android:contentDescription="@string/app_name"
+                                android:gravity="center"
+                                android:text="No item found"
+                                android:textColor="@color/RED"
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                android:visibility="gone" />
+
 
                             <androidx.recyclerview.widget.RecyclerView
                                 android:id="@+id/categories_recycler_view"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:background="@color/orders_search_layout_blue_bg" />
+                                android:background="@color/orders_search_layout_blue_bg"
+                                android:visibility="gone" />
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/cross_selling_recycle_new"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@color/offers_list_bg"
+                                android:visibility="gone" />
 
                             <ListView
                                 android:id="@+id/search_suggestion_listview"
@@ -532,7 +693,6 @@
                                 android:id="@+id/search_listview"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:layout_marginBottom="@dimen/twenty_five_dp"
                                 android:background="@color/orders_search_layout_bg"
                                 android:visibility="gone" />
 
@@ -555,7 +715,8 @@
                 android:layout_height="match_parent"
                 android:layout_marginStart="@dimen/twenty_dp"
                 android:layout_marginEnd="@dimen/ten_dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -645,6 +806,13 @@
         <include
             android:id="@+id/networkErrorLayout"
             layout="@layout/layout_network_error" />
+
+        <TextView
+            android:id="@+id/trans_color_id"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/transparent_color"
+            android:visibility="gone" />
     </RelativeLayout>
 
     <include
