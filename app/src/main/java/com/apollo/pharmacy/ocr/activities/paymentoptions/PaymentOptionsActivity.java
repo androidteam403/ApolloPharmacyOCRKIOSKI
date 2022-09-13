@@ -50,12 +50,14 @@ public class PaymentOptionsActivity extends BaseActivity implements PhonePayQrCo
     private ActivityPaymentOptionsBinding activityPaymentOptionsBinding;
     private double pharmaTotalData = 0.0;
     private List<OCRToDigitalMedicineResponse> dataList;
-    private String customerDeliveryAddress, name, singleAdd, pincode, city, state;
+    private String customerDeliveryAddress, name, singleAdd, pincode, city, state, stateCode, mobileNumber;
     private double grandTotalAmountFmcg = 0.0;
     private double grandTotalAmountPharma = 0.0;
     private boolean isPharmaOrder;
     private boolean isFmcgOrder;
     private boolean isPharmadeliveryType, isFmcgDeliveryType;
+
+    private String fmcgOrderId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +84,8 @@ public class PaymentOptionsActivity extends BaseActivity implements PhonePayQrCo
             pincode = (String) getIntent().getStringExtra("pincode");
             city = (String) getIntent().getStringExtra("city");
             state = (String) getIntent().getStringExtra("state");
+            stateCode = (String) getIntent().getStringExtra("STATE_CODE");
+            mobileNumber = (String) getIntent().getStringExtra("MOBILE_NUMBER");
         }
 
         if (isFmcgDeliveryType) {
@@ -203,9 +207,9 @@ public class PaymentOptionsActivity extends BaseActivity implements PhonePayQrCo
 //                    placeOrder();
 
                     if (isFmcgOrder) {
-                        isFmcgOrder = false;
-//                        new PhonePayQrCodeController(PaymentOptionsActivity.this, PaymentOptionsActivity.this).expressCheckoutTransactionApiCall(getExpressCheckoutTransactionApiRequest());
-                        placeOrderFmcg();
+//                        isFmcgOrder = false;
+                        new PhonePayQrCodeController(PaymentOptionsActivity.this, PaymentOptionsActivity.this).expressCheckoutTransactionApiCall(getExpressCheckoutTransactionApiRequest());
+//                        placeOrderFmcg();
                     } else {
                         isPharmaOrder = false;
                         placeOrderPharma();
@@ -389,7 +393,8 @@ public class PaymentOptionsActivity extends BaseActivity implements PhonePayQrCo
 
                     if (isFmcgOrder) {
                         isFmcgOrder = false;
-                        placeOrderFmcg();
+                        new PhonePayQrCodeController(PaymentOptionsActivity.this, PaymentOptionsActivity.this).expressCheckoutTransactionApiCall(getExpressCheckoutTransactionApiRequest());
+//                        placeOrderFmcg();
                     } else {
                         isPharmaOrder = false;
                         placeOrderPharma();
@@ -576,7 +581,7 @@ public class PaymentOptionsActivity extends BaseActivity implements PhonePayQrCo
         }
     }
 
-    String fmcgOrderId;
+    //    String fmcgOrderId;
     String pharmaOrderId;
     boolean onlineAmountPaid;
 
@@ -597,7 +602,8 @@ public class PaymentOptionsActivity extends BaseActivity implements PhonePayQrCo
             }
             if (isFmcgOrder) {
                 pharmaOrderId = body.getOrdersResult().getOrderNo().toString();
-                placeOrderFmcg();
+//                placeOrderFmcg();
+                new PhonePayQrCodeController(PaymentOptionsActivity.this, PaymentOptionsActivity.this).expressCheckoutTransactionApiCall(getExpressCheckoutTransactionApiRequest());
                 isFmcgOrder = false;
             } else if (isPharmaOrder) {
                 fmcgOrderId = body.getOrdersResult().getOrderNo().toString();
@@ -612,6 +618,7 @@ public class PaymentOptionsActivity extends BaseActivity implements PhonePayQrCo
                     intent.putExtra("OnlineAmountPaid", onlineAmountPaid);
                     intent.putExtra("pharma_delivery_type", isPharmadeliveryType);
                     intent.putExtra("fmcg_delivery_type", isFmcgDeliveryType);
+                    intent.putExtra("EXPRESS_CHECKOUT_TRANSACTION_ID", expressCheckoutTransactionId);
                     startActivity(intent);
                     overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
                 }
@@ -623,7 +630,7 @@ public class PaymentOptionsActivity extends BaseActivity implements PhonePayQrCo
 
     @Override
     public void onFailureService(String string) {
-
+        Toast.makeText(this, string, Toast.LENGTH_SHORT).show();
     }
 
 
@@ -635,7 +642,8 @@ public class PaymentOptionsActivity extends BaseActivity implements PhonePayQrCo
             onlineAmountPaid = true;
             if (isFmcgOrder) {
                 isFmcgOrder = false;
-                placeOrderFmcg();
+//                placeOrderFmcg();
+                new PhonePayQrCodeController(PaymentOptionsActivity.this, PaymentOptionsActivity.this).expressCheckoutTransactionApiCall(getExpressCheckoutTransactionApiRequest());
             } else {
                 isPharmaOrder = false;
                 placeOrderPharma();
@@ -670,9 +678,15 @@ public class PaymentOptionsActivity extends BaseActivity implements PhonePayQrCo
         Utils.showSnackbarDialog(this, findViewById(android.R.id.content), message);
     }
 
+    private String expressCheckoutTransactionId = "";
+
     @Override
     public void onSuccessexpressCheckoutTransactionApiCall(ExpressCheckoutTransactionApiResponse expressCheckoutTransactionApiResponse) {
-        if (expressCheckoutTransactionApiResponse.getRequestStatus() != null && expressCheckoutTransactionApiResponse.getRequestStatus().equals("0")) {
+        if (expressCheckoutTransactionApiResponse.getRequestStatus() != null && expressCheckoutTransactionApiResponse.getRequestStatus() == 0) {
+            isFmcgOrder = false;
+            this.expressCheckoutTransactionId = expressCheckoutTransactionApiResponse.getTransactionId();
+            placeOrderFmcg();
+
 
         }
     }
@@ -750,7 +764,7 @@ public class PaymentOptionsActivity extends BaseActivity implements PhonePayQrCo
 
         PlaceOrderReqModel placeOrderReqModel = new PlaceOrderReqModel();
         PlaceOrderReqModel.TpdetailsEntity tpDetailsEntity = new PlaceOrderReqModel.TpdetailsEntity();
-        tpDetailsEntity.setOrderId(Utils.getTransactionGeneratedId());
+        tpDetailsEntity.setOrderId(this.fmcgOrderId);//Utils.getTransactionGeneratedId()
         tpDetailsEntity.setShopId(SessionManager.INSTANCE.getStoreId());
         if (isFmcgDeliveryType) {
             tpDetailsEntity.setShippingMethod("HOME DELIVERY");
@@ -1080,38 +1094,248 @@ public class PaymentOptionsActivity extends BaseActivity implements PhonePayQrCo
 
     public ExpressCheckoutTransactionApiRequest getExpressCheckoutTransactionApiRequest() {
         ExpressCheckoutTransactionApiRequest expressCheckoutTransactionApiRequest = new ExpressCheckoutTransactionApiRequest();
-        expressCheckoutTransactionApiRequest.setCorpCode("");//Need Clarify
-        expressCheckoutTransactionApiRequest.setMobileNO("");//Need Clarify
-        expressCheckoutTransactionApiRequest.setCustomerName("");//Need Clarify
-        expressCheckoutTransactionApiRequest.setDoctorName("");//Need Clarify
-        expressCheckoutTransactionApiRequest.setDoctorCode("");//Need Clarify
-        expressCheckoutTransactionApiRequest.setTrackingRef("");//Need Clarify
-        expressCheckoutTransactionApiRequest.setStaff("");//Need Clarify
-        expressCheckoutTransactionApiRequest.setStore("");//Need Clarify
-        expressCheckoutTransactionApiRequest.setState("");//Need Clarify
-        expressCheckoutTransactionApiRequest.setTerminal("");//Need Clarify
-        expressCheckoutTransactionApiRequest.setDataAreaId("");//Need Clarify
-        expressCheckoutTransactionApiRequest.setIsStockCheck(true);//Need Clarify
-        expressCheckoutTransactionApiRequest.setExpiryDays(30);//Need Clarify
+        expressCheckoutTransactionApiRequest.setRemainingamount(0);
+        expressCheckoutTransactionApiRequest.setAvailablePoint(0);
+        expressCheckoutTransactionApiRequest.setIsPickPackOrder(false);
+        expressCheckoutTransactionApiRequest.setIsHDOrder(false);
+        expressCheckoutTransactionApiRequest.setTimeSlot("1900-01-01");
+        expressCheckoutTransactionApiRequest.setAmazonPrintStatus(null);
+        expressCheckoutTransactionApiRequest.setIsTPASeller(false);
+        expressCheckoutTransactionApiRequest.setDonationAmount(0);
+        expressCheckoutTransactionApiRequest.setIsBulkDiscount(false);
+        expressCheckoutTransactionApiRequest.setReturnRequestId("");
+        expressCheckoutTransactionApiRequest.setIsOMSJurnalsScreen(false);
+        expressCheckoutTransactionApiRequest.setISOMSReturn(false);
+        expressCheckoutTransactionApiRequest.setRiderMobile("");
+        expressCheckoutTransactionApiRequest.setRiderName("");
+        expressCheckoutTransactionApiRequest.setRiderCode("");
+        expressCheckoutTransactionApiRequest.setDspName("");
+        expressCheckoutTransactionApiRequest.setRevReturnOtp("");
+        expressCheckoutTransactionApiRequest.setPickupOtp("");
+        expressCheckoutTransactionApiRequest.setFwdReturnOtp("");
+        expressCheckoutTransactionApiRequest.setRTOStatus(false);
+        expressCheckoutTransactionApiRequest.setPickupStatus(false);
+        expressCheckoutTransactionApiRequest.setTier("");
+        expressCheckoutTransactionApiRequest.setCustomerType("");
+        expressCheckoutTransactionApiRequest.setStockStatus("");
+        expressCheckoutTransactionApiRequest.setIsUHIDBilling(false);
+        expressCheckoutTransactionApiRequest.setHCOfferCode("");
+        expressCheckoutTransactionApiRequest.setDiscountStatus(0);
+        expressCheckoutTransactionApiRequest.setDiscountReferenceID("");
+        expressCheckoutTransactionApiRequest.setISOnlineOrder(false);
+        expressCheckoutTransactionApiRequest.setISCancelled(false);
+        expressCheckoutTransactionApiRequest.setVendorCode("");
+        expressCheckoutTransactionApiRequest.setISReserved(false);
+        expressCheckoutTransactionApiRequest.setISBulkBilling(false);
+        expressCheckoutTransactionApiRequest.setDeliveryDate("1900-01-01");
+        expressCheckoutTransactionApiRequest.setOrderType("");
+        expressCheckoutTransactionApiRequest.setOrderSource("");
+        expressCheckoutTransactionApiRequest.setShippingMethod("");
+        expressCheckoutTransactionApiRequest.setShippingMethodDesc("");
+        expressCheckoutTransactionApiRequest.setBillingCity("");
+        expressCheckoutTransactionApiRequest.setVendorId("");
+        expressCheckoutTransactionApiRequest.setPaymentSource("");
+        expressCheckoutTransactionApiRequest.setISPrescibeDiscount(false);
+        expressCheckoutTransactionApiRequest.setCancelReasonCode("");
+        expressCheckoutTransactionApiRequest.setStoreName("");
+        expressCheckoutTransactionApiRequest.setRegionCode("");
+        expressCheckoutTransactionApiRequest.setCustomerID("");
+        expressCheckoutTransactionApiRequest.setDob("");
+        expressCheckoutTransactionApiRequest.setCustAddress("");
+        expressCheckoutTransactionApiRequest.setCustomerState("");
+        expressCheckoutTransactionApiRequest.setGender(0);
+        expressCheckoutTransactionApiRequest.setSalesOrigin("");
+        expressCheckoutTransactionApiRequest.setRefno("");
+        expressCheckoutTransactionApiRequest.setIpno("");
+        expressCheckoutTransactionApiRequest.setIPSerialNO("");
+        expressCheckoutTransactionApiRequest.setReciptId("");
+        expressCheckoutTransactionApiRequest.setBatchTerminalid("");
+        expressCheckoutTransactionApiRequest.setBusinessDate("");
+        expressCheckoutTransactionApiRequest.setChannel("");
+        expressCheckoutTransactionApiRequest.setComment("");
+        expressCheckoutTransactionApiRequest.setCreatedonPosTerminal("");
+        expressCheckoutTransactionApiRequest.setCurrency("");
+        expressCheckoutTransactionApiRequest.setCustAccount("");
+        expressCheckoutTransactionApiRequest.setCustDiscamount(0);
+        expressCheckoutTransactionApiRequest.setDiscAmount(0);
+        expressCheckoutTransactionApiRequest.setEntryStatus(0);
+        expressCheckoutTransactionApiRequest.setGrossAmount(0);
+        expressCheckoutTransactionApiRequest.setNetAmount(0);
+        expressCheckoutTransactionApiRequest.setNetAmountInclTax(0);
+        expressCheckoutTransactionApiRequest.setNumberofItemLines(0);
+        expressCheckoutTransactionApiRequest.setNumberofItems(0);
+        expressCheckoutTransactionApiRequest.setRoundedAmount(0);
+        expressCheckoutTransactionApiRequest.setReturnStore("");
+        expressCheckoutTransactionApiRequest.setReturnTerminal("");
+        expressCheckoutTransactionApiRequest.setReturnTransactionId("");
+        expressCheckoutTransactionApiRequest.setReturnReceiptId("");
+        expressCheckoutTransactionApiRequest.setTimewhenTransClosed(0);
+        expressCheckoutTransactionApiRequest.setTotalDiscAmount(0);
+        expressCheckoutTransactionApiRequest.setTotalManualDiscountAmount(0);
+        expressCheckoutTransactionApiRequest.setTotalManualDiscountPercentage(0);
+        expressCheckoutTransactionApiRequest.setTotalMRP(0);
+        expressCheckoutTransactionApiRequest.setTotalTaxAmount(0);
+        expressCheckoutTransactionApiRequest.setTransactionId("");
+        expressCheckoutTransactionApiRequest.setTransDate("");
+        expressCheckoutTransactionApiRequest.setType(0);
+        expressCheckoutTransactionApiRequest.setIsVoid(false);
+        expressCheckoutTransactionApiRequest.setIsReturn(false);
+        expressCheckoutTransactionApiRequest.setISBatchModifiedAllowed(false);
+        expressCheckoutTransactionApiRequest.setISReturnAllowed(false);
+        expressCheckoutTransactionApiRequest.setIsManualBill(false);
+        expressCheckoutTransactionApiRequest.setReturnType(0);
+        expressCheckoutTransactionApiRequest.setCurrentSalesLine(0);
+        expressCheckoutTransactionApiRequest.setRequestStatus(0);
+        expressCheckoutTransactionApiRequest.setReturnMessage("");
+        expressCheckoutTransactionApiRequest.setPosEvent(0);
+        expressCheckoutTransactionApiRequest.setTransType(0);
+        expressCheckoutTransactionApiRequest.setISPosted(false);
+        expressCheckoutTransactionApiRequest.setSez(0);
+        expressCheckoutTransactionApiRequest.setCouponCode("");
+        expressCheckoutTransactionApiRequest.setISAdvancePayment(false);
+        expressCheckoutTransactionApiRequest.setAmounttoAccount(0);
+        expressCheckoutTransactionApiRequest.setReminderDays(0);
+        expressCheckoutTransactionApiRequest.setISOMSOrder(false);
+        expressCheckoutTransactionApiRequest.setISHBPStore(false);
+        expressCheckoutTransactionApiRequest.setPatientID("");
+        expressCheckoutTransactionApiRequest.setApprovedID("");
+        expressCheckoutTransactionApiRequest.setDiscountRef("");
+        expressCheckoutTransactionApiRequest.setAWBNo("");
+        expressCheckoutTransactionApiRequest.setDSPCode("");
+        expressCheckoutTransactionApiRequest.setISHyperLocalDelivery(false);
+        expressCheckoutTransactionApiRequest.setISHyperDelivered(false);
+        expressCheckoutTransactionApiRequest.setCreatedDateTime("1900-01-01");
+        expressCheckoutTransactionApiRequest.setOMSCreditAmount(0);
+        expressCheckoutTransactionApiRequest.setISOMSValidate(false);
+        expressCheckoutTransactionApiRequest.setAllowedTenderType("");
+        expressCheckoutTransactionApiRequest.setShippingCharges(0);
+        expressCheckoutTransactionApiRequest.setAgeGroup("");
+
+
+        expressCheckoutTransactionApiRequest.setCorpCode("8860");
+        expressCheckoutTransactionApiRequest.setMobileNO(mobileNumber);
+        expressCheckoutTransactionApiRequest.setCustomerName(name);
+        expressCheckoutTransactionApiRequest.setDoctorName("APOLLO");
+        expressCheckoutTransactionApiRequest.setDoctorCode("0");
+        this.fmcgOrderId = Utils.getTransactionGeneratedId();
+        expressCheckoutTransactionApiRequest.setTrackingRef(this.fmcgOrderId);
+        expressCheckoutTransactionApiRequest.setStaff("System");
+        expressCheckoutTransactionApiRequest.setStore(SessionManager.INSTANCE.getStoreId());
+        expressCheckoutTransactionApiRequest.setState(stateCode);
+        expressCheckoutTransactionApiRequest.setTerminal(SessionManager.INSTANCE.getTerminalId());
+        expressCheckoutTransactionApiRequest.setDataAreaId(SessionManager.INSTANCE.getCompanyName());
+        expressCheckoutTransactionApiRequest.setIsStockCheck(true);
+        expressCheckoutTransactionApiRequest.setExpiryDays(30);
 
         List<ExpressCheckoutTransactionApiRequest.SalesLine> salesLineList = new ArrayList<>();
-        // do add saleslines to salesLineList
-
         for (int i = 0; i < SessionManager.INSTANCE.getDataList().size(); i++) {
             ExpressCheckoutTransactionApiRequest.SalesLine salesLine = new ExpressCheckoutTransactionApiRequest.SalesLine();
             if (SessionManager.INSTANCE.getDataList().get(i).getMedicineType().equals("FMCG") || SessionManager.INSTANCE.getDataList().get(i).getMedicineType().equals("PRIVATE LABEL")) {
+                salesLine.setReasonCode("");
+                salesLine.setPriceVariation(false);
+                salesLine.setQCPass(false);
+                salesLine.setQCFail(false);
+                salesLine.setQCStatus(0);
+                salesLine.setQCDate("");
+                salesLine.setQCRemarks("");
+                salesLine.setAlternetItemID("");
+                salesLine.setItemName("");
+                salesLine.setCategory("");
+                salesLine.setCategoryCode("");
+                salesLine.setSubCategory("");
+                salesLine.setSubCategoryCode("");
+                salesLine.setScheduleCategory("");
+                salesLine.setScheduleCategoryCode("");
+                salesLine.setManufacturerCode("");
+                salesLine.setManufacturerName("");
+                salesLine.setExpiry("01-Jan-1900");
+                salesLine.setStockQty(0);
+                salesLine.setReturnQty(0);
+                salesLine.setRemainingQty(0);
+                salesLine.setTax(0);
+                salesLine.setAdditionaltax(0);
+                salesLine.setBarcode("");
+                salesLine.setComment("");
+                salesLine.setDiscOfferId("");
+                salesLine.setHsncodeIn("");
+                salesLine.setInventBatchId("");
+                salesLine.setPreviewText("");
+                salesLine.setLinedscAmount(0);
+                salesLine.setLineManualDiscountAmount(0);
+                salesLine.setLineManualDiscountPercentage(0);
+                salesLine.setNetAmount(0);
+                salesLine.setNetAmountInclTax(0);
+                salesLine.setOriginalPrice(0);
+                salesLine.setPeriodicDiscAmount(0);
+                salesLine.setPrice(0);
+                salesLine.setTaxAmount(0);
+                salesLine.setBaseAmount(0);
+                salesLine.setTotalRoundedAmount(0);
+                salesLine.setUnit("");
+                salesLine.setVariantId("");
+                salesLine.setTotal(0);
+                salesLine.setISPrescribed(0);
+                salesLine.setRemainderDays(0);
+                salesLine.setIsVoid(false);
+                salesLine.setIsPriceOverride(false);
+                salesLine.setIsChecked(false);
+                salesLine.setRetailCategoryRecID("");
+                salesLine.setRetailSubCategoryRecID("");
+                salesLine.setRetailMainCategoryRecID("");
+                salesLine.setDpco(false);
+                salesLine.setProductRecID("");
+                salesLine.setModifyBatchId("");
+                salesLine.setDiseaseType("");
+                salesLine.setClassification("");
+                salesLine.setSubClassification("");
+                salesLine.setOfferQty(0);
+                salesLine.setOfferAmount(0);
+                salesLine.setOfferDiscountType(0);
+                salesLine.setOfferDiscountValue(0);
+                salesLine.setDiscountType("");
+                salesLine.setMixMode(false);
+                salesLine.setMMGroupId("");
+                salesLine.setOfferType(0);
+                salesLine.setApplyDiscount(false);
+                salesLine.setIGSTPerc(0);
+                salesLine.setCESSPerc(0);
+                salesLine.setCGSTPerc(0);
+                salesLine.setSGSTPerc(0);
+                salesLine.setTotalTax(0);
+                salesLine.setIGSTTaxCode(null);
+                salesLine.setCESSTaxCode(null);
+                salesLine.setCGSTTaxCode(null);
+                salesLine.setSGSTTaxCode(null);
+                salesLine.setDiscountStructureType(0);
+                salesLine.setSubstitudeItemId("");
+                salesLine.setCategoryReference("");
+                salesLine.setOrderStatus(0);
+                salesLine.setOmsLineID(0);
+                salesLine.setIsSubsitute(false);
+                salesLine.setIsGeneric(false);
+                salesLine.setOmsLineRECID(0);
+                salesLine.setISReserved(false);
+                salesLine.setISStockAvailable(false);
+                salesLine.setISRestricted(false);
+                salesLine.setPhysicalBatchID(null);
+                salesLine.setPhysicalMRP(0);
+                salesLine.setPhysicalExpiry(null);
+
+
                 salesLine.setLineNo(i + 1);
                 salesLine.setItemId(SessionManager.INSTANCE.getDataList().get(i).getArtCode().contains(",") ? SessionManager.INSTANCE.getDataList().get(i).getArtCode().substring(0, SessionManager.INSTANCE.getDataList().get(i).getArtCode().indexOf(",")) : SessionManager.INSTANCE.getDataList().get(i).getArtCode());
                 salesLine.setItemName(SessionManager.INSTANCE.getDataList().get(i).getArtName());
                 salesLine.setQty(SessionManager.INSTANCE.getDataList().get(i).getQty());
                 salesLine.setMrp(Double.parseDouble(SessionManager.INSTANCE.getDataList().get(i).getArtprice()));
-                salesLine.setDiscAmount(Double.parseDouble(SessionManager.INSTANCE.getDataList().get(i).getNetAmountInclTax()));//Need Clarify
-                salesLine.setTotalDiscAmount(0.0); //Need Clarify
-                salesLine.setTotalDiscPct(5);//Need Clarify
-                salesLine.setUnitPrice(SessionManager.INSTANCE.getDataList().get(i).getQty() * Double.parseDouble(SessionManager.INSTANCE.getDataList().get(i).getArtprice()));//Need Clarify
-                salesLine.setUnitQty(SessionManager.INSTANCE.getDataList().get(i).getQty());//Need Clarify
-                salesLine.setDiscId("EXPRESSCHECKOUT");//Need Clarify
-                salesLine.setLineDiscPercentage(5);//Need Clarify
+                salesLine.setDiscAmount(0.0);
+                salesLine.setTotalDiscAmount(0.0);
+                salesLine.setTotalDiscPct(0);
+                salesLine.setInventBatchId(SessionManager.INSTANCE.getDataList().get(i).getArtCode().contains(",") ? SessionManager.INSTANCE.getDataList().get(i).getArtCode().substring(SessionManager.INSTANCE.getDataList().get(i).getArtCode().indexOf(",") + 1) : "");
+                salesLine.setUnitPrice(Double.parseDouble(SessionManager.INSTANCE.getDataList().get(i).getArtprice()));
+                salesLine.setUnitQty(SessionManager.INSTANCE.getDataList().get(i).getQty());
+                salesLine.setDiscId("");//EXPRESSCHECKOUT
+                salesLine.setLineDiscPercentage(0);
+
 
                 salesLineList.add(salesLine);
             }
@@ -1120,9 +1344,29 @@ public class PaymentOptionsActivity extends BaseActivity implements PhonePayQrCo
         expressCheckoutTransactionApiRequest.setSalesLine(salesLineList);
 
         List<ExpressCheckoutTransactionApiRequest.TenderLine> tenderLineList = new ArrayList<>();
-        // do add TenderLines to tenderLineList
-        expressCheckoutTransactionApiRequest.setTenderLine(tenderLineList);
+        ExpressCheckoutTransactionApiRequest.TenderLine tenderLine = new ExpressCheckoutTransactionApiRequest.TenderLine();
+        tenderLine.setLineNo(1);
+        tenderLine.setTenderId(1);
+        tenderLine.setTenderType(0);
+        tenderLine.setTenderName("Credit");
+        tenderLine.setExchRate(0);
+        tenderLine.setExchRateMst(0);
+        tenderLine.setMobileNo("");
+        tenderLine.setWalletType(0);
+        tenderLine.setWalletOrderId("");
+        tenderLine.setWalletTransactionID("");
+        tenderLine.setRewardsPoint(0);
+        tenderLine.setPreviewText("");
+        tenderLine.setIsVoid(false);
+        tenderLine.setBarCode("");
 
+
+        tenderLine.setAmountTendered(grandTotalAmountFmcg);
+        tenderLine.setAmountCur(grandTotalAmountFmcg);
+        tenderLine.setAmountMst(grandTotalAmountFmcg);
+        tenderLineList.add(tenderLine);
+
+        expressCheckoutTransactionApiRequest.setTenderLine(tenderLineList);
 
         return expressCheckoutTransactionApiRequest;
     }

@@ -33,6 +33,7 @@ public class DeliveryAddressDialog implements PincodeValidateListener {
     private boolean negativeExist = false;
     Context context;
     private ConstraintLayout constraintLayout;
+    private String stateCode;
 
     public DeliveryAddressDialog(Context context) {
 
@@ -143,6 +144,14 @@ public class DeliveryAddressDialog implements PincodeValidateListener {
         return state;
     }
 
+    public String getStateCode() {
+        return stateCode;
+    }
+
+    public String getMobileNumber() {
+        return deliveryAddressDialog.number.getText().toString();
+    }
+
     public void setDeliveryAddress(String name, String userAddress, String pincode, String city, String state) {
         deliveryAddressDialog.name.setText(name.toString());
         deliveryAddressDialog.address.setText(userAddress.toString());
@@ -215,6 +224,7 @@ public class DeliveryAddressDialog implements PincodeValidateListener {
         if (body != null && body.size() > 0 && body.get(0) != null && body.get(0).getCity() != null && body.get(0).getState() != null) {
             deliveryAddressDialog.city.setText(body.get(0).getCity().toString());
             deliveryAddressDialog.state.setText(body.get(0).getState().toString());
+//            stateCode = body.get(0).get().toString()
             View view1 = dialog.getCurrentFocus();
             if (view1 != null) {
                 InputMethodManager inputManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -252,6 +262,7 @@ public class DeliveryAddressDialog implements PincodeValidateListener {
         Utils.dismissDialog();
         deliveryAddressDialog.city.setText(response.getDeviceDetails().get(0).getCITY());
         deliveryAddressDialog.state.setText(response.getDeviceDetails().get(0).getSTATE());
+        stateCode = response.getDeviceDetails().get(0).getSTATE_CODE();
         View view1 = dialog.getCurrentFocus();
         if (view1 != null) {
             InputMethodManager inputManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);

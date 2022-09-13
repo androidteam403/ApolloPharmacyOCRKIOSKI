@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraint_layout"
@@ -46,22 +46,26 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/five_dp">
 
+
                             <TextView
+                                android:id="@+id/config_store_text"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
+                                android:layout_centerHorizontal="true"
                                 android:text="Offers"
+                                android:layout_centerVertical="true"
                                 android:textColor="@color/colorWhite"
                                 android:textSize="@dimen/twelve_sp"
                                 android:textStyle="bold" />
+
 
                             <ImageView
                                 android:layout_width="@dimen/one_hundred_dp"
                                 android:layout_height="@dimen/fifty_dp"
                                 android:layout_alignParentEnd="true"
+                                android:contentDescription="@string/app_name"
                                 android:src="@drawable/scan_products1"
-                                android:visibility="gone"
-                                android:contentDescription="@string/app_name" />
+                                android:visibility="gone" />
 
                             <TextView
                                 android:id="@+id/checkout_text"
@@ -291,10 +295,10 @@
                                 android:layout_height="match_parent"
                                 android:background="@color/orders_search_layout_blue_bg">
 
-                               <androidx.recyclerview.widget.RecyclerView
-                                   android:layout_width="match_parent"
-                                   android:layout_height="match_parent"
-                                   android:id="@+id/offers_recycle"/>
+                                <androidx.recyclerview.widget.RecyclerView
+                                    android:id="@+id/offers_recycle"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent" />
 
                             </RelativeLayout>
 

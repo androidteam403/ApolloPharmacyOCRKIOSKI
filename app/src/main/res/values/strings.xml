@@ -461,6 +461,9 @@
     <string name="label_my_profile">My Profile</string>
     <string name="label_continue_shopping">Continue Shopping</string>
     <string name="label_login_session_expired">Login session expired!!</string>
+    <string name="label_store">Store</string>
+    <string name="label_company_name">Company name</string>
+    <string name="label_print_receipt">Print Receipt</string>
 
 
 </resources>

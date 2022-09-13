@@ -45,15 +45,19 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/thirty_dp">
 
+
                             <TextView
+                                android:id="@+id/config_store_text"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_centerInParent="true"
-                                android:layout_centerVertical="true"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginStart="@dimen/five_dp"
                                 android:text="Offers"
+                                android:layout_centerVertical="true"
                                 android:textColor="@color/colorWhite"
                                 android:textSize="@dimen/thirty_five_sp"
                                 android:textStyle="bold" />
+
 
                             <ImageView
                                 android:layout_width="@dimen/one_hundred_dp"
@@ -305,11 +309,10 @@
                                 <!--                                    app:zoomage_zoomable="true" />-->
 
 
-
-                                    <androidx.recyclerview.widget.RecyclerView
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:id="@+id/offers_recycle"/>
+                                <androidx.recyclerview.widget.RecyclerView
+                                    android:id="@+id/offers_recycle"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent" />
 
                             </RelativeLayout>
 

@@ -173,13 +173,21 @@ public class PhonePayQrCodeController {
         ApiInterface apiInterface = ApiClient.getApiService();
         Gson gson = new Gson();
         String json = gson.toJson(expressCheckoutTransactionApiRequest);
-        System.out.println("EXPRESS_CHECKOUT_TRANSACTION_API_CALL===================" + json);
+        Utils.dismissDialog();
+        System.out.println("EXPRESS_CHECKOUT_TRANSACTION_API_CALL_RQUEST===================" + json);
         Call<ExpressCheckoutTransactionApiResponse> call = apiInterface.EXPRESS_CHECKOUT_TRANSACTION_API_CALL(expressCheckoutTransactionApiRequest);
         call.enqueue(new Callback<ExpressCheckoutTransactionApiResponse>() {
             @Override
             public void onResponse(@NotNull Call<ExpressCheckoutTransactionApiResponse> call, @NotNull Response<ExpressCheckoutTransactionApiResponse> response) {
+                Utils.dismissDialog();
                 if (response.body() != null) {
-                    phonePayQrCodeListener.onSuccessexpressCheckoutTransactionApiCall(response.body());
+                    String jsonResponse = gson.toJson(response.body());
+                    System.out.println("EXPRESS_CHECKOUT_TRANSACTION_API_CALL_RESPONSE===================" + jsonResponse);
+                    if (response.body().getRequestStatus() == 0) {
+                        phonePayQrCodeListener.onSuccessexpressCheckoutTransactionApiCall(response.body());
+                    } else {
+                        phonePayQrCodeListener.onFailureService(response.body().getReturnMessage());
+                    }
                 } else {
                     phonePayQrCodeListener.onFailureService(activity.getResources().getString(R.string.label_something_went_wrong));
                     Utils.dismissDialog();

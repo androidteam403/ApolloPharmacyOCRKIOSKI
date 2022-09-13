@@ -444,4 +444,22 @@ object SessionManager {
     fun getSessionTime(): Int {
         return pref.getInt(ApplicationConstant.SESSION_TIME, 5);
     }
+
+    fun setConfigStore(configStore: String) {
+        editor.putString(ApplicationConstant.CONFIG_STORE, configStore)
+        editor.apply()
+    }
+
+    fun getConfigStore(): String {
+        return pref.getString(ApplicationConstant.CONFIG_STORE, "")
+    }
+
+    fun setCompanyName(companyName: String) {
+        editor.putString(ApplicationConstant.COMPANY_NAME, companyName)
+        editor.apply()
+    }
+
+    fun getCompanyName(): String {
+        return pref.getString(ApplicationConstant.COMPANY_NAME, "")
+    }
 }
