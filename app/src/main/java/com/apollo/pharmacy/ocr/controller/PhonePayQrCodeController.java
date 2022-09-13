@@ -17,6 +17,7 @@ import com.apollo.pharmacy.ocr.model.PlaceOrderResModel;
 import com.apollo.pharmacy.ocr.network.ApiClient;
 import com.apollo.pharmacy.ocr.network.ApiInterface;
 import com.apollo.pharmacy.ocr.utility.Constants;
+import com.apollo.pharmacy.ocr.utility.Session;
 import com.apollo.pharmacy.ocr.utility.SessionManager;
 import com.apollo.pharmacy.ocr.utility.Utils;
 import com.google.gson.Gson;
@@ -50,7 +51,7 @@ public class PhonePayQrCodeController {
         phonePayQrCodeRequest.setOriginalTransactionId("");
         phonePayQrCodeRequest.setProviderReferenceId("");
         phonePayQrCodeRequest.setReqType("GENERATEQRCODE");
-        phonePayQrCodeRequest.setStoreId("16001");
+        phonePayQrCodeRequest.setStoreId(SessionManager.INSTANCE.getStoreId());
         phonePayQrCodeRequest.setTransactionId(Utils.getOrderedID());
         phonePayQrCodeRequest.setUrl("http://172.16.2.251:8033/PHONEPEUAT/APOLLO/PhonePe");
 
@@ -112,7 +113,7 @@ public class PhonePayQrCodeController {
         phonePayQrCodeRequest.setOriginalTransactionId("");
         phonePayQrCodeRequest.setProviderReferenceId("");
         phonePayQrCodeRequest.setReqType("CHECKPAYMENTSTATUS");
-        phonePayQrCodeRequest.setStoreId("16001");
+        phonePayQrCodeRequest.setStoreId(SessionManager.INSTANCE.getStoreId());
         phonePayQrCodeRequest.setTransactionId(tranId);
         phonePayQrCodeRequest.setUrl("http://172.16.2.251:8033/PHONEPEUAT/APOLLO/PhonePe");
 

@@ -1,5 +1,7 @@
 package com.apollo.pharmacy.ocr.activities.checkout;
 
+import com.apollo.pharmacy.ocr.activities.paymentoptions.model.ExpressCheckoutTransactionApiResponse;
+
 public interface CheckoutListener {
     void onClickNeedHomeDelivery();
 
@@ -12,4 +14,8 @@ public interface CheckoutListener {
     void onClickBack();
 
     void onClickPaynow();
+
+    void onSuccessexpressCheckoutTransactionApiCall(ExpressCheckoutTransactionApiResponse expressCheckoutTransactionApiResponse);
+
+    void onFailuremessage(String message);
 }

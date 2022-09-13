@@ -41,7 +41,7 @@
 
         <Button
             android:id="@+id/dialog_ok"
-            android:layout_width="@dimen/dimen130dp"
+            android:layout_width="@dimen/dimen160dp"
             android:layout_height="@dimen/thirty_five_dp"
             android:layout_gravity="center"
             android:layout_marginEnd="@dimen/five_dp"
@@ -52,7 +52,7 @@
 
         <Button
             android:id="@+id/dialog_cancel"
-            android:layout_width="@dimen/dimen130dp"
+            android:layout_width="@dimen/dimen160dp"
             android:layout_height="@dimen/thirty_five_dp"
             android:layout_gravity="center"
             android:layout_marginStart="@dimen/five_dp"

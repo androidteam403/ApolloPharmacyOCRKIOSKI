@@ -86,6 +86,8 @@ public class PaymentOptionsActivity extends BaseActivity implements PhonePayQrCo
             state = (String) getIntent().getStringExtra("state");
             stateCode = (String) getIntent().getStringExtra("STATE_CODE");
             mobileNumber = (String) getIntent().getStringExtra("MOBILE_NUMBER");
+            fmcgOrderId = (String) getIntent().getStringExtra("FMCG_TRANSACTON_ID");
+            expressCheckoutTransactionId = (String) getIntent().getStringExtra("EXPRESS_CHECKOUT_TRANSACTION_ID");
         }
 
         if (isFmcgDeliveryType) {
@@ -207,9 +209,9 @@ public class PaymentOptionsActivity extends BaseActivity implements PhonePayQrCo
 //                    placeOrder();
 
                     if (isFmcgOrder) {
-//                        isFmcgOrder = false;
-                        new PhonePayQrCodeController(PaymentOptionsActivity.this, PaymentOptionsActivity.this).expressCheckoutTransactionApiCall(getExpressCheckoutTransactionApiRequest());
-//                        placeOrderFmcg();
+                        isFmcgOrder = false;
+//                        new PhonePayQrCodeController(PaymentOptionsActivity.this, PaymentOptionsActivity.this).expressCheckoutTransactionApiCall(getExpressCheckoutTransactionApiRequest());
+                        placeOrderFmcg();
                     } else {
                         isPharmaOrder = false;
                         placeOrderPharma();
@@ -393,8 +395,8 @@ public class PaymentOptionsActivity extends BaseActivity implements PhonePayQrCo
 
                     if (isFmcgOrder) {
                         isFmcgOrder = false;
-                        new PhonePayQrCodeController(PaymentOptionsActivity.this, PaymentOptionsActivity.this).expressCheckoutTransactionApiCall(getExpressCheckoutTransactionApiRequest());
-//                        placeOrderFmcg();
+//                        new PhonePayQrCodeController(PaymentOptionsActivity.this, PaymentOptionsActivity.this).expressCheckoutTransactionApiCall(getExpressCheckoutTransactionApiRequest());
+                        placeOrderFmcg();
                     } else {
                         isPharmaOrder = false;
                         placeOrderPharma();
@@ -602,8 +604,8 @@ public class PaymentOptionsActivity extends BaseActivity implements PhonePayQrCo
             }
             if (isFmcgOrder) {
                 pharmaOrderId = body.getOrdersResult().getOrderNo().toString();
-//                placeOrderFmcg();
-                new PhonePayQrCodeController(PaymentOptionsActivity.this, PaymentOptionsActivity.this).expressCheckoutTransactionApiCall(getExpressCheckoutTransactionApiRequest());
+                placeOrderFmcg();
+//                new PhonePayQrCodeController(PaymentOptionsActivity.this, PaymentOptionsActivity.this).expressCheckoutTransactionApiCall(getExpressCheckoutTransactionApiRequest());
                 isFmcgOrder = false;
             } else if (isPharmaOrder) {
                 fmcgOrderId = body.getOrdersResult().getOrderNo().toString();
@@ -642,8 +644,8 @@ public class PaymentOptionsActivity extends BaseActivity implements PhonePayQrCo
             onlineAmountPaid = true;
             if (isFmcgOrder) {
                 isFmcgOrder = false;
-//                placeOrderFmcg();
-                new PhonePayQrCodeController(PaymentOptionsActivity.this, PaymentOptionsActivity.this).expressCheckoutTransactionApiCall(getExpressCheckoutTransactionApiRequest());
+                placeOrderFmcg();
+//                new PhonePayQrCodeController(PaymentOptionsActivity.this, PaymentOptionsActivity.this).expressCheckoutTransactionApiCall(getExpressCheckoutTransactionApiRequest());
             } else {
                 isPharmaOrder = false;
                 placeOrderPharma();

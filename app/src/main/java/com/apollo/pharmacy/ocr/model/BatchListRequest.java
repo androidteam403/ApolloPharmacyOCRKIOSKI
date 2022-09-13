@@ -5,95 +5,107 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class BatchListRequest implements Serializable
-    {
-        @SerializedName("ArticleCode")
-        @Expose
-        private String articleCode;
-        @SerializedName("CustomerState")
-        @Expose
-        private String customerState;
-        @SerializedName("DataAreaId")
-        @Expose
-        private String dataAreaId;
-        @SerializedName("SEZ")
-        @Expose
-        private Integer sez;
-        @SerializedName("SearchType")
-        @Expose
-        private Integer searchType;
-        @SerializedName("StoreId")
-        @Expose
-        private String storeId;
-        @SerializedName("StoreState")
-        @Expose
-        private String storeState;
-        @SerializedName("TerminalId")
-        @Expose
-        private String terminalId;
-        private final static long serialVersionUID = 1940996587951591380L;
+public class BatchListRequest implements Serializable {
+    @SerializedName("ArticleCode")
+    @Expose
+    private String articleCode;
+    @SerializedName("CustomerState")
+    @Expose
+    private String customerState;
+    @SerializedName("DataAreaId")
+    @Expose
+    private String dataAreaId;
+    @SerializedName("SEZ")
+    @Expose
+    private Integer sez;
+    @SerializedName("SearchType")
+    @Expose
+    private Integer searchType;
+    @SerializedName("StoreId")
+    @Expose
+    private String storeId;
+    @SerializedName("StoreState")
+    @Expose
+    private String storeState;
+    @SerializedName("TerminalId")
+    @Expose
+    private String terminalId;
 
-        public String getArticleCode() {
-            return articleCode;
-        }
+    @SerializedName("ExpiryDays")
+    @Expose
+    private String expiryDays;
 
-        public void setArticleCode(String articleCode) {
-            this.articleCode = articleCode;
-        }
+    private final static long serialVersionUID = 1940996587951591380L;
 
-        public String getCustomerState() {
-            return customerState;
-        }
+    public String getArticleCode() {
+        return articleCode;
+    }
 
-        public void setCustomerState(String customerState) {
-            this.customerState = customerState;
-        }
+    public void setArticleCode(String articleCode) {
+        this.articleCode = articleCode;
+    }
 
-        public String getDataAreaId() {
-            return dataAreaId;
-        }
+    public String getCustomerState() {
+        return customerState;
+    }
 
-        public void setDataAreaId(String dataAreaId) {
-            this.dataAreaId = dataAreaId;
-        }
+    public void setCustomerState(String customerState) {
+        this.customerState = customerState;
+    }
 
-        public Integer getSez() {
-            return sez;
-        }
+    public String getDataAreaId() {
+        return dataAreaId;
+    }
 
-        public void setSez(Integer sez) {
-            this.sez = sez;
-        }
+    public void setDataAreaId(String dataAreaId) {
+        this.dataAreaId = dataAreaId;
+    }
 
-        public Integer getSearchType() {
-            return searchType;
-        }
+    public Integer getSez() {
+        return sez;
+    }
 
-        public void setSearchType(Integer searchType) {
-            this.searchType = searchType;
-        }
+    public void setSez(Integer sez) {
+        this.sez = sez;
+    }
 
-        public String getStoreId() {
-            return storeId;
-        }
+    public Integer getSearchType() {
+        return searchType;
+    }
 
-        public void setStoreId(String storeId) {
-            this.storeId = storeId;
-        }
+    public void setSearchType(Integer searchType) {
+        this.searchType = searchType;
+    }
 
-        public String getStoreState() {
-            return storeState;
-        }
+    public String getStoreId() {
+        return storeId;
+    }
 
-        public void setStoreState(String storeState) {
-            this.storeState = storeState;
-        }
+    public void setStoreId(String storeId) {
+        this.storeId = storeId;
+    }
 
-        public String getTerminalId() {
-            return terminalId;
-        }
+    public String getStoreState() {
+        return storeState;
+    }
 
-        public void setTerminalId(String terminalId) {
-            this.terminalId = terminalId;
+    public void setStoreState(String storeState) {
+        this.storeState = storeState;
+    }
+
+    public String getTerminalId() {
+        return terminalId;
+    }
+
+    public void setTerminalId(String terminalId) {
+        this.terminalId = terminalId;
+    }
+
+    public String getExpiryDays() {
+        return expiryDays;
+    }
+
+    public void setExpiryDays(String expiryDays) {
+        this.expiryDays = expiryDays;
     }
 }
