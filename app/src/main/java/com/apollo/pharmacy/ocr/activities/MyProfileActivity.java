@@ -529,7 +529,7 @@ public class MyProfileActivity extends BaseActivity implements MyCartListener, C
     @Override
     public void onSuccessSearchItemApi(UpCellCrossCellResponse body) {
         if (body != null && body.getCrossselling() != null && body.getCrossselling().size() > 0) {
-            MyOfersAdapterNew crossCellAdapter = new MyOfersAdapterNew(MyProfileActivity.this, this, body.getCrossselling(), this);
+            MyOfersAdapterNew crossCellAdapter = new MyOfersAdapterNew(MyProfileActivity.this, MyProfileActivity.this, body.getCrossselling(), this);
             RecyclerView.LayoutManager mLayoutManager4 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
             crossCellDataRecycle.setLayoutManager(mLayoutManager4);
             crossCellDataRecycle.setItemAnimator(new DefaultItemAnimator());

@@ -458,7 +458,7 @@ public class MyOffersActivity extends BaseActivity implements MyOffersListener, 
             activityMyOffersBinding.crossSellingRecycleNew.setVisibility(View.VISIBLE);
             myOffersText = "SpecialOffers";
 
-            MyOfersAdapterNew crossCellAdapter = new MyOfersAdapterNew(MyOffersActivity.this, this, crosssellingList, this);
+            MyOfersAdapterNew crossCellAdapter = new MyOfersAdapterNew(MyOffersActivity.this, MyOffersActivity.this, crosssellingList, this);
             activityMyOffersBinding.crossSellingRecycleNew.setLayoutManager(new GridLayoutManager(this, 6));
             activityMyOffersBinding.crossSellingRecycleNew.setAdapter(crossCellAdapter);
 
@@ -543,7 +543,7 @@ public class MyOffersActivity extends BaseActivity implements MyOffersListener, 
             activityMyOffersBinding.crossSellingRecycleNew.setVisibility(View.VISIBLE);
             myOffersText = "SpecialOffers";
 
-            MyOfersAdapterNew crossCellAdapter = new MyOfersAdapterNew(MyOffersActivity.this, this, crosssellingList, this);
+            MyOfersAdapterNew crossCellAdapter = new MyOfersAdapterNew(MyOffersActivity.this, MyOffersActivity.this, crosssellingList, this);
             activityMyOffersBinding.crossSellingRecycleNew.setLayoutManager(new GridLayoutManager(this, 6));
             activityMyOffersBinding.crossSellingRecycleNew.setAdapter(crossCellAdapter);
 
