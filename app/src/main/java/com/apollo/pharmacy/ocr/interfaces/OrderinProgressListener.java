@@ -9,4 +9,6 @@ public interface OrderinProgressListener {
     void onSuccessPdfResponse(PdfModelResponse body);
 
     void onFailurePdfResponse(PdfModelResponse body);
+
+    void onClickPrintReceipt();
 }

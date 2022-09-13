@@ -207,7 +207,7 @@ public class PaymentOptionsActivity extends BaseActivity implements PhonePayQrCo
 //                    placeOrder();
 
                     if (isFmcgOrder) {
-                        isFmcgOrder = false;
+//                        isFmcgOrder = false;
                         new PhonePayQrCodeController(PaymentOptionsActivity.this, PaymentOptionsActivity.this).expressCheckoutTransactionApiCall(getExpressCheckoutTransactionApiRequest());
 //                        placeOrderFmcg();
                     } else {
@@ -618,6 +618,7 @@ public class PaymentOptionsActivity extends BaseActivity implements PhonePayQrCo
                     intent.putExtra("OnlineAmountPaid", onlineAmountPaid);
                     intent.putExtra("pharma_delivery_type", isPharmadeliveryType);
                     intent.putExtra("fmcg_delivery_type", isFmcgDeliveryType);
+                    intent.putExtra("EXPRESS_CHECKOUT_TRANSACTION_ID", expressCheckoutTransactionId);
                     startActivity(intent);
                     overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
                 }
@@ -677,10 +678,16 @@ public class PaymentOptionsActivity extends BaseActivity implements PhonePayQrCo
         Utils.showSnackbarDialog(this, findViewById(android.R.id.content), message);
     }
 
+    private String expressCheckoutTransactionId = "";
+
     @Override
     public void onSuccessexpressCheckoutTransactionApiCall(ExpressCheckoutTransactionApiResponse expressCheckoutTransactionApiResponse) {
         if (expressCheckoutTransactionApiResponse.getRequestStatus() != null && expressCheckoutTransactionApiResponse.getRequestStatus() == 0) {
+            isFmcgOrder = false;
+            this.expressCheckoutTransactionId = expressCheckoutTransactionApiResponse.getTransactionId();
             placeOrderFmcg();
+
+
         }
     }
 
@@ -1216,7 +1223,7 @@ public class PaymentOptionsActivity extends BaseActivity implements PhonePayQrCo
         expressCheckoutTransactionApiRequest.setStore(SessionManager.INSTANCE.getStoreId());
         expressCheckoutTransactionApiRequest.setState(stateCode);
         expressCheckoutTransactionApiRequest.setTerminal(SessionManager.INSTANCE.getTerminalId());
-        expressCheckoutTransactionApiRequest.setDataAreaId("AHEL");
+        expressCheckoutTransactionApiRequest.setDataAreaId(SessionManager.INSTANCE.getCompanyName());
         expressCheckoutTransactionApiRequest.setIsStockCheck(true);
         expressCheckoutTransactionApiRequest.setExpiryDays(30);
 

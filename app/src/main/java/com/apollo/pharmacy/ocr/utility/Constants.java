@@ -70,11 +70,11 @@ public class Constants extends Application {
     public static String Categorylist_Url = "";
     public static String Get_Servicability_link = "https://uat.apollopharmacy.in/";
     public static String Send_Sms_Api = "https://online.apollopharmacy.org/";
-    public static String Order_Place_With_Prescription_API = "https://online.apollopharmacy.org/UAT/OrderPlace.svc/";
+    public static String Order_Place_With_Prescription_API = "https://online.apollopharmacy.org/TP/OrderPlace.svc/";        //"https://online.apollopharmacy.org/UAT/OrderPlace.svc/";
     public static String Order_Place_With_Prescription_Token = "9f15bdd0fcd5423190c2e877ba02bel";
 
 
-    public static String New_Order_Place_With_Prescription_Token = "9f15bdd0fcd5423190c2e877ba0228APM";
+    public static String New_Order_Place_With_Prescription_Token = "9f15bdd0fcd5423190c2e877ba022ExPc"; //"9f15bdd0fcd5423190c2e877ba0228APM";
 
     public static final String DIRECTORY_NAME = "USBCamera";
 
@@ -142,8 +142,6 @@ public class Constants extends Application {
 //    public static String Categorylist_Url = "http://lms.apollopharmacy.org:8033/RPA/Apollo/CATEGORYLIST";
 
 
-
-
     // Zebra sdk
     //Instance of SDK Handler
     public static SDKHandler sdkHandler;
@@ -159,7 +157,7 @@ public class Constants extends Application {
     public static final String TOAST = "toast";
 
     //Settings for notifications
-    public static int MOT_SETTING_OPMODE ;
+    public static int MOT_SETTING_OPMODE;
     public static boolean MOT_SETTING_SCANNER_DETECTION;
     public static boolean MOT_SETTING_EVENT_ACTIVE;
     public static boolean MOT_SETTING_EVENT_AVAILABLE;
@@ -177,11 +175,11 @@ public class Constants extends Application {
 
     public static volatile int INTENT_ID = 0xFFFF;
 
-    public static int SCANNER_ID_NONE=  -1;
-    public static String currentScannerName ="";
-    public static String currentScannerAddress ="";
-    public static int currentScannerId =SCANNER_ID_NONE;
-    public static boolean currentAutoReconnectionState =true;
+    public static int SCANNER_ID_NONE = -1;
+    public static String currentScannerName = "";
+    public static String currentScannerAddress = "";
+    public static int currentScannerId = SCANNER_ID_NONE;
+    public static boolean currentAutoReconnectionState = true;
     public static boolean isAnyScannerConnected = false; //True, if currently connected to any scanner
     public static int currentConnectedScannerID = -1; //Track scannerId of currently connected Scanner
     public static boolean isFirmwareUpdateInProgress = false;
@@ -189,15 +187,16 @@ public class Constants extends Application {
     public static boolean virtualTetherHostActivated = false;
     public static boolean virtualTetherEventOccurred = false;
     //Scanners (both available and active)
-    public static ArrayList<DCSScannerInfo> mScannerInfoList=new ArrayList<DCSScannerInfo>();
-    public static ArrayList<ScannerAppEngine.IScannerAppEngineDevListDelegate> mDevListDelegates=new ArrayList<ScannerAppEngine.IScannerAppEngineDevListDelegate>();
+    public static ArrayList<DCSScannerInfo> mScannerInfoList = new ArrayList<DCSScannerInfo>();
+    public static ArrayList<ScannerAppEngine.IScannerAppEngineDevListDelegate> mDevListDelegates = new ArrayList<ScannerAppEngine.IScannerAppEngineDevListDelegate>();
     //Barcode data
-    public static ArrayList<Barcode> barcodeData=new ArrayList<Barcode>();
+    public static ArrayList<Barcode> barcodeData = new ArrayList<Barcode>();
     public static DCSScannerInfo currentConnectedScanner;
     public static DCSScannerInfo lastConnectedScanner;
 
 
     public static int minScreenWidth = 360;
+
     public Constants() {
 
     }

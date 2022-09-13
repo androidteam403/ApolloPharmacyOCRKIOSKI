@@ -148,7 +148,7 @@ public interface ApiInterface {
     Call<List<OrderHistoryResponse>> getOrderHistory(@Header("Authentication") String token, @Body OrderHistoryRequest request);
 
 
-    @POST("https://online.apollopharmacy.org/MAPPSUAT/apollompos/Self/OrderHistory")
+    @POST("https://online.apollopharmacy.org/MAPPS/apollompos/Self/OrderHistory")//https://online.apollopharmacy.org/MAPPSUAT/apollompos/Self/OrderHistory
     Call<SelfOrderHistoryResponse> GET_SELF_ORDER_HISTORY(@Body SelfOrderHistoryRequest request);
 
 

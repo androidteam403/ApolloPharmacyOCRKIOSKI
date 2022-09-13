@@ -107,6 +107,9 @@ public class MyOffersActivity extends BaseActivity implements MyOffersListener, 
     private ImageView mPdfView;
     String googleDocs = "https://docs.google.com/viewer?url=";
 
+
+    private TextView configSroreText;
+
     @Override
     public void onNetworkConnectionChanged(boolean isConnected) {
         if (isConnected) {
@@ -179,6 +182,9 @@ public class MyOffersActivity extends BaseActivity implements MyOffersListener, 
         myCartCount = findViewById(R.id.lblCartCnt);
         TextView checkOutText = findViewById(R.id.checkout_text);
         constraintLayout = findViewById(R.id.constraint_layout);
+
+        configSroreText = (TextView) findViewById(R.id.config_store_text);
+        configSroreText.setText(SessionManager.INSTANCE.getConfigStore() + " Offers");
 
         checkOutText.setOnClickListener(v -> {
             finish();

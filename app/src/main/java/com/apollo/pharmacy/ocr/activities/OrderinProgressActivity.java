@@ -45,7 +45,6 @@ import com.apollo.pharmacy.ocr.custompdf.PDFCreatorActivity;
 import com.apollo.pharmacy.ocr.custompdf.utils.PDFUtil;
 import com.apollo.pharmacy.ocr.custompdf.views.PDFBody;
 import com.apollo.pharmacy.ocr.custompdf.views.PDFFooterView;
-
 import com.apollo.pharmacy.ocr.custompdf.views.PDFHeaderView;
 import com.apollo.pharmacy.ocr.custompdf.views.PDFTableView;
 import com.apollo.pharmacy.ocr.custompdf.views.basic.PDFHorizontalView;
@@ -82,6 +81,7 @@ public class OrderinProgressActivity extends PDFCreatorActivity implements Order
     private boolean isFmcgDeliveryType;
     private OrderInProgressController orderInProgressController;
     private Context primaryBaseActivity;
+    private String expressCheckoutTransactionId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -89,14 +89,12 @@ public class OrderinProgressActivity extends PDFCreatorActivity implements Order
         orderinProgressBinding = DataBindingUtil.setContentView(this, R.layout.activity_orderin_progress);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         orderinProgressBinding.setCallback(this);
-        orderInProgressController = new OrderInProgressController(this);
-        orderInProgressController.downloadPdf();
         setUp();
     }
 
     @Override
     protected void attachBaseContext(Context base) {
-        primaryBaseActivity=base;
+        primaryBaseActivity = base;
         super.attachBaseContext(base);
     }
 
@@ -107,9 +105,9 @@ public class OrderinProgressActivity extends PDFCreatorActivity implements Order
             onlineAmountPaid = (boolean) getIntent().getBooleanExtra("OnlineAmountPaid", false);
             isPharmadeliveryType = (boolean) getIntent().getBooleanExtra("pharma_delivery_type", false);
             isFmcgDeliveryType = (boolean) getIntent().getBooleanExtra("fmcg_delivery_type", false);
+
+
         }
-
-
 
 
         orderinProgressBinding.fmcgRequestId.setText(fmcgOrderId);
@@ -196,6 +194,11 @@ public class OrderinProgressActivity extends PDFCreatorActivity implements Order
             if (isPharma && isFmcg || isPharma) {
                 orderinProgressBinding.orderisinProgressText.setText("Your order is in progress");
             }
+            if (isFmcg) {
+                expressCheckoutTransactionId = (String) getIntent().getStringExtra("EXPRESS_CHECKOUT_TRANSACTION_ID");
+                orderInProgressController = new OrderInProgressController(this);
+                orderInProgressController.downloadPdf(expressCheckoutTransactionId);
+            }
         }
     }
 
@@ -203,53 +206,53 @@ public class OrderinProgressActivity extends PDFCreatorActivity implements Order
     Runnable continuShopAlertRunnable = () -> continueShoppingAlert();
 
     private void continueShoppingAlert() {
-//        Dialog continueShopAlertDialog = new Dialog(this);
-//        continueShopAlertDialog.setContentView(R.layout.dialog_alert_for_idle);
-//        if (continueShopAlertDialog.getWindow() != null)
-//            continueShopAlertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-//        continueShopAlertDialog.setCancelable(false);
-//        TextView dialogTitleText = continueShopAlertDialog.findViewById(R.id.dialog_info);
-//        Button okButton = continueShopAlertDialog.findViewById(R.id.dialog_ok);
-//        Button declineButton = continueShopAlertDialog.findViewById(R.id.dialog_cancel);
-//        TextView alertTittle = continueShopAlertDialog.findViewById(R.id.session_time_expiry_countdown);
-//
-//        SpannableStringBuilder alertSpannnable = new SpannableStringBuilder("Alert!");
-//        alertSpannnable.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), 0, alertSpannnable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//        alertTittle.setText(alertSpannnable);
-//
-//
-//        dialogTitleText.setText("Do you want to continue shopping?");
-//        okButton.setText("Yes, Continue");
-//        declineButton.setText("Logout");
-//        okButton.setOnClickListener(v -> {
-//            if (continueShopAlertDialog != null && continueShopAlertDialog.isShowing()) {
-//                continueShopAlertDialog.dismiss();
-//            }
-//            List<OCRToDigitalMedicineResponse> dataList = new ArrayList<>();
-//            SessionManager.INSTANCE.setDataList(dataList);
-//            Intent intent = new Intent(OrderinProgressActivity.this, MySearchActivity.class);
+        Dialog continueShopAlertDialog = new Dialog(this);
+        continueShopAlertDialog.setContentView(R.layout.dialog_alert_for_idle);
+        if (continueShopAlertDialog.getWindow() != null)
+            continueShopAlertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        continueShopAlertDialog.setCancelable(false);
+        TextView dialogTitleText = continueShopAlertDialog.findViewById(R.id.dialog_info);
+        Button okButton = continueShopAlertDialog.findViewById(R.id.dialog_ok);
+        Button declineButton = continueShopAlertDialog.findViewById(R.id.dialog_cancel);
+        TextView alertTittle = continueShopAlertDialog.findViewById(R.id.session_time_expiry_countdown);
+
+        SpannableStringBuilder alertSpannnable = new SpannableStringBuilder("Alert!");
+        alertSpannnable.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), 0, alertSpannnable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        alertTittle.setText(alertSpannnable);
+
+
+        dialogTitleText.setText("Do you want to continue shopping?");
+        okButton.setText("Yes, Continue");
+        declineButton.setText("Logout");
+        okButton.setOnClickListener(v -> {
+            if (continueShopAlertDialog != null && continueShopAlertDialog.isShowing()) {
+                continueShopAlertDialog.dismiss();
+            }
+            List<OCRToDigitalMedicineResponse> dataList = new ArrayList<>();
+            SessionManager.INSTANCE.setDataList(dataList);
+            Intent intent = new Intent(OrderinProgressActivity.this, MySearchActivity.class);
+            startActivity(intent);
+            overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
+            finish();
+
+        });
+        declineButton.setOnClickListener(v -> {
+            continueShopAlertDialog.dismiss();
+
+//            SessionManager.INSTANCE.logoutUser();
+
+//            Intent intent = new Intent(OrderinProgressActivity.this, UserLoginActivity.class);
 //            startActivity(intent);
 //            overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
-//            finish();
-//
-//        });
-//        declineButton.setOnClickListener(v -> {
-//            continueShopAlertDialog.dismiss();
-//
-////            SessionManager.INSTANCE.logoutUser();
-//
-////            Intent intent = new Intent(OrderinProgressActivity.this, UserLoginActivity.class);
-////            startActivity(intent);
-////            overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
-////            finishAffinity();
-//
-//        });
-//        continueShopAlertDialog.show();
+//            finishAffinity();
+
+        });
+        continueShopAlertDialog.show();
     }
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+//        super.onBackPressed();
         onClickContinueShopping();
     }
 
@@ -263,7 +266,7 @@ public class OrderinProgressActivity extends PDFCreatorActivity implements Order
     protected void onResume() {
         super.onResume();
         continueShopAlertHandler.removeCallbacks(continuShopAlertRunnable);
-        continueShopAlertHandler.postDelayed(continuShopAlertRunnable, 5000);
+        continueShopAlertHandler.postDelayed(continuShopAlertRunnable, 30000);
     }
 
     @Override
@@ -275,35 +278,40 @@ public class OrderinProgressActivity extends PDFCreatorActivity implements Order
         overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
         finish();
     }
+
     PdfModelResponse pdfModelResponse;
     String transactionId;
+
     @Override
     public void onSuccessPdfResponse(PdfModelResponse pdfModelResponse) {
         this.pdfModelResponse = pdfModelResponse;
-        transactionId="300006125";
+        if (isStoragePermissionGranted()) {
 
-        if (pdfModelResponse != null) {
-            if (orderinProgressBinding.layoutPdfPreview != null) {
-                orderinProgressBinding.layoutPdfPreview.removeAllViews();
-            }
-            isStoragePermissionGranted();
-            createPDF(transactionId,orderinProgressBinding.layoutPdfPreview,pdfModelResponse, new PDFUtil.PDFUtilListener() {
-                @Override
-                public void pdfGenerationSuccess(File savedPDFFile) {
-                    Toast.makeText(OrderinProgressActivity.this, "PDF Created", Toast.LENGTH_SHORT).show();
-                    openPdf();
-                }
+            transactionId = expressCheckoutTransactionId;
 
-                @Override
-                public void pdfGenerationFailure(Exception exception) {
-                    Toast.makeText(OrderinProgressActivity.this, "PDF NOT Created", Toast.LENGTH_SHORT).show();
+            if (pdfModelResponse != null) {
+                if (orderinProgressBinding.layoutPdfPreview != null) {
+                    orderinProgressBinding.layoutPdfPreview.removeAllViews();
                 }
-            });
+//            isStoragePermissionGranted();
+                createPDF(transactionId, orderinProgressBinding.layoutPdfPreview, pdfModelResponse, new PDFUtil.PDFUtilListener() {
+                    @Override
+                    public void pdfGenerationSuccess(File savedPDFFile) {
+                        Toast.makeText(OrderinProgressActivity.this, "PDF Created", Toast.LENGTH_SHORT).show();
+//                        openPdf();
+                    }
+
+                    @Override
+                    public void pdfGenerationFailure(Exception exception) {
+                        Toast.makeText(OrderinProgressActivity.this, "PDF NOT Created", Toast.LENGTH_SHORT).show();
+                    }
+                });
 
 //        Toast.makeText(getContext(), "Pdf api is successfull", Toast.LENGTH_SHORT ).show();
 
 //        orderSummaryBinding.postesting.setText(pdfModelResponse.getSalesHeader().get(0).getBranch());
 
+            }
         }
 
     }
@@ -311,6 +319,13 @@ public class OrderinProgressActivity extends PDFCreatorActivity implements Order
     @Override
     public void onFailurePdfResponse(PdfModelResponse body) {
 
+    }
+
+    @Override
+    public void onClickPrintReceipt() {
+        if (isStoragePermissionGranted()) {
+            openPdf();
+        }
     }
 
     public boolean isStoragePermissionGranted() {
@@ -342,7 +357,7 @@ public class OrderinProgressActivity extends PDFCreatorActivity implements Order
             builder.setMediaSize(PrintAttributes.MediaSize.ISO_A4);
             builder.setColorMode(PrintAttributes.COLOR_MODE_MONOCHROME);
 
-            PrintManager  printManager = (PrintManager) primaryBaseActivity.getSystemService(Context.PRINT_SERVICE);
+            PrintManager printManager = (PrintManager) primaryBaseActivity.getSystemService(Context.PRINT_SERVICE);
             String jobName = this.getString(R.string.app_name) + " Document";
 
             printManager.print(jobName, pda, builder.build());
@@ -419,7 +434,7 @@ public class OrderinProgressActivity extends PDFCreatorActivity implements Order
     };
 
     @Override
-    protected PDFHeaderView getHeaderView(int forPage,PdfModelResponse pdfModelResponse) {
+    protected PDFHeaderView getHeaderView(int forPage, PdfModelResponse pdfModelResponse) {
         PDFHeaderView headerView = new PDFHeaderView(getApplicationContext());
 
         PDFHorizontalView horizontalView = new PDFHorizontalView(getApplicationContext());
@@ -428,9 +443,9 @@ public class OrderinProgressActivity extends PDFCreatorActivity implements Order
         LinearLayout.LayoutParams verticalLayoutParam = new LinearLayout.LayoutParams(
                 0,
                 LinearLayout.LayoutParams.WRAP_CONTENT, 1);
-        verticalLayoutParam.setMargins(0,10,0,0);
+        verticalLayoutParam.setMargins(0, 10, 0, 0);
         PDFTextView pdfTextView1 = new PDFTextView(getApplicationContext(), PDFTextView.PDF_TEXT_SIZE.SMALL)
-                .setText("Apollo Pharmacy-"+pdfModelResponse.getSalesHeader().get(0).getBranch());
+                .setText("Apollo Pharmacy-" + pdfModelResponse.getSalesHeader().get(0).getBranch());
         pdfTextView1.setTextTypeface(ResourcesCompat.getFont(getContext(), R.font.cambria));
         verticalView.addView(pdfTextView1);
         PDFTextView pdfTextView2 = new PDFTextView(getApplicationContext(), PDFTextView.PDF_TEXT_SIZE.SMALL)
@@ -449,30 +464,30 @@ public class OrderinProgressActivity extends PDFCreatorActivity implements Order
         PDFVerticalView verticalView2 = new PDFVerticalView(getApplicationContext());
         LinearLayout.LayoutParams headerImageLayoutParam = new LinearLayout.LayoutParams(
                 100,
-                100,0);
+                100, 0);
         PDFImageView imageView = new PDFImageView(getApplicationContext());
         imageView.setImageScale(ImageView.ScaleType.FIT_XY);
         imageView.setImageResource(R.drawable.apollo_circle_logo);
         headerImageLayoutParam.setMargins(0, 0, 0, 0);
         verticalView2.addView(imageView);
         verticalView2.setLayout(headerImageLayoutParam);
-        verticalView2.getView().setGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM);
+        verticalView2.getView().setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
         horizontalView.addView(verticalView2);
 
         PDFVerticalView verticalView3 = new PDFVerticalView(getApplicationContext());
-        verticalLayoutParam.setMargins(0,10,0,0);
+        verticalLayoutParam.setMargins(0, 10, 0, 0);
         pdfTextView1 = new PDFTextView(getApplicationContext(), PDFTextView.PDF_TEXT_SIZE.SMALL)
-                .setText("FSSAI NO : "+ pdfModelResponse.getSalesHeader().get(0).getFssaino()).setTextTypeface(ResourcesCompat.getFont(getContext(), R.font.cambria));
+                .setText("FSSAI NO : " + pdfModelResponse.getSalesHeader().get(0).getFssaino()).setTextTypeface(ResourcesCompat.getFont(getContext(), R.font.cambria));
         verticalView3.addView(pdfTextView1);
         pdfTextView2 = new PDFTextView(getApplicationContext(), PDFTextView.PDF_TEXT_SIZE.SMALL)
-                .setText("D.L.NO:"+pdfModelResponse.getSalesHeader().get(0).getDlno()).setTextTypeface(ResourcesCompat.getFont(getContext(), R.font.cambria));
+                .setText("D.L.NO:" + pdfModelResponse.getSalesHeader().get(0).getDlno()).setTextTypeface(ResourcesCompat.getFont(getContext(), R.font.cambria));
         verticalView3.addView(pdfTextView2);
         pdfTextView3 = new PDFTextView(getApplicationContext(), PDFTextView.PDF_TEXT_SIZE.SMALL)
-                .setText("GST NO:"+pdfModelResponse.getSalesHeader().get(0).getGstin()).setTextTypeface(ResourcesCompat.getFont(getContext(), R.font.cambria));
+                .setText("GST NO:" + pdfModelResponse.getSalesHeader().get(0).getGstin()).setTextTypeface(ResourcesCompat.getFont(getContext(), R.font.cambria));
         verticalView3.addView(pdfTextView3);
         pdfTextView4 = new PDFTextView(getApplicationContext(), PDFTextView.PDF_TEXT_SIZE.SMALL);
         if (pdfModelResponse.getSalesHeader().get(0).getCgstin() != null) {
-            pdfTextView4.setText("C.GSTIN:"+pdfModelResponse.getSalesHeader().get(0).getCgstin()).setTextTypeface(ResourcesCompat.getFont(getContext(), R.font.cambria));
+            pdfTextView4.setText("C.GSTIN:" + pdfModelResponse.getSalesHeader().get(0).getCgstin()).setTextTypeface(ResourcesCompat.getFont(getContext(), R.font.cambria));
         } else {
             pdfTextView4.setText("--").setTextTypeface(ResourcesCompat.getFont(getContext(), R.font.cambria));
         }
@@ -496,7 +511,7 @@ public class OrderinProgressActivity extends PDFCreatorActivity implements Order
         LinearLayout.LayoutParams verticalLayoutParam1 = new LinearLayout.LayoutParams(
                 0,
                 LinearLayout.LayoutParams.WRAP_CONTENT, 1);
-        verticalLayoutParam1.setMargins(0,10,0,0);
+        verticalLayoutParam1.setMargins(0, 10, 0, 0);
         PDFTextView pdfTextView1 = new PDFTextView(getApplicationContext(), PDFTextView.PDF_TEXT_SIZE.SMALL)
                 .setText("Name: " + pdfModelResponse.getSalesHeader().get(0).getCustName()).setTextTypeface(ResourcesCompat.getFont(getContext(), R.font.cambria));
         verticalView1.addView(pdfTextView1);
@@ -553,14 +568,13 @@ public class OrderinProgressActivity extends PDFCreatorActivity implements Order
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 1, 0);
-        layoutParams.setMargins(0,5,0,5);
+        layoutParams.setMargins(0, 5, 0, 5);
         lineSeparatorView2.setLayout(layoutParams);
         pdfBody.addView(lineSeparatorView2);
 
 
-        int[] widthPercent = {20, 7, 12, 8,10, 10, 8, 8,10, 7}; // Sum should be equal to 100%
-        String[] textInTable = {"Product Name", "SCH", "HSNCODE", "Mfg","BATCH","EXPIRY","Qty","RATE","AMOUNT","GST%"};
-
+        int[] widthPercent = {20, 7, 12, 8, 10, 10, 8, 8, 10, 7}; // Sum should be equal to 100%
+        String[] textInTable = {"Product Name", "SCH", "HSNCODE", "Mfg", "BATCH", "EXPIRY", "Qty", "RATE", "AMOUNT", "GST%"};
 
 
         PDFTableView.PDFTableRowView tableHeader = new PDFTableView.PDFTableRowView(getApplicationContext());
@@ -586,29 +600,29 @@ public class OrderinProgressActivity extends PDFCreatorActivity implements Order
             PDFTableView.PDFTableRowView tableRowView = new PDFTableView.PDFTableRowView(getApplicationContext());
             for (int j = 0; j < textInTable.length; j++) {
                 PDFTextView pdfTextView = new PDFTextView(getApplicationContext(), PDFTextView.PDF_TEXT_SIZE.SMALL);
-                if(j==0){
+                if (j == 0) {
                     pdfTextView.setText(salesLine.getItemName()).setTextTypeface(ResourcesCompat.getFont(getContext(), R.font.cambria));
-                }else if(j==1){
+                } else if (j == 1) {
                     pdfTextView.setText(salesLine.getSch()).setTextTypeface(ResourcesCompat.getFont(getContext(), R.font.cambria));
-                }else if(j==2){
+                } else if (j == 2) {
                     pdfTextView.setText(salesLine.getHSNCode()).setTextTypeface(ResourcesCompat.getFont(getContext(), R.font.cambria));
-                }else if(j==3){
+                } else if (j == 3) {
                     pdfTextView.setText(salesLine.getManufacturer()).setTextTypeface(ResourcesCompat.getFont(getContext(), R.font.cambria));
-                }else if(j==4){
+                } else if (j == 4) {
                     pdfTextView.setText(salesLine.getBatchNo()).setTextTypeface(ResourcesCompat.getFont(getContext(), R.font.cambria));
-                }else if(j==5){
+                } else if (j == 5) {
                     if (salesLine.getExpDate() != null && salesLine.getExpDate().length() > 5) {
                         pdfTextView.setText(salesLine.getExpDate().substring(5)).setTextTypeface(ResourcesCompat.getFont(getContext(), R.font.cambria));
-                    }else {
+                    } else {
                         pdfTextView.setText("-").setTextTypeface(ResourcesCompat.getFont(getContext(), R.font.cambria));
                     }
-                }else if(j==6){
+                } else if (j == 6) {
                     pdfTextView.setText(salesLine.getQty()).setTextTypeface(ResourcesCompat.getFont(getContext(), R.font.cambria));
-                }else if(j==7){
+                } else if (j == 7) {
                     pdfTextView.setText(salesLine.getMrp()).setTextTypeface(ResourcesCompat.getFont(getContext(), R.font.cambria));
-                }else if(j==8){
+                } else if (j == 8) {
                     pdfTextView.setText(salesLine.getLineTotAmount()).setTextTypeface(ResourcesCompat.getFont(getContext(), R.font.cambria));
-                }else {
+                } else {
                     pdfTextView.setText(String.valueOf(Double.parseDouble(salesLine.getSGSTPer()) + Double.parseDouble(salesLine.getCGSTPer()))).setTextTypeface(ResourcesCompat.getFont(getContext(), R.font.cambria));
                 }
                 tableRowView.addToRow(pdfTextView);
@@ -692,7 +706,7 @@ public class OrderinProgressActivity extends PDFCreatorActivity implements Order
         LinearLayout.LayoutParams layoutParams5 = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 1, 0);
-        layoutParams5.setMargins(0,5,0,5);
+        layoutParams5.setMargins(0, 5, 0, 5);
         lineSeparatorView5.setLayout(layoutParams5);
         pdfBody.addView(lineSeparatorView5);
 
@@ -707,7 +721,7 @@ public class OrderinProgressActivity extends PDFCreatorActivity implements Order
                 .setText("Registered Office:No.19 Bishop Garden, Raja Annamalaipuram,\nChennai-600028").setTextTypeface(ResourcesCompat.getFont(getContext(), R.font.cambria));
         regsteredOffice.setLayout(new LinearLayout.LayoutParams(
                 0,
-                LinearLayout.LayoutParams.WRAP_CONTENT,2));
+                LinearLayout.LayoutParams.WRAP_CONTENT, 2));
         regsteredOffice.getView().setGravity(Gravity.CENTER_VERTICAL);
         footerView.addView(regsteredOffice);
 
@@ -740,12 +754,12 @@ public class OrderinProgressActivity extends PDFCreatorActivity implements Order
         LinearLayout.LayoutParams verticalFooter2 = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
-        verticalFooter2.setMargins(0,10,0,0);
+        verticalFooter2.setMargins(0, 10, 0, 0);
         pdfTextView1 = new PDFTextView(getApplicationContext(), PDFTextView.PDF_TEXT_SIZE.SMALL);
         SpannableString word1 = new SpannableString("APOLLO PHARMACY");
         StyleSpan boldSpan = new StyleSpan(Typeface.BOLD);
         word1.setSpan(new ForegroundColorSpan(Color.BLACK), 0, word1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        pdfTextView1.setText("for "+word1).setTextTypeface(ResourcesCompat.getFont(getContext(), R.font.cambria));
+        pdfTextView1.setText("for " + word1).setTextTypeface(ResourcesCompat.getFont(getContext(), R.font.cambria));
         apolloWishesView2.addView(pdfTextView1);
         pdfTextView2 = new PDFTextView(getApplicationContext(), PDFTextView.PDF_TEXT_SIZE.SMALL)
                 .setText("Registered Pharmacist").setTextTypeface(ResourcesCompat.getFont(getContext(), R.font.cambria));
@@ -759,10 +773,20 @@ public class OrderinProgressActivity extends PDFCreatorActivity implements Order
     }
 
     @Override
-    protected PDFFooterView getFooterView(int forPage,PdfModelResponse pdfModelResponse) {
+    protected PDFFooterView getFooterView(int forPage, PdfModelResponse pdfModelResponse) {
         return null;
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//            openPdf();
+            onSuccessPdfResponse(pdfModelResponse);
+//            Log.v(TAG,"Permission: "+permissions[0]+ "was "+grantResults[0]);
+            //resume tasks needing this permission
+        }
+    }
 
     public class OrderinProgresssuiModel {
         private String pharmaCount;
