@@ -14,13 +14,16 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -151,6 +154,7 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
     TextView noDataFound, noDataFoundCrosssel, noDataFoundUpsel;
     private boolean isDialogShow = false;
     private List<OCRToDigitalMedicineResponse> dataListSphare;
+    private EditText usbScanEdit;
 
     @Override
     public void onSuccessProductList(HashMap<String, GetProductListResponse> productList) {
@@ -858,7 +862,41 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
         } else {
             setUp();
         }
+
+        usbScanEdit = (EditText) findViewById(R.id.usb_scan);
+        usbScanEdit.requestFocus();
+
+        usbScanEdit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.toString() != null && !s.toString().isEmpty()) {
+                    usbScanHandler.removeCallbacks(usbScanRunnable);
+                    usbScanHandler.postDelayed(usbScanRunnable, 250);
+//                    Toast.makeText(HomeActivity.this, s.toString(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
+
+    Handler usbScanHandler = new Handler();
+    Runnable usbScanRunnable = new Runnable() {
+        @Override
+        public void run() {
+            Utils.showDialog(MyCartActivity.this, "Plaese wait...");
+            new MyCartController(MyCartActivity.this).searchItemProducts(usbScanEdit.getText().toString(), 0, 0, 0);
+            usbScanEdit.setText("");
+        }
+    };
 
     private void setUp() {
         grandTotalPrice = findViewById(R.id.grand_total_price);
@@ -2095,7 +2133,7 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
         calculatePosTransactionRequest.setCustomerName(SessionManager.INSTANCE.getCustrName());
         calculatePosTransactionRequest.setCustomerState("");
         calculatePosTransactionRequest.setDob("");
-        calculatePosTransactionRequest.setDataAreaId("Ahel");
+        calculatePosTransactionRequest.setDataAreaId(SessionManager.INSTANCE.getCompanyName());
         calculatePosTransactionRequest.setDeliveryDate("");
         calculatePosTransactionRequest.setDiscAmount(0);
         calculatePosTransactionRequest.setDoctorCode("");

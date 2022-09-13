@@ -188,9 +188,10 @@
                                 android:layout_width="@dimen/fifty_dp"
                                 android:layout_height="@dimen/fifty_dp"
                                 android:layout_alignParentEnd="true"
-                                android:contentDescription="@string/app_name"
                                 android:background="@drawable/white_image_bg"
-                                android:src="@drawable/cross_icon" />
+                                android:contentDescription="@string/app_name"
+                                android:src="@drawable/cross_icon"
+                                android:visibility="gone" />
                         </RelativeLayout>
                     </LinearLayout>
 
@@ -363,6 +364,15 @@
                     android:layout_marginTop="@dimen/forty_dp"
                     android:contentDescription="@string/app_name"
                     android:src="@drawable/checkout_cart_unselect" />
+
+                <EditText
+                    android:id="@+id/usb"
+                    android:layout_width="0.1dp"
+                    android:layout_height="0.1dp"
+                    android:background="@color/white"
+                    android:importantForAutofill="no"
+                    android:inputType="text" />
+
 
             </RelativeLayout>
 

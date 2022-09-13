@@ -16,6 +16,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+                <EditText
+                    android:layout_width="100dp"
+                    android:layout_height="40dp" />
+
                 <RelativeLayout
                     android:layout_width="@dimen/one_hundred_five_dp"
                     android:layout_height="match_parent"
@@ -181,7 +185,6 @@
                                 android:orientation="vertical">
 
                                 <ImageView
-
                                     android:layout_width="@dimen/two_hundred_dp"
                                     android:layout_height="@dimen/one_hundred_eighty_dp"
                                     android:contentDescription="@string/app_name"
@@ -200,10 +203,11 @@
 
                             <ImageView
                                 android:id="@+id/scanner_check"
-                                android:layout_width="@dimen/twenty_dp"
-                                android:layout_height="@dimen/twenty_dp"
+                                android:layout_width="12dp"
+                                android:layout_height="7dp"
                                 android:layout_alignParentEnd="true"
-                                android:layout_marginEnd="@dimen/twenty_five_dp"
+                                android:layout_marginEnd="33dp"
+                                android:visibility="gone"
                                 android:background="@drawable/white_image_bg"
                                 android:contentDescription="@string/app_name" />
                         </RelativeLayout>
@@ -371,6 +375,15 @@
                             android:textStyle="bold" />
                     </LinearLayout>
                 </LinearLayout>
+
+                <EditText
+                    android:id="@+id/usb"
+                    android:layout_width="0.1dp"
+                    android:layout_height="0.1dp"
+                    android:background="@color/white"
+                    android:inputType="text"
+                    android:importantForAutofill="no" />
+
             </RelativeLayout>
 
             <include

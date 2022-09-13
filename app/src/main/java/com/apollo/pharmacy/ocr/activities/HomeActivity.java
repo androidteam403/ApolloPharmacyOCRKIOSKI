@@ -14,10 +14,13 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -69,6 +72,7 @@ public class HomeActivity extends BaseActivity implements ConnectivityReceiver.C
     List<OCRToDigitalMedicineResponse> dataList = new ArrayList<>();
     private ImageView scannerStatus;
     private boolean isDialogShow = false;
+    private EditText usbScanEdit;
 
     @Override
     public void onNetworkConnectionChanged(boolean isConnected) {
@@ -116,6 +120,28 @@ public class HomeActivity extends BaseActivity implements ConnectivityReceiver.C
         ImageView customerCareImg = findViewById(R.id.customer_care_icon);
         LinearLayout customerHelpLayout = findViewById(R.id.customer_help_layout);
         customerHelpLayout.setVisibility(View.VISIBLE);
+        usbScanEdit = (EditText) findViewById(R.id.usb);
+        usbScanEdit.requestFocus();
+
+        usbScanEdit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.toString() != null && !s.toString().isEmpty()) {
+                    usbScanHandler.removeCallbacks(usbScanRunnable);
+                    usbScanHandler.postDelayed(usbScanRunnable, 250);
+                }
+            }
+        });
 //        crash.setText("crash");
 
         if (SessionManager.INSTANCE.getDataList() != null && SessionManager.INSTANCE.getDataList().size() > 0) {
@@ -499,6 +525,15 @@ public class HomeActivity extends BaseActivity implements ConnectivityReceiver.C
         });
     }
 
+    Handler usbScanHandler = new Handler();
+    Runnable usbScanRunnable = new Runnable() {
+        @Override
+        public void run() {
+            Utils.showDialog(HomeActivity.this, "Plaese wait...");
+            new HomeActivityController(HomeActivity.this).searchItemProducts(usbScanEdit.getText().toString());
+            usbScanEdit.setText("");
+        }
+    };
 
     private void checkGalleryPermission() {
         if ((ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) &&
@@ -826,6 +861,8 @@ public class HomeActivity extends BaseActivity implements ConnectivityReceiver.C
 
     @Override
     protected void onPause() {
+        usbScanHandler.removeCallbacks(usbScanRunnable);
+        usbScanEdit.setText("");
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiverNew);
 

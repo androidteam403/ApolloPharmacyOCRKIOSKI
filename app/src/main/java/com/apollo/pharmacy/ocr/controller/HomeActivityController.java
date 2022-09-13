@@ -105,6 +105,7 @@ public class HomeActivityController {
 
             @Override
             public void onFailure(@NonNull Call<ItemSearchResponse> call, @NonNull Throwable t) {
+                Utils.dismissDialog();
                 homeListener.onSearchFailure(t.getMessage());
             }
         });

@@ -208,7 +208,7 @@ public class MyCartController {
         itemSearchRequest.setIsInitial(true);
         itemSearchRequest.setIsStockCheck(true);
         itemSearchRequest.setSearchString(item);
-        itemSearchRequest.setStoreID("16001");
+        itemSearchRequest.setStoreID(SessionManager.INSTANCE.getStoreId());
         Call<ItemSearchResponse> call = apiInterface.getSearchItemApiCall(itemSearchRequest);
         call.enqueue(new Callback<ItemSearchResponse>() {
             @Override
@@ -241,7 +241,7 @@ public class MyCartController {
         itemSearchRequest.setIsInitial(true);
         itemSearchRequest.setIsStockCheck(true);
         itemSearchRequest.setSearchString(item);
-        itemSearchRequest.setStoreID("16001");
+        itemSearchRequest.setStoreID(SessionManager.INSTANCE.getStoreId());
         Call<ItemSearchResponse> call = apiInterface.getSearchItemApiCall(itemSearchRequest);
         call.enqueue(new Callback<ItemSearchResponse>() {
             @Override
@@ -276,12 +276,12 @@ public class MyCartController {
         BatchListRequest batchListRequest = new BatchListRequest();
         batchListRequest.setArticleCode(artcode);
         batchListRequest.setCustomerState("");
-        batchListRequest.setDataAreaId("ahel");
+        batchListRequest.setDataAreaId(SessionManager.INSTANCE.getCompanyName());
         batchListRequest.setSez(0);
         batchListRequest.setSearchType(1);
-        batchListRequest.setStoreId("16001");
-        batchListRequest.setStoreState("AP");
-        batchListRequest.setTerminalId("005");
+        batchListRequest.setStoreId(SessionManager.INSTANCE.getStoreId());
+        batchListRequest.setStoreState("TS");
+        batchListRequest.setTerminalId(SessionManager.INSTANCE.getTerminalId());
         Call<BatchListResponse> call = api.GET_BATCH_LIST(batchListRequest);
         call.enqueue(new Callback<BatchListResponse>() {
             @Override

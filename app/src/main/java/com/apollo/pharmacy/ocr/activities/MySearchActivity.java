@@ -164,12 +164,14 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
     TextView transColorId;
     private boolean isDialogShow = false;
     private RecyclerView offersRecycle;
+    private EditText usbScanEditText;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_search);
+        usbScanEditText = (EditText) findViewById(R.id.usb_scan);
 
 //        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         advertiseBanner = (ImageView) findViewById(R.id.advertise_banner);
@@ -642,7 +644,54 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
             }
         });
         hideKeyboardEmptyPlaceClick();
+
+
+        usbScanEditText.requestFocus();
+
+        usbScanEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.toString() != null && !s.toString().isEmpty()) {
+                    usbScanHandler.removeCallbacks(usbScanRunnable);
+                    usbScanHandler.postDelayed(usbScanRunnable, 250);
+//                    Handler handler = new Handler();
+//                    handler.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            Utils.showDialog(MySearchActivity.this, "Plaese wait...");
+//                            MySearchController mySearchControllerScan = new MySearchController(MySearchActivity.this, MySearchActivity.this);
+//                            mySearchControllerScan.searchItemProducts(usbScanEditText.getText().toString());
+//                            usbScanEditText.setText("");
+//                        }
+//                    }, 1000);
+
+//                    Toast.makeText(HomeActivity.this, s.toString(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
+
+    Handler usbScanHandler = new Handler();
+    Runnable usbScanRunnable = new Runnable() {
+        @Override
+        public void run() {
+            Utils.showDialog(MySearchActivity.this, "Plaese wait...");
+            MySearchController mySearchControllerScan = new MySearchController(MySearchActivity.this, MySearchActivity.this);
+            mySearchControllerScan.searchItemProducts(usbScanEditText.getText().toString());
+            usbScanEditText.setText("");
+        }
+    };
+
 
     private void setPharmaFirst() {
         tabFlag = false;
@@ -740,6 +789,8 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
     private void hideKeyBoard() {
         if (keyboardFrag != null) {
             medic_keyboard.setVisibility(View.GONE);
+            searchProducts.clearFocus();
+            usbScanEditText.requestFocus();
 //            getSupportFragmentManager().beginTransaction().remove(getSupportFragmentManager().findFragmentByTag("KEYBOARD")).commit();
         }
     }
@@ -774,6 +825,8 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
 
     @Override
     public void onPause() {
+        usbScanHandler.removeCallbacks(usbScanRunnable);
+        usbScanEditText.setText("");
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mCartMessageReceiver);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiverNew);
