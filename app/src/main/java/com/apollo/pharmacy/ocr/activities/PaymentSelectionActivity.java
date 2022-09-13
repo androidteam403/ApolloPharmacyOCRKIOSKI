@@ -38,6 +38,7 @@ import com.apollo.pharmacy.ocr.model.OrdersResult;
 import com.apollo.pharmacy.ocr.model.OrdersResult_new;
 import com.apollo.pharmacy.ocr.model.Paymentdetails;
 import com.apollo.pharmacy.ocr.model.Paymentdetails_new;
+import com.apollo.pharmacy.ocr.model.PhonePayQrCodeResponse;
 import com.apollo.pharmacy.ocr.model.PinelabTransaction_cancelresponse;
 import com.apollo.pharmacy.ocr.model.Pinelabs_paymenttransaction_response;
 import com.apollo.pharmacy.ocr.model.Pinelabs_transaction_payment_request;
@@ -88,7 +89,7 @@ import kotlin.jvm.internal.Intrinsics;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class PaymentSelectionActivity extends AppCompatActivity implements PaymentSelectionListener,
+public class PaymentSelectionActivity extends BaseActivity implements PaymentSelectionListener,
         ConnectivityReceiver.ConnectivityReceiverListener {
 
     private List<OCRToDigitalMedicineResponse> cartproduct_list;

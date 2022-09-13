@@ -14,16 +14,16 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/two_hundred_sixty_five_dp"
         android:layout_marginTop="@dimen/eighteen_dp"
-        android:weightSum="1"
         android:background="@color/offers_list_bg"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:weightSum="1">
 
         <RelativeLayout
             android:layout_width="0dp"
-            android:layout_weight="0.5"
             android:layout_height="@dimen/two_hundred_sixty_dp"
             android:layout_marginStart="@dimen/ten_dp"
-            android:layout_marginEnd="@dimen/ten_dp">
+            android:layout_marginEnd="@dimen/ten_dp"
+            android:layout_weight="0.5">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -69,7 +69,36 @@
                     android:layout_below="@+id/offers_header_layout"
                     android:layout_marginStart="@dimen/five_dp"
                     android:layout_marginEnd="@dimen/five_dp"
-                    android:layout_marginBottom="@dimen/fifteen_dp" />
+                    android:layout_marginBottom="@dimen/fifteen_dp"
+                    android:visibility="gone" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:layout_below="@+id/offers_header_layout">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/cross_cell_data_recycle"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="@dimen/five_dp"
+                        android:layout_marginEnd="@dimen/five_dp"
+                        android:layout_marginBottom="@dimen/fifteen_dp" />
+
+                    <TextView
+                        android:id="@+id/no_data_found_crosssell"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:text="No Data Found"
+                        android:textColor="@color/RED"
+                        android:textSize="@dimen/twenty_sp"
+                        android:textStyle="bold"
+                        android:visibility="gone" />
+
+
+                </RelativeLayout>
             </RelativeLayout>
 
             <TextView
@@ -89,9 +118,9 @@
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="@dimen/two_hundred_sixty_dp"
-            android:layout_weight="0.5"
             android:layout_marginStart="@dimen/ten_dp"
-            android:layout_marginEnd="@dimen/ten_dp">
+            android:layout_marginEnd="@dimen/ten_dp"
+            android:layout_weight="0.5">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -138,7 +167,35 @@
                     android:layout_below="@+id/trending_header_layout"
                     android:layout_marginStart="@dimen/five_dp"
                     android:layout_marginEnd="@dimen/five_dp"
-                    android:layout_marginBottom="@dimen/fifteen_dp" />
+                    android:layout_marginBottom="@dimen/fifteen_dp"
+                    android:visibility="gone" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:layout_below="@+id/trending_header_layout">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/up_cell_data_recycle"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="@dimen/five_dp"
+                        android:layout_marginEnd="@dimen/five_dp"
+                        android:layout_marginBottom="@dimen/fifteen_dp" />
+
+                    <TextView
+                        android:id="@+id/no_data_found_upsell"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:text="No Data Found"
+                        android:textColor="@color/RED"
+                        android:textSize="@dimen/twenty_sp"
+                        android:textStyle="bold"
+                        android:visibility="gone" />
+
+                </RelativeLayout>
             </RelativeLayout>
 
             <TextView
@@ -161,8 +218,20 @@
         android:layout_width="wrap_content"
         android:layout_height="@dimen/forty_dp"
         android:layout_alignParentTop="true"
-        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
         android:contentDescription="@string/app_name"
         android:rotation="180"
         android:src="@drawable/down_arrow" />
+    <TextView
+        android:id="@+id/no_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="No Data Found"
+        android:textColor="@color/RED"
+        android:textSize="@dimen/twenty_sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+
 </RelativeLayout>

@@ -21,23 +21,30 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.apollo.pharmacy.ocr.R;
+import com.apollo.pharmacy.ocr.adapters.MyOfersAdapterNew;
 import com.apollo.pharmacy.ocr.adapters.PromotionsAdapter;
 import com.apollo.pharmacy.ocr.controller.MyCartController;
 import com.apollo.pharmacy.ocr.enums.ViewMode;
 import com.apollo.pharmacy.ocr.interfaces.CartCountListener;
 import com.apollo.pharmacy.ocr.interfaces.MyCartListener;
+import com.apollo.pharmacy.ocr.model.BatchListResponse;
+import com.apollo.pharmacy.ocr.model.CalculatePosTransactionResponse;
 import com.apollo.pharmacy.ocr.model.CustomerData;
 import com.apollo.pharmacy.ocr.model.GetImageRes;
 import com.apollo.pharmacy.ocr.model.GetProductListResponse;
+import com.apollo.pharmacy.ocr.model.ItemSearchResponse;
 import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
 import com.apollo.pharmacy.ocr.model.PortFolioModel;
 import com.apollo.pharmacy.ocr.model.Product;
 import com.apollo.pharmacy.ocr.model.ScannedData;
 import com.apollo.pharmacy.ocr.model.ScannedMedicine;
+import com.apollo.pharmacy.ocr.model.UpCellCrossCellResponse;
 import com.apollo.pharmacy.ocr.model.UserAddress;
 import com.apollo.pharmacy.ocr.network.ApiClient;
 import com.apollo.pharmacy.ocr.network.ApiInterface;
@@ -60,7 +67,7 @@ import java.util.TreeSet;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class MyProfileActivity extends AppCompatActivity implements MyCartListener, CartCountListener,
+public class MyProfileActivity extends BaseActivity implements MyCartListener, CartCountListener,
         ConnectivityReceiver.ConnectivityReceiverListener {
 
     private TextView name_txt, phone_txt, emial_address_txt, location_txt, address_txt, customer_id_txt;
@@ -71,10 +78,12 @@ public class MyProfileActivity extends AppCompatActivity implements MyCartListen
     private HashMap<String, GetProductListResponse> productListResponseHashMap;
     private List<String> specialOfferList;
     private ArrayList<Product> outofstock_array, stockin_array;
-    private TextView myCartCount;
+    private TextView myCartCount, promotionViewAll, nodataFound;
     private List<OCRToDigitalMedicineResponse> dataList = new ArrayList<>();
     private ConstraintLayout constraintLayout;
     private MyCartController myCartController;
+    private RecyclerView crossCellDataRecycle;
+//    private ActivityMyProfileBinding activityMyProfileBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,11 +96,16 @@ public class MyProfileActivity extends AppCompatActivity implements MyCartListen
 
         RecyclerView promotionsRecyclerView = findViewById(R.id.promotionsRecyclerView);
         promotionsRecyclerView.setLayoutManager(new GridLayoutManager(MyProfileActivity.this, 6));
-
+        crossCellDataRecycle = findViewById(R.id.cross_cell_data_recycle);
+        promotionViewAll = findViewById(R.id.promotion_viewAll);
+        nodataFound = findViewById(R.id.nodata_found);
         product_list_array = new ArrayList<Product>();
         outofstock_array = new ArrayList<Product>();
         stockin_array = new ArrayList<Product>();
         myCartController = new MyCartController(this);
+
+        myCartController.upcellCrosscellList("7353910637", MyProfileActivity.this);
+
 
         myCartCount = findViewById(R.id.lblCartCnt);
         TextView promotionViewAll = findViewById(R.id.promotion_viewAll);
@@ -103,7 +117,7 @@ public class MyProfileActivity extends AppCompatActivity implements MyCartListen
             }
         }
 
-        LinearLayout faqLayout = findViewById(R.id.help_layout);
+        ImageView faqLayout = findViewById(R.id.faq);
         TextView helpText = findViewById(R.id.help_text);
         helpText.setText(getResources().getString(R.string.faq));
         faqLayout.setOnClickListener(view -> startActivity(new Intent(MyProfileActivity.this, FAQActivity.class)));
@@ -160,6 +174,12 @@ public class MyProfileActivity extends AppCompatActivity implements MyCartListen
 
         SessionManager.INSTANCE.setCurrentPage(ApplicationConstant.ACTIVITY_ADDMORE);
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiverAddmore, new IntentFilter("MedicineReciverAddMore"));
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
+                new IntentFilter("cardReceiver"));
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiverNew, new IntentFilter("OrderhistoryCardReciver"));
+        Constants.getInstance().setConnectivityListener(this);
     }
 
     /* view components*/
@@ -200,20 +220,24 @@ public class MyProfileActivity extends AppCompatActivity implements MyCartListen
 
     private void updateUI(PortFolioModel portFolioModel) {
         CustomerData customerData = portFolioModel.getCustomerData();
-        customer_id_txt.setText(customerData.getLCIN());
-        if (null != customerData.getName() && !customerData.getName().isEmpty()) {
-            name_txt.setText(customerData.getName());
-        } else {
-            name_txt.setText("-");
+        if (customerData != null) {
+            customer_id_txt.setText(customerData.getLCIN());
+            if (null != customerData.getName() && !customerData.getName().isEmpty()) {
+                name_txt.setText(customerData.getName());
+            } else {
+                name_txt.setText("One Apollo User");
+            }
+            if (null != customerData.getMobileNumber() && !customerData.getMobileNumber().isEmpty()) {
+                phone_txt.setText(customerData.getMobileNumber().trim());
+            } else {
+                phone_txt.setText("-");
+            }
+            emial_address_txt.setText(String.valueOf(customerData.getEarnedCredits()));
+            location_txt.setText(String.valueOf(customerData.getAvailableCredits()));
+            address_txt.setText(String.valueOf(customerData.getBurnedCredits()));
+        }else{
+            name_txt.setText("One Apollo User");
         }
-        if (null != customerData.getMobileNumber() && !customerData.getMobileNumber().isEmpty()) {
-            phone_txt.setText(customerData.getMobileNumber().trim());
-        } else {
-            phone_txt.setText("-");
-        }
-        emial_address_txt.setText(String.valueOf(customerData.getEarnedCredits()));
-        location_txt.setText(String.valueOf(customerData.getAvailableCredits()));
-        address_txt.setText(String.valueOf(customerData.getBurnedCredits()));
     }
 
     private void initLeftMenu() {
@@ -255,9 +279,9 @@ public class MyProfileActivity extends AppCompatActivity implements MyCartListen
             declineButton.setText(getResources().getString(R.string.label_cancel_text));
             okButton.setOnClickListener(v1 -> {
                 dialog.dismiss();
-                SessionManager.INSTANCE.logoutUser();
+//                SessionManager.INSTANCE.logoutUser();
 
-                Intent intent = new Intent(MyProfileActivity.this, MainActivity.class);
+                Intent intent = new Intent(MyProfileActivity.this, UserLoginActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
                 finishAffinity();
@@ -503,6 +527,57 @@ public class MyProfileActivity extends AppCompatActivity implements MyCartListen
     }
 
     @Override
+    public void onSuccessSearchItemApi(UpCellCrossCellResponse body) {
+        if (body != null && body.getCrossselling() != null && body.getCrossselling().size() > 0) {
+            MyOfersAdapterNew crossCellAdapter = new MyOfersAdapterNew(MyProfileActivity.this, MyProfileActivity.this, body.getCrossselling(), this);
+            RecyclerView.LayoutManager mLayoutManager4 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+            crossCellDataRecycle.setLayoutManager(mLayoutManager4);
+            crossCellDataRecycle.setItemAnimator(new DefaultItemAnimator());
+            crossCellDataRecycle.setAdapter(crossCellAdapter);
+            nodataFound.setVisibility(View.GONE);
+            promotionViewAll.setVisibility(View.VISIBLE);
+        } else {
+            nodataFound.setVisibility(View.VISIBLE);
+            promotionViewAll.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onSearchFailure(String message) {
+
+    }
+
+    @Override
+    public void onSuccessBarcodeItemApi(ItemSearchResponse itemSearchResponse, int serviceType, int qty, int position) {
+
+    }
+
+    @Override
+    public void onFailureBarcodeItemApi(String message) {
+
+    }
+
+    @Override
+    public void upSellCrosssellApiCall(List<UpCellCrossCellResponse.Crossselling> crossselling, List<UpCellCrossCellResponse.Upselling> upselling) {
+
+    }
+
+    @Override
+    public void setSuccessBatchList(BatchListResponse body, int position, ItemSearchResponse.Item itemSearchData) {
+
+    }
+
+    @Override
+    public void onSuccessCalculatePosTransactionApi(CalculatePosTransactionResponse calculatePosTransactionResponse) {
+
+    }
+
+    @Override
+    public void onSuccessSearchItemApi(ItemSearchResponse itemSearchResponse, int position) {
+
+    }
+
+    @Override
     public void onNetworkConnectionChanged(boolean isConnected) {
         if (isConnected) {
             findViewById(R.id.networkErrorLayout).setVisibility(View.GONE);
@@ -530,8 +605,23 @@ public class MyProfileActivity extends AppCompatActivity implements MyCartListen
 
     public void cartCount(int count) {
         if (count != 0) {
+
+            List<OCRToDigitalMedicineResponse> countUniques = new ArrayList<>();
+            countUniques.addAll(SessionManager.INSTANCE.getDataList());
+
+            for (int i = 0; i < countUniques.size(); i++) {
+                for (int j = 0; j < countUniques.size(); j++) {
+                    if (i != j && countUniques.get(i).getArtName().equals(countUniques.get(j).getArtName())) {
+                        countUniques.remove(j);
+                        j--;
+                    }
+                }
+            }
+
+
             myCartCount.setVisibility(View.VISIBLE);
-            myCartCount.setText(String.valueOf(count));
+//            myCartCount.setText(String.valueOf(count));
+            myCartCount.setText(String.valueOf(countUniques.size()));
         } else {
             myCartCount.setVisibility(View.GONE);
             myCartCount.setText("0");
@@ -539,11 +629,106 @@ public class MyProfileActivity extends AppCompatActivity implements MyCartListen
     }
 
     @Override
+    public void showSnackBAr() {
+
+    }
+
+    @Override
     public void onPause() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiverAddmore);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiverNew);
         super.onPause();
         Constants.getInstance().setConnectivityListener(null);
     }
+
+    private BroadcastReceiver mMessageReceiverNew = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String message = intent.getStringExtra("message");
+            if (message.equalsIgnoreCase("OrderNow")) {
+                if (null != SessionManager.INSTANCE.getDataList()) {
+                    if (SessionManager.INSTANCE.getDataList().size() > 0) {
+                        cartCount(SessionManager.INSTANCE.getDataList().size());
+                        dataList = SessionManager.INSTANCE.getDataList();
+                    }
+                }
+                Utils.showSnackbar(MyProfileActivity.this, constraintLayout, getApplicationContext().getResources().getString(R.string.label_item_added_cart));
+                cartCount(dataList.size());
+            }
+        }
+    };
+
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String message = intent.getStringExtra("message");
+            if (message.equalsIgnoreCase("Addtocart")) {
+                if (null != SessionManager.INSTANCE.getDataList()) {
+                    if (SessionManager.INSTANCE.getDataList().size() > 0) {
+                        cartCount(SessionManager.INSTANCE.getDataList().size());
+                        dataList = SessionManager.INSTANCE.getDataList();
+                    }
+                }
+                boolean product_avilable = false;
+                if (null != dataList) {
+                    int count = 0;
+                    for (OCRToDigitalMedicineResponse data : dataList) {
+                        if (data.getArtCode() != null) {
+                            if (data.getArtCode().equalsIgnoreCase(intent.getStringExtra("product_sku"))) {
+                                product_avilable = true;
+                                int qty = data.getQty();
+                                qty = qty + 1;
+                                dataList.remove(count);
+                                OCRToDigitalMedicineResponse object1 = new OCRToDigitalMedicineResponse();
+                                object1.setArtName(intent.getStringExtra("product_name"));
+                                object1.setArtCode(intent.getStringExtra("product_sku"));
+                                object1.setMedicineType(intent.getStringExtra("medicineType"));
+                                object1.setQty(Integer.parseInt(intent.getStringExtra("product_quantyty")));
+                                if (null != intent.getStringExtra("product_price")) {
+                                    object1.setArtprice(intent.getStringExtra("product_price"));
+                                } else {
+                                    object1.setArtprice(String.valueOf(intent.getStringExtra("product_price")));
+                                }
+                                object1.setMou(String.valueOf(intent.getStringExtra("product_mou")));
+//                                object1.setQty(qty);
+                                object1.setContainer("Strip");
+                                dataList.add(object1);
+                                SessionManager.INSTANCE.setDataList(dataList);
+                                break;
+                            } else {
+                                product_avilable = false;
+                            }
+                        }
+                        count = count + 1;
+                    }
+                    if (!product_avilable) {
+                        OCRToDigitalMedicineResponse object1 = new OCRToDigitalMedicineResponse();
+                        object1.setArtName(intent.getStringExtra("product_name"));
+                        object1.setArtCode(intent.getStringExtra("product_sku"));
+                        object1.setMedicineType(intent.getStringExtra("medicineType"));
+                        object1.setQty(Integer.parseInt(intent.getStringExtra("product_quantyty")));
+                        if (null != intent.getStringExtra("product_price")) {
+                            object1.setArtprice(intent.getStringExtra("product_price"));
+                        } else {
+                            object1.setArtprice(String.valueOf(intent.getStringExtra("product_price")));
+                        }
+                        object1.setMou(String.valueOf(intent.getStringExtra("product_mou")));
+//                        object1.setQty(1);
+                        object1.setContainer("Strip");
+                        dataList.add(object1);
+                        SessionManager.INSTANCE.setDataList(dataList);
+                    }
+                }
+                Utils.showSnackbar(MyProfileActivity.this, constraintLayout, getApplicationContext().getResources().getString(R.string.label_item_added_cart));
+                cartCount(dataList.size());
+            }
+//            if (null != SessionManager.INSTANCE.getDataList())
+//                checkOutNewBtn.setVisibility(View.VISIBLE);
+//            else
+//                checkOutNewBtn.setVisibility(View.GONE);
+        }
+    };
 
     private final BroadcastReceiver mMessageReceiverAddmore = new BroadcastReceiver() {
         @Override

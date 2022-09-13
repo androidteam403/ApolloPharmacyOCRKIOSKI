@@ -14,6 +14,33 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+    <uses-permission
+        android:name="android.permission.LOCAL_MAC_ADDRESS"
+        tools:ignore="ProtectedPermissions" />
+
+
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="com.google.android.permission.gsf.permission" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <uses-permission
         android:name="android.permission.WRITE_SECURE_SETTINGS"
         tools:ignore="ProtectedPermissions" />
@@ -46,9 +73,9 @@
             android:authorities="${applicationId}.provider"
             android:exported="false"
             android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths" />
+            <!--            <meta-data-->
+            <!--                android:name="android.support.FILE_PROVIDER_PATHS"-->
+            <!--                android:resource="@xml/file_paths" />-->
         </provider>
 
         <activity
@@ -61,13 +88,7 @@
         </activity>
         <activity
             android:name=".activities.Delete"
-            android:screenOrientation="landscape">
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
-
-        </activity>
+            android:screenOrientation="landscape" />
         <activity
             android:name=".activities.MainActivity"
             android:screenOrientation="landscape" />
@@ -111,7 +132,12 @@
             android:screenOrientation="landscape" />
         <activity
             android:name=".activities.HomeActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape">
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+        </activity>
         <activity
             android:name=".activities.USBCameraActivity"
             android:screenOrientation="landscape">
@@ -128,7 +154,8 @@
         </activity>
         <activity
             android:name=".activities.MyCartActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".activities.DeliverySelectionActivity"
             android:screenOrientation="landscape" />
@@ -138,7 +165,8 @@
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".activities.MySearchActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".activities.InsertPrescriptionActivity"
             android:screenOrientation="landscape" />
@@ -161,6 +189,42 @@
         <activity
             android:name=".activities.MyProfileActivity"
             android:screenOrientation="landscape" />
+        <activity
+            android:name=".activities.paymentoptions.PaymentOptionsActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".activities.insertprescriptionnew.InsertPrescriptionActivityNew"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".activities.yourorderstatus.YourOrderStatusActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".activities.checkout.CheckoutActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".activities.OrderinProgressActivity"
+            android:screenOrientation="landscape">
+
+        </activity>
+        <activity
+            android:name=".activities.mposstoresetup.MposStoreSetupActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".activities.barcodescanner.BarcodeScannerActivity"
+            android:screenOrientation="landscape">
+
+        </activity>
+        <activity
+            android:name=".activities.barcodegenerationforconnect.BarcodeGenerationtoConnectActivity"
+            android:screenOrientation="landscape">
+
+        </activity>
+        <activity
+            android:name=".activities.scanproduct.ScanProductActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".activities.scanimage.ScanImageActivity"
+            android:screenOrientation="landscape" />
 
         <meta-data
             android:name="com.google.android.actions"
@@ -180,6 +244,8 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
+
+        <activity android:name=".activities.epsonscan.EpsonScanActivity" />
     </application>
 
 </manifest>
