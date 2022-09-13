@@ -62,7 +62,7 @@ public class MyOfersAdapterNew extends RecyclerView.Adapter<MyOfersAdapterNew.Vi
         holder.viewYourOffersBinding.itemAddtoCartLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(context.getApplicationContext(), crossselling.getItemid());
+                ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(context, crossselling.getItemid());
 
                 itemBatchSelectionDilaog.show();
 

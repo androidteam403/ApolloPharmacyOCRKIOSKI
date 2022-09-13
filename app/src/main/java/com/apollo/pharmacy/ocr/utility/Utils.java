@@ -23,6 +23,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -167,17 +168,22 @@ public class Utils {
     public static void showSnackbarDialog(Context context, View layout, String name) {
         Snackbar mSnackbar = Snackbar.make(layout, name, Snackbar.LENGTH_LONG);
         View snackbarView = mSnackbar.getView();
+//        FrameLayout.LayoutParams params=(FrameLayout.LayoutParams)snackbarView.getLayoutParams();
+//        params.gravity=Gravity.CENTER;
         snackbarView.setBackgroundColor(context.getResources().getColor(R.color.material_amber_accent_700));
         (mSnackbar.getView()).getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
         TextView textView = (TextView) snackbarView.findViewById(com.google.android.material.R.id.snackbar_text);
         textView.setTextColor(Color.BLACK);
+//        (mSnackbar.getView()).getLayoutParams().gravity=Gravity.BOTTOM;
         textView.setTextSize(25);
         snackbarView.setMinimumHeight(60);
         textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         } else {
             textView.setGravity(Gravity.CENTER_HORIZONTAL);
+
         }
         mSnackbar.show();
     }

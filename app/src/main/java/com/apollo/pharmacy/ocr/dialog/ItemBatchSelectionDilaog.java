@@ -53,6 +53,7 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
         dialog = new Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
         dialogItemBatchSelectionBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.dialog_item_batch_selection, null, false);
         dialog.setContentView(dialogItemBatchSelectionBinding.getRoot());
+//        dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.MATCH_PARENT);
 
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.setCancelable(false);
@@ -233,10 +234,11 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
     public ItemBatchSelectionDilaog(Context context, String articalCode) {
         dialog = new Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
         dialogItemBatchSelectionBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.dialog_item_batch_selection, null, false);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
         dialog.setContentView(dialogItemBatchSelectionBinding.getRoot());
         this.context = context;
         if (dialog.getWindow() != null)
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.setCancelable(false);
 //        batchSelection();
         batchlistVisbiblityHandling();
@@ -422,12 +424,36 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
                 Utils.dismissDialog();
                 dialog.dismiss();
                 View view = dialog.getWindow().getDecorView();
-                Utils.showSnackbarDialog(context, view, "Product Out Of Stock");
-                dialogItemBatchSelectionBinding.loadingPanel.setVisibility(View.GONE);
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        dialogItemBatchSelectionBinding.snackText.setVisibility(View.GONE);
+
+                    }
+                }, 4000);
+                dialogItemBatchSelectionBinding.snackText.setVisibility(View.VISIBLE);
+                dialogItemBatchSelectionBinding.snackText.setText("Product Out Of Stock");
+
+//                Utils.showSnackbarDialog(context, view, "Product Out Of Stock");
+//                dialogItemBatchSelectionBinding.loadingPanel.setVisibility(View.GONE);
             }
         } else {
             View view = dialog.getWindow().getDecorView();
-            Utils.showSnackbarDialog(context, view, "Item not available in batch list");
+//            Utils.showSnackbarDialog(context, view, "Item not available in batch list");
+
+            Handler handler1 = new Handler();
+            handler1.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    dialogItemBatchSelectionBinding.snackText.setVisibility(View.GONE);
+
+                }
+            }, 4000);
+
+            dialogItemBatchSelectionBinding.snackText.setVisibility(View.VISIBLE);
+            dialogItemBatchSelectionBinding.snackText.setText("Item not available in batch list");
+
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
@@ -720,20 +746,46 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
                         }
                     } else {
                         View view = dialog.getWindow().getDecorView();
+
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                dialogItemBatchSelectionBinding.snackText.setVisibility(View.GONE);
+
+                            }
+                        }, 4000);
                         dialogItemBatchSelectionBinding.snackText.setVisibility(View.VISIBLE);
                         dialogItemBatchSelectionBinding.snackText.setText("Selected quantity is not available in batch");
-
 //                        Utils.showSnackbarDialog(context, view, "Selected quantity is not available in batch");
                     }
                 } else {
+                      Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            dialogItemBatchSelectionBinding.snackText.setVisibility(View.GONE);
+
+                        }
+                    }, 4000);
                     dialogItemBatchSelectionBinding.snackText.setVisibility(View.VISIBLE);
                     dialogItemBatchSelectionBinding.snackText.setText("Please enter product quantity");
-                    View view = dialog.getWindow().getDecorView();
+//                    View view = dialog.getWindow().getDecorView();
 //                    Utils.showSnackbarDialog(context, view, "Please enter product quantity");
                 }
             } else {
+
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        dialogItemBatchSelectionBinding.snackText.setVisibility(View.GONE);
+
+                    }
+                }, 4000);
                 dialogItemBatchSelectionBinding.snackText.setVisibility(View.VISIBLE);
                 dialogItemBatchSelectionBinding.snackText.setText("Product Out of Stock");
+
 //                View view = dialog.getWindow().getDecorView();
 //                Utils.showSnackbarDialog(context, view, "Product Out of Stock");
                 if (itemBatchListDialogListener != null) {
@@ -742,9 +794,19 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
                 dismiss();
             }
         } else {
+            Handler handler = new Handler();
+
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    dialogItemBatchSelectionBinding.snackText.setVisibility(View.GONE);
+
+                }
+            }, 4000);
             dialogItemBatchSelectionBinding.snackText.setVisibility(View.VISIBLE);
             dialogItemBatchSelectionBinding.snackText.setText("The selected batch Id has expired.");
-//            View view = dialog.getWindow().getDecorView();
+
+            //            View view = dialog.getWindow().getDecorView();
 //            Utils.showSnackbarDialog(context, view, "The selected batch Id has expired.");
         }
     }
