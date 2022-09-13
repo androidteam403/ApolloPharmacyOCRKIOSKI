@@ -171,7 +171,7 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_search);
 
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+//        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         advertiseBanner = (ImageView) findViewById(R.id.advertise_banner);
         Glide.with(this).load("http://dev.thresholdsoft.com/apollo_feedback_assets/advertisement1.png?123").into(advertiseBanner);
         searchProducts = findViewById(R.id.search_product_text);
@@ -1144,7 +1144,7 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
         if (productList != null && productList.getCrossselling() != null && productList.getCrossselling().size() > 0) {
             crosssellingList = productList.getCrossselling();
             offersRecycle.setVisibility(View.VISIBLE);
-            MyOfersAdapterNew crossCellAdapter = new MyOfersAdapterNew(MySearchActivity.this, this, crosssellingList, this);
+            MyOfersAdapterNew crossCellAdapter = new MyOfersAdapterNew(MySearchActivity.this, MySearchActivity.this, crosssellingList, this);
             offersRecycle.setLayoutManager(new GridLayoutManager(this, 6));
             offersRecycle.setAdapter(crossCellAdapter);
         }

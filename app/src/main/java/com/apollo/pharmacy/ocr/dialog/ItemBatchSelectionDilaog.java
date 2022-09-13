@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
@@ -52,8 +53,7 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
         dialog = new Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
         dialogItemBatchSelectionBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.dialog_item_batch_selection, null, false);
         dialog.setContentView(dialogItemBatchSelectionBinding.getRoot());
-        this.context = context;
-        if (dialog.getWindow() != null)
+
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.setCancelable(false);
         batchlistVisbiblityHandling();
@@ -318,11 +318,9 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
     }
 
     public void show() {
-        try {
-            dialog.show();
-        } catch (WindowManager.BadTokenException e) {
-            Log.e("=====WindowManagerBad ", e.toString());
-        }
+       if (dialog!=null){
+           dialog.show();
+       }
     }
 
     public void dismiss() {
@@ -722,23 +720,32 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
                         }
                     } else {
                         View view = dialog.getWindow().getDecorView();
-                        Utils.showSnackbarDialog(context, view, "Selected quantity is not available in batch");
+                        dialogItemBatchSelectionBinding.snackText.setVisibility(View.VISIBLE);
+                        dialogItemBatchSelectionBinding.snackText.setText("Selected quantity is not available in batch");
+
+//                        Utils.showSnackbarDialog(context, view, "Selected quantity is not available in batch");
                     }
                 } else {
+                    dialogItemBatchSelectionBinding.snackText.setVisibility(View.VISIBLE);
+                    dialogItemBatchSelectionBinding.snackText.setText("Please enter product quantity");
                     View view = dialog.getWindow().getDecorView();
-                    Utils.showSnackbarDialog(context, view, "Please enter product quantity");
+//                    Utils.showSnackbarDialog(context, view, "Please enter product quantity");
                 }
             } else {
-                View view = dialog.getWindow().getDecorView();
-                Utils.showSnackbarDialog(context, view, "Product Out of Stock");
+                dialogItemBatchSelectionBinding.snackText.setVisibility(View.VISIBLE);
+                dialogItemBatchSelectionBinding.snackText.setText("Product Out of Stock");
+//                View view = dialog.getWindow().getDecorView();
+//                Utils.showSnackbarDialog(context, view, "Product Out of Stock");
                 if (itemBatchListDialogListener != null) {
                     itemBatchListDialogListener.onDismissDialog();
                 }
                 dismiss();
             }
         } else {
-            View view = dialog.getWindow().getDecorView();
-            Utils.showSnackbarDialog(context, view, "The selected batch Id has expired.");
+            dialogItemBatchSelectionBinding.snackText.setVisibility(View.VISIBLE);
+            dialogItemBatchSelectionBinding.snackText.setText("The selected batch Id has expired.");
+//            View view = dialog.getWindow().getDecorView();
+//            Utils.showSnackbarDialog(context, view, "The selected batch Id has expired.");
         }
     }
 

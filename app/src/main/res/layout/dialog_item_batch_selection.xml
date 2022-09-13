@@ -315,6 +315,21 @@
                 android:textSize="@dimen/sixteen_sp"
                 android:textStyle="normal" />
         </RelativeLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/margin_10dp"
+            android:layout_centerHorizontal="true"
+            android:paddingTop="25dp"
+            android:textAlignment="center"
+            android:visibility="gone"
+            android:textStyle="bold"
+            android:textSize="25dp"
+            android:paddingBottom="20dp"
+            android:textColor="@color/black"
+            android:background="@color/material_amber_accent_700"
+            android:id="@+id/snack_text"/>
 
     </RelativeLayout>
 </layout>

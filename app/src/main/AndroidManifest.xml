@@ -154,7 +154,8 @@
         </activity>
         <activity
             android:name=".activities.MyCartActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".activities.DeliverySelectionActivity"
             android:screenOrientation="landscape" />
@@ -164,7 +165,8 @@
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".activities.MySearchActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".activities.InsertPrescriptionActivity"
             android:screenOrientation="landscape" />

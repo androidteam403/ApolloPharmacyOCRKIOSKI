@@ -62,8 +62,10 @@ public class MyOfersAdapterNew extends RecyclerView.Adapter<MyOfersAdapterNew.Vi
         holder.viewYourOffersBinding.itemAddtoCartLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(context.getApplicationContext(), crossselling.getItemid());
 
-                ItemBatchSelectionDilaog itemBatchSelectionDilaog = new ItemBatchSelectionDilaog(context, crossselling.getItemid());
+                itemBatchSelectionDilaog.show();
+
                 itemBatchSelectionDilaog.setTitle(crossselling.getItemname());
                 crossselling.setQty(1);
 
@@ -98,7 +100,7 @@ public class MyOfersAdapterNew extends RecyclerView.Adapter<MyOfersAdapterNew.Vi
                     itemBatchSelectionDilaog.getBatchAvilableData();
 
                     itemBatchSelectionDilaog.globalBatchListHandlings(crossselling.getItemname(), crossselling.getItemid(),
-                            balanceQty, dummyDataList, context, "FMCG");
+                            balanceQty, dummyDataList, activity, "FMCG");
 
 
 //                    if (itemBatchSelectionDilaog.getBatchAvilableData() != null && itemBatchSelectionDilaog.getBatchAvilableData().getBatchList() != null && itemBatchSelectionDilaog.getBatchAvilableData().getBatchList().size() > 0) {
@@ -286,7 +288,6 @@ public class MyOfersAdapterNew extends RecyclerView.Adapter<MyOfersAdapterNew.Vi
                 itemBatchSelectionDilaog.setNegativeListener(v1 -> {
                     itemBatchSelectionDilaog.dismiss();
                 });
-                itemBatchSelectionDilaog.show();
             }
         });
     }

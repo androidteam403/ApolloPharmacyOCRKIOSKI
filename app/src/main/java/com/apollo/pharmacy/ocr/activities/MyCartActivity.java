@@ -2377,7 +2377,7 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                 crosssellingList.add(itemSearchResponse.getItemList().get(0));
                 if (crosssellcountforadapter == 3) {
                     if (crosssellingList != null && crosssellingList.size() > 0) {
-                        CrossCellAdapter crossCellAdapter = new CrossCellAdapter(this, crosssellingList, addToCarLayHandel);
+                        CrossCellAdapter crossCellAdapter = new CrossCellAdapter(MyCartActivity.this, crosssellingList, addToCarLayHandel);
                         RecyclerView.LayoutManager mLayoutManager4 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
                         crossCell_recycle.setLayoutManager(mLayoutManager4);
                         crossCell_recycle.setItemAnimator(new DefaultItemAnimator());

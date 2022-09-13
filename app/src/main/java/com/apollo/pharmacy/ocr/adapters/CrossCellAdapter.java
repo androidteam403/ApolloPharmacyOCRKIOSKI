@@ -2,6 +2,7 @@ package com.apollo.pharmacy.ocr.adapters;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +23,7 @@ import java.util.List;
 
 public class CrossCellAdapter extends RecyclerView.Adapter<CrossCellAdapter.ViewHolder> {
 
-    private Activity activity;
+    private Context activity;
     private List<ItemSearchResponse.Item> upsellList;
     boolean addToCarLayHandel;
     List<OCRToDigitalMedicineResponse> dummyDataList = new ArrayList<>();
