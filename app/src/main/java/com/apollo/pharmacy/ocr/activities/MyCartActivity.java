@@ -882,7 +882,6 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
                 if (s.toString() != null && !s.toString().isEmpty()) {
                     usbScanHandler.removeCallbacks(usbScanRunnable);
                     usbScanHandler.postDelayed(usbScanRunnable, 250);
-//                    Toast.makeText(HomeActivity.this, s.toString(), Toast.LENGTH_SHORT).show();
                 }
             }
         });

@@ -63,6 +63,7 @@ public class PincodeValidateController {
     }
     public void checkServiceAvailability(Context context, String inputPincode) {
         ApiInterface apiInterface = ApiClient.getApiService(Constants.CheckServiceAvailability);
+        Utils.showDialog(context, "Loading…");
         ServiceAvailabilityRequest serviceAvailabilityRequest = new ServiceAvailabilityRequest();
         serviceAvailabilityRequest.setVendorName("KIOSK");
         serviceAvailabilityRequest.setPincode(inputPincode);

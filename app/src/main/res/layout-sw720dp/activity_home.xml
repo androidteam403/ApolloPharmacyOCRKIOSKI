@@ -93,7 +93,7 @@
                                 android:layout_width="@dimen/two_hundred_fifty_dp"
                                 android:layout_height="@dimen/three_hundred_dp"
                                 android:contentDescription="@string/app_name"
-                                android:src="@drawable/step1_icon" />
+                                android:src="@drawable/scan_prescription_home" />
 
                             <TextView
                                 android:layout_width="230dp"
@@ -128,7 +128,7 @@
                                 android:layout_width="@dimen/two_hundred_fifty_dp"
                                 android:layout_height="@dimen/three_hundred_dp"
                                 android:contentDescription="@string/app_name"
-                                android:src="@drawable/step3_icon" />
+                                android:src="@drawable/search_products_home" />
 
                             <TextView
                                 android:layout_width="230dp"
@@ -170,7 +170,7 @@
                                     android:layout_marginStart="@dimen/twenty_dp"
                                     android:layout_marginEnd="@dimen/twenty_dp"
                                     android:contentDescription="@string/app_name"
-                                    android:src="@drawable/step2_icon" />
+                                    android:src="@drawable/scan_items_home" />
 
                                 <TextView
                                     android:layout_width="230dp"

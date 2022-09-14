@@ -451,15 +451,15 @@ public class HomeActivity extends BaseActivity implements ConnectivityReceiver.C
         activityHomeBinding.scanProducts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view1) {
-                if (Constants.isAnyScannerConnected) {
-                    Utils.showSnackbar(HomeActivity.this, constraintLayout, "Scanner connected already");
-
-//                    Toast.makeText(HomeActivity.this, "Scanner connected already", Toast.LENGTH_SHORT).show();
-                } else {
-                    Intent intent = new Intent(HomeActivity.this, BarcodeGenerationtoConnectActivity.class);
-                    intent.putExtra(com.apollo.pharmacy.ocr.zebrasdk.helper.Constants.SCANNER_MODE, "BARCODE");
-                    startActivityForResult(intent, BarcodeGenerationtoConnectActivity.BARCODE_GENERATIONTO_CONNECT_ACTIVITY);
-                }
+//                if (Constants.isAnyScannerConnected) {
+//                    Utils.showSnackbar(HomeActivity.this, constraintLayout, "Scanner connected already");
+//
+////                    Toast.makeText(HomeActivity.this, "Scanner connected already", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    Intent intent = new Intent(HomeActivity.this, BarcodeGenerationtoConnectActivity.class);
+//                    intent.putExtra(com.apollo.pharmacy.ocr.zebrasdk.helper.Constants.SCANNER_MODE, "BARCODE");
+//                    startActivityForResult(intent, BarcodeGenerationtoConnectActivity.BARCODE_GENERATIONTO_CONNECT_ACTIVITY);
+//                }
 
 
 //                activityHomeBinding.transColorId.setVisibility(View.VISIBLE);

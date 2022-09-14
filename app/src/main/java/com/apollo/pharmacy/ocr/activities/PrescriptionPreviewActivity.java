@@ -17,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -98,7 +97,8 @@ public class PrescriptionPreviewActivity extends BaseActivity implements Prescri
         LinearLayout faqLayout = findViewById(R.id.help_layout);
         TextView helpText = findViewById(R.id.help_text);
         helpText.setText(getResources().getString(R.string.faq));
-        faqLayout.setOnClickListener(view -> startActivity(new Intent(PrescriptionPreviewActivity.this, FAQActivity.class)));
+        ImageView faq = findViewById(R.id.faq);
+        faq.setOnClickListener(view -> startActivity(new Intent(PrescriptionPreviewActivity.this, FAQActivity.class)));
 
         ImageView customerCareImg = findViewById(R.id.customer_care_icon);
         LinearLayout customerHelpLayout = findViewById(R.id.customer_help_layout);
@@ -225,7 +225,7 @@ public class PrescriptionPreviewActivity extends BaseActivity implements Prescri
         public void onReceive(Context context, Intent intent) {
             String message = intent.getStringExtra("message");
             if (message.equalsIgnoreCase("ImageName")) {
-               // SessionManager.INSTANCE.setDynamicOrderId(intent.getStringExtra("imageId"));
+                // SessionManager.INSTANCE.setDynamicOrderId(intent.getStringExtra("imageId"));
                 myCartController.handleImageService(intent.getStringExtra("data"));
             }
         }

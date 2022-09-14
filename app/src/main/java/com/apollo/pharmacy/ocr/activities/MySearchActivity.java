@@ -664,18 +664,6 @@ public class MySearchActivity extends BaseActivity implements SubCategoryListene
                 if (s.toString() != null && !s.toString().isEmpty()) {
                     usbScanHandler.removeCallbacks(usbScanRunnable);
                     usbScanHandler.postDelayed(usbScanRunnable, 250);
-//                    Handler handler = new Handler();
-//                    handler.postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            Utils.showDialog(MySearchActivity.this, "Plaese wait...");
-//                            MySearchController mySearchControllerScan = new MySearchController(MySearchActivity.this, MySearchActivity.this);
-//                            mySearchControllerScan.searchItemProducts(usbScanEditText.getText().toString());
-//                            usbScanEditText.setText("");
-//                        }
-//                    }, 1000);
-
-//                    Toast.makeText(HomeActivity.this, s.toString(), Toast.LENGTH_SHORT).show();
                 }
             }
         });

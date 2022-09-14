@@ -152,10 +152,12 @@ public class Utils {
         View snackbarView = mSnackbar.getView();
         snackbarView.setBackgroundColor(context.getResources().getColor(R.color.material_amber_accent_700));
         (mSnackbar.getView()).getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
+        (mSnackbar.getView()).getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
         TextView textView = (TextView) snackbarView.findViewById(com.google.android.material.R.id.snackbar_text);
         textView.setTextColor(Color.BLACK);
         textView.setTextSize(25);
-        snackbarView.setMinimumHeight(60);
+//        snackbarView.setMinimumHeight(10);
+//        snackbarView.setMinimumHeight(40);
         textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
