@@ -33,7 +33,7 @@ public class OrderInProgressController {
         reqModel.setReturnMessage("");
         reqModel.setTransactionId(orderId);
         reqModel.setBillingType(5);
-        reqModel.setDigitalReceiptRequired(false);
+        reqModel.setDigitalReceiptRequired(true);
         Call<PdfModelResponse> call = apiInterface.DOWNLOAD_PDF(reqModel);
         call.enqueue(new Callback<PdfModelResponse>() {
             @Override

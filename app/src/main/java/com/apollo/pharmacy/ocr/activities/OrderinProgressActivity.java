@@ -623,7 +623,9 @@ public class OrderinProgressActivity extends PDFCreatorActivity implements Order
                 } else if (j == 8) {
                     pdfTextView.setText(salesLine.getLineTotAmount()).setTextTypeface(ResourcesCompat.getFont(getContext(), R.font.cambria));
                 } else {
-                    pdfTextView.setText(String.valueOf(Double.parseDouble(salesLine.getSGSTPer()) + Double.parseDouble(salesLine.getCGSTPer()))).setTextTypeface(ResourcesCompat.getFont(getContext(), R.font.cambria));
+
+                    double gst = Double.parseDouble(salesLine.getSGSTPer()) + Double.parseDouble(salesLine.getCGSTPer());
+                    pdfTextView.setText(String.format("%.02f", gst)).setTextTypeface(ResourcesCompat.getFont(getContext(), R.font.cambria));
                 }
                 tableRowView.addToRow(pdfTextView);
             }
@@ -637,8 +639,10 @@ public class OrderinProgressActivity extends PDFCreatorActivity implements Order
         pdfBody.addView(lineSeparatorView4);
 
         PDFHorizontalView taxbleView = new PDFHorizontalView(getApplicationContext());
+
+        double taxbleValue = Double.parseDouble(pdfModelResponse.getSalesLine().get(0).getTaxable());
         PDFTextView taxableValue = new PDFTextView(getApplicationContext(), PDFTextView.PDF_TEXT_SIZE.SMALL)
-                .setText("TAXABLE VALUE: " + pdfModelResponse.getSalesLine().get(0).getTaxable()).setTextTypeface(ResourcesCompat.getFont(getContext(), R.font.cambria));
+                .setText("TAXABLE VALUE: " + String.format("%.02f", taxbleValue)).setTextTypeface(ResourcesCompat.getFont(getContext(), R.font.cambria));
         taxableValue.setLayout(verticalLayoutParam1);
         taxableValue.getView().setGravity(Gravity.CENTER_VERTICAL);
         taxbleView.addView(taxableValue);
@@ -655,7 +659,7 @@ public class OrderinProgressActivity extends PDFCreatorActivity implements Order
 
             }
         }
-        taxableValue1.setText("CGstAMT : " + String.valueOf(cgstAmount)).setTextTypeface(ResourcesCompat.getFont(getContext(), R.font.cambria));
+        taxableValue1.setText("CGstAMT : " + String.format("%.02f", cgstAmount)).setTextTypeface(ResourcesCompat.getFont(getContext(), R.font.cambria));
         taxableValue1.setLayout(verticalLayoutParam1);
         taxableValue1.getView().setGravity(Gravity.CENTER_VERTICAL);
         taxbleView.addView(taxableValue1);
@@ -672,7 +676,7 @@ public class OrderinProgressActivity extends PDFCreatorActivity implements Order
 
             }
         }
-        taxableValue2.setText("SGstAmt: " + String.valueOf(sgstAmount)).setTextTypeface(ResourcesCompat.getFont(getContext(), R.font.cambria));
+        taxableValue2.setText("SGstAmt: " + String.format("%.02f", sgstAmount)).setTextTypeface(ResourcesCompat.getFont(getContext(), R.font.cambria));
         taxableValue2.setLayout(verticalLayoutParam1);
         taxableValue2.getView().setGravity(Gravity.CENTER_VERTICAL);
         taxbleView.addView(taxableValue2);
@@ -680,23 +684,31 @@ public class OrderinProgressActivity extends PDFCreatorActivity implements Order
 
 
         PDFHorizontalView taxbleView2 = new PDFHorizontalView(getApplicationContext());
+
+        double gross = Double.parseDouble(pdfModelResponse.getSalesHeader().get(0).getTotal());
         PDFTextView taxableValue5 = new PDFTextView(getApplicationContext(), PDFTextView.PDF_TEXT_SIZE.SMALL)
-                .setText("Gross: " + pdfModelResponse.getSalesHeader().get(0).getTotal()).setTextTypeface(ResourcesCompat.getFont(getContext(), R.font.cambria));
+                .setText("Gross: " + String.format("%.02f", gross)).setTextTypeface(ResourcesCompat.getFont(getContext(), R.font.cambria));
         taxableValue5.setLayout(verticalLayoutParam1);
         taxableValue5.getView().setGravity(Gravity.CENTER_VERTICAL);
         taxbleView2.addView(taxableValue5);
+
+        double disAmt = Double.parseDouble(pdfModelResponse.getSalesHeader().get(0).getDiscount());
         PDFTextView taxableValue3 = new PDFTextView(getApplicationContext(), PDFTextView.PDF_TEXT_SIZE.SMALL)
-                .setText("DisAmt :" + pdfModelResponse.getSalesHeader().get(0).getDiscount()).setTextTypeface(ResourcesCompat.getFont(getContext(), R.font.cambria));
+                .setText("DisAmt :" + String.format("%.02f", disAmt)).setTextTypeface(ResourcesCompat.getFont(getContext(), R.font.cambria));
         taxableValue3.setLayout(verticalLayoutParam1);
         taxableValue3.getView().setGravity(Gravity.CENTER_VERTICAL);
         taxbleView2.addView(taxableValue3);
+
+        double donation = Double.parseDouble(pdfModelResponse.getSalesHeader().get(0).getDonationAmount());
         PDFTextView taxableValue4 = new PDFTextView(getApplicationContext(), PDFTextView.PDF_TEXT_SIZE.SMALL)
-                .setText("Donation: " + pdfModelResponse.getSalesHeader().get(0).getDonationAmount()).setTextTypeface(ResourcesCompat.getFont(getContext(), R.font.cambria));
+                .setText("Donation: " + String.format("%.02f", donation)).setTextTypeface(ResourcesCompat.getFont(getContext(), R.font.cambria));
         taxableValue4.setLayout(verticalLayoutParam1);
         taxableValue4.getView().setGravity(Gravity.CENTER_VERTICAL);
         taxbleView2.addView(taxableValue4);
+
+        double netAmt = Double.parseDouble(pdfModelResponse.getSalesHeader().get(0).getNetTotal());
         PDFTextView taxableValue6 = new PDFTextView(getApplicationContext(), PDFTextView.PDF_TEXT_SIZE.SMALL)
-                .setText("NetAmt: " + pdfModelResponse.getSalesHeader().get(0).getNetTotal()).setTextTypeface(ResourcesCompat.getFont(getContext(), R.font.cambria));
+                .setText("NetAmt: " + String.format("%.02f", netAmt)).setTextTypeface(ResourcesCompat.getFont(getContext(), R.font.cambria));
         taxableValue6.setLayout(verticalLayoutParam1);
         taxableValue6.getView().setGravity(Gravity.CENTER_VERTICAL);
         taxbleView2.addView(taxableValue6);

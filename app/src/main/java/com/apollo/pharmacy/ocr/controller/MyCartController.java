@@ -281,6 +281,7 @@ public class MyCartController {
         batchListRequest.setSearchType(1);
         batchListRequest.setStoreId(SessionManager.INSTANCE.getStoreId());
         batchListRequest.setStoreState("TS");
+        batchListRequest.setExpiryDays("30");
         batchListRequest.setTerminalId(SessionManager.INSTANCE.getTerminalId());
         Call<BatchListResponse> call = api.GET_BATCH_LIST(batchListRequest);
         call.enqueue(new Callback<BatchListResponse>() {

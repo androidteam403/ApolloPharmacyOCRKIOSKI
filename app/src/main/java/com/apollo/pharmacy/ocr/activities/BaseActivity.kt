@@ -14,11 +14,13 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.apollo.pharmacy.ocr.R
+import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse
 import com.apollo.pharmacy.ocr.utility.LanguageManager.Companion.setLocale
 import com.apollo.pharmacy.ocr.utility.SessionManager.getSessionTime
-import com.apollo.pharmacy.ocr.utility.SessionManager.logoutUser
+import com.apollo.pharmacy.ocr.utility.SessionManager.setDataList
 import com.apollo.pharmacy.ocr.zebrasdk.BaseActivity
 import java.text.DecimalFormat
+import java.util.*
 
 open class BaseActivity() : AppCompatActivity() {
 
@@ -71,6 +73,17 @@ open class BaseActivity() : AppCompatActivity() {
             if (sessionTimeOutAlert!!.isShowing) {
                 sessionTimeOutAlert!!.dismiss()
             }
+
+            logoutConfirmationHandler.removeCallbacks(logoutConfirmationRunnable)
+
+            val dataList: List<OCRToDigitalMedicineResponse> = ArrayList()
+            setDataList(dataList)
+
+
+            val intent = Intent(this, UserLoginActivity::class.java)
+            startActivity(intent)
+            overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out)
+            finishAffinity()
         }
         if (sessionTimeOutAlert != null) {
             sessionTimeOutAlert!!.show()
@@ -84,6 +97,10 @@ open class BaseActivity() : AppCompatActivity() {
             sessionTimeOutAlert!!.dismiss()
         }
         //logoutUser()
+
+        val dataList: List<OCRToDigitalMedicineResponse> = ArrayList()
+        setDataList(dataList)
+
         val intent = Intent(this, UserLoginActivity::class.java)
         startActivity(intent)
         overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out)

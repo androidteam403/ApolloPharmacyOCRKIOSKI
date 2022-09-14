@@ -26,6 +26,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.apollo.pharmacy.ocr.R;
 import com.apollo.pharmacy.ocr.activities.UserLoginActivity;
+import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
 import com.apollo.pharmacy.ocr.utility.Constants;
 import com.apollo.pharmacy.ocr.utility.SessionManager;
 import com.apollo.pharmacy.ocr.zebrasdk.helper.Barcode;
@@ -1174,7 +1175,20 @@ public class BaseActivity extends AppCompatActivity implements ScannerAppEngine,
                 }
                 BaseActivity.this.delayedIdle(IDLE_DELAY_MINUTES);
             });
-            declineButton.setOnClickListener(v -> sessionTimeOutAlert.dismiss());
+            declineButton.setOnClickListener(v -> {
+                sessionTimeOutAlert.dismiss();
+
+                logoutConfirmationHandler.removeCallbacks(logoutConfirmationRunnable);
+                sessionTimeOutHandler.removeCallbacks(sessionTimeOutRunnable);
+
+                List<OCRToDigitalMedicineResponse> dataList = new ArrayList<>();
+                SessionManager.INSTANCE.setDataList(dataList);
+
+                Intent intent = new Intent(BaseActivity.this, UserLoginActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
+                finishAffinity();
+            });
             sessionTimeOutAlert.show();
         }
     };
@@ -1187,6 +1201,10 @@ public class BaseActivity extends AppCompatActivity implements ScannerAppEngine,
                 sessionTimeOutAlert.dismiss();
             }
 //            SessionManager.INSTANCE.logoutUser();
+
+            List<OCRToDigitalMedicineResponse> dataList = new ArrayList<>();
+            SessionManager.INSTANCE.setDataList(dataList);
+
             Intent intent = new Intent(BaseActivity.this, UserLoginActivity.class);
             startActivity(intent);
             overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);

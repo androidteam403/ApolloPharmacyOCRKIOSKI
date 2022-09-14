@@ -90,11 +90,6 @@ public class PaymentOptionsActivity extends BaseActivity implements PhonePayQrCo
             expressCheckoutTransactionId = (String) getIntent().getStringExtra("EXPRESS_CHECKOUT_TRANSACTION_ID");
         }
 
-        if (isFmcgDeliveryType) {
-            activityPaymentOptionsBinding.cashOnDelivery.setVisibility(View.VISIBLE);
-        } else {
-            activityPaymentOptionsBinding.cashOnDelivery.setVisibility(View.GONE);
-        }
 
         if (null != SessionManager.INSTANCE.getDataList())
             this.dataList = SessionManager.INSTANCE.getDataList();
@@ -168,7 +163,11 @@ public class PaymentOptionsActivity extends BaseActivity implements PhonePayQrCo
                     }
                 }
             }
-
+            if (isFmcgDeliveryType || isFmcgOrder) {
+                activityPaymentOptionsBinding.cashOnDelivery.setVisibility(View.VISIBLE);
+            } else {
+                activityPaymentOptionsBinding.cashOnDelivery.setVisibility(View.GONE);
+            }
 
 //            fmcgToatalPass = fmcgTotal;
             orderDetailsuiModel.setPharmaCount(String.valueOf(pharmaMedicineCount));

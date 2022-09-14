@@ -1,6 +1,9 @@
 package com.apollo.pharmacy.ocr.controller;
 
 import android.content.Context;
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
 
 import com.apollo.pharmacy.ocr.interfaces.MposBatchListListener;
 import com.apollo.pharmacy.ocr.model.BatchListRequest;
@@ -11,6 +14,9 @@ import com.apollo.pharmacy.ocr.utility.SessionManager;
 import com.apollo.pharmacy.ocr.utility.Utils;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,17 +37,25 @@ public class MposBatchListController {
         BatchListRequest batchListRequest = new BatchListRequest();
         batchListRequest.setArticleCode(artcode);
         batchListRequest.setCustomerState("");
-        batchListRequest.setDataAreaId("ahel");
+        batchListRequest.setDataAreaId(SessionManager.INSTANCE.getCompanyName());
         batchListRequest.setSez(0);
         batchListRequest.setSearchType(1);
-        batchListRequest.setStoreId("16001");
-        batchListRequest.setStoreState("AP");
-        batchListRequest.setTerminalId("005");
+        batchListRequest.setStoreId(SessionManager.INSTANCE.getStoreId());
+        batchListRequest.setStoreState("TS");
+        batchListRequest.setExpiryDays("30");
+        batchListRequest.setTerminalId(SessionManager.INSTANCE.getTerminalId());
         Call<BatchListResponse> call = api.GET_BATCH_LIST(batchListRequest);
         call.enqueue(new Callback<BatchListResponse>() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onResponse(@NotNull Call<BatchListResponse> call, @NotNull Response<BatchListResponse> response) {
                 if (response.body() != null) {
+                    List<BatchListResponse.Batch> batchList = response.body().getBatchList()
+                            .stream()
+                            .filter(batchItem -> !batchItem.getNearByExpiry())
+                            .collect(Collectors.toList());
+
+                    response.body().setBatchList(batchList);
                     mposBatchListListener.setSuccessBatchList(response.body());
                 } else {
                     Utils.dismissDialog();
