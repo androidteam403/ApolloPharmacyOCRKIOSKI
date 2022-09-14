@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="Lets_Begin">"Let's Begin"</string>
     <string name="Mobile_Number">Mobile Number</string>
     <string name="Back">Back</string>
@@ -64,7 +64,7 @@
     <string name="label_order_medicine">Order medicine in just 3 simple steps</string>
     <string name="label_scan_prescription">Scan Your Prescription</string>
     <string name="label_need_help_call">Need Help? Call</string>
-    <string name="label_care_number">1800 6354</string>
+    <string name="label_care_number">1860 500 0101</string>
     <string name="label_or">or</string>
     <string name="label_insert_prescription">Insert Your Prescription</string>
     <string name="label_in_scanner">in the scanner</string>
@@ -283,4 +283,9 @@
     <string name="label_fetching_order_history">Fetching Orders History…</string>
     <string name="label_loading_presc_info">Loading Prescription Info…</string>
     <string name="label_capture_prescription_message">Place the prescription in the bottom tray and capture</string>
+
+    <string name="qr_code" tools:ignore="ExtraTranslation">qr_code</string>
+    <string name="enter_your_info" tools:ignore="ExtraTranslation">Enter your info</string>
+    <string name="generate_qr_code" tools:ignore="ExtraTranslation">Generate QR Code</string>
+
 </resources>

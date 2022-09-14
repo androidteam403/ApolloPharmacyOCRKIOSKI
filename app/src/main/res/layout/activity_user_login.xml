@@ -87,6 +87,7 @@
                                     android:layout_marginStart="@dimen/ten_dp"
                                     android:contentDescription="@string/app_name"
                                     android:rotation="90"
+                                    android:visibility="gone"
                                     android:src="@drawable/back_arrow_click_effect" />
 
                                 <TextView

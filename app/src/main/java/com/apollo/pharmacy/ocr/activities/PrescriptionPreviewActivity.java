@@ -17,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,12 +28,16 @@ import com.apollo.pharmacy.ocr.controller.UploadBgImageController;
 import com.apollo.pharmacy.ocr.interfaces.MyCartListener;
 import com.apollo.pharmacy.ocr.interfaces.PrescriptionPreviewListener;
 import com.apollo.pharmacy.ocr.interfaces.UploadBgImageListener;
+import com.apollo.pharmacy.ocr.model.BatchListResponse;
+import com.apollo.pharmacy.ocr.model.CalculatePosTransactionResponse;
 import com.apollo.pharmacy.ocr.model.GetImageRes;
 import com.apollo.pharmacy.ocr.model.GetProductListResponse;
+import com.apollo.pharmacy.ocr.model.ItemSearchResponse;
 import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
 import com.apollo.pharmacy.ocr.model.PrescriptionItem;
 import com.apollo.pharmacy.ocr.model.ScannedData;
 import com.apollo.pharmacy.ocr.model.ScannedMedicine;
+import com.apollo.pharmacy.ocr.model.UpCellCrossCellResponse;
 import com.apollo.pharmacy.ocr.model.UserAddress;
 import com.apollo.pharmacy.ocr.receiver.ConnectivityReceiver;
 import com.apollo.pharmacy.ocr.utility.Constants;
@@ -49,7 +52,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class PrescriptionPreviewActivity extends AppCompatActivity implements PrescriptionPreviewListener, MyCartListener,
+public class PrescriptionPreviewActivity extends BaseActivity implements PrescriptionPreviewListener, MyCartListener,
         ConnectivityReceiver.ConnectivityReceiverListener, UploadBgImageListener {
 
     private ArrayList<PrescriptionItem> prescriptionList;
@@ -94,7 +97,8 @@ public class PrescriptionPreviewActivity extends AppCompatActivity implements Pr
         LinearLayout faqLayout = findViewById(R.id.help_layout);
         TextView helpText = findViewById(R.id.help_text);
         helpText.setText(getResources().getString(R.string.faq));
-        faqLayout.setOnClickListener(view -> startActivity(new Intent(PrescriptionPreviewActivity.this, FAQActivity.class)));
+        ImageView faq = findViewById(R.id.faq);
+        faq.setOnClickListener(view -> startActivity(new Intent(PrescriptionPreviewActivity.this, FAQActivity.class)));
 
         ImageView customerCareImg = findViewById(R.id.customer_care_icon);
         LinearLayout customerHelpLayout = findViewById(R.id.customer_help_layout);
@@ -221,7 +225,7 @@ public class PrescriptionPreviewActivity extends AppCompatActivity implements Pr
         public void onReceive(Context context, Intent intent) {
             String message = intent.getStringExtra("message");
             if (message.equalsIgnoreCase("ImageName")) {
-               // SessionManager.INSTANCE.setDynamicOrderId(intent.getStringExtra("imageId"));
+                // SessionManager.INSTANCE.setDynamicOrderId(intent.getStringExtra("imageId"));
                 myCartController.handleImageService(intent.getStringExtra("data"));
             }
         }
@@ -363,6 +367,47 @@ public class PrescriptionPreviewActivity extends AppCompatActivity implements Pr
         PrescriptionItem prescriptionItem = new PrescriptionItem(imgUrl);
         prescriptionList.add(prescriptionItem);
         prescriptionListAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onSuccessSearchItemApi(UpCellCrossCellResponse body) {
+
+    }
+
+    @Override
+    public void onSearchFailure(String message) {
+
+    }
+
+    @Override
+    public void onSuccessBarcodeItemApi(ItemSearchResponse itemSearchResponse, int serviceType, int qty, int position) {
+
+    }
+
+
+    @Override
+    public void onFailureBarcodeItemApi(String message) {
+
+    }
+
+    @Override
+    public void upSellCrosssellApiCall(List<UpCellCrossCellResponse.Crossselling> crossselling, List<UpCellCrossCellResponse.Upselling> upselling) {
+
+    }
+
+    @Override
+    public void setSuccessBatchList(BatchListResponse body, int position, ItemSearchResponse.Item itemSearchData) {
+
+    }
+
+    @Override
+    public void onSuccessCalculatePosTransactionApi(CalculatePosTransactionResponse calculatePosTransactionResponse) {
+
+    }
+
+    @Override
+    public void onSuccessSearchItemApi(ItemSearchResponse itemSearchResponse, int position) {
+
     }
 
     @Override

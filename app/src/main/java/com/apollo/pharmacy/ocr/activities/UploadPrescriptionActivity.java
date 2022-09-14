@@ -43,7 +43,7 @@ import retrofit2.Response;
 
 import static com.apollo.pharmacy.ocr.utility.Utils.getNameFromFilePath;
 
-public class UploadPrescriptionActivity extends AppCompatActivity implements ConnectivityReceiver.ConnectivityReceiverListener,
+public class UploadPrescriptionActivity extends BaseActivity implements ConnectivityReceiver.ConnectivityReceiverListener,
         RecyclerViewAdapter.ItemListener {
 
     private LinearLayout continueLayout;

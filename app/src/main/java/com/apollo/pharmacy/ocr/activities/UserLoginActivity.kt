@@ -12,18 +12,33 @@ import android.view.animation.TranslateAnimation
 import android.view.inputmethod.EditorInfo
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.apollo.pharmacy.ocr.R
+import com.apollo.pharmacy.ocr.activities.mposstoresetup.MposStoreSetupActivity
 import com.apollo.pharmacy.ocr.controller.UserLoginController
+import com.apollo.pharmacy.ocr.dialog.AccesskeyDialog
 import com.apollo.pharmacy.ocr.interfaces.UserLoginListener
+import com.apollo.pharmacy.ocr.model.Global_api_response
+import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse
 import com.apollo.pharmacy.ocr.model.Send_Sms_Request
 import com.apollo.pharmacy.ocr.receiver.ConnectivityReceiver
 import com.apollo.pharmacy.ocr.utility.*
+import com.apollo.pharmacy.ocr.utility.SessionManager.getEposUrl
+import com.apollo.pharmacy.ocr.utility.SessionManager.getStoreId
+import com.apollo.pharmacy.ocr.utility.SessionManager.getTerminalId
+import com.apollo.pharmacy.ocr.utility.SessionManager.isFcmAdded
+import com.apollo.pharmacy.ocr.utility.SessionManager.setDataList
+import com.apollo.pharmacy.ocr.utility.SessionManager.setDeletedDataList
 import com.apollo.pharmacy.ocr.widget.CustomKeyboard
+import com.google.android.gms.tasks.Task
+import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.iid.InstanceIdResult
 import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.android.synthetic.main.activity_user_login.*
 import kotlinx.android.synthetic.main.view_faq_layout.*
+import java.util.*
 
 class UserLoginActivity : AppCompatActivity(), UserLoginListener, ConnectivityReceiver.ConnectivityReceiverListener {
 
@@ -54,6 +69,10 @@ class UserLoginActivity : AppCompatActivity(), UserLoginListener, ConnectivityRe
     override fun onSendSmsFailure() {
         Utils.dismissDialog()
         Utils.showCustomAlertDialog(this, resources.getString(R.string.label_server_err_message), false, resources.getString(R.string.label_ok), "")
+    }
+
+    override fun onFailure(message: String?) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
     lateinit var utils: Utils
@@ -87,11 +106,19 @@ class UserLoginActivity : AppCompatActivity(), UserLoginListener, ConnectivityRe
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_login)
-        FirebaseMessaging.getInstance().setAutoInitEnabled(true);
 
+
+        val dataList: List<OCRToDigitalMedicineResponse> = ArrayList()
+        setDataList(dataList)
+        setDeletedDataList(dataList)
+
+
+        FirebaseMessaging.getInstance().setAutoInitEnabled(true);
         utils = Utils()
         userLoginController = UserLoginController()
+        userLoginController.getGlobalApiList(this, this)
 
+        SessionManager.setBatchId("");
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
@@ -99,7 +126,7 @@ class UserLoginActivity : AppCompatActivity(), UserLoginListener, ConnectivityRe
         edittext_mobileNum.setTextIsSelectable(true)
 
         setMobileNumberKeyboard()
-
+        val faq_layout = findViewById<ImageView>(R.id.faq);
         val customerCareImg = findViewById<ImageView>(R.id.customer_care_icon)
         val customerHelpLayout = findViewById<LinearLayout>(R.id.customer_help_layout)
         constraint_layout = findViewById(R.id.constraint_layout)
@@ -157,7 +184,8 @@ class UserLoginActivity : AppCompatActivity(), UserLoginListener, ConnectivityRe
             finish()
             overridePendingTransition(R.animator.trans_right_in, R.animator.trans_right_out)
         }
-        help_layout.setOnClickListener(View.OnClickListener {
+
+        faq_layout.setOnClickListener(View.OnClickListener {
             startActivity(Intent(this@UserLoginActivity, FAQActivity::class.java))
         })
         back_otp_icon.setOnClickListener {
@@ -166,40 +194,58 @@ class UserLoginActivity : AppCompatActivity(), UserLoginListener, ConnectivityRe
             setMobileNumberKeyboard()
         }
         generate_otp_layout.setOnClickListener(View.OnClickListener {
-            val MobilePattern = "[0-9]{10}"
-            mobileNum = edittext_mobileNum.text.toString()
-            if (mobileNum.length < 10) {
-                send_otp_image.setImageResource(R.drawable.right_selection_green)
-                edittext_error_layout.setBackgroundResource(R.drawable.phone_error_alert_bg)
-                edittext_error_text.visibility = View.VISIBLE
-                return@OnClickListener
-            } else {
-                send_otp_image.setImageResource(R.drawable.right_selection_green)
-                edittext_error_layout.setBackgroundResource(R.drawable.phone_country_code_bg)
-                edittext_error_text.visibility = View.INVISIBLE
-                if (oldMobileNum.equals(edittext_mobileNum.text.toString()) && edittext_mobileNum.text.toString().length > 0 && (mobileNum.matches(MobilePattern.toRegex()))) {
-                    mobile_number_input_layout.visibility = View.GONE
-                    otp_parent_layout.visibility = View.VISIBLE
+            if (getStoreId() != null && !getStoreId().isEmpty()
+                    && getTerminalId() != null && !getTerminalId().isEmpty() && getEposUrl() != null && !getEposUrl().isEmpty()) {
+                val MobilePattern = "[0-9]{10}"
+                mobileNum = edittext_mobileNum.text.toString()
+                if (mobileNum.length < 10) {
+                    send_otp_image.setImageResource(R.drawable.right_selection_green)
+                    edittext_error_layout.setBackgroundResource(R.drawable.phone_error_alert_bg)
+                    edittext_error_text.visibility = View.VISIBLE
+                    return@OnClickListener
                 } else {
-                    if (edittext_mobileNum.text.toString().length > 0) {
-                        oldMobileNum = edittext_mobileNum.text.toString()
-                        if (mobileNum.matches(MobilePattern.toRegex())) {
-                            Utils.showDialog(this, resources.getString(R.string.label_sending_otp))
-                            otp = (Math.random() * 9000).toInt() + 1000
-                            if (NetworkUtils.isNetworkConnected(applicationContext)) {
-                                val sms_req = Send_Sms_Request()
-                                sms_req.mobileNo = mobileNum
-                                sms_req.message = "Dear Apollo Customer, Your one time password is " + otp.toString()+" and is valid for 3mins."
-                                sms_req.isOtp = true
-                                sms_req.otp = otp.toString()
-                                sms_req.apiType = "KIOSk"
-                                userLoginController.handleSendSmsApi(sms_req, this)
-                            } else {
-                                Utils.showSnackbar(applicationContext, constraint_layout, resources.getString(R.string.label_internet_error_text));
+                    send_otp_image.setImageResource(R.drawable.right_selection_green)
+                    edittext_error_layout.setBackgroundResource(R.drawable.phone_country_code_bg)
+                    edittext_error_text.visibility = View.INVISIBLE
+                    if (oldMobileNum.equals(edittext_mobileNum.text.toString()) && edittext_mobileNum.text.toString().length > 0 && (mobileNum.matches(MobilePattern.toRegex()))) {
+                        mobile_number_input_layout.visibility = View.GONE
+                        otp_parent_layout.visibility = View.VISIBLE
+                    } else {
+                        if (edittext_mobileNum.text.toString().length > 0) {
+                            oldMobileNum = edittext_mobileNum.text.toString()
+                            if (mobileNum.matches(MobilePattern.toRegex())) {
+                                Utils.showDialog(this, resources.getString(R.string.label_sending_otp))
+                                otp = (Math.random() * 9000).toInt() + 1000
+                                if (NetworkUtils.isNetworkConnected(applicationContext)) {
+                                    val sms_req = Send_Sms_Request()
+                                    sms_req.mobileNo = mobileNum
+                                    sms_req.message = "Dear Apollo Customer, Your one time password is " + otp.toString() + " and is valid for 3mins."
+                                    sms_req.isOtp = true
+                                    sms_req.otp = otp.toString()
+                                    sms_req.apiType = "KIOSk"
+                                    userLoginController.handleSendSmsApi(sms_req, this)
+                                } else {
+                                    Utils.showSnackbar(applicationContext, constraint_layout, resources.getString(R.string.label_internet_error_text));
+                                }
                             }
                         }
                     }
                 }
+            } else {
+                val accesskeyDialog = AccesskeyDialog(this)
+                accesskeyDialog.onClickSubmit { v1: View? ->
+                    accesskeyDialog.listener()
+                    if (accesskeyDialog.validate()) {
+                        val intent = Intent(this, MposStoreSetupActivity::class.java)
+                        startActivity(intent)
+                        overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out)
+                        accesskeyDialog.dismiss()
+                    }
+                }
+                accesskeyDialog.show()
+//                Intent intent = new Intent(MainActivity.this, MposStoreSetupActivity.class);
+//                startActivity(intent);
+//                overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
             }
         })
 
@@ -258,13 +304,35 @@ class UserLoginActivity : AppCompatActivity(), UserLoginListener, ConnectivityRe
             finish()
             this.overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out)
         }
+
+        if (getStoreId() != null && !getStoreId().isEmpty()
+                && getTerminalId() != null && !getTerminalId().isEmpty() && getEposUrl() != null && !getEposUrl().isEmpty()) {
+
+        } else {
+            val accesskeyDialog = AccesskeyDialog(this)
+            accesskeyDialog.onClickSubmit { v1: View? ->
+                accesskeyDialog.listener()
+                if (accesskeyDialog.validate()) {
+                    val intent = Intent(this, MposStoreSetupActivity::class.java)
+                    startActivity(intent)
+                    overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out)
+                    accesskeyDialog.dismiss()
+                }
+            }
+            accesskeyDialog.show()
+//                Intent intent = new Intent(MainActivity.this, MposStoreSetupActivity.class);
+//                startActivity(intent);
+//                overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
+        }
+
+
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
-        startActivity(Intent(this@UserLoginActivity, MainActivity::class.java))
-        finish()
-        overridePendingTransition(R.animator.trans_right_in, R.animator.trans_right_out)
+//        super.onBackPressed()
+//        startActivity(Intent(this@UserLoginActivity, MainActivity::class.java))
+//        finish()
+//        overridePendingTransition(R.animator.trans_right_in, R.animator.trans_right_out)
     }
 
     fun setMobileNumberKeyboard() {
@@ -284,6 +352,103 @@ class UserLoginActivity : AppCompatActivity(), UserLoginListener, ConnectivityRe
         if (keyboard != null) {
             otp_keyboard_wrapper_layout.removeAllViews()
             otp_keyboard_wrapper_layout.addView(keyboard)
+        }
+    }
+
+    override fun onSuccessGlobalApiResponse(list: Global_api_response) {
+        val apiList = list.apis
+        for (list1 in apiList) {
+            val comparestring = list1.name
+            val url = list1.url
+            Utils.printMessage("USERLOGINACTIVITY", "Api list--> " + url + list1.name)
+            if (comparestring.equals("Add_FCM_Token", ignoreCase = true)) {
+                Constants.Add_FCM_Token = list1.url
+            } else if (comparestring.equals("Send_Otp", ignoreCase = true)) {
+                Constants.Send_Otp = list1.url
+            } else if (comparestring.equals("Get_Past_Prescription", ignoreCase = true)) {
+                Constants.Get_Past_Prescription = list1.url
+            } else if (comparestring.equals("Delete_the_Prescription", ignoreCase = true)) {
+                Constants.Delete_the_Prescription = list1.url
+            } else if (comparestring.equals("Get_Portfolio_of_the_User", ignoreCase = true)) {
+                Constants.Get_Portfolio_of_the_User = list1.url
+            } else if (comparestring.equals("Get_Scanned_Prescription_Image", ignoreCase = true)) {
+                Constants.Get_Scanned_Prescription_Image = list1.url
+            } else if (comparestring.equals("Get_Prescription_Medicine_List", ignoreCase = true)) {
+                Constants.Get_Prescription_Medicine_List = list1.url
+            } else if (comparestring.equals("Get_Special_Offers_Products", ignoreCase = true)) {
+                Constants.Get_Special_Offers_Products = list1.url
+                Constants.Get_Product_List = list1.url
+            } else if (comparestring.equals("Get_Trending_now_Products", ignoreCase = true)) {
+                Constants.Get_Trending_now_Products = list1.url
+            } else if (comparestring.equals("Get_The_price_for_Past_Prescription_Medicine_list", ignoreCase = true)) {
+                Constants.Get_The_price_for_Past_Prescription_Medicine_list = list1.url
+            } else if (comparestring.equals("Search_Suggestions", ignoreCase = true)) {
+                Constants.Search_Suggestions = list1.url
+            } else if (comparestring.equals("Search_Product", ignoreCase = true)) {
+                Constants.Search_Product = list1.url
+            } else if (comparestring.equals("Get_Redeem_Points", ignoreCase = true)) {
+                Constants.Get_Redeem_Points = list1.url
+            } else if (comparestring.equals("Redeem_points_Send_Otp", ignoreCase = true)) {
+                Constants.Redeem_points_Send_Otp = list1.url
+            } else if (comparestring.equals("Redeem_Points_Resend_Otp", ignoreCase = true)) {
+                Constants.Redeem_Points_Resend_Otp = list1.url
+            } else if (comparestring.equals("Redeem_Points_Validate_Otp", ignoreCase = true)) {
+                Constants.Redeem_Points_Validate_Otp = list1.url
+            } else if (comparestring.equals("Redeem_points_Retry_Validate_Otp", ignoreCase = true)) {
+                Constants.Redeem_points_Retry_Validate_Otp = list1.url
+            } else if (comparestring.equals("Redeem_Points_Check_Voucher", ignoreCase = true)) {
+                Constants.Redeem_Points_Check_Voucher = list1.url
+            } else if (comparestring.equals("Redeem_Voucher", ignoreCase = true)) {
+                Constants.Redeem_Voucher = list1.url
+            } else if (comparestring.equals("Get_Store_Locator", ignoreCase = true)) {
+                Constants.Get_Store_Locator = list1.url
+            } else if (comparestring.equals("Get_Bit_List_for_Jiyo", ignoreCase = true)) {
+                Constants.Get_Bit_List_for_Jiyo = list1.url
+            } else if (comparestring.equals("Get_Display_Video_For_Jiyo", ignoreCase = true)) {
+                Constants.Get_Display_Video_For_Jiyo = list1.url
+            } else if (comparestring.equals("Paytm_Payment_Transaction", ignoreCase = true)) {
+                Constants.Paytm_Payment_Transaction = list1.url
+            } else if (comparestring.equals("Pinelab_Upload_Transaction", ignoreCase = true)) {
+                Constants.Pinelab_Upload_Transaction = list1.url
+            } else if (comparestring.equals("Pinelab_Get_Cloud_Bases_Transaction", ignoreCase = true)) {
+                Constants.Pinelab_Get_Cloud_Bases_Transaction = list1.url
+            } else if (comparestring.equals("Pinelab_Cancel_Transaction", ignoreCase = true)) {
+                Constants.Pinelab_Cancel_Transaction = list1.url
+            } else if (comparestring.equals("Get_User_Delivery_Address_List", ignoreCase = true)) {
+                Constants.Get_User_Delivery_Address_List = list1.url
+            } else if (comparestring.equals("Edit_User_Delivery_Address", ignoreCase = true)) {
+                Constants.Edit_User_Delivery_Address = list1.url
+            } else if (comparestring.equals("Add_User_Delivery_Address", ignoreCase = true)) {
+                Constants.Add_User_Delivery_Address = list1.url
+            } else if (comparestring.equals("Delete_User_Delivery_address", ignoreCase = true)) {
+                Constants.Delete_User_Delivery_address = list1.url
+            } else if (comparestring.equals("Get_State_city_List", ignoreCase = true)) {
+                Constants.Get_State_city_List = list1.url
+            } else if (comparestring.equals("Get_Order_History_For_User", ignoreCase = true)) {
+                Constants.Get_Order_History_For_User = list1.url
+            } else if (comparestring.equals("Order_Pushing_Api", ignoreCase = true)) {
+                Constants.Order_Pushing_Api = list1.url
+            } else if (comparestring.equals("Get_Image_link", ignoreCase = true)) {
+                Constants.Get_Image_link = list1.url
+            } else if (comparestring.equals("GET_CATEGORY_LIST", ignoreCase = true)) {
+                Constants.Categorylist_Url = list1.url
+            }
+        }
+        handleFcmTokenFunctionality()
+    }
+
+    private fun handleFcmTokenFunctionality() {
+        if (NetworkUtils.isNetworkConnected(this)) {
+            FirebaseInstanceId.getInstance().instanceId
+                    .addOnCompleteListener { task: Task<InstanceIdResult> ->
+                        if (task.isSuccessful) {
+                            if (!isFcmAdded()) {
+                                userLoginController.handleFCMTokenRegistration(task.result.token, this)
+                            }
+                        }
+                    }
+        } else {
+            Utils.showSnackbar(this, constraint_layout, applicationContext.resources.getString(R.string.label_internet_error_text))
         }
     }
 }

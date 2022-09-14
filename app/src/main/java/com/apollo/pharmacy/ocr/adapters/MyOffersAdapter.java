@@ -118,4 +118,8 @@ public class MyOffersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void setLoadMoreListener(OnLoadMoreListener loadMoreListener) {
         this.loadMoreListener = loadMoreListener;
     }
+
+
+
+
 }

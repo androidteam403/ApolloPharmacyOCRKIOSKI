@@ -11,8 +11,10 @@ import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +23,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -42,7 +45,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -150,10 +152,12 @@ public class Utils {
         View snackbarView = mSnackbar.getView();
         snackbarView.setBackgroundColor(context.getResources().getColor(R.color.material_amber_accent_700));
         (mSnackbar.getView()).getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
+        (mSnackbar.getView()).getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
         TextView textView = (TextView) snackbarView.findViewById(com.google.android.material.R.id.snackbar_text);
         textView.setTextColor(Color.BLACK);
         textView.setTextSize(25);
-        snackbarView.setMinimumHeight(60);
+//        snackbarView.setMinimumHeight(10);
+//        snackbarView.setMinimumHeight(40);
         textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
@@ -162,6 +166,30 @@ public class Utils {
         }
         mSnackbar.show();
     }
+
+    public static void showSnackbarDialog(Context context, View layout, String name) {
+        Snackbar mSnackbar = Snackbar.make(layout, name, Snackbar.LENGTH_LONG);
+        View snackbarView = mSnackbar.getView();
+//        FrameLayout.LayoutParams params=(FrameLayout.LayoutParams)snackbarView.getLayoutParams();
+//        params.gravity=Gravity.CENTER;
+        snackbarView.setBackgroundColor(context.getResources().getColor(R.color.material_amber_accent_700));
+        (mSnackbar.getView()).getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
+        TextView textView = (TextView) snackbarView.findViewById(com.google.android.material.R.id.snackbar_text);
+        textView.setTextColor(Color.BLACK);
+//        (mSnackbar.getView()).getLayoutParams().gravity=Gravity.BOTTOM;
+        textView.setTextSize(25);
+        snackbarView.setMinimumHeight(60);
+        textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        } else {
+            textView.setGravity(Gravity.CENTER_HORIZONTAL);
+
+        }
+        mSnackbar.show();
+    }
+
     public static void showSnackbarMessage(Context context, View layout, String name) {
         Snackbar mSnackbar = Snackbar.make(layout, name, Snackbar.LENGTH_LONG);
         View snackbarView = mSnackbar.getView();
@@ -179,6 +207,7 @@ public class Utils {
         }
         mSnackbar.show();
     }
+
     public static void showSnackbarLinear(Context context, LinearLayout layout, String name) {
         Snackbar mSnackbar = Snackbar.make(layout, name, Snackbar.LENGTH_LONG);
         View snackbarView = mSnackbar.getView();
@@ -217,6 +246,18 @@ public class Utils {
 
     public static String getDateFormat(String inputDate) {
         SimpleDateFormat spf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+        Date newDate = null;
+        try {
+            newDate = spf.parse(inputDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        spf = new SimpleDateFormat("dd MMM, yyyy", Locale.ENGLISH);
+        return spf.format(newDate);
+    }
+
+    public static String getDateFormatSelfOrderHistory(String inputDate) {//7/7/2022 2:20:49 PM
+        SimpleDateFormat spf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss aaa", Locale.ENGLISH);
         Date newDate = null;
         try {
             newDate = spf.parse(inputDate);
@@ -341,5 +382,14 @@ public class Utils {
         if (imm != null) {
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
+    }
+
+    public static boolean isValidEmail(CharSequence target) {
+        return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
+    }
+
+    public static String getCurrentDate(String pattern) {
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern, Locale.getDefault());
+        return sdf.format(new Date());
     }
 }

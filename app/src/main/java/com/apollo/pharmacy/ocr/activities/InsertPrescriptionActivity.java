@@ -20,7 +20,7 @@ import com.apollo.pharmacy.ocr.receiver.MedTrailConnectivityReceiver;
 import com.apollo.pharmacy.ocr.utility.Constants;
 import com.bumptech.glide.Glide;
 
-public class InsertPrescriptionActivity extends AppCompatActivity implements MedTrailConnectivityReceiver.MedTrailConnectivityListener {
+public class InsertPrescriptionActivity extends BaseActivity implements MedTrailConnectivityReceiver.MedTrailConnectivityListener {
 
     @Override
     protected void onResume() {
