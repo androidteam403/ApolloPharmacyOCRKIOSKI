@@ -113,6 +113,9 @@ public class HomeActivity extends BaseActivity implements ConnectivityReceiver.C
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activityHomeBinding = DataBindingUtil.setContentView(this, R.layout.activity_home);
+
+//        activityHomeBinding = DataBindingUtil.setContentView(this, R.layout.updated_homescreen_layout);
+
 //        addDevConnectionsDelegate(this);
         addDevEventsDelegate(this);
         scannerStatus = (ImageView) findViewById(R.id.scanner_check);
