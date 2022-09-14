@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/update_actvity_teme">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+<!--            <ImageView-->
+<!--                android:layout_width="180dp"-->
+<!--                android:layout_height="90dp"-->
+<!--                android:layout_marginStart="370dp"-->
+<!--                android:layout_marginTop="90dp"-->
+<!--                android:src="@drawable/updated_apollo_app_logo" />-->
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="380dp"
+                android:layout_marginTop="100dp"
+                android:fontFamily="@font/roboto_bold"
+
+                android:paddingStart="3dp"
+                android:text="  Welcome to"
+                android:textColor="@color/white"
+                android:textSize="25dp" />
+
+
+            <RelativeLayout
+                android:id="@+id/edittext_error_layout"
+                android:layout_width="300dp"
+                android:layout_height="52dp"
+                android:layout_marginStart="330dp"
+                android:layout_marginTop="60dp"
+                android:background="@drawable/phone_country_code_bg"
+                android:orientation="vertical">
+
+
+                <EditText
+                    android:id="@+id/edittext_mobileNum"
+                    style="@android:style/TextAppearance.DeviceDefault.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_5dp"
+                    android:background="@drawable/redbox"
+                    android:hint="Search Products"
+                    android:inputType="text"
+                    android:letterSpacing="0.3"
+                    android:maxLength="10"
+                    android:maxLines="1"
+                    android:paddingStart="40dp"
+                    android:paddingEnd="10dp"
+                    android:textColor="@color/colorBlack"
+                    android:textColorHint="@color/white"
+                    android:textCursorDrawable="@drawable/editext_cursor_color"
+                    android:textIsSelectable="false"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:theme="@style/edittext_theme" />
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_alignParentBottom="true"
+
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".5"
+                android:background="@drawable/topcurve"
+                android:gravity="start"
+                android:orientation="vertical"
+                android:padding="5dp">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="@dimen/dimen160dp"
+                        android:layout_height="80dp"
+                        android:src="@drawable/scan_again"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:textSize="25sp"
+                        android:layout_marginTop="30dp"
+                        android:fontFamily="@font/roboto_bold"
+                        android:text="Scan\nPrescription"/>
+
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:textSize="22sp"
+                        android:background="@drawable/blackbox"
+                        android:fontFamily="@font/roboto_bold"
+                        android:text="START SCAN"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".5"
+                android:background="@drawable/sidecurve"
+                android:gravity="start"
+                android:orientation="vertical"
+                android:padding="5dp">
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14sp"
+                    android:layout_marginStart="190dp"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="@dimen/dimen160dp"
+                        android:layout_height="80dp"
+                        android:src="@drawable/scan_again"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:textSize="25sp"
+                        android:layout_marginTop="45dp"
+                        android:fontFamily="@font/roboto_bold"
+                        android:text="Scan\nItems"/>
+
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/BLACK"
+                        android:textSize="22sp"
+                        android:layout_marginStart="@dimen/dimen160dp"
+                        android:fontFamily="@font/roboto_medium"
+                        android:text="SHOW YOUR ITEM BARCODE"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="350dp"
+            android:layout_marginTop="140dp"
+
+            android:fontFamily="@font/roboto_bold"
+            android:text="Express Billing"
+            android:textColor="@color/white"
+            android:textSize="30dp" />
+        <ImageView
+            android:layout_width="70dp"
+            android:layout_height="55dp"
+            android:rotation="90"
+            android:layout_marginTop="520dp"
+            android:layout_marginStart="185dp"
+            android:src="@drawable/ic_play_arrow_white_48dp"/>
+
+        <ImageView
+            android:layout_width="70dp"
+            android:layout_height="55dp"
+            android:layout_marginTop="470dp"
+            android:layout_marginStart="902dp"
+            android:src="@drawable/ic_play_arrow_white_48dp"/>
+
+        <ImageView
+            android:layout_width="35dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="340dp"
+            android:layout_marginTop="212dp"
+            android:src="@drawable/updated_search" />
+    </RelativeLayout>
+
+</layout>
