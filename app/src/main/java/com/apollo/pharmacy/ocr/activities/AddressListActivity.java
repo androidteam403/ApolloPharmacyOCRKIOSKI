@@ -329,7 +329,7 @@ public class AddressListActivity extends BaseActivity implements AddressListList
         PlaceOrderReqModel placeOrderReqModel = new PlaceOrderReqModel();
         PlaceOrderReqModel.TpdetailsEntity tpDetailsEntity = new PlaceOrderReqModel.TpdetailsEntity();
         tpDetailsEntity.setOrderId(getTransactionGeneratedId());
-        tpDetailsEntity.setShopId("16001");
+        tpDetailsEntity.setShopId(SessionManager.INSTANCE.getStoreId());
         tpDetailsEntity.setShippingMethod("HOME DELIVERY");
         tpDetailsEntity.setPaymentMethod("COD");
         tpDetailsEntity.setVendorName(SessionManager.INSTANCE.getKioskSetupResponse().getKIOSK_ID());

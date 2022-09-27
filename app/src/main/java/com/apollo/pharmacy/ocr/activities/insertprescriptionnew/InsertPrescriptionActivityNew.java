@@ -17,7 +17,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -452,6 +451,11 @@ public class InsertPrescriptionActivityNew extends BaseActivity implements Inser
         tpDetailsEntity.setPaymentDetails(paymentDetailsEntity);
 
         ArrayList<PlaceOrderReqModel.ItemDetailsEntity> itemDetailsArr = new ArrayList<>();
+        PlaceOrderReqModel.ItemDetailsEntity itemDetailsEntity = new PlaceOrderReqModel.ItemDetailsEntity();
+        itemDetailsEntity.setItemID("APC0011");
+        itemDetailsEntity.setItemName("AP Cough Dropns 300N - Rs.1");
+        itemDetailsArr.add(itemDetailsEntity);
+
         tpDetailsEntity.setItemDetails(itemDetailsArr);
         tpDetailsEntity.setDotorName("Apollo");
         tpDetailsEntity.setStateCode(selectedStateCode);

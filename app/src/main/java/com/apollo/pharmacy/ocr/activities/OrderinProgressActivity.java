@@ -40,6 +40,7 @@ import androidx.databinding.DataBindingUtil;
 
 import com.apollo.pharmacy.ocr.R;
 import com.apollo.pharmacy.ocr.Utils.EnglishNumberToWords;
+import com.apollo.pharmacy.ocr.activities.userlogin.UserLoginActivity;
 import com.apollo.pharmacy.ocr.controller.OrderInProgressController;
 import com.apollo.pharmacy.ocr.custompdf.PDFCreatorActivity;
 import com.apollo.pharmacy.ocr.custompdf.utils.PDFUtil;
@@ -82,6 +83,8 @@ public class OrderinProgressActivity extends PDFCreatorActivity implements Order
     private OrderInProgressController orderInProgressController;
     private Context primaryBaseActivity;
     private String expressCheckoutTransactionId;
+    private Boolean isFmcgQrCodePayment;
+    private boolean isBillPrintReady = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -105,8 +108,8 @@ public class OrderinProgressActivity extends PDFCreatorActivity implements Order
             onlineAmountPaid = (boolean) getIntent().getBooleanExtra("OnlineAmountPaid", false);
             isPharmadeliveryType = (boolean) getIntent().getBooleanExtra("pharma_delivery_type", false);
             isFmcgDeliveryType = (boolean) getIntent().getBooleanExtra("fmcg_delivery_type", false);
-
-
+            isFmcgQrCodePayment = (Boolean) getIntent().getBooleanExtra("IS_FMCG_QR_CODE_PAYMENT", false);
+            orderinProgressBinding.setIsFmcgQrCodePayment(isFmcgQrCodePayment);
         }
 
 
@@ -194,9 +197,9 @@ public class OrderinProgressActivity extends PDFCreatorActivity implements Order
             if (isPharma && isFmcg || isPharma) {
                 orderinProgressBinding.orderisinProgressText.setText("Your order is in progress");
             }
-            if (isFmcg) {
+            if (isFmcgQrCodePayment) {
                 expressCheckoutTransactionId = (String) getIntent().getStringExtra("EXPRESS_CHECKOUT_TRANSACTION_ID");
-                orderInProgressController = new OrderInProgressController(this);
+                orderInProgressController = new OrderInProgressController(this, this);
                 orderInProgressController.downloadPdf(expressCheckoutTransactionId);
             }
         }
@@ -240,11 +243,12 @@ public class OrderinProgressActivity extends PDFCreatorActivity implements Order
             continueShopAlertDialog.dismiss();
 
 //            SessionManager.INSTANCE.logoutUser();
-
-//            Intent intent = new Intent(OrderinProgressActivity.this, UserLoginActivity.class);
-//            startActivity(intent);
-//            overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
-//            finishAffinity();
+            List<OCRToDigitalMedicineResponse> dataList = new ArrayList<>();
+            SessionManager.INSTANCE.setDataList(dataList);
+            Intent intent = new Intent(OrderinProgressActivity.this, UserLoginActivity.class);
+            startActivity(intent);
+            overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
+            finishAffinity();
 
         });
         continueShopAlertDialog.show();
@@ -279,6 +283,11 @@ public class OrderinProgressActivity extends PDFCreatorActivity implements Order
         finish();
     }
 
+    @Override
+    public void onFailureMessage(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
     PdfModelResponse pdfModelResponse;
     String transactionId;
 
@@ -297,7 +306,8 @@ public class OrderinProgressActivity extends PDFCreatorActivity implements Order
                 createPDF(transactionId, orderinProgressBinding.layoutPdfPreview, pdfModelResponse, new PDFUtil.PDFUtilListener() {
                     @Override
                     public void pdfGenerationSuccess(File savedPDFFile) {
-                        Toast.makeText(OrderinProgressActivity.this, "PDF Created", Toast.LENGTH_SHORT).show();
+                        isBillPrintReady = true;
+//                        Toast.makeText(OrderinProgressActivity.this, "PDF Created", Toast.LENGTH_SHORT).show();
 //                        openPdf();
                     }
 
@@ -323,8 +333,10 @@ public class OrderinProgressActivity extends PDFCreatorActivity implements Order
 
     @Override
     public void onClickPrintReceipt() {
-        if (isStoragePermissionGranted()) {
-            openPdf();
+        if (isBillPrintReady) {
+            if (isStoragePermissionGranted()) {
+                openPdf();
+            }
         }
     }
 
@@ -445,7 +457,7 @@ public class OrderinProgressActivity extends PDFCreatorActivity implements Order
                 LinearLayout.LayoutParams.WRAP_CONTENT, 1);
         verticalLayoutParam.setMargins(0, 10, 0, 0);
         PDFTextView pdfTextView1 = new PDFTextView(getApplicationContext(), PDFTextView.PDF_TEXT_SIZE.SMALL)
-                .setText("Apollo Pharmacy-" + pdfModelResponse.getSalesHeader().get(0).getBranch());
+                .setText("Apollo Pharmacy-" + pdfModelResponse.getSalesHeader() != null && pdfModelResponse.getSalesHeader().size() > 0 ? pdfModelResponse.getSalesHeader().get(0).getBranch() : "-");
         pdfTextView1.setTextTypeface(ResourcesCompat.getFont(getContext(), R.font.cambria));
         verticalView.addView(pdfTextView1);
         PDFTextView pdfTextView2 = new PDFTextView(getApplicationContext(), PDFTextView.PDF_TEXT_SIZE.SMALL)
@@ -612,7 +624,7 @@ public class OrderinProgressActivity extends PDFCreatorActivity implements Order
                     pdfTextView.setText(salesLine.getBatchNo()).setTextTypeface(ResourcesCompat.getFont(getContext(), R.font.cambria));
                 } else if (j == 5) {
                     if (salesLine.getExpDate() != null && salesLine.getExpDate().length() > 5) {
-                        pdfTextView.setText(salesLine.getExpDate().substring(5)).setTextTypeface(ResourcesCompat.getFont(getContext(), R.font.cambria));
+                        pdfTextView.setText(salesLine.getExpDate().substring(0,7)).setTextTypeface(ResourcesCompat.getFont(getContext(), R.font.cambria));
                     } else {
                         pdfTextView.setText("-").setTextTypeface(ResourcesCompat.getFont(getContext(), R.font.cambria));
                     }

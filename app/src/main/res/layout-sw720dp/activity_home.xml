@@ -10,11 +10,149 @@
             android:id="@+id/parent_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/activity_theme_bg">
+            android:background="@drawable/update_actvity_teme">
+
+            <EditText
+                android:id="@+id/usb"
+                android:layout_width="0.1dp"
+                android:layout_height="0.1dp"
+                android:background="@color/white"
+                android:importantForAutofill="no"
+                android:inputType="text" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:weightSum="1">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.7"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_bold"
+                        android:text="Welcome to"
+                        android:textColor="@color/white"
+                        android:textSize="35sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_bold"
+                        android:text="Express Billing"
+                        android:textAllCaps="true"
+                        android:textColor="@color/white"
+                        android:textSize="50sp" />
+
+                    <LinearLayout
+                        android:id="@+id/shop_products"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/ten_dp"
+                        android:background="@drawable/redbox"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:contentDescription="@string/app_name"
+                            android:src="@drawable/search_products_home_btn" />
+
+                        <TextView
+                            android:id="@+id/edittext_mobileNum"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Search Products"
+                            android:textColor="@color/white"
+                            android:textIsSelectable="false"
+                            android:textSize="35sp"
+                            android:textStyle="bold"
+                            android:theme="@style/edittext_theme" />
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.3"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight=".5"
+                        android:background="@drawable/topcurve"
+                        android:gravity="start|center_vertical">
+
+                        <ImageView
+                            android:id="@+id/scan_prescription"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/fifteen_dp"
+                            android:contentDescription="@string/app_name"
+                            android:src="@drawable/scan_prescription_home_btn" />
+
+                    </RelativeLayout>
+
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight=".5"
+                        android:background="@drawable/sidecurve"
+                        android:gravity="end|center_vertical">
+
+                        <ImageView
+                            android:id="@+id/scan_products"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/fifteen_dp"
+                            android:contentDescription="@string/app_name"
+                            android:src="@drawable/scan_items_home_btn" />
+
+                    </RelativeLayout>
+                </LinearLayout>
+            </LinearLayout>
+            <ImageView
+                android:id="@+id/checkout_image"
+                android:layout_width="@dimen/dimen150dp"
+                android:layout_height="70dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="@dimen/five_dp"
+                android:layout_marginEnd="@dimen/five_dp"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/checkout_cart_unselect" />
+
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/activity_theme_bg"
+            android:visibility="gone">
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:visibility="gone">
+
+                <EditText
+                    android:layout_width="100dp"
+                    android:layout_height="40dp" />
 
                 <RelativeLayout
                     android:layout_width="@dimen/one_hundred_five_dp"
@@ -30,115 +168,132 @@
                 </RelativeLayout>
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="@dimen/nine_hundred_dp"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/welcome_txt"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/one_hundred_dp"
-                        android:layout_marginTop="@dimen/forty_dp"
-                        android:gravity="center"
-                        android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/thirty_eight_sp"
-                        android:textStyle="bold"
-                        android:visibility="gone" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/forty_dp"
-                        android:layout_marginBottom="@dimen/five_dp"
-                        android:gravity="center"
-                        android:text="@string/label_welcome"
-                        android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/thirty_eight_sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="@string/label_welcome"
-                        android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/twenty_five_sp"
-                        android:textStyle="bold"
-                        android:visibility="gone" />
-
-                    <TextView
+                    <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:text="Select any one of the option below"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/twenty_eight_sp"
-                        android:textStyle="bold" />
+                        android:gravity="center_vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/welcome_txt"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/ten_dp"
+                                android:gravity="center"
+                                android:textColor="@color/colorWhite"
+                                android:textSize="@dimen/eighteen_sp"
+                                android:textStyle="bold"
+                                android:visibility="gone" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/ten_dp"
+                                android:gravity="center"
+                                android:text="Welcome"
+                                android:textColor="@color/colorWhite"
+                                android:textSize="@dimen/twenty_two_sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/margin_10dp"
+                                android:gravity="center"
+                                android:text="Welcome"
+                                android:textColor="@color/colorWhite"
+                                android:textSize="@dimen/seventeen_sp"
+                                android:textStyle="bold"
+                                android:visibility="gone" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_marginTop="@dimen/five_dp"
+                                android:text="Select any one of the option below"
+                                android:textColor="@color/white"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+<!--                        <ImageView-->
+<!--                            android:id="@+id/checkout_image"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="@dimen/thirty_dp"-->
+<!--                            android:layout_alignParentEnd="true"-->
+<!--                            android:layout_centerVertical="true"-->
+<!--                            android:contentDescription="@string/app_name"-->
+<!--                            android:src="@drawable/checkout_cart_unselect" />-->
+
+                    </RelativeLayout>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="@dimen/forty_dp"
+                        android:layout_marginTop="@dimen/thirty_dp"
                         android:orientation="horizontal">
 
                         <LinearLayout
-                            android:id="@+id/scan_prescription"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="vertical">
 
                             <ImageView
-                                android:layout_width="@dimen/two_hundred_fifty_dp"
-                                android:layout_height="@dimen/three_hundred_dp"
+                                android:layout_width="@dimen/two_hundred_dp"
+                                android:layout_height="@dimen/one_hundred_eighty_dp"
                                 android:contentDescription="@string/app_name"
                                 android:src="@drawable/scan_prescription_home" />
 
                             <TextView
-                                android:layout_width="230dp"
+                                android:layout_width="180dp"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
                                 android:layout_marginTop="@dimen/ten_dp"
                                 android:gravity="center"
                                 android:text="Please Place your prescription in the scan area"
                                 android:textColor="@color/white"
-                                android:textSize="@dimen/eighteen_sp" />
+                                android:textSize="@dimen/thirteen_sp" />
                         </LinearLayout>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="@dimen/five_dp"
-                            android:layout_marginRight="@dimen/five_dp"
                             android:text="OR"
                             android:textColor="@color/black"
                             android:textSize="@dimen/twenty_two_sp"
                             android:textStyle="bold" />
 
-
                         <LinearLayout
-                            android:id="@+id/shop_products"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="vertical">
 
                             <ImageView
-                                android:layout_width="@dimen/two_hundred_fifty_dp"
-                                android:layout_height="@dimen/three_hundred_dp"
+                                android:layout_width="@dimen/two_hundred_dp"
+                                android:layout_height="@dimen/one_hundred_eighty_dp"
                                 android:contentDescription="@string/app_name"
                                 android:src="@drawable/search_products_home" />
 
                             <TextView
-                                android:layout_width="230dp"
+                                android:layout_width="180dp"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
                                 android:layout_marginTop="@dimen/ten_dp"
                                 android:gravity="center"
                                 android:text="Use kiosk and shop\n product and place order\n for home delivery"
                                 android:textColor="@color/white"
-                                android:textSize="@dimen/eighteen_sp" />
+                                android:textSize="@dimen/thirteen_sp" />
 
                         </LinearLayout>
 
@@ -146,59 +301,54 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="@dimen/five_dp"
-                            android:layout_marginRight="@dimen/five_dp"
                             android:text="OR"
                             android:textColor="@color/black"
                             android:textSize="@dimen/twenty_two_sp"
                             android:textStyle="bold" />
 
                         <RelativeLayout
-                            android:layout_width="250dp"
+                            android:layout_width="@dimen/two_hundred_dp"
                             android:layout_height="wrap_content">
 
-
                             <LinearLayout
-                                android:id="@+id/scan_products"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:orientation="vertical">
 
                                 <ImageView
-                                    android:layout_width="@dimen/two_hundred_fifty_dp"
-                                    android:layout_height="@dimen/three_hundred_dp"
-                                    android:layout_marginStart="@dimen/twenty_dp"
-                                    android:layout_marginEnd="@dimen/twenty_dp"
+                                    android:layout_width="@dimen/two_hundred_dp"
+                                    android:layout_height="@dimen/one_hundred_eighty_dp"
                                     android:contentDescription="@string/app_name"
                                     android:src="@drawable/scan_items_home" />
 
                                 <TextView
-                                    android:layout_width="230dp"
+                                    android:layout_width="180dp"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_horizontal"
                                     android:layout_marginTop="@dimen/ten_dp"
                                     android:gravity="center"
                                     android:text="Use barcode scanner\n beside the kiosk\n and scan product barcode"
                                     android:textColor="@color/white"
-                                    android:textSize="@dimen/eighteen_sp" />
+                                    android:textSize="@dimen/thirteen_sp" />
                             </LinearLayout>
 
                             <ImageView
                                 android:id="@+id/scanner_check"
-                                android:layout_width="@dimen/fifty_dp"
-                                android:layout_height="@dimen/fifty_dp"
+                                android:layout_width="12dp"
+                                android:layout_height="7dp"
                                 android:layout_alignParentEnd="true"
+                                android:layout_marginEnd="33dp"
                                 android:background="@drawable/white_image_bg"
                                 android:contentDescription="@string/app_name"
-                                android:src="@drawable/cross_icon"
                                 android:visibility="gone" />
                         </RelativeLayout>
                     </LinearLayout>
 
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="@dimen/ten_dp"
                         android:orientation="horizontal"
                         android:visibility="gone">
 
@@ -209,29 +359,29 @@
                             <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/fifty_dp"
+                                android:layout_marginTop="@dimen/ten_dp"
                                 android:background="@drawable/okay_btn_bg"
                                 android:orientation="horizontal">
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginStart="@dimen/thirty_dp"
+                                    android:layout_marginStart="@dimen/twenty_dp"
                                     android:text="@string/label_scan_prescription"
                                     android:textColor="@color/colorBlack"
-                                    android:textSize="@dimen/twenty_three_sp"
+                                    android:textSize="@dimen/sixteen_sp"
                                     android:textStyle="bold" />
-
                             </LinearLayout>
 
                             <ImageView
                                 android:layout_width="@dimen/fifty_dp"
                                 android:layout_height="@dimen/fifty_dp"
-                                android:layout_marginTop="@dimen/fifty_dp"
+                                android:layout_marginTop="@dimen/seven_dp"
                                 android:background="@drawable/round_untick_bg"
                                 android:backgroundTint="@color/white"
                                 android:contentDescription="@string/app_name"
                                 android:src="@drawable/scan_prescription_icon" />
+
 
                         </RelativeLayout>
 
@@ -239,7 +389,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/margin_10dp"
-                            android:layout_marginTop="@dimen/sixty_dp"
+                            android:layout_marginTop="@dimen/twenty_dp"
                             android:layout_marginEnd="@dimen/margin_10dp"
                             android:text="OR"
                             android:textColor="@color/white"
@@ -252,38 +402,38 @@
                             <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/fifty_dp"
+                                android:layout_marginTop="@dimen/ten_dp"
                                 android:background="@drawable/shopproducts_btn_bg"
                                 android:orientation="horizontal">
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginStart="@dimen/thirty_dp"
+                                    android:layout_marginStart="@dimen/fifteen_dp"
                                     android:text="Shop Products"
                                     android:textColor="@color/colorBlack"
-                                    android:textSize="@dimen/twenty_three_sp"
+                                    android:textSize="@dimen/sixteen_sp"
                                     android:textStyle="bold" />
                             </LinearLayout>
 
                             <ImageView
                                 android:layout_width="@dimen/fifty_dp"
                                 android:layout_height="@dimen/fifty_dp"
-                                android:layout_marginTop="@dimen/fifty_dp"
+                                android:layout_marginTop="@dimen/seven_dp"
                                 android:background="@drawable/round_untick_bg"
                                 android:backgroundTint="@color/white"
                                 android:contentDescription="@string/app_name"
                                 android:padding="@dimen/ten_dp"
                                 android:src="@drawable/shop_products_icon" />
 
-                        </RelativeLayout>
 
+                        </RelativeLayout>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/margin_10dp"
-                            android:layout_marginTop="@dimen/sixty_dp"
+                            android:layout_marginTop="@dimen/twenty_dp"
                             android:layout_marginEnd="@dimen/margin_10dp"
                             android:text="OR"
                             android:textColor="@color/white"
@@ -296,29 +446,30 @@
                             <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/fifty_dp"
+                                android:layout_marginTop="@dimen/ten_dp"
                                 android:background="@drawable/scanproducts_btn_bg"
                                 android:orientation="horizontal">
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginStart="@dimen/thirty_dp"
+                                    android:layout_marginStart="@dimen/fifteen_dp"
                                     android:text="Scan Products"
                                     android:textColor="@color/colorBlack"
-                                    android:textSize="@dimen/twenty_three_sp"
+                                    android:textSize="@dimen/sixteen_sp"
                                     android:textStyle="bold" />
                             </LinearLayout>
 
                             <ImageView
                                 android:layout_width="@dimen/fifty_dp"
                                 android:layout_height="@dimen/fifty_dp"
-                                android:layout_marginTop="@dimen/fifty_dp"
+                                android:layout_marginTop="@dimen/seven_dp"
                                 android:background="@drawable/round_untick_bg"
                                 android:backgroundTint="@color/white"
                                 android:contentDescription="@string/app_name"
                                 android:padding="@dimen/ten_dp"
                                 android:src="@drawable/scan_products_icon" />
+
 
                         </RelativeLayout>
                     </LinearLayout>
@@ -355,23 +506,6 @@
                             android:textStyle="bold" />
                     </LinearLayout>
                 </LinearLayout>
-
-                <ImageView
-                    android:id="@+id/checkout_image"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/thirty_dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginTop="@dimen/forty_dp"
-                    android:contentDescription="@string/app_name"
-                    android:src="@drawable/checkout_cart_unselect" />
-
-                <EditText
-                    android:id="@+id/usb"
-                    android:layout_width="0.1dp"
-                    android:layout_height="0.1dp"
-                    android:background="@color/white"
-                    android:importantForAutofill="no"
-                    android:inputType="text" />
 
 
             </RelativeLayout>

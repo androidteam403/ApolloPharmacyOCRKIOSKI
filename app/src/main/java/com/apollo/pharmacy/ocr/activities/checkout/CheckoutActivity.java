@@ -20,6 +20,7 @@ import com.apollo.pharmacy.ocr.activities.paymentoptions.PaymentOptionsActivity;
 import com.apollo.pharmacy.ocr.activities.paymentoptions.model.ExpressCheckoutTransactionApiRequest;
 import com.apollo.pharmacy.ocr.activities.paymentoptions.model.ExpressCheckoutTransactionApiResponse;
 import com.apollo.pharmacy.ocr.databinding.ActivityCheckoutBinding;
+import com.apollo.pharmacy.ocr.databinding.DialogPharmaItemContainAlertBinding;
 import com.apollo.pharmacy.ocr.databinding.DialogStockavailableAlertBinding;
 import com.apollo.pharmacy.ocr.dialog.DeliveryAddressDialog;
 import com.apollo.pharmacy.ocr.model.OCRToDigitalMedicineResponse;
@@ -36,6 +37,7 @@ public class CheckoutActivity extends BaseActivity implements CheckoutListener {
     private boolean isPharmaHomeDelivery = false;
     private boolean isFmcgHomeDelivery = false;
     private boolean isFmcgProductsThere = false;
+    private boolean isPharmaProductsThere = false;
     private String fmcgOrderId;
     //    private double grandTotalAmountFmcg = 0.0;
     private double fmcgToatalPass = 0.0;
@@ -95,6 +97,7 @@ public class CheckoutActivity extends BaseActivity implements CheckoutListener {
                     if (data.getMedicineType() != null) {
                         if (data.getMedicineType().equals("PHARMA")) {
                             isPharma = true;
+                            isPharmaProductsThere = true;
                             if (data.getNetAmountInclTax() != null && !data.getNetAmountInclTax().isEmpty()) {
                                 pharmaTotal = pharmaTotal + (Double.parseDouble(data.getNetAmountInclTax()));
                                 pharmaTotalOffer = pharmaTotalOffer + (Double.parseDouble(data.getArtprice()) * data.getQty());
@@ -306,25 +309,14 @@ public class CheckoutActivity extends BaseActivity implements CheckoutListener {
             });
             deliveryAddressDialog.show();
         } else {
-            if (isFmcgProductsThere) {
-                new CheckoutActivityController(this, this).expressCheckoutTransactionApiCall(getExpressCheckoutTransactionApiRequest());
+            if (isPharmaProductsThere) {
+                pharmaItemsContainsAlert();
             } else {
-                navigateToPaymentOptionsActivity();
-//                Intent intent = new Intent(CheckoutActivity.this, PaymentOptionsActivity.class);
-//                intent.putExtra("fmcgTotal", fmcgToatalPass);
-//                intent.putExtra("isPharmaHomeDelivery", isPharmaHomeDelivery);
-//                intent.putExtra("isFmcgHomeDelivery", isFmcgHomeDelivery);
-//                intent.putExtra("customerDeliveryAddress", address);
-//                intent.putExtra("name", name);
-//                intent.putExtra("singleAdd", singleAdd);
-//                intent.putExtra("pincode", pincode);
-//                intent.putExtra("city", city);
-//                intent.putExtra("state", state);
-//                intent.putExtra("STATE_CODE", stateCode);
-//                intent.putExtra("MOBILE_NUMBER", mobileNumber);
-//
-//                startActivity(intent);
-//                overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
+//                if (isFmcgProductsThere) {
+//                    new CheckoutActivityController(this, this).expressCheckoutTransactionApiCall(getExpressCheckoutTransactionApiRequest());
+//                } else {
+                    navigateToPaymentOptionsActivity();
+//                }
             }
         }
 
@@ -380,6 +372,30 @@ public class CheckoutActivity extends BaseActivity implements CheckoutListener {
 //            startActivity(intent);
 //            overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
 //        }
+    }
+
+    private void pharmaItemsContainsAlert() {
+        Dialog pharmaItemsContainsAlertDialog = new Dialog(this);
+        DialogPharmaItemContainAlertBinding dialogPharmaItemContainAlertBinding = DataBindingUtil.inflate(LayoutInflater.from(this), R.layout.dialog_pharma_item_contain_alert, null, true);
+        pharmaItemsContainsAlertDialog.setContentView(dialogPharmaItemContainAlertBinding.getRoot());
+        if (pharmaItemsContainsAlertDialog.getWindow() != null)
+            pharmaItemsContainsAlertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialogPharmaItemContainAlertBinding.dialogCancel.setOnClickListener(v -> {
+            if (pharmaItemsContainsAlertDialog != null) {
+                pharmaItemsContainsAlertDialog.dismiss();
+            }
+            finish();
+        });
+        dialogPharmaItemContainAlertBinding.dialogOk.setOnClickListener(v -> {
+            pharmaItemsContainsAlertDialog.dismiss();
+//            if (isFmcgProductsThere) {
+//                new CheckoutActivityController(this, this).expressCheckoutTransactionApiCall(getExpressCheckoutTransactionApiRequest());
+//            } else {
+                navigateToPaymentOptionsActivity();
+//            }
+        });
+        pharmaItemsContainsAlertDialog.show();
+
     }
 
     @Override
@@ -448,7 +464,7 @@ public class CheckoutActivity extends BaseActivity implements CheckoutListener {
         intent.putExtra("city", city);
         intent.putExtra("state", state);
         intent.putExtra("FMCG_TRANSACTON_ID", fmcgOrderId);
-        intent.putExtra("EXPRESS_CHECKOUT_TRANSACTION_ID", expressCheckoutTransactionId);
+//        intent.putExtra("EXPRESS_CHECKOUT_TRANSACTION_ID", expressCheckoutTransactionId);
         intent.putExtra("STATE_CODE", stateCode);
         intent.putExtra("MOBILE_NUMBER", mobileNumber);
 
@@ -610,7 +626,7 @@ public class CheckoutActivity extends BaseActivity implements CheckoutListener {
         expressCheckoutTransactionApiRequest.setStore(SessionManager.INSTANCE.getStoreId());
         expressCheckoutTransactionApiRequest.setState(stateCode);
         expressCheckoutTransactionApiRequest.setTerminal(SessionManager.INSTANCE.getTerminalId());
-        expressCheckoutTransactionApiRequest.setDataAreaId(SessionManager.INSTANCE.getCompanyName());
+        expressCheckoutTransactionApiRequest.setDataAreaId(SessionManager.INSTANCE.getDataAreaId());
         expressCheckoutTransactionApiRequest.setIsStockCheck(true);
         expressCheckoutTransactionApiRequest.setExpiryDays(30);
 
@@ -733,9 +749,9 @@ public class CheckoutActivity extends BaseActivity implements CheckoutListener {
         List<ExpressCheckoutTransactionApiRequest.TenderLine> tenderLineList = new ArrayList<>();
         ExpressCheckoutTransactionApiRequest.TenderLine tenderLine = new ExpressCheckoutTransactionApiRequest.TenderLine();
         tenderLine.setLineNo(1);
-        tenderLine.setTenderId(1);
-        tenderLine.setTenderType(0);
-        tenderLine.setTenderName("Credit");
+        tenderLine.setTenderId(32);
+        tenderLine.setTenderType(5);
+        tenderLine.setTenderName("QR CODE");
         tenderLine.setExchRate(0);
         tenderLine.setExchRateMst(0);
         tenderLine.setMobileNo("");

@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -56,6 +57,12 @@ public class DeliveryAddressDialog implements PincodeValidateListener {
                 if (s.length() == 6) {
                     PincodeValidateController pincodeValidateController = new PincodeValidateController(context, DeliveryAddressDialog.this);
 //                    pincodeValidateController.onPincodeValidateApi(s.toString());
+                    View view1 = dialog.getCurrentFocus();
+                    if (view1 != null) {
+                        InputMethodManager inputManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                        inputManager.hideSoftInputFromWindow(dialog.getCurrentFocus().getWindowToken(),
+                                InputMethodManager.HIDE_NOT_ALWAYS);
+                    }
                     pincodeValidateController.checkServiceAvailability(context, s.toString());
                 }
             }
@@ -159,6 +166,12 @@ public class DeliveryAddressDialog implements PincodeValidateListener {
         deliveryAddressDialog.zipCode.setText(pincode);
         PincodeValidateController pincodeValidateController = new PincodeValidateController(context, DeliveryAddressDialog.this);
 //        pincodeValidateController.onPincodeValidateApi(pincode.toString());
+        View view1 = dialog.getCurrentFocus();
+        if (view1 != null) {
+            InputMethodManager inputManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputManager.hideSoftInputFromWindow(dialog.getCurrentFocus().getWindowToken(),
+                    InputMethodManager.HIDE_NOT_ALWAYS);
+        }
         pincodeValidateController.checkServiceAvailability(context, pincode.toString());
     }
 
@@ -269,7 +282,12 @@ public class DeliveryAddressDialog implements PincodeValidateListener {
             inputManager.hideSoftInputFromWindow(dialog.getCurrentFocus().getWindowToken(),
                     InputMethodManager.HIDE_NOT_ALWAYS);
         }
-        Utils.showSnackbarDialog(context, dialog.getWindow().getDecorView(), context.getResources().getString(R.string.label_service_available));
+        deliveryAddressDialog.snackText.setText(context.getResources().getString(R.string.label_service_available));
+        deliveryAddressDialog.snackText.setVisibility(View.VISIBLE);
+        new Handler().postDelayed(() -> {
+            deliveryAddressDialog.snackText.setVisibility(View.GONE);
+        }, 2000);
+//        Utils.showSnackbarDialog(context, dialog.getWindow().getDecorView(), context.getResources().getString(R.string.label_service_available));
     }
 
     @Override
@@ -283,7 +301,12 @@ public class DeliveryAddressDialog implements PincodeValidateListener {
             inputManager.hideSoftInputFromWindow(dialog.getCurrentFocus().getWindowToken(),
                     InputMethodManager.HIDE_NOT_ALWAYS);
         }
-        Utils.showSnackbarDialog(context, dialog.getWindow().getDecorView(), message);
+        deliveryAddressDialog.snackText.setText(message);
+        deliveryAddressDialog.snackText.setVisibility(View.VISIBLE);
+        new Handler().postDelayed(() -> {
+            deliveryAddressDialog.snackText.setVisibility(View.GONE);
+        }, 2000);
+//        Utils.showSnackbarDialog(context, dialog.getWindow().getDecorView(), message);
     }
 
 

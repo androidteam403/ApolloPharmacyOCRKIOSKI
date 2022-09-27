@@ -1463,7 +1463,7 @@ public class MyOffersActivity extends BaseActivity implements MyOffersListener, 
         calculatePosTransactionRequest.setComment("");
         calculatePosTransactionRequest.setCorpCode("0");
         calculatePosTransactionRequest.setCouponCode("");
-        calculatePosTransactionRequest.setCreatedonPosTerminal("006");
+        calculatePosTransactionRequest.setCreatedonPosTerminal(SessionManager.INSTANCE.getTerminalId());
         calculatePosTransactionRequest.setCurrency("INR");
         calculatePosTransactionRequest.setCurrentSalesLine(0);
         calculatePosTransactionRequest.setCustAccount("");
@@ -1472,7 +1472,7 @@ public class MyOffersActivity extends BaseActivity implements MyOffersListener, 
         calculatePosTransactionRequest.setCustomerName(SessionManager.INSTANCE.getCustrName());
         calculatePosTransactionRequest.setCustomerState("");
         calculatePosTransactionRequest.setDob("");
-        calculatePosTransactionRequest.setDataAreaId("Ahel");
+        calculatePosTransactionRequest.setDataAreaId(SessionManager.INSTANCE.getDataAreaId());
         calculatePosTransactionRequest.setDeliveryDate("");
         calculatePosTransactionRequest.setDiscAmount(0);
         calculatePosTransactionRequest.setDoctorCode("");
@@ -1530,10 +1530,10 @@ public class MyOffersActivity extends BaseActivity implements MyOffersListener, 
         calculatePosTransactionRequest.setShippingMethod("");
         calculatePosTransactionRequest.setStaff("");
         calculatePosTransactionRequest.setState("AP");
-        calculatePosTransactionRequest.setStore("16001");
+        calculatePosTransactionRequest.setStore(SessionManager.INSTANCE.getStoreId());
         calculatePosTransactionRequest.setStoreName("POS TESTING");
         calculatePosTransactionRequest.setTenderLine(null);
-        calculatePosTransactionRequest.setTerminal("006");
+        calculatePosTransactionRequest.setTerminal(SessionManager.INSTANCE.getTerminalId());
         calculatePosTransactionRequest.setTimewhenTransClosed(0);
         calculatePosTransactionRequest.setTotalDiscAmount(0);
         calculatePosTransactionRequest.setTotalMRP(0.0);

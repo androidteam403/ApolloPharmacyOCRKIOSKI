@@ -17,7 +17,6 @@ import com.apollo.pharmacy.ocr.model.PlaceOrderResModel;
 import com.apollo.pharmacy.ocr.network.ApiClient;
 import com.apollo.pharmacy.ocr.network.ApiInterface;
 import com.apollo.pharmacy.ocr.utility.Constants;
-import com.apollo.pharmacy.ocr.utility.Session;
 import com.apollo.pharmacy.ocr.utility.SessionManager;
 import com.apollo.pharmacy.ocr.utility.Utils;
 import com.google.gson.Gson;
@@ -45,7 +44,7 @@ public class PhonePayQrCodeController {
 //        Utils.showDialog(activity, "Loading…");
         ApiInterface api = ApiClient.getApiServiceMposBaseUrl(SessionManager.INSTANCE.getEposUrl());
         PhonePayQrCodeRequest phonePayQrCodeRequest = new PhonePayQrCodeRequest();
-        phonePayQrCodeRequest.setAmount(grandTotal);
+        phonePayQrCodeRequest.setAmount(1.0);
         phonePayQrCodeRequest.setExpiresIn(2000);
         phonePayQrCodeRequest.setMessage("");
         phonePayQrCodeRequest.setOriginalTransactionId("");
@@ -53,7 +52,7 @@ public class PhonePayQrCodeController {
         phonePayQrCodeRequest.setReqType("GENERATEQRCODE");
         phonePayQrCodeRequest.setStoreId(SessionManager.INSTANCE.getStoreId());
         phonePayQrCodeRequest.setTransactionId(Utils.getOrderedID());
-        phonePayQrCodeRequest.setUrl("http://172.16.2.251:8033/PHONEPEUAT/APOLLO/PhonePe");
+        phonePayQrCodeRequest.setUrl("http://10.4.14.7:8041/APOLLO/PhonePe");//http://172.16.2.251:8033/PHONEPEUAT/APOLLO/PhonePe
 
         Gson gson = new Gson();
         String json = gson.toJson(phonePayQrCodeRequest);
@@ -65,7 +64,7 @@ public class PhonePayQrCodeController {
                 if (response.body() != null && response.body().getQrCode() != null) {
                     phonePayQrCodeListener.onSuccessGetPhonePayQrCodeUpi(response.body(), scanpay);
 //                    Utils.dismissDialog();
-                    getPhonePayPaymentSuccess(phonePayQrCodeRequest.getTransactionId());
+                    getPhonePayPaymentSuccess(phonePayQrCodeRequest.getTransactionId(), grandTotal);
                 }
             }
 
@@ -89,25 +88,29 @@ public class PhonePayQrCodeController {
                 if (response.body().getOrdersResult().getStatus()) {
                     phonePayQrCodeListener.onSuccessPlaceOrderFMCG(response.body());
                 } else {
-                    phonePayQrCodeListener.onFailureService(context.getResources().getString(R.string.label_something_went_wrong));
+                    if (response.body() != null && response.body().getOrdersResult() != null && response.body().getOrdersResult().getMessage() != null) {
+                        phonePayQrCodeListener.onFailureService(response.body().getOrdersResult().getMessage());
+                    } else {
+                        phonePayQrCodeListener.onFailureService(context.getResources().getString(R.string.label_something_went_wrong));
+                    }
                     Utils.dismissDialog();
                 }
             }
 
             @Override
             public void onFailure(@NotNull Call<PlaceOrderResModel> call, @NotNull Throwable t) {
-                phonePayQrCodeListener.onFailureService(context.getResources().getString(R.string.label_something_went_wrong));
+                phonePayQrCodeListener.onFailureService(t.getMessage());//context.getResources().getString(R.string.label_something_went_wrong)
                 Utils.dismissDialog();
 
             }
         });
     }
 
-    public void getPhonePayPaymentSuccess(String tranId) {
+    public void getPhonePayPaymentSuccess(String tranId, double amt) {
 //        Utils.showDialog(activity, "Loading…");
         ApiInterface api = ApiClient.getApiServiceMposBaseUrl(SessionManager.INSTANCE.getEposUrl());
         PhonePayQrCodeRequest phonePayQrCodeRequest = new PhonePayQrCodeRequest();
-        phonePayQrCodeRequest.setAmount(1.0);
+        phonePayQrCodeRequest.setAmount(amt);
         phonePayQrCodeRequest.setExpiresIn(2000);
         phonePayQrCodeRequest.setMessage("");
         phonePayQrCodeRequest.setOriginalTransactionId("");
@@ -115,7 +118,7 @@ public class PhonePayQrCodeController {
         phonePayQrCodeRequest.setReqType("CHECKPAYMENTSTATUS");
         phonePayQrCodeRequest.setStoreId(SessionManager.INSTANCE.getStoreId());
         phonePayQrCodeRequest.setTransactionId(tranId);
-        phonePayQrCodeRequest.setUrl("http://172.16.2.251:8033/PHONEPEUAT/APOLLO/PhonePe");
+        phonePayQrCodeRequest.setUrl("http://10.4.14.7:8041/APOLLO/PhonePe");
 
         Call<PhonePayQrCodeResponse> call = api.GET_PhonePay_Qr_payment_Success(phonePayQrCodeRequest);
         call.enqueue(new Callback<PhonePayQrCodeResponse>() {
@@ -171,10 +174,16 @@ public class PhonePayQrCodeController {
     }
 
     public void expressCheckoutTransactionApiCall(ExpressCheckoutTransactionApiRequest expressCheckoutTransactionApiRequest) {
-        ApiInterface apiInterface = ApiClient.getApiService();
+        String baseUrl = "";
+        if (SessionManager.INSTANCE.getEposUrl().contains("EPOS")) {
+            baseUrl = SessionManager.INSTANCE.getEposUrl().replace("EPOS", "ExpressDelivery");
+        } else {
+            baseUrl = SessionManager.INSTANCE.getEposUrl();
+        }
+        ApiInterface apiInterface = ApiClient.getApiService(baseUrl);
         Gson gson = new Gson();
         String json = gson.toJson(expressCheckoutTransactionApiRequest);
-        Utils.dismissDialog();
+        Utils.showDialog(activity, "Please wait...");
         System.out.println("EXPRESS_CHECKOUT_TRANSACTION_API_CALL_RQUEST===================" + json);
         Call<ExpressCheckoutTransactionApiResponse> call = apiInterface.EXPRESS_CHECKOUT_TRANSACTION_API_CALL(expressCheckoutTransactionApiRequest);
         call.enqueue(new Callback<ExpressCheckoutTransactionApiResponse>() {

@@ -88,7 +88,7 @@ public class HomeActivityController {
         itemSearchRequest.setIsInitial(true);
         itemSearchRequest.setIsStockCheck(true);
         itemSearchRequest.setSearchString(item);
-        itemSearchRequest.setStoreID("16001");
+        itemSearchRequest.setStoreID(SessionManager.INSTANCE.getStoreId());
         Call<ItemSearchResponse> call = apiInterface.getSearchItemApiCall(itemSearchRequest);
         call.enqueue(new Callback<ItemSearchResponse>() {
             @Override

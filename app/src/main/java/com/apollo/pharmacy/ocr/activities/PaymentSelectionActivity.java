@@ -799,7 +799,7 @@ public class PaymentSelectionActivity extends BaseActivity implements PaymentSel
 
         Tpdetails main_obj = new Tpdetails();
         main_obj.setOrderid(String.valueOf(n));
-        main_obj.setShopid("16001");
+        main_obj.setShopid(SessionManager.INSTANCE.getStoreId());
         main_obj.setShippingMethod("Home Delivery - Fixed");
         main_obj.setPaymentMethod("ccavenue");
         main_obj.setVendorname("MAPP");
@@ -889,7 +889,7 @@ public class PaymentSelectionActivity extends BaseActivity implements PaymentSel
             main_obj_new.setShippingMethod("Strote Pickup");
             main_obj_new.setRemarks("Pick From Kiosk");
         } else {
-            main_obj_new.setShopId("16001");
+            main_obj_new.setShopId(SessionManager.INSTANCE.getStoreId());
             main_obj_new.setShippingMethod("Home Delivery");
             main_obj_new.setRemarks("");
         }

@@ -228,7 +228,7 @@ public class MyOffersController {
         itemSearchRequest.setIsInitial(true);
         itemSearchRequest.setIsStockCheck(true);
         itemSearchRequest.setSearchString(item);
-        itemSearchRequest.setStoreID("16001");
+        itemSearchRequest.setStoreID(SessionManager.INSTANCE.getStoreId());
         Call<ItemSearchResponse> call = apiInterface.getSearchItemApiCall(itemSearchRequest);
         call.enqueue(new Callback<ItemSearchResponse>() {
             @Override
@@ -328,7 +328,7 @@ public class MyOffersController {
         itemSearchRequest.setIsInitial(true);
         itemSearchRequest.setIsStockCheck(true);
         itemSearchRequest.setSearchString(item);
-        itemSearchRequest.setStoreID("16001");
+        itemSearchRequest.setStoreID(SessionManager.INSTANCE.getStoreId());
         Call<ItemSearchResponse> call = apiInterface.getSearchItemApiCall(itemSearchRequest);
         call.enqueue(new Callback<ItemSearchResponse>() {
             @Override
@@ -361,7 +361,7 @@ public class MyOffersController {
         BatchListRequest batchListRequest = new BatchListRequest();
         batchListRequest.setArticleCode(artcode);
         batchListRequest.setCustomerState("");
-        batchListRequest.setDataAreaId(SessionManager.INSTANCE.getCompanyName());
+        batchListRequest.setDataAreaId(SessionManager.INSTANCE.getDataAreaId());
         batchListRequest.setSez(0);
         batchListRequest.setSearchType(1);
         batchListRequest.setStoreId(SessionManager.INSTANCE.getStoreId());

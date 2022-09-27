@@ -57,7 +57,8 @@ public class PaymentOptionsActivity extends BaseActivity implements PhonePayQrCo
     private boolean isFmcgOrder;
     private boolean isPharmadeliveryType, isFmcgDeliveryType;
 
-    private String fmcgOrderId;
+    private String fmcgOrderId = "";
+    private boolean isFmcgQrCodePayment = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -619,6 +620,7 @@ public class PaymentOptionsActivity extends BaseActivity implements PhonePayQrCo
                     intent.putExtra("OnlineAmountPaid", onlineAmountPaid);
                     intent.putExtra("pharma_delivery_type", isPharmadeliveryType);
                     intent.putExtra("fmcg_delivery_type", isFmcgDeliveryType);
+                    intent.putExtra("IS_FMCG_QR_CODE_PAYMENT", isFmcgQrCodePayment);
                     intent.putExtra("EXPRESS_CHECKOUT_TRANSACTION_ID", expressCheckoutTransactionId);
                     startActivity(intent);
                     overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
@@ -642,9 +644,10 @@ public class PaymentOptionsActivity extends BaseActivity implements PhonePayQrCo
             Toast.makeText(this, "Payment is successfully done", Toast.LENGTH_SHORT).show();
             onlineAmountPaid = true;
             if (isFmcgOrder) {
-                isFmcgOrder = false;
-                placeOrderFmcg();
-//                new PhonePayQrCodeController(PaymentOptionsActivity.this, PaymentOptionsActivity.this).expressCheckoutTransactionApiCall(getExpressCheckoutTransactionApiRequest());
+//                isFmcgOrder = false;
+//                placeOrderFmcg();
+                isFmcgQrCodePayment = true;
+                new PhonePayQrCodeController(PaymentOptionsActivity.this, PaymentOptionsActivity.this).expressCheckoutTransactionApiCall(getExpressCheckoutTransactionApiRequest(phonePayQrCodeResponse, transactionId));
             } else {
                 isPharmaOrder = false;
                 placeOrderPharma();
@@ -652,7 +655,7 @@ public class PaymentOptionsActivity extends BaseActivity implements PhonePayQrCo
         } else {
             if (paymentSuccess) {
                 PhonePayQrCodeController phonePayQrCodeController = new PhonePayQrCodeController(getApplicationContext(), PaymentOptionsActivity.this);
-                phonePayQrCodeController.getPhonePayPaymentSuccess(transactionId);
+                phonePayQrCodeController.getPhonePayPaymentSuccess(transactionId, grandTotalAmountFmcg);
             }
         }
     }
@@ -686,7 +689,40 @@ public class PaymentOptionsActivity extends BaseActivity implements PhonePayQrCo
         if (expressCheckoutTransactionApiResponse.getRequestStatus() != null && expressCheckoutTransactionApiResponse.getRequestStatus() == 0) {
             isFmcgOrder = false;
             this.expressCheckoutTransactionId = expressCheckoutTransactionApiResponse.getTransactionId();
-            placeOrderFmcg();
+
+            if (!isFmcgOrder && !isPharmaOrder) {
+                if (fmcgOrderId == null) {
+                    fmcgOrderId = expressCheckoutTransactionId;
+                    paymentSuccess = false;
+                    Utils.dismissDialog();
+                }
+            }
+           if (isPharmaOrder) {
+//                fmcgOrderId = expressCheckoutTransactionId;
+                placeOrderPharma();
+                isPharmaOrder = false;
+            }
+            if (!isFmcgOrder && !isPharmaOrder) {
+//                if (pharmaOrderId != null && fmcgOrderId != null) {
+                    Intent intent = new Intent(PaymentOptionsActivity.this, OrderinProgressActivity.class);
+                    intent.putExtra("PharmaOrderPlacedData", pharmaOrderId);
+                    intent.putExtra("FmcgOrderPlacedData", fmcgOrderId);
+                    intent.putExtra("OnlineAmountPaid", onlineAmountPaid);
+                    intent.putExtra("pharma_delivery_type", isPharmadeliveryType);
+                    intent.putExtra("fmcg_delivery_type", isFmcgDeliveryType);
+                    intent.putExtra("IS_FMCG_QR_CODE_PAYMENT", isFmcgQrCodePayment);
+                    intent.putExtra("EXPRESS_CHECKOUT_TRANSACTION_ID", expressCheckoutTransactionId);
+                    startActivity(intent);
+                    overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out);
+//                }
+            }
+
+
+
+
+
+
+//            placeOrderFmcg();
 
 
         }
@@ -765,7 +801,13 @@ public class PaymentOptionsActivity extends BaseActivity implements PhonePayQrCo
 
         PlaceOrderReqModel placeOrderReqModel = new PlaceOrderReqModel();
         PlaceOrderReqModel.TpdetailsEntity tpDetailsEntity = new PlaceOrderReqModel.TpdetailsEntity();
-        tpDetailsEntity.setOrderId(this.fmcgOrderId);//Utils.getTransactionGeneratedId()
+        if (this.fmcgOrderId == null || (this.fmcgOrderId != null && this.fmcgOrderId.isEmpty())) {
+            this.fmcgOrderId = Utils.getTransactionGeneratedId();
+            tpDetailsEntity.setOrderId(this.fmcgOrderId);
+
+        } else {
+            tpDetailsEntity.setOrderId(this.fmcgOrderId);//Utils.getTransactionGeneratedId()
+        }
         tpDetailsEntity.setShopId(SessionManager.INSTANCE.getStoreId());
         if (isFmcgDeliveryType) {
             tpDetailsEntity.setShippingMethod("HOME DELIVERY");
@@ -1093,7 +1135,7 @@ public class PaymentOptionsActivity extends BaseActivity implements PhonePayQrCo
     }
 
 
-    public ExpressCheckoutTransactionApiRequest getExpressCheckoutTransactionApiRequest() {
+    public ExpressCheckoutTransactionApiRequest getExpressCheckoutTransactionApiRequest(PhonePayQrCodeResponse phonePayQrCodeResponse, String transactionId) {
         ExpressCheckoutTransactionApiRequest expressCheckoutTransactionApiRequest = new ExpressCheckoutTransactionApiRequest();
         expressCheckoutTransactionApiRequest.setRemainingamount(0);
         expressCheckoutTransactionApiRequest.setAvailablePoint(0);
@@ -1224,7 +1266,7 @@ public class PaymentOptionsActivity extends BaseActivity implements PhonePayQrCo
         expressCheckoutTransactionApiRequest.setStore(SessionManager.INSTANCE.getStoreId());
         expressCheckoutTransactionApiRequest.setState(stateCode);
         expressCheckoutTransactionApiRequest.setTerminal(SessionManager.INSTANCE.getTerminalId());
-        expressCheckoutTransactionApiRequest.setDataAreaId(SessionManager.INSTANCE.getCompanyName());
+        expressCheckoutTransactionApiRequest.setDataAreaId(SessionManager.INSTANCE.getDataAreaId());
         expressCheckoutTransactionApiRequest.setIsStockCheck(true);
         expressCheckoutTransactionApiRequest.setExpiryDays(30);
 
@@ -1347,15 +1389,15 @@ public class PaymentOptionsActivity extends BaseActivity implements PhonePayQrCo
         List<ExpressCheckoutTransactionApiRequest.TenderLine> tenderLineList = new ArrayList<>();
         ExpressCheckoutTransactionApiRequest.TenderLine tenderLine = new ExpressCheckoutTransactionApiRequest.TenderLine();
         tenderLine.setLineNo(1);
-        tenderLine.setTenderId(1);
-        tenderLine.setTenderType(0);
-        tenderLine.setTenderName("Credit");
+        tenderLine.setTenderId(32);
+        tenderLine.setTenderType(5);
+        tenderLine.setTenderName("QR CODE");
         tenderLine.setExchRate(0);
         tenderLine.setExchRateMst(0);
         tenderLine.setMobileNo("");
         tenderLine.setWalletType(0);
-        tenderLine.setWalletOrderId("");
-        tenderLine.setWalletTransactionID("");
+        tenderLine.setWalletOrderId(phonePayQrCodeResponse.getProviderReferenceId());
+        tenderLine.setWalletTransactionID(transactionId);
         tenderLine.setRewardsPoint(0);
         tenderLine.setPreviewText("");
         tenderLine.setIsVoid(false);

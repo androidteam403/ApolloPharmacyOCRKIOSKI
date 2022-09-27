@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.apollo.pharmacy.ocr.R;
+import com.apollo.pharmacy.ocr.activities.userlogin.UserLoginActivity;
 import com.apollo.pharmacy.ocr.controller.StoreSetupController;
 import com.apollo.pharmacy.ocr.dialog.GetStoresDialog;
 import com.apollo.pharmacy.ocr.interfaces.StoreSetupListener;

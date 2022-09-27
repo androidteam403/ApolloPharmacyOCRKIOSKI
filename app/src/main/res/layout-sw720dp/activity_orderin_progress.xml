@@ -919,7 +919,7 @@
                                 android:textColor="@color/BLACK"
                                 android:textSize="@dimen/eighteen_sp"
                                 android:textStyle="bold"
-                                android:visibility="@{model.isFmcg ? view.VISIBLE : view.GONE}" />
+                                android:visibility="@{isFmcgQrCodePayment ? view.VISIBLE : view.GONE}" />
 
                         </LinearLayout>
                     </RelativeLayout>
@@ -948,6 +948,10 @@
         <variable
             name="view"
             type="android.view.View" />
+
+        <variable
+            name="isFmcgQrCodePayment"
+            type="Boolean" />
 
         <variable
             name="callback"

@@ -10,8 +10,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -54,7 +52,7 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
         dialog.setContentView(dialogItemBatchSelectionBinding.getRoot());
 //        dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.MATCH_PARENT);
 
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.setCancelable(false);
         batchlistVisbiblityHandling();
         for (OCRToDigitalMedicineResponse data : datalist) {
@@ -760,7 +758,7 @@ public class ItemBatchSelectionDilaog implements AdapterItemBatchSelection.OnIte
 //                        Utils.showSnackbarDialog(context, view, "Selected quantity is not available in batch");
                     }
                 } else {
-                      Handler handler = new Handler();
+                    Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {

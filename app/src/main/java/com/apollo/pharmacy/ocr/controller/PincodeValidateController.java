@@ -1,5 +1,6 @@
 package com.apollo.pharmacy.ocr.controller;
 
+import android.app.Activity;
 import android.content.Context;
 
 import androidx.annotation.NonNull;
@@ -61,9 +62,11 @@ public class PincodeValidateController {
             }
         });
     }
+
     public void checkServiceAvailability(Context context, String inputPincode) {
         ApiInterface apiInterface = ApiClient.getApiService(Constants.CheckServiceAvailability);
         Utils.showDialog(context, "Loading…");
+        Utils.hideKeyboard((Activity) context);
         ServiceAvailabilityRequest serviceAvailabilityRequest = new ServiceAvailabilityRequest();
         serviceAvailabilityRequest.setVendorName("KIOSK");
         serviceAvailabilityRequest.setPincode(inputPincode);

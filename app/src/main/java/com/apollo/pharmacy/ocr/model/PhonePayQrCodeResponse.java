@@ -18,7 +18,7 @@ public class PhonePayQrCodeResponse implements Serializable {
     private Boolean status;
     @SerializedName("providerReferenceId")
     @Expose
-    private Object providerReferenceId;
+    private String providerReferenceId;
     private final static long serialVersionUID = -2187061808453914291L;
 
     public String getMessage() {
@@ -45,11 +45,11 @@ public class PhonePayQrCodeResponse implements Serializable {
         this.status = status;
     }
 
-    public Object getProviderReferenceId() {
+    public String getProviderReferenceId() {
         return providerReferenceId;
     }
 
-    public void setProviderReferenceId(Object providerReferenceId) {
+    public void setProviderReferenceId(String providerReferenceId) {
         this.providerReferenceId = providerReferenceId;
     }
 }

@@ -41,6 +41,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.apollo.pharmacy.ocr.R;
 import com.apollo.pharmacy.ocr.activities.checkout.CheckoutActivity;
+import com.apollo.pharmacy.ocr.activities.userlogin.UserLoginActivity;
 import com.apollo.pharmacy.ocr.adapters.CrossCellAdapter;
 import com.apollo.pharmacy.ocr.adapters.MyCartListAdapter;
 import com.apollo.pharmacy.ocr.adapters.PromotionsAdapter;
@@ -2132,7 +2133,7 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
         calculatePosTransactionRequest.setCustomerName(SessionManager.INSTANCE.getCustrName());
         calculatePosTransactionRequest.setCustomerState("");
         calculatePosTransactionRequest.setDob("");
-        calculatePosTransactionRequest.setDataAreaId(SessionManager.INSTANCE.getCompanyName());
+        calculatePosTransactionRequest.setDataAreaId(SessionManager.INSTANCE.getDataAreaId());
         calculatePosTransactionRequest.setDeliveryDate("");
         calculatePosTransactionRequest.setDiscAmount(0);
         calculatePosTransactionRequest.setDoctorCode("");
@@ -2190,10 +2191,10 @@ public class MyCartActivity extends BaseActivity implements OnItemClickListener,
         calculatePosTransactionRequest.setShippingMethod("");
         calculatePosTransactionRequest.setStaff("");
         calculatePosTransactionRequest.setState("AP");
-        calculatePosTransactionRequest.setStore("16001");
+        calculatePosTransactionRequest.setStore(SessionManager.INSTANCE.getStoreId());
         calculatePosTransactionRequest.setStoreName("POS TESTING");
         calculatePosTransactionRequest.setTenderLine(null);
-        calculatePosTransactionRequest.setTerminal("006");
+        calculatePosTransactionRequest.setTerminal(SessionManager.INSTANCE.getTerminalId());
         calculatePosTransactionRequest.setTimewhenTransClosed(0);
         calculatePosTransactionRequest.setTotalDiscAmount(0);
         calculatePosTransactionRequest.setTotalMRP(0.0);

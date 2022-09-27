@@ -7,6 +7,7 @@ import com.apollo.pharmacy.ocr.activities.paymentoptions.model.ExpressCheckoutTr
 import com.apollo.pharmacy.ocr.activities.paymentoptions.model.ExpressCheckoutTransactionApiResponse;
 import com.apollo.pharmacy.ocr.network.ApiClient;
 import com.apollo.pharmacy.ocr.network.ApiInterface;
+import com.apollo.pharmacy.ocr.utility.SessionManager;
 import com.apollo.pharmacy.ocr.utility.Utils;
 import com.google.gson.Gson;
 
@@ -26,7 +27,14 @@ public class CheckoutActivityController {
     }
 
     public void expressCheckoutTransactionApiCall(ExpressCheckoutTransactionApiRequest expressCheckoutTransactionApiRequest) {
-        ApiInterface apiInterface = ApiClient.getApiService();
+        String baseUrl = "";
+        if (SessionManager.INSTANCE.getEposUrl().contains("EPOS")) {
+            baseUrl = SessionManager.INSTANCE.getEposUrl().replace("EPOS", "ExpressDelivery");
+        } else {
+            baseUrl = SessionManager.INSTANCE.getEposUrl();
+        }
+
+        ApiInterface apiInterface = ApiClient.getApiService(baseUrl);
         Gson gson = new Gson();
         String json = gson.toJson(expressCheckoutTransactionApiRequest);
         Utils.showDialog(mContext, "Please wait...");

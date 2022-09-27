@@ -2,6 +2,7 @@ package com.apollo.pharmacy.ocr.utility
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.apollo.pharmacy.ocr.activities.userlogin.model.GetGlobalConfigurationResponse
 import com.apollo.pharmacy.ocr.model.*
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -454,12 +455,24 @@ object SessionManager {
         return pref.getString(ApplicationConstant.CONFIG_STORE, "")
     }
 
-    fun setCompanyName(companyName: String) {
+    fun setDataAreaId(companyName: String) {
         editor.putString(ApplicationConstant.COMPANY_NAME, companyName)
         editor.apply()
     }
 
-    fun getCompanyName(): String {
+    fun getDataAreaId(): String {
         return pref.getString(ApplicationConstant.COMPANY_NAME, "")
     }
+
+    fun setGlobalConfigurationResponse(getGlobalConfigurationResponse: String) {
+        editor.putString(ApplicationConstant.GET_GLOBAL_CONFIGURATION_RESPONSE, getGlobalConfigurationResponse)
+        editor.apply()
+    }
+
+    fun getGlobalConfigurationResponse(): GetGlobalConfigurationResponse {
+        val gson = Gson()
+        val json: String = pref.getString(ApplicationConstant.GET_GLOBAL_CONFIGURATION_RESPONSE, "")
+        return gson.fromJson(json, GetGlobalConfigurationResponse::class.java)
+    }
+
 }

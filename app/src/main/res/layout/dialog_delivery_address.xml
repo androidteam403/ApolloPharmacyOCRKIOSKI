@@ -276,5 +276,20 @@
                 android:id="@+id/networkErrorLayout"
                 layout="@layout/layout_network_error" />
         </FrameLayout>
+        <TextView
+            android:id="@+id/snack_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:background="@color/material_amber_accent_700"
+            android:paddingTop="25dp"
+            android:paddingBottom="20dp"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="25dp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
     </RelativeLayout>
 </layout>

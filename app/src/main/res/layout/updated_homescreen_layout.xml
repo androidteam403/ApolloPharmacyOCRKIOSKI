@@ -2,7 +2,6 @@
 <layout>
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/update_actvity_teme">
@@ -12,12 +11,12 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-<!--            <ImageView-->
-<!--                android:layout_width="180dp"-->
-<!--                android:layout_height="90dp"-->
-<!--                android:layout_marginStart="370dp"-->
-<!--                android:layout_marginTop="90dp"-->
-<!--                android:src="@drawable/updated_apollo_app_logo" />-->
+            <!--            <ImageView-->
+            <!--                android:layout_width="180dp"-->
+            <!--                android:layout_height="90dp"-->
+            <!--                android:layout_marginStart="370dp"-->
+            <!--                android:layout_marginTop="90dp"-->
+            <!--                android:src="@drawable/updated_apollo_app_logo" />-->
 
             <TextView
                 android:layout_width="wrap_content"
@@ -85,37 +84,42 @@
                 android:gravity="start"
                 android:orientation="vertical"
                 android:padding="5dp">
+
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
+
                     <ImageView
                         android:layout_width="@dimen/dimen160dp"
                         android:layout_height="80dp"
-                        android:src="@drawable/scan_again"/>
+                        android:src="@drawable/scan_again" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/white"
-                        android:textSize="25sp"
                         android:layout_marginTop="30dp"
                         android:fontFamily="@font/roboto_bold"
-                        android:text="Scan\nPrescription"/>
+                        android:text="Scan\nPrescription"
+                        android:textColor="@color/white"
+                        android:textSize="25sp" />
 
 
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/white"
-                        android:textSize="22sp"
                         android:background="@drawable/blackbox"
                         android:fontFamily="@font/roboto_bold"
-                        android:text="START SCAN"/>
+                        android:text="START SCAN"
+                        android:textColor="@color/white"
+                        android:textSize="22sp" />
 
                 </LinearLayout>
 
@@ -135,36 +139,40 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="14sp"
                     android:layout_marginStart="190dp"
+                    android:layout_marginTop="14sp"
                     android:orientation="horizontal">
+
                     <ImageView
                         android:layout_width="@dimen/dimen160dp"
                         android:layout_height="80dp"
-                        android:src="@drawable/scan_again"/>
+                        android:src="@drawable/scan_again" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/black"
-                        android:textSize="25sp"
                         android:layout_marginTop="45dp"
                         android:fontFamily="@font/roboto_bold"
-                        android:text="Scan\nItems"/>
+                        android:text="Scan\nItems"
+                        android:textColor="@color/black"
+                        android:textSize="25sp" />
 
 
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/BLACK"
-                        android:textSize="22sp"
                         android:layout_marginStart="@dimen/dimen160dp"
                         android:fontFamily="@font/roboto_medium"
-                        android:text="SHOW YOUR ITEM BARCODE"/>
+                        android:text="SHOW YOUR ITEM BARCODE"
+                        android:textColor="@color/BLACK"
+                        android:textSize="22sp" />
 
                 </LinearLayout>
 
@@ -182,20 +190,21 @@
             android:text="Express Billing"
             android:textColor="@color/white"
             android:textSize="30dp" />
-        <ImageView
-            android:layout_width="70dp"
-            android:layout_height="55dp"
-            android:rotation="90"
-            android:layout_marginTop="520dp"
-            android:layout_marginStart="185dp"
-            android:src="@drawable/ic_play_arrow_white_48dp"/>
 
         <ImageView
             android:layout_width="70dp"
             android:layout_height="55dp"
-            android:layout_marginTop="470dp"
+            android:layout_marginStart="185dp"
+            android:layout_marginTop="520dp"
+            android:rotation="90"
+            android:src="@drawable/ic_play_arrow_white_48dp" />
+
+        <ImageView
+            android:layout_width="70dp"
+            android:layout_height="55dp"
             android:layout_marginStart="902dp"
-            android:src="@drawable/ic_play_arrow_white_48dp"/>
+            android:layout_marginTop="470dp"
+            android:src="@drawable/ic_play_arrow_white_48dp" />
 
         <ImageView
             android:layout_width="35dp"

@@ -464,6 +464,7 @@
     <string name="label_store">Store</string>
     <string name="label_company_name">Company name</string>
     <string name="label_print_receipt">Print Receipt</string>
+    <string name="label_alert">Alert!</string>
 
 
 </resources>

@@ -129,7 +129,7 @@
         <!--AIzaSyDAAQk_9yUxZhS267gzniV4z7tlsSISGm4-->
 
         <activity
-            android:name=".activities.UserLoginActivity"
+            android:name=".activities.userlogin.UserLoginActivity"
             android:screenOrientation="landscape" />
         <activity
             android:name=".activities.HomeActivity"

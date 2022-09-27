@@ -774,11 +774,11 @@
                                 android:paddingTop="@dimen/ten_dp"
                                 android:paddingEnd="@dimen/fifteen_dp"
                                 android:paddingBottom="@dimen/ten_dp"
-                                android:visibility="@{model.isFmcg ? view.VISIBLE : view.GONE}"
                                 android:text="@string/label_print_receipt"
                                 android:textColor="@color/BLACK"
                                 android:textSize="@dimen/eighteen_sp"
-                                android:textStyle="bold" />
+                                android:textStyle="bold"
+                                android:visibility="@{isFmcgQrCodePayment ? view.VISIBLE : view.GONE}" />
                         </LinearLayout>
                     </RelativeLayout>
                 </RelativeLayout>
@@ -808,6 +808,10 @@
         <variable
             name="view"
             type="android.view.View" />
+
+        <variable
+            name="isFmcgQrCodePayment"
+            type="Boolean" />
 
         <variable
             name="callback"

@@ -1,4 +1,4 @@
-package com.apollo.pharmacy.ocr.activities
+package com.apollo.pharmacy.ocr.activities.userlogin
 
 import android.content.Intent
 import android.graphics.Color
@@ -16,7 +16,11 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.apollo.pharmacy.ocr.R
+import com.apollo.pharmacy.ocr.activities.FAQActivity
+import com.apollo.pharmacy.ocr.activities.HomeActivity
+import com.apollo.pharmacy.ocr.activities.MainActivity
 import com.apollo.pharmacy.ocr.activities.mposstoresetup.MposStoreSetupActivity
+import com.apollo.pharmacy.ocr.activities.userlogin.model.GetGlobalConfigurationResponse
 import com.apollo.pharmacy.ocr.controller.UserLoginController
 import com.apollo.pharmacy.ocr.dialog.AccesskeyDialog
 import com.apollo.pharmacy.ocr.interfaces.UserLoginListener
@@ -252,11 +256,13 @@ class UserLoginActivity : AppCompatActivity(), UserLoginListener, ConnectivityRe
         verify_otp_layout.setOnClickListener(View.OnClickListener {
             if (!TextUtils.isEmpty(otp_view.text.toString()) && otp_view.text.toString().length > 0) {
                 if (otp == otp_view.text.toString().toInt()) {
-                    verify_otp_image.setImageResource(R.drawable.right_selection_green)
-                    SessionManager.setMobilenumber(mobileNum)
-                    startActivity(Intent(applicationContext, HomeActivity::class.java))
-                    finishAffinity()
-                    this.overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out)
+                    UserLoginController().getGlobalConfigurationApiCall(this, this)
+
+//                    verify_otp_image.setImageResource(R.drawable.right_selection_green)
+//                    SessionManager.setMobilenumber(mobileNum)
+//                    startActivity(Intent(applicationContext, HomeActivity::class.java))
+//                    finishAffinity()
+//                    this.overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out)
                 } else {
                     verify_otp_image.setImageResource(R.drawable.right_selection_green)
                     Utils.showSnackbar(this@UserLoginActivity, constraint_layout, applicationContext.resources.getString(R.string.label_invalid_otp_try_again))
@@ -451,4 +457,13 @@ class UserLoginActivity : AppCompatActivity(), UserLoginListener, ConnectivityRe
             Utils.showSnackbar(this, constraint_layout, applicationContext.resources.getString(R.string.label_internet_error_text))
         }
     }
+
+    override fun onSuccessGlobalConfigurationApiCall(getGlobalConfigurationResponse: GetGlobalConfigurationResponse?) {
+        verify_otp_image.setImageResource(R.drawable.right_selection_green)
+        SessionManager.setMobilenumber(mobileNum)
+        startActivity(Intent(applicationContext, HomeActivity::class.java))
+        finishAffinity()
+        this.overridePendingTransition(R.animator.trans_left_in, R.animator.trans_left_out)
+    }
+
 }

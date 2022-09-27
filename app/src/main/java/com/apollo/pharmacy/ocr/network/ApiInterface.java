@@ -3,6 +3,7 @@ package com.apollo.pharmacy.ocr.network;
 import com.apollo.pharmacy.ocr.activities.mposstoresetup.model.StoreListResponseModel;
 import com.apollo.pharmacy.ocr.activities.paymentoptions.model.ExpressCheckoutTransactionApiRequest;
 import com.apollo.pharmacy.ocr.activities.paymentoptions.model.ExpressCheckoutTransactionApiResponse;
+import com.apollo.pharmacy.ocr.activities.userlogin.model.GetGlobalConfigurationResponse;
 import com.apollo.pharmacy.ocr.controller.GetStoreInfoRequest;
 import com.apollo.pharmacy.ocr.model.AddFCMTokenRequest;
 import com.apollo.pharmacy.ocr.model.AllOffersResponse;
@@ -269,12 +270,16 @@ public interface ApiInterface {
 
 
     //made changes by Naveen.M - 05/08/2022
-    @POST("http://online.apollopharmacy.org:51/ExpressDelivery/SalesTransactionService.svc/ExpressCheckOutTransaction")
+    @POST("SalesTransactionService.svc/ExpressCheckOutTransaction")
     Call<ExpressCheckoutTransactionApiResponse> EXPRESS_CHECKOUT_TRANSACTION_API_CALL(@Body ExpressCheckoutTransactionApiRequest expressCheckoutTransactionApiRequest);
 
-    @POST("http://online.apollopharmacy.org:51/EPOS/SalesTransactionService.svc/PrintReceipt")
+    @POST("SalesTransactionService.svc/PrintReceipt")
 //http://online.apollopharmacy.org:51/EPOS/
     Call<PdfModelResponse> DOWNLOAD_PDF(@Body PdfModelRequest response);
+
+
+    @POST("SalesTransactionService.svc/GetGlobalConfigration/{storeId}/{treminalId}/{DataAreaId}")
+    Call<GetGlobalConfigurationResponse> GET_GLOBAL_CONFING_API_CALL(@Path("storeId") String storeId, @Path("treminalId") String terminalId, @Path("DataAreaId") String dataAreaId, @Body Object o);
 
 
 }

@@ -1,16 +1,23 @@
 package com.apollo.pharmacy.ocr.controller
 
 import android.content.Context
+import com.apollo.pharmacy.ocr.activities.userlogin.model.GetGlobalConfigurationResponse
 import com.apollo.pharmacy.ocr.interfaces.UserLoginListener
 import com.apollo.pharmacy.ocr.model.*
 import com.apollo.pharmacy.ocr.network.ApiClient
 import com.apollo.pharmacy.ocr.network.CallbackWithRetry
 import com.apollo.pharmacy.ocr.utility.ApplicationConstant
 import com.apollo.pharmacy.ocr.utility.Constants
+import com.apollo.pharmacy.ocr.utility.SessionManager
 import com.apollo.pharmacy.ocr.utility.SessionManager.addFcmLog
+import com.apollo.pharmacy.ocr.utility.SessionManager.getDataAreaId
 import com.apollo.pharmacy.ocr.utility.SessionManager.getKioskSetupResponse
+import com.apollo.pharmacy.ocr.utility.SessionManager.getStoreId
+import com.apollo.pharmacy.ocr.utility.SessionManager.getTerminalId
 import com.apollo.pharmacy.ocr.utility.Utils
+import com.google.gson.Gson
 import retrofit2.Call
+import retrofit2.Callback
 import retrofit2.Response
 
 class UserLoginController {
@@ -86,6 +93,32 @@ class UserLoginController {
             }
 
             override fun onFailure(call: Call<Global_api_response?>, t: Throwable) {
+                userLoginListener.onFailure(t.message)
+            }
+        })
+    }
+
+    fun getGlobalConfigurationApiCall(mContext: Context?, userLoginListener: UserLoginListener) {
+        Utils.showDialog(mContext, "Loading…")
+        val api = ApiClient.getApiService(SessionManager.getEposUrl())
+        val call = api.GET_GLOBAL_CONFING_API_CALL(getStoreId(), getTerminalId(), getDataAreaId(), Object())
+        call.enqueue(object : Callback<GetGlobalConfigurationResponse?> {
+            override fun onResponse(call: Call<GetGlobalConfigurationResponse?>, response: Response<GetGlobalConfigurationResponse?>) {
+                Utils.dismissDialog()
+                if (response.body() != null && response.body()!!.requestStatus == 0) {
+                    SessionManager.setDataAreaId(response.body()!!.dataAreaID)
+                    val gson = Gson()
+                    val json = gson.toJson(response.body())
+
+                    SessionManager.setGlobalConfigurationResponse(json)
+                    userLoginListener.onSuccessGlobalConfigurationApiCall(response.body())
+                } else if (response.body() != null) {
+                    userLoginListener.onFailure(response.body()!!.returnMessage)
+                }
+            }
+
+            override fun onFailure(call: Call<GetGlobalConfigurationResponse?>, t: Throwable) {
+                Utils.dismissDialog()
                 userLoginListener.onFailure(t.message)
             }
         })

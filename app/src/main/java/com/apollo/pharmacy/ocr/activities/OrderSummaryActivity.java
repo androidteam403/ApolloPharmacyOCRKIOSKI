@@ -19,7 +19,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -960,7 +959,7 @@ public class OrderSummaryActivity extends BaseActivity implements OrderSummaryLi
         Random_Order_id = String.valueOf(n);
         Tpdetails main_obj = new Tpdetails();
         main_obj.setOrderid(Random_Order_id);
-        main_obj.setShopid("16001");
+        main_obj.setShopid(SessionManager.INSTANCE.getStoreId());
         main_obj.setShippingMethod("Home Delivery - Fixed");
         main_obj.setPaymentMethod("ccavenue");
         main_obj.setVendorname("MAPP");
@@ -1057,7 +1056,7 @@ public class OrderSummaryActivity extends BaseActivity implements OrderSummaryLi
                 main_obj_new.setRemarks("Pick From Kiosk");
             }
         } else {
-            main_obj_new.setShopId("16001");
+            main_obj_new.setShopId(SessionManager.INSTANCE.getStoreId());
             main_obj_new.setShippingMethod("Home Delivery");
             main_obj_new.setRemarks("");
         }

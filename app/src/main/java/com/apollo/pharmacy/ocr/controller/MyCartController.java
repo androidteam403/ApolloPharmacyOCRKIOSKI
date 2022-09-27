@@ -276,7 +276,7 @@ public class MyCartController {
         BatchListRequest batchListRequest = new BatchListRequest();
         batchListRequest.setArticleCode(artcode);
         batchListRequest.setCustomerState("");
-        batchListRequest.setDataAreaId(SessionManager.INSTANCE.getCompanyName());
+        batchListRequest.setDataAreaId(SessionManager.INSTANCE.getDataAreaId());
         batchListRequest.setSez(0);
         batchListRequest.setSearchType(1);
         batchListRequest.setStoreId(SessionManager.INSTANCE.getStoreId());

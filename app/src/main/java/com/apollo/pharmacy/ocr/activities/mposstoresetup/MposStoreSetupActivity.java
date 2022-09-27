@@ -182,7 +182,7 @@ public class MposStoreSetupActivity extends AppCompatActivity implements GoogleA
         String terminalId = mposStoreSetupActivityBinding.terminalIdText.getText().toString().trim();
         String sessionTime = mposStoreSetupActivityBinding.sessionTime.getText().toString().trim();
         String configStore = mposStoreSetupActivityBinding.configStore.getText().toString().trim();
-        String companyName = mposStoreSetupActivityBinding.companyName.getText().toString().trim();
+//        String companyName = mposStoreSetupActivityBinding.companyName.getText().toString().trim();
         if (url.isEmpty()) {
             mposStoreSetupActivityBinding.baseUrl.setError("Please Enter Epos Url");
             mposStoreSetupActivityBinding.baseUrl.requestFocus();
@@ -200,11 +200,12 @@ public class MposStoreSetupActivity extends AppCompatActivity implements GoogleA
             mposStoreSetupActivityBinding.configStore.setError("Store should not be empty");
             mposStoreSetupActivityBinding.configStore.requestFocus();
             return false;
-        } else if (companyName.isEmpty()) {
-            mposStoreSetupActivityBinding.companyName.setError("Company name should not be empty");
-            mposStoreSetupActivityBinding.companyName.requestFocus();
-            return false;
         }
+//        else if (companyName.isEmpty()) {
+//            mposStoreSetupActivityBinding.companyName.setError("Company name should not be empty");
+//            mposStoreSetupActivityBinding.companyName.requestFocus();
+//            return false;
+//        }
         return true;
     }
 
@@ -412,7 +413,8 @@ public class MposStoreSetupActivity extends AppCompatActivity implements GoogleA
                 SessionManager.INSTANCE.setStoreId(mposStoreSetupActivityBinding.storeId.getText().toString());
             SessionManager.INSTANCE.setSessionTime(Integer.parseInt(mposStoreSetupActivityBinding.sessionTime.getText().toString().trim()));
             SessionManager.INSTANCE.setConfigStore(mposStoreSetupActivityBinding.configStore.getText().toString().trim());
-            SessionManager.INSTANCE.setCompanyName(mposStoreSetupActivityBinding.companyName.getText().toString().trim());
+//            SessionManager.INSTANCE.setDataAreaId(mposStoreSetupActivityBinding.companyName.getText().toString().trim());
+            SessionManager.INSTANCE.setDataAreaId(selectedStoreId.getDataAreaId());
             SessionManager.INSTANCE.setTerminalId(mposStoreSetupActivityBinding.terminalIdText.getText().toString());
             SessionManager.INSTANCE.setEposUrl(mposStoreSetupActivityBinding.baseUrl.getText().toString());
             SessionManager.INSTANCE.setAccessDialogHandler("Dismiss");

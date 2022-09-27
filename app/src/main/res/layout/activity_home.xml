@@ -10,11 +10,146 @@
             android:id="@+id/parent_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/activity_theme_bg">
+            android:background="@drawable/update_actvity_teme">
+
+            <EditText
+                android:id="@+id/usb"
+                android:layout_width="0.1dp"
+                android:layout_height="0.1dp"
+                android:background="@color/white"
+                android:importantForAutofill="no"
+                android:inputType="text" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:weightSum="1">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.7"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_bold"
+                        android:text="Welcome to"
+                        android:textColor="@color/white"
+                        android:textSize="25sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_bold"
+                        android:text="Express Billing"
+                        android:textAllCaps="true"
+                        android:textColor="@color/white"
+                        android:textSize="35sp" />
+
+                    <LinearLayout
+                        android:id="@+id/shop_products"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/ten_dp"
+                        android:background="@drawable/redbox"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:contentDescription="@string/app_name"
+                            android:src="@drawable/search_products_home_btn" />
+
+                        <TextView
+                            android:id="@+id/edittext_mobileNum"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Search Products"
+                            android:textColor="@color/white"
+                            android:textIsSelectable="false"
+                            android:textSize="25sp"
+                            android:textStyle="bold"
+                            android:theme="@style/edittext_theme" />
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.3"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight=".5"
+                        android:background="@drawable/topcurve"
+                        android:gravity="start|center_vertical">
+
+                        <ImageView
+                            android:id="@+id/scan_prescription"
+                            android:layout_width="@dimen/dimen200dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/ten_dp"
+                            android:contentDescription="@string/app_name"
+                            android:src="@drawable/scan_prescription_home_btn" />
+
+                    </RelativeLayout>
+
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight=".5"
+                        android:background="@drawable/sidecurve"
+                        android:gravity="end|center_vertical">
+
+                        <ImageView
+                            android:id="@+id/scan_products"
+                            android:layout_width="@dimen/dimen200dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/ten_dp"
+                            android:contentDescription="@string/app_name"
+                            android:src="@drawable/scan_items_home_btn" />
+
+                    </RelativeLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/checkout_image"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="@dimen/five_dp"
+                android:layout_marginEnd="@dimen/five_dp"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/checkout_cart_unselect" />
+
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/activity_theme_bg"
+            android:visibility="gone">
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:visibility="gone">
 
                 <EditText
                     android:layout_width="100dp"
@@ -91,14 +226,14 @@
                                 android:textStyle="bold" />
                         </LinearLayout>
 
-                        <ImageView
-                            android:id="@+id/checkout_image"
-                            android:layout_width="wrap_content"
-                            android:layout_height="@dimen/thirty_dp"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:contentDescription="@string/app_name"
-                            android:src="@drawable/checkout_cart_unselect" />
+                        <!--                        <ImageView-->
+                        <!--                            android:id="@+id/checkout_image"-->
+                        <!--                            android:layout_width="wrap_content"-->
+                        <!--                            android:layout_height="@dimen/thirty_dp"-->
+                        <!--                            android:layout_alignParentEnd="true"-->
+                        <!--                            android:layout_centerVertical="true"-->
+                        <!--                            android:contentDescription="@string/app_name"-->
+                        <!--                            android:src="@drawable/checkout_cart_unselect" />-->
 
                     </RelativeLayout>
 
@@ -110,7 +245,6 @@
                         android:orientation="horizontal">
 
                         <LinearLayout
-                            android:id="@+id/scan_prescription"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="vertical">
@@ -142,7 +276,6 @@
                             android:textStyle="bold" />
 
                         <LinearLayout
-                            android:id="@+id/shop_products"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="vertical">
@@ -179,7 +312,6 @@
                             android:layout_height="wrap_content">
 
                             <LinearLayout
-                                android:id="@+id/scan_products"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:orientation="vertical">
@@ -207,9 +339,9 @@
                                 android:layout_height="7dp"
                                 android:layout_alignParentEnd="true"
                                 android:layout_marginEnd="33dp"
-                                android:visibility="gone"
                                 android:background="@drawable/white_image_bg"
-                                android:contentDescription="@string/app_name" />
+                                android:contentDescription="@string/app_name"
+                                android:visibility="gone" />
                         </RelativeLayout>
                     </LinearLayout>
 
@@ -376,13 +508,6 @@
                     </LinearLayout>
                 </LinearLayout>
 
-                <EditText
-                    android:id="@+id/usb"
-                    android:layout_width="0.1dp"
-                    android:layout_height="0.1dp"
-                    android:background="@color/white"
-                    android:inputType="text"
-                    android:importantForAutofill="no" />
 
             </RelativeLayout>
 
