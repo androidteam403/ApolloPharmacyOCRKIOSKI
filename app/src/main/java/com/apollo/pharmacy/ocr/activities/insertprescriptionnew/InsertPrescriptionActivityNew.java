@@ -42,7 +42,9 @@ import net.alhazmy13.mediapicker.Image.ImagePicker;
 
 import java.io.File;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class InsertPrescriptionActivityNew extends BaseActivity implements InsertPrescriptionActivityNewListener, ChooseDeliveryType.ChooseDeliveryTypeListener {
@@ -454,6 +456,10 @@ public class InsertPrescriptionActivityNew extends BaseActivity implements Inser
         PlaceOrderReqModel.ItemDetailsEntity itemDetailsEntity = new PlaceOrderReqModel.ItemDetailsEntity();
         itemDetailsEntity.setItemID("APC0011");
         itemDetailsEntity.setItemName("AP Cough Dropns 300N - Rs.1");
+        itemDetailsEntity.setPrice(1);
+        itemDetailsEntity.setPack("1");
+        itemDetailsEntity.setMOU(1);
+        itemDetailsEntity.setQty(1);
         itemDetailsArr.add(itemDetailsEntity);
 
         tpDetailsEntity.setItemDetails(itemDetailsArr);
@@ -463,8 +469,13 @@ public class InsertPrescriptionActivityNew extends BaseActivity implements Inser
         tpDetailsEntity.setUserId(SessionManager.INSTANCE.getKioskSetupResponse().getKIOSK_ID());
         tpDetailsEntity.setOrderType("Pharma");
         tpDetailsEntity.setCouponCode("MED10");
-        tpDetailsEntity.setOrderDate(Utils.getOrderedID());
-        tpDetailsEntity.setRequestType("NONCART");
+
+        Date date = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-M-dd");
+        String strDate = formatter.format(date);
+        tpDetailsEntity.setOrderDate(strDate);
+//        tpDetailsEntity.setOrderDate(Utils.getOrderedID());
+        tpDetailsEntity.setRequestType("CART");//NONCART
         tpDetailsEntity.setPrescUrl(prescEntityArray);
         placeOrderReqModel.setTpdetails(tpDetailsEntity);
         new InsertPrescriptionActivityNewController(this, this).handleOrderPlaceService(this, placeOrderReqModel);

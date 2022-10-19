@@ -16,7 +16,6 @@ import com.apollo.pharmacy.ocr.model.PlaceOrderReqModel;
 import com.apollo.pharmacy.ocr.model.PlaceOrderResModel;
 import com.apollo.pharmacy.ocr.network.ApiClient;
 import com.apollo.pharmacy.ocr.network.ApiInterface;
-import com.apollo.pharmacy.ocr.utility.Constants;
 import com.apollo.pharmacy.ocr.utility.SessionManager;
 import com.apollo.pharmacy.ocr.utility.Utils;
 import com.google.gson.Gson;
@@ -44,7 +43,7 @@ public class PhonePayQrCodeController {
 //        Utils.showDialog(activity, "Loading…");
         ApiInterface api = ApiClient.getApiServiceMposBaseUrl(SessionManager.INSTANCE.getEposUrl());
         PhonePayQrCodeRequest phonePayQrCodeRequest = new PhonePayQrCodeRequest();
-        phonePayQrCodeRequest.setAmount(1.0);
+        phonePayQrCodeRequest.setAmount(grandTotal);
         phonePayQrCodeRequest.setExpiresIn(2000);
         phonePayQrCodeRequest.setMessage("");
         phonePayQrCodeRequest.setOriginalTransactionId("");
@@ -52,8 +51,9 @@ public class PhonePayQrCodeController {
         phonePayQrCodeRequest.setReqType("GENERATEQRCODE");
         phonePayQrCodeRequest.setStoreId(SessionManager.INSTANCE.getStoreId());
         phonePayQrCodeRequest.setTransactionId(Utils.getOrderedID());
-        phonePayQrCodeRequest.setUrl("http://10.4.14.7:8041/APOLLO/PhonePe");//http://172.16.2.251:8033/PHONEPEUAT/APOLLO/PhonePe
-
+        phonePayQrCodeRequest.setUrl("http://172.16.2.251:8033/PHONEPEUAT/APOLLO/PhonePe");
+        //http://172.16.2.251:8033/PHONEPEUAT/APOLLO/PhonePe
+        //http://10.4.14.7:8041/APOLLO/PhonePe
         Gson gson = new Gson();
         String json = gson.toJson(phonePayQrCodeRequest);
 
@@ -77,10 +77,15 @@ public class PhonePayQrCodeController {
     }
 
     public void handleOrderPlaceService(Context context, PlaceOrderReqModel placeOrderReqModel) {
-        ApiInterface apiInterface = ApiClient.getApiService(Constants.Order_Place_With_Prescription_API);
+//        ApiInterface apiInterface = ApiClient.getApiService(Constants.Order_Place_With_Prescription_API);
         Gson gson = new Gson();
         String json = gson.toJson(placeOrderReqModel);
-        Call<PlaceOrderResModel> call = apiInterface.PLACE_ORDER_SERVICE_CALL(Constants.New_Order_Place_With_Prescription_Token, placeOrderReqModel);
+//        Call<PlaceOrderResModel> call = apiInterface.PLACE_ORDER_SERVICE_CALL(Constants.New_Order_Place_With_Prescription_Token, placeOrderReqModel);
+
+        ApiInterface apiInterface = ApiClient.getApiService("https://online.apollopharmacy.org/UAT/OrderPlace.svc/");
+        Call<PlaceOrderResModel> call = apiInterface.PLACE_ORDER_SERVICE_CALL("9f15bdd0fcd5423190c2e877ba0228APM", placeOrderReqModel);
+
+
         call.enqueue(new Callback<PlaceOrderResModel>() {
             @Override
             public void onResponse(@NotNull Call<PlaceOrderResModel> call, @NotNull Response<PlaceOrderResModel> response) {
@@ -89,6 +94,8 @@ public class PhonePayQrCodeController {
                     phonePayQrCodeListener.onSuccessPlaceOrderFMCG(response.body());
                 } else {
                     if (response.body() != null && response.body().getOrdersResult() != null && response.body().getOrdersResult().getMessage() != null) {
+                        phonePayQrCodeListener.onFailureService(response.body().getOrdersResult().getMessage());
+                    } else if (response.body() != null && response.body().getOrdersResult().getMessage() != null && !response.body().getOrdersResult().getMessage().isEmpty()) {
                         phonePayQrCodeListener.onFailureService(response.body().getOrdersResult().getMessage());
                     } else {
                         phonePayQrCodeListener.onFailureService(context.getResources().getString(R.string.label_something_went_wrong));
@@ -118,7 +125,9 @@ public class PhonePayQrCodeController {
         phonePayQrCodeRequest.setReqType("CHECKPAYMENTSTATUS");
         phonePayQrCodeRequest.setStoreId(SessionManager.INSTANCE.getStoreId());
         phonePayQrCodeRequest.setTransactionId(tranId);
-        phonePayQrCodeRequest.setUrl("http://10.4.14.7:8041/APOLLO/PhonePe");
+        phonePayQrCodeRequest.setUrl("http://172.16.2.251:8033/PHONEPEUAT/APOLLO/PhonePe");
+        //http://172.16.2.251:8033/PHONEPEUAT/APOLLO/PhonePe
+       // http://10.4.14.7:8041/APOLLO/PhonePe
 
         Call<PhonePayQrCodeResponse> call = api.GET_PhonePay_Qr_payment_Success(phonePayQrCodeRequest);
         call.enqueue(new Callback<PhonePayQrCodeResponse>() {
