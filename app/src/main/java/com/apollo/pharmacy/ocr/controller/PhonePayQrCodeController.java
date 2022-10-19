@@ -41,6 +41,7 @@ public class PhonePayQrCodeController {
 
     public void getPhonePayQrCodeGeneration(boolean scanpay, double grandTotal) {
 //        Utils.showDialog(activity, "Loading…");
+
         ApiInterface api = ApiClient.getApiServiceMposBaseUrl(SessionManager.INSTANCE.getEposUrl());
         PhonePayQrCodeRequest phonePayQrCodeRequest = new PhonePayQrCodeRequest();
         phonePayQrCodeRequest.setAmount(grandTotal);
